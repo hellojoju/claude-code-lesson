@@ -7,236 +7,236 @@ last_verified: "2026-04-05"
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
 
-> 🟢 **Beginner** | ⏱ 25 minutes
+> 🟢 **初级** | ⏱ 25 分钟
 >
-> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+> ✅ 已验证 Claude Code **v2.1.92** · 最后验证：2026-04-05
 
-**What you'll build:** Save and restore conversation state.
+**你将构建：** 保存和恢复会话状态。
 
-# Checkpoints and Rewind
+# Checkpoints（检查点）与回滚
 
-Your refactor just broke 3 things. The tests are failing. The API is returning 500 errors. And you can't remember exactly what you changed. Here's how checkpoints save you — one keystroke and you're back to the working state, ready to try a more careful approach.
+你的重构刚刚破坏了 3 个功能。测试失败了。API 返回 500 错误。而且你无法准确记得改了什么。这就是 checkpoints 如何拯救你 —— 一个按键操作，你就回到了正常工作状态，准备好尝试更谨慎的方法。
 
-Checkpoints allow you to save conversation state and rewind to previous points in your Claude Code session. This is invaluable for exploring different approaches, recovering from mistakes, or comparing alternative solutions.
-
----
-
-## The "Oh No" Moment
-
-We've all been there:
-
-```
-You: Refactor the auth module to use OAuth2
-
-Claude: [Makes 47 changes across 12 files]
-
-You: Run the tests
-
-Claude: Tests failed. 23 assertions broken.
-       Error in payment processing.
-       Database connection lost.
-
-You: ...what just happened?
-```
-
-Without checkpoints, you're stuck. You could spend hours debugging. Or you could undo everything and start over, losing any good changes mixed in with the bad.
-
-**With checkpoints:**
-
-```
-You: [Press Esc twice] Rewind to before the refactor
-
-Claude: Restored to checkpoint "auth-oauth2-start".
-       All files reverted. Conversation restored.
-
-You: Let's try that again, one module at a time.
-```
-
-This is the power of checkpoints — instant recovery from any "oh no" moment.
+Checkpoints 允许你保存会话状态并回滚到 Claude Code 会话中的先前时刻。这对于探索不同方法、从错误中恢复或比较替代方案非常有价值。
 
 ---
 
-## What Are Checkpoints?
+## "糟糕"时刻
 
-Checkpoints are snapshots of your conversation state, including:
+我们都经历过：
 
-| Component | What's Captured |
-|-----------|-----------------|
-| **Messages** | All user and assistant messages exchanged |
-| **Files** | All file modifications made during the session |
-| **Tools** | Complete history of tool invocations |
-| **Context** | Session metadata and state |
+```
+你: 重构认证模块以使用 OAuth2
 
-Think of checkpoints as "save points" in a game. At any moment, you can load a previous save and try a different path.
+Claude: [跨 12 个文件进行了 47 处更改]
+
+你: 运行测试
+
+Claude: 测试失败。23 个断言被破坏。
+       支付处理出错。
+       数据库连接丢失。
+
+你: ...刚才发生了什么？
+```
+
+没有 checkpoints，你就陷入困境了。你可能要花几个小时调试。或者你可能不得不撤销一切重新开始，丢失所有混在错误中的正确更改。
+
+**有了 checkpoints：**
+
+```
+你: [按两次 Esc] 回滚到重构前
+
+Claude: 已恢复到 checkpoint "auth-oauth2-start"。
+       所有文件已还原。会话已恢复。
+
+你: 让我们再试一次，一次一个模块。
+```
+
+这就是 checkpoints 的威力 —— 从任何"糟糕"时刻瞬间恢复。
 
 ---
 
-## Key Concepts
+## 什么是 Checkpoints？
 
-| Concept | Description |
-|---------|-------------|
-| **Checkpoint** | Snapshot of conversation state including messages, files, and context |
-| **Rewind** | Return to a previous checkpoint, discarding subsequent changes |
-| **Branch Point** | Checkpoint from which multiple approaches are explored |
-| **Recovery Point** | A checkpoint you create before risky operations |
+Checkpoints 是会话状态的快照，包括：
+
+| 组成部分 | 捕获内容 |
+|----------|----------|
+| **消息** | 交换的所有用户和助手消息 |
+| **文件** | 会话期间进行的所有文件修改 |
+| **工具** | 完整的工具调用历史 |
+| **上下文** | 会话元数据和状态 |
+
+把 checkpoints 想象成游戏中的"存档点"。在任何时刻，你都可以加载之前的存档并尝试不同的路径。
 
 ---
 
-## Accessing Checkpoints
+## 核心概念
 
-You can access and manage checkpoints in two primary ways:
+| 概念 | 描述 |
+|------|------|
+| **Checkpoint** | 包括消息、文件和上下文的会话状态快照 |
+| **Rewind（回滚）** | 返回到之前的 checkpoint，丢弃后续更改 |
+| **Branch Point（分支点）** | 从该 checkpoint 探索多种方法的节点 |
+| **Recovery Point（恢复点）** | 在危险操作前创建的 checkpoint |
 
-### Using Keyboard Shortcut
+---
 
-Press `Esc` twice (`Esc` + `Esc`) to open the checkpoint interface and browse saved checkpoints.
+## 访问 Checkpoints
 
-### Using Slash Command
+你可以通过两种主要方式访问和管理 checkpoints：
 
-Use the `/rewind` command (alias: `/checkpoint`) for quick access:
+### 使用键盘快捷键
+
+按两次 `Esc`（`Esc` + `Esc`）打开 checkpoint 界面并浏览已保存的 checkpoints。
+
+### 使用 Slash 命令
+
+使用 `/rewind` 命令（别名：`/checkpoint`）快速访问：
 
 ```bash
-# Open rewind interface
+# 打开回滚界面
 /rewind
 
-# Or use the alias
+# 或使用别名
 /checkpoint
 ```
 
 ---
 
-## Checkpoint Strategy Decision Tree
+## Checkpoint 策略决策树
 
-When should you create checkpoints? When should you rewind? This decision tree guides you through the checkpoint workflow:
+何时应该创建 checkpoints？何时应该回滚？这个决策树指导你通过 checkpoint 工作流：
 
 ```mermaid
 flowchart TD
-    A[I want to make a change] --> B{Is it risky?}
-    B -->|Yes| C[Note current checkpoint ID]
-    B -->|No| D[Proceed normally]
+    A[我想做出更改] --> B{是否有风险？}
+    B -->|是| C[记录当前 checkpoint ID]
+    B -->|否| D[正常进行]
     
-    C --> E[Make changes]
+    C --> E[进行更改]
     D --> E
     
-    E --> F{Did it work?}
-    F -->|Yes| G[Continue working]
-    F -->|No| H{Want to try different approach?}
+    E --> F{成功了吗？}
+    F -->|是| G[继续工作]
+    F -->|否| H{想尝试不同方法？}
     
-    H -->|Yes| I[Press Esc+Esc]
-    H -->|No| J[Debug the issue]
+    H -->|是| I[按 Esc+Esc]
+    H -->|否| J[调试问题]
     
-    I --> K[Select earlier checkpoint]
-    K --> L{What to restore?}
+    I --> K[选择较早的 checkpoint]
+    K --> L{恢复什么？}
     
-    L -->|Everything| M[Restore code and conversation]
-    L -->|Just files| N[Restore code only]
-    L -->|Just context| O[Restore conversation only]
-    L -->|Keep but compress| P[Summarize from here]
+    L -->|全部| M[恢复代码和会话]
+    L -->|仅文件| N[仅恢复代码]
+    L -->|仅上下文| O[仅恢复会话]
+    L -->|保留但压缩| P[从此处开始摘要]
     
     M --> E
     N --> E
     O --> E
-    P --> Q[Summary replaces messages]
+    P --> Q[摘要替换消息]
     
-    G --> R{Want to compare approaches?}
-    R -->|Yes| S[Document current state]
+    G --> R{想比较方法？}
+    R -->|是| S[记录当前状态]
     S --> I
-    R -->|No| T[Continue session]
+    R -->|否| T[继续会话]
 ```
 
 ---
 
-## Rewind Options Explained
+## 回滚选项详解
 
-When you rewind, you're presented with five options. Understanding each one helps you choose the right recovery strategy:
+当你回滚时，会看到五个选项。理解每个选项有助于你选择正确的恢复策略：
 
-### 1. Restore Code and Conversation
+### 1. 恢复代码和会话
 
-**Use when:** You want a complete reset to a known-good state.
-
-```
-Before: Checkpoint A (working state)
-        ↓
-        Changes made (broken state)
-        
-After:  Checkpoint A restored
-        Files: Reverted
-        Messages: Reverted
-        Tool history: Reverted
-```
-
-This is your "nuclear option" — complete rollback to a saved point.
-
-### 2. Restore Conversation Only
-
-**Use when:** You want to reset the context but keep your file changes.
+**使用场景：** 你想要完全重置到一个已知良好的状态。
 
 ```
-Scenario: You made good code changes but the conversation
-          got confused or went down a wrong path.
-
-Result:   Files stay as they are
-          Conversation resets to checkpoint
-          You can re-explain requirements with clean context
+之前: Checkpoint A（正常状态）
+      ↓
+      已做出更改（损坏状态）
+      
+之后: Checkpoint A 已恢复
+      文件：已还原
+      消息：已还原
+      工具历史：已还原
 ```
 
-### 3. Restore Code Only
+这是你的"核选项" —— 完全回滚到保存点。
 
-**Use when:** The conversation was helpful but the code changes broke something.
+### 2. 仅恢复会话
 
-```
-Scenario: Claude figured out the architecture but the 
-          implementation has bugs.
-
-Result:   Files revert to checkpoint state
-          Conversation history preserved
-          You can refer back to the reasoning
-```
-
-### 4. Summarize From Here
-
-**Use when:** The conversation is too long and you want to compress history.
+**使用场景：** 你想要重置上下文但保留文件更改。
 
 ```
-Scenario: You've been working for 2 hours, the context
-          is bloated, but you don't want to lose everything.
+场景：你做出了正确的代码更改但会话
+      变得混乱或走向了错误的方向。
 
-Result:   Claude generates a summary of conversation
-          Summary replaces messages from checkpoint forward
-          Original messages preserved in transcript
-          Context window freed up
+结果：文件保持原样
+      会话重置到 checkpoint
+      你可以在干净的上下文中重新解释需求
 ```
 
-You can optionally provide instructions to focus the summary:
+### 3. 仅恢复代码
+
+**使用场景：** 会话有帮助但代码更改破坏了某些东西。
 
 ```
-User: Summarize from here, focusing on the API design decisions
+场景：Claude 搞清楚了架构但实现
+      有 bug。
+
+结果：文件还原到 checkpoint 状态
+      会话历史保留
+      你可以回顾推理过程
 ```
 
-### 5. Never Mind
+### 4. 从此处开始摘要
 
-**Use when:** You opened the rewind menu by accident or changed your mind.
+**使用场景：** 会话太长，你想压缩历史。
 
 ```
-Result: Returns to current state with no changes
+场景：你已经工作了 2 小时，上下文
+      变得臃肿，但不想丢失一切。
+
+结果：Claude 生成会话摘要
+      摘要替换从 checkpoint 开始的消息
+      原始消息保留在转录中
+      上下文窗口释放
+```
+
+你可以可选地提供指令来聚焦摘要：
+
+```
+用户: 从此处开始摘要，聚焦于 API 设计决策
+```
+
+### 5. 没关系
+
+**使用场景：** 你不小心打开了回滚菜单或改变了主意。
+
+```
+结果：返回当前状态，不做任何更改
 ```
 
 ---
 
-## Automatic Checkpoints
+## 自动 Checkpoints
 
-Claude Code automatically creates checkpoints for you:
+Claude Code 自动为你创建 checkpoints：
 
-| Trigger | Behavior |
-|---------|----------|
-| Every user prompt | New checkpoint created automatically |
-| Session persistence | Checkpoints saved across sessions |
-| Auto-cleanup | Checkpoints older than 30 days removed |
+| 触发条件 | 行为 |
+|----------|------|
+| 每个用户提示 | 自动创建新 checkpoint |
+| 会话持久化 | checkpoints 跨会话保存 |
+| 自动清理 | 超过 30 天的 checkpoints 被删除 |
 
-This means you can always rewind to any previous point in your conversation, from a few minutes ago to days before.
+这意味着你始终可以回滚到会话中的任何先前时刻，从几分钟前到几天前。
 
-### Configuration
+### 配置
 
-You can toggle automatic checkpoints in your settings:
+你可以在设置中切换自动 checkpoints：
 
 ```json
 {
@@ -244,303 +244,303 @@ You can toggle automatic checkpoints in your settings:
 }
 ```
 
-- `autoCheckpoint`: Enable or disable automatic checkpoint creation on every user prompt (default: `true`)
+- `autoCheckpoint`：启用或禁用每个用户提示上的自动 checkpoint 创建（默认：`true`）
 
 ---
 
-## Workflow Templates
+## 工作流模板
 
-Here are three ready-to-use checkpoint workflows for common scenarios.
+以下是三个用于常见场景的即用型 checkpoint 工作流。
 
-### Template 1: Safe Refactoring Workflow
+### 模板 1：安全重构工作流
 
-Use this workflow when making significant changes to existing code.
+在对现有代码进行重大更改时使用此工作流。
 
 ```mermaid
 sequenceDiagram
-    participant U as User
+    participant U as 用户
     participant C as Claude Code
-    participant CP as Checkpoint System
+    participant CP as Checkpoint 系统
     
-    U->>C: Request refactor
-    Note over C,CP: Auto-checkpoint created
+    U->>C: 请求重构
+    Note over C,CP: 自动 checkpoint 已创建
     
-    C->>U: Making changes to auth module...
-    C->>U: Modified 8 files
+    C->>U: 正在对认证模块进行更改...
+    C->>U: 已修改 8 个文件
     
-    U->>C: Run tests
-    C->>U: 5 tests failed!
+    U->>C: 运行测试
+    C->>U: 5 个测试失败！
     
-    U->>CP: Press Esc+Esc
-    CP->>U: Show checkpoints
+    U->>CP: 按 Esc+Esc
+    CP->>U: 显示 checkpoints
     
-    U->>CP: Select pre-refactor checkpoint
-    U->>CP: Choose "Restore code and conversation"
+    U->>CP: 选择重构前的 checkpoint
+    U->>CP: 选择"恢复代码和会话"
     
-    CP->>U: Restored to checkpoint
-    Note over U: Clean slate, ready to try again
+    CP->>U: 已恢复到 checkpoint
+    Note over U: 干净的状态，准备再试一次
     
-    U->>C: Let's refactor more carefully this time
+    U->>C: 这次让我们更谨慎地重构
 ```
 
-**Try It Now:**
+**立即尝试：**
 
-Context: You're about to make a potentially risky change to your authentication module.
+上下文：你即将对认证模块进行可能有风险的操作。
 
-1. Start a potentially risky operation:
+1. 开始一个可能有风险的操作：
    ```
-   You: Refactor the database layer to use connection pooling
+   你: 重构数据库层以使用连接池
    ```
 
-2. If something goes wrong, press `Esc` twice and select the checkpoint before the refactor.
+2. 如果出现问题，按两次 `Esc` 并选择重构前的 checkpoint。
 
-3. Choose "Restore code and conversation" for a clean slate.
+3. 选择"恢复代码和会话"获得干净的状态。
 
-Expected Output: All changes reverted, conversation reset to pre-refactor state.
+预期输出：所有更改已还原，会话重置到重构前状态。
 
-### Template 2: A/B Testing Workflow
+### 模板 2：A/B 测试工作流
 
-Use this workflow when you want to compare two different approaches.
+当你想要比较两种不同方法时使用此工作流。
 
 ```mermaid
 flowchart LR
-    A[Starting Point] --> B[Implement Approach A]
-    B --> C[Save Results A]
-    C --> D[Rewind to Start]
-    D --> E[Implement Approach B]
-    E --> F[Save Results B]
-    F --> G[Compare A vs B]
-    G --> H[Choose Winner]
+    A[起始点] --> B[实现方法 A]
+    B --> C[保存结果 A]
+    C --> D[回滚到起点]
+    D --> E[实现方法 B]
+    E --> F[保存结果 B]
+    F --> G[比较 A vs B]
+    G --> H[选择胜者]
 ```
 
-**Step-by-step:**
+**分步操作：**
 
-1. **Document your starting checkpoint:**
+1. **记录你的起始 checkpoint：**
    ```
-   You: I'm at checkpoint "feature-start-001"
-   Claude: Noted. Current state saved.
+   你: 我在 checkpoint "feature-start-001"
+   Claude: 已记录。当前状态已保存。
    ```
 
-2. **Implement Approach A:**
+2. **实现方法 A：**
    ```
-   You: Implement caching with Redis
-   Claude: [Implements Redis caching]
+   你: 用 Redis 实现缓存
+   Claude: [实现 Redis 缓存]
    
-   You: Run benchmarks
-   Claude: Average response time: 45ms
+   你: 运行基准测试
+   Claude: 平均响应时间：45ms
    ```
 
-3. **Save your results:**
+3. **保存你的结果：**
    ```
-   You: Document: Redis approach gives 45ms response time
+   你: 记录：Redis 方法给出 45ms 响应时间
    ```
 
-4. **Rewind and try Approach B:**
+4. **回滚并尝试方法 B：**
    ```
-   You: [Press Esc+Esc, rewind to "feature-start-001"]
-   You: Implement caching with in-memory cache
-   Claude: [Implements in-memory caching]
+   你: [按 Esc+Esc，回滚到 "feature-start-001"]
+   你: 用内存缓存实现缓存
+   Claude: [实现内存缓存]
    
-   You: Run benchmarks
-   Claude: Average response time: 12ms
+   你: 运行基准测试
+   Claude: 平均响应时间：12ms
    ```
 
-5. **Compare and choose:**
+5. **比较并选择：**
    ```
-   You: In-memory is 3x faster. Let's go with that.
+   你: 内存缓存快 3 倍。就用那个。
    ```
 
-**Try It Now:**
+**立即尝试：**
 
-Context: You need to compare two different sorting algorithms for your data processing pipeline.
+上下文：你需要为数据处理管道比较两种不同的排序算法。
 
 ```
-You: I want to compare two sorting algorithms. 
-     Current checkpoint is my baseline.
+你: 我想比较两种排序算法。 
+     当前 checkpoint 是我的基线。
 
-Claude: Ready to implement first algorithm.
+Claude: 准备实现第一个算法。
 
-You: Implement quicksort and run the benchmark suite.
+你: 实现快速排序并运行基准测试套件。
 
-[Claude runs benchmark, reports results]
+[Claude 运行基准测试，报告结果]
 
-You: Great, results saved. Now I'll rewind and try mergesort.
+你: 很好，结果已保存。现在我要回滚并尝试归并排序。
 
-[Press Esc+Esc, rewind to baseline]
+[按 Esc+Esc，回滚到基线]
 
-You: Implement mergesort and run the same benchmark.
+你: 实现归并排序并运行相同的基准测试。
 ```
 
-Expected Output: Two benchmark results to compare, no code conflicts.
+预期输出：两个基准测试结果可供比较，无代码冲突。
 
-### Template 3: Disaster Recovery Workflow
+### 模板 3：灾难恢复工作流
 
-Use this workflow when something has gone terribly wrong.
+当发生严重问题时使用此工作流。
 
 ```mermaid
 stateDiagram-v2
     [*] --> NormalWork
-    NormalWork --> Disaster: Something breaks
+    NormalWork --> Disaster: 某些东西坏了
     
-    Disaster --> Panic: Don't panic!
-    Panic --> Assess: Take a breath
-    Assess --> Rewind: Use checkpoints
+    Disaster --> Panic: 不要惊慌！
+    Panic --> Assess: 深呼吸
+    Assess --> Rewind: 使用 checkpoints
     
-    Rewind --> SelectPoint: Open checkpoint browser
-    SelectPoint --> ChooseRestore: Select safe point
-    ChooseRestore --> Restored: Apply restore
+    Rewind --> SelectPoint: 打开 checkpoint 浏览器
+    SelectPoint --> ChooseRestore: 选择安全点
+    ChooseRestore --> Restored: 应用恢复
     
-    Restored --> Verify: Check everything works
-    Verify --> NormalWork: All good!
-    Verify --> Rewind: Still broken, try earlier point
+    Restored --> Verify: 检查一切是否正常
+    Verify --> NormalWork: 都好了！
+    Verify --> Rewind: 还是坏了，尝试更早的点
 ```
 
-**Recovery Protocol:**
+**恢复流程：**
 
-1. **Don't panic.** Checkpoints have you covered.
+1. **不要惊慌。** Checkpoints 会保护你。
 
-2. **Assess the damage:**
+2. **评估损害：**
    ```
-   You: What just broke?
-   Claude: The deployment failed, 3 services are down,
-           and the database migration rolled back partially.
-   ```
-
-3. **Open checkpoint browser:**
-   ```
-   Press Esc+Esc (or /rewind)
+   你: 刚刚什么坏了？
+   Claude: 部署失败，3 个服务下线，
+           数据库迁移部分回滚。
    ```
 
-4. **Select a known-good checkpoint:**
-   - Look for checkpoints before the risky operation
-   - Check timestamps to find the right one
-   - "Restore code and conversation" for full rollback
-
-5. **Verify recovery:**
+3. **打开 checkpoint 浏览器：**
    ```
-   You: Run the test suite
-   Claude: All 847 tests passing.
+   按 Esc+Esc（或 /rewind）
    ```
 
-6. **Document what happened:**
+4. **选择一个已知良好的 checkpoint：**
+   - 寻找危险操作前的 checkpoints
+   - 检查时间戳找到正确的那个
+   - "恢复代码和会话"用于完全回滚
+
+5. **验证恢复：**
    ```
-   You: Note for future: Don't run migrations during peak traffic.
+   你: 运行测试套件
+   Claude: 所有 847 个测试通过。
+   ```
+
+6. **记录发生的事情：**
+   ```
+   你: 未来注意：不要在高峰流量期间运行迁移。
    ```
 
 ---
 
-## Integration with Planning Mode
+## 与规划模式的集成
 
-Planning Mode and Checkpoints work together as a powerful combination for complex tasks.
+规划模式和 Checkpoints 作为复杂任务的强大组合一起工作。
 
-### How They Complement Each Other
+### 它们如何互补
 
-| Feature | Planning Mode | Checkpoints |
-|---------|---------------|-------------|
-| **Purpose** | Structure approach before execution | Recover if execution fails |
-| **When to use** | Before starting complex work | When something goes wrong |
-| **Scope** | Future actions | Past states |
-| **Visibility** | Shows what will happen | Shows what happened |
+| 功能 | 规划模式 | Checkpoints |
+|------|----------|-------------|
+| **目的** | 在执行前结构化方法 | 如果执行失败则恢复 |
+| **何时使用** | 在开始复杂工作前 | 当出现问题时 |
+| **范围** | 未来动作 | 过去状态 |
+| **可见性** | 显示将要发生什么 | 显示发生了什么 |
 
-### Recommended Workflow
+### 推荐工作流
 
 ```mermaid
 flowchart TD
-    A[Complex Task] --> B[Enable Planning Mode]
-    B --> C[Note checkpoint ID]
-    C --> D[Review plan]
+    A[复杂任务] --> B[启用规划模式]
+    B --> C[记录 checkpoint ID]
+    C --> D[审查计划]
     
-    D --> E{Plan looks good?}
-    E -->|No| F[Refine plan]
+    D --> E{计划看起来好？}
+    E -->|否| F[修订计划]
     F --> D
     
-    E -->|Yes| G[Execute plan]
-    G --> H{Execution successful?}
+    E -->|是| G[执行计划]
+    G --> H{执行成功？}
     
-    H -->|Yes| I[Commit changes]
-    H -->|No| J[Rewind to checkpoint]
-    J --> K[Revise plan]
+    H -->|是| I[提交更改]
+    H -->|否| J[回滚到 checkpoint]
+    J --> K[修订计划]
     K --> D
 ```
 
-### Example: Planning + Checkpoints in Action
+### 示例：规划 + Checkpoints 实战
 
 ```
-You: /plan Refactor the authentication system to support 
-     multi-tenancy. This is complex and touches 20+ files.
+你: /plan 重构认证系统以支持 
+     多租户。这很复杂，涉及 20+ 个文件。
 
-Claude: [Planning Mode enabled]
-        Creating implementation plan...
+Claude: [规划模式已启用]
+        创建实施计划...
         
-        Plan:
-        1. Update User model for tenant association
-        2. Modify auth middleware for tenant context
-        3. Update session management
-        4. Migrate existing data
-        5. Update tests
+        计划：
+        1. 更新 User 模型以进行租户关联
+        2. 修改认证中间件以处理租户上下文
+        3. 更新会话管理
+        4. 迁移现有数据
+        5. 更新测试
         
-        Note: Current checkpoint is "auth-multitenant-start"
+        注意：当前 checkpoint 是 "auth-multitenant-start"
 
-You: Plan approved. Execute.
+你: 计划批准。执行。
 
-Claude: [Executes plan step by step]
-        Step 1 complete...
-        Step 2 complete...
-        Step 3 failed! Migration error.
+Claude: [逐步执行计划]
+        步骤 1 完成...
+        步骤 2 完成...
+        步骤 3 失败！迁移错误。
 
-You: [Press Esc+Esc] Rewind to "auth-multitenant-start"
+你: [按 Esc+Esc] 回滚到 "auth-multitenant-start"
 
-Claude: Restored to checkpoint. 
-        The issue was in step 3 - let's adjust the plan.
+Claude: 已恢复到 checkpoint。 
+        问题在步骤 3 —— 让我们调整计划。
 
-You: /plan Revise step 3 to handle the migration error
+你: /plan 修订步骤 3 以处理迁移错误
 
-Claude: [Planning Mode enabled]
-        Revised plan for step 3...
+Claude: [规划模式已启用]
+        步骤 3 的修订计划...
 ```
 
-### Key Integration Points
+### 关键集成点
 
-1. **Before Planning:** Note your checkpoint ID
-2. **During Planning:** Reference the checkpoint for rollback
-3. **After Planning:** If plan fails, rewind and revise
+1. **规划前：** 记录你的 checkpoint ID
+2. **规划中：** 参考 checkpoint 以便回滚
+3. **规划后：** 如果计划失败，回滚并修订
 
 ---
 
-## Checkpoint Lifecycle
+## Checkpoint 生命周期
 
-Understanding the full lifecycle helps you use checkpoints effectively.
+理解完整生命周期有助于你有效使用 checkpoints。
 
 ```mermaid
 flowchart TD
-    subgraph Creation
-        A[User Message Sent] --> B[Checkpoint Created]
-        B --> C[Stored in Session]
+    subgraph Creation[创建]
+        A[用户消息发送] --> B[Checkpoint 创建]
+        B --> C[存储在会话中]
     end
     
-    subgraph Storage
-        C --> D{Already exists?}
-        D -->|No| E[Save to Disk]
-        D -->|Yes| F[Update Existing]
-        E --> G[Indexed by Timestamp]
+    subgraph Storage[存储]
+        C --> D{已存在？}
+        D -->|否| E[保存到磁盘]
+        D -->|是| F[更新现有]
+        E --> G[按时间戳索引]
         F --> G
     end
     
-    subgraph Usage
-        G --> H[Available for Rewind]
-        H --> I{User Rewinds?}
-        I -->|Yes| J[Load Checkpoint]
-        J --> K[Restore State]
-        K --> L[Continue Session]
-        I -->|No| M[Continue Working]
+    subgraph Usage[使用]
+        G --> H[可用于回滚]
+        H --> I{用户回滚？}
+        I -->|是| J[加载 Checkpoint]
+        J --> K[恢复状态]
+        K --> L[继续会话]
+        I -->|否| M[继续工作]
         M --> A
     end
     
-    subgraph Cleanup
-        N[Cleanup Process] --> O{Age > 30 days?}
-        O -->|Yes| P[Mark for Deletion]
-        O -->|No| Q[Retain]
-        P --> R[Delete from Disk]
+    subgraph Cleanup[清理]
+        N[清理进程] --> O{年龄 > 30 天？}
+        O -->|是| P[标记删除]
+        O -->|否| Q[保留]
+        P --> R[从磁盘删除]
         Q --> H
     end
     
@@ -549,719 +549,719 @@ flowchart TD
 
 ---
 
-## Try It Now: Checkpoint Explorer
+## 立即尝试：Checkpoint 探索器
 
-**Goal:** Familiarize yourself with the checkpoint interface and understand what information is available.
+**目标：** 熟悉 checkpoint 界面并了解可用的信息。
 
-Context: You want to see what checkpoints exist in your current session and learn what details they contain.
+上下文：你想查看当前会话中存在的 checkpoints 并了解它们包含的详细信息。
 
-1. Open the checkpoint browser:
+1. 打开 checkpoint 浏览器：
    ```
-   Press Esc twice (Esc + Esc)
+   按两次 Esc（Esc + Esc）
    ```
    
-   Or use the slash command:
+   或使用 slash 命令：
    ```
    /rewind
    ```
 
-2. Browse the checkpoint list:
-   - Note the timestamps for each checkpoint
-   - Look at the number of messages at each point
-   - See which files were modified
+2. 浏览 checkpoint 列表：
+   - 注意每个 checkpoint 的时间戳
+   - 查看每个时刻的消息数量
+   - 查看哪些文件被修改
 
-3. Select a checkpoint (don't restore yet):
-   - Read the checkpoint details
-   - See what tools were used
-   - Understand the scope of changes
+3. 选择一个 checkpoint（暂不恢复）：
+   - 阅读 checkpoint 详情
+   - 查看使用了什么工具
+   - 理解更改范围
 
-4. Cancel and return:
-   - Choose "Never mind" to return without changes
+4. 取消并返回：
+   - 选择"没关系"不做更改返回
 
-Expected Output: You should see a list of checkpoints with timestamps and details. No changes made to your session.
+预期输出：你应该看到带有时间戳和详情的 checkpoint 列表。你的会话未做任何更改。
 
-**Pro tip:** Get in the habit of opening the checkpoint browser periodically to understand what recovery points are available. This builds muscle memory for when you actually need to rewind.
+**专业提示：** 养成定期打开 checkpoint 浏览器的习惯，以了解可用的恢复点。这在你真正需要回滚时建立肌肉记忆。
 
 ---
 
-### Lifecycle Stages
+### 生命周期阶段
 
-| Stage | Description | Duration |
-|-------|-------------|----------|
-| **Creation** | Auto-created with each user prompt | Instant |
-| **Active** | Available for rewind operations | Session lifetime |
-| **Retention** | Stored for future sessions | Up to 30 days |
-| **Cleanup** | Automatically removed after 30 days | Scheduled |
+| 阶段 | 描述 | 持续时间 |
+|------|------|----------|
+| **创建** | 每个用户提示自动创建 | 即时 |
+| **活跃** | 可用于回滚操作 | 会话生命周期 |
+| **保留** | 为未来会话存储 | 最长 30 天 |
+| **清理** | 30 天后自动删除 | 已调度 |
 
-### What's Captured at Each Checkpoint
+### 每个 Checkpoint 捕获的内容
 
 ```
-Checkpoint "auth-refactor-start" created at 2024-01-15 14:23:45
-├── Messages: 47 (user: 23, assistant: 24)
-├── Files Modified: 8
-│   ├── src/auth/login.ts (modified)
-│   ├── src/auth/middleware.ts (modified)
-│   ├── src/models/user.ts (modified)
+Checkpoint "auth-refactor-start" 创建于 2024-01-15 14:23:45
+├── 消息：47（用户：23，助手：24）
+├── 已修改文件：8
+│   ├── src/auth/login.ts（已修改）
+│   ├── src/auth/middleware.ts（已修改）
+│   ├── src/models/user.ts（已修改）
 │   └── ...
-├── Tools Used: Edit (23), Bash (8), Read (15)
-└── Session Context: Available
+├── 使用工具：Edit（23），Bash（8），Read（15）
+└── 会话上下文：可用
 ```
 
 ---
 
-## Try It Now: Hands-On Exercises
+## 立即尝试：动手练习
 
-### Exercise 1: Basic Rewind
+### 练习 1：基本回滚
 
-**Goal:** Experience the checkpoint workflow firsthand.
+**目标：** 亲身体验 checkpoint 工作流。
 
-Context: You want to understand how checkpoints work by making a reversible change.
+上下文：你想通过做出一个可逆更改来理解 checkpoints 如何工作。
 
-1. Make a change:
+1. 做一个更改：
    ```
-   You: Add a comment to the top of README.md that says "Temporary test"
-   ```
-
-2. Verify the change:
-   ```
-   You: Read the first line of README.md
-   Claude: "Temporary test" is at the top.
+   你: 在 README.md 顶部添加一个注释，内容是"临时测试"
    ```
 
-3. Rewind:
-   - Press `Esc` twice
-   - Select the checkpoint from before step 1
-   - Choose "Restore code and conversation"
-
-4. Verify the rewind:
+2. 验证更改：
    ```
-   You: Read the first line of README.md
-   Claude: The original first line is back.
+   你: 读取 README.md 的第一行
+   Claude: "临时测试"在顶部。
    ```
 
-Expected Output: After step 2, the comment is visible. After step 4, the comment is gone and original content is restored.
+3. 回滚：
+   - 按两次 `Esc`
+   - 选择步骤 1 之前的 checkpoint
+   - 选择"恢复代码和会话"
 
-### Exercise 2: Branching Exploration
-
-**Goal:** Use checkpoints to explore two different approaches.
-
-Context: You're designing a button component and want to compare styling options.
-
-1. Note your starting point:
+4. 验证回滚：
    ```
-   You: I'm at checkpoint "exploration-base". I want to try 
-        two different button styles.
+   你: 读取 README.md 的第一行
+   Claude: 原始第一行回来了。
    ```
 
-2. Implement Style A:
+预期输出：步骤 2 后，注释可见。步骤 4 后，注释消失，原始内容恢复。
+
+### 练习 2：分支探索
+
+**目标：** 使用 checkpoints 探索两种不同方法。
+
+上下文：你在设计一个按钮组件，想比较样式选项。
+
+1. 记录你的起始点：
    ```
-   You: Style the button with a gradient background
-   Claude: [Adds gradient CSS]
+   你: 我在 checkpoint "exploration-base"。我想尝试 
+       两种不同的按钮样式。
    ```
 
-3. Document results:
+2. 实现样式 A：
    ```
-   You: Style A: Gradient background applied
+   你: 用渐变背景样式化按钮
+   Claude: [添加渐变 CSS]
    ```
 
-4. Rewind and try Style B:
+3. 记录结果：
    ```
-   [Press Esc+Esc, rewind to "exploration-base"]
+   你: 样式 A：渐变背景已应用
+   ```
+
+4. 回滚并尝试样式 B：
+   ```
+   [按 Esc+Esc，回滚到 "exploration-base"]
    
-   You: Style the button with a solid color and shadow
-   Claude: [Adds solid color CSS]
+   你: 用实色和阴影样式化按钮
+   Claude: [添加实色 CSS]
    ```
 
-5. Compare:
+5. 比较：
    ```
-   You: Which style looks better for our brand?
-   Claude: I can describe both if you remind me what 
-           Style A looked like...
-   ```
-
-Expected Output: You have two different implementations to choose from, no code conflicts because each was tested independently.
-
-### Exercise 3: Recovery Practice
-
-**Goal:** Practice recovering from a "broken" state.
-
-Context: You accidentally made a destructive change and need to recover quickly.
-
-1. Create a deliberate problem:
-   ```
-   You: Delete the entire src/ directory
-   Claude: [Deletes src/ directory]
+   你: 哪种样式更适合我们的品牌？
+   Claude: 如果你提醒我样式 A 
+           看起来什么样，我可以描述两者...
    ```
 
-2. Panic (just kidding):
+预期输出：你有两个不同的实现可供选择，无代码冲突，因为每个都是独立测试的。
+
+### 练习 3：恢复练习
+
+**目标：** 练习从"损坏"状态恢复。
+
+上下文：你意外做了一个破坏性更改，需要快速恢复。
+
+1. 故意制造问题：
    ```
-   You: Oh no! I need that back!
+   你: 删除整个 src/ 目录
+   Claude: [删除 src/ 目录]
    ```
 
-3. Recover:
+2. 惊慌（开玩笑）：
    ```
-   [Press Esc+Esc]
-   [Select checkpoint before the deletion]
-   [Choose "Restore code only"]
+   你: 糟糕！我需要把它恢复回来！
    ```
 
-4. Verify:
+3. 恢复：
    ```
-   You: List files in src/
-   Claude: All files restored.
+   [按 Esc+Esc]
+   [选择删除前的 checkpoint]
+   [选择"仅恢复代码"]
    ```
 
-Expected Output: Directory restored to pre-deletion state, no permanent damage.
+4. 验证：
+   ```
+   你: 列出 src/ 中的文件
+   Claude: 所有文件已恢复。
+   ```
+
+预期输出：目录恢复到删除前状态，无永久损坏。
 
 ---
 
-## Patterns & Recipes
+## 模式与配方
 
-### Pattern 1: Branching Exploration
+### 模式 1：分支探索
 
-**When to use:** Comparing multiple implementation approaches.
+**何时使用：** 比较多种实现方法。
 
-**Recipe:**
+**配方：**
 
 ```
-1. Document starting checkpoint
-2. Implement Approach A
-3. Record results/metrics
-4. Rewind to start
-5. Implement Approach B
-6. Record results/metrics
-7. Compare and choose winner
+1. 记录起始 checkpoint
+2. 实现方法 A
+3. 记录结果/指标
+4. 回滚到起点
+5. 实现方法 B
+6. 记录结果/指标
+7. 比较并选择胜者
 ```
 
-**Example:**
+**示例：**
 
 ```markdown
-# Comparison: Database Connection Strategies
+# 比较：数据库连接策略
 
-## Baseline Checkpoint: "db-optimization-start"
+## 基线 Checkpoint："db-optimization-start"
 
-### Approach A: Connection Pooling
-- Checkpoint: "db-pooling-complete"
-- Connection time: 2ms avg
-- Memory: +15MB
-- Complexity: Low
+### 方法 A：连接池
+- Checkpoint："db-pooling-complete"
+- 连接时间：2ms 平均
+- 内存：+15MB
+- 复杂度：低
 
-### Approach B: Connection Multiplexing
-- Checkpoint: "db-multiplex-complete"
-- Connection time: 1.5ms avg
-- Memory: +8MB
-- Complexity: Medium
+### 方法 B：连接复用
+- Checkpoint："db-multiplex-complete"
+- 连接时间：1.5ms 平均
+- 内存：+8MB
+- 复杂度：中
 
-## Decision: Approach B
-- 25% faster connections
-- Lower memory footprint
-- Complexity acceptable for our use case
+## 决策：方法 B
+- 连接快 25%
+- 更低的内存占用
+- 复杂度对我们的用例可接受
 ```
 
-### Pattern 2: Safe Refactoring
+### 模式 2：安全重构
 
-**When to use:** Making significant changes to existing code.
+**何时使用：** 对现有代码进行重大更改。
 
-**Recipe:**
-
-```
-1. Run tests, ensure passing
-2. Note checkpoint ID
-3. Make small, focused change
-4. Run tests immediately
-5. If failing: rewind, adjust approach
-6. If passing: commit, note new checkpoint
-7. Repeat for next change
-```
-
-**Example:**
+**配方：**
 
 ```
-You: All tests passing. Checkpoint: "refactor-step-0"
-
-You: Extract the validation logic into a separate function
-Claude: [Extracts validation to validateInput()]
-
-You: Run tests
-Claude: 3 tests failing in validation module
-
-You: [Rewind to "refactor-step-0"]
-
-You: Let's extract it differently - keep the signature the same
-Claude: [Extracts with same signature]
-
-You: Run tests
-Claude: All tests passing. Checkpoint: "refactor-step-1"
-
-You: Great, commit this step and continue.
+1. 运行测试，确保通过
+2. 记录 checkpoint ID
+3. 做出小而专注的更改
+4. 立即运行测试
+5. 如果失败：回滚，调整方法
+6. 如果通过：提交，记录新 checkpoint
+7. 对下一个更改重复
 ```
 
-### Pattern 3: Recovery Protocol
-
-**When to use:** Something has gone wrong and you need to recover.
-
-**Recipe:**
+**示例：**
 
 ```
-1. Stop! Don't make more changes.
-2. Assess: What's broken?
-3. Open checkpoint browser (Esc+Esc)
-4. Find last known-good checkpoint
-5. Choose appropriate restore option:
-   - "Code and conversation" for full rollback
-   - "Code only" if conversation was helpful
-   - "Conversation only" if code is fine
-6. Verify recovery with tests
-7. Document what went wrong
-8. Resume with revised approach
+你: 所有测试通过。Checkpoint："refactor-step-0"
+
+你: 将验证逻辑提取到单独的函数
+Claude: [将验证提取到 validateInput()]
+
+你: 运行测试
+Claude: 验证模块中 3 个测试失败
+
+你: [回滚到 "refactor-step-0"]
+
+你: 让我们用不同方式提取 —— 保持签名相同
+Claude: [用相同签名提取]
+
+你: 运行测试
+Claude: 所有测试通过。Checkpoint："refactor-step-1"
+
+你: 很好，提交这一步并继续。
 ```
 
-**Example Recovery Log:**
+### 模式 3：恢复流程
+
+**何时使用：** 出了问题需要恢复。
+
+**配方：**
+
+```
+1. 停止！不要做更多更改。
+2. 评估：什么坏了？
+3. 打开 checkpoint 浏览器（Esc+Esc）
+4. 找到最后已知良好的 checkpoint
+5. 选择适当的恢复选项：
+   - "代码和会话"用于完全回滚
+   - "仅代码"如果会话有帮助
+   - "仅会话"如果代码正常
+6. 用测试验证恢复
+7. 记录哪里出了问题
+8. 用修订的方法继续
+```
+
+**示例恢复日志：**
 
 ```markdown
-# Recovery Log: 2024-01-15
+# 恢复日志：2024-01-15
 
-## Incident
-- Attempted: Database schema migration during peak traffic
-- Result: Connection pool exhausted, 500 errors
-- Checkpoint: "pre-migration-stable"
+## 事故
+- 尝试：高峰流量期间数据库架构迁移
+- 结果：连接池耗尽，500 错误
+- Checkpoint："pre-migration-stable"
 
-## Recovery
-- Rewound to: "pre-migration-stable"
-- Restore type: Code and conversation
-- Verification: All health checks passing
+## 恢复
+- 回滚到："pre-migration-stable"
+- 恢复类型：代码和会话
+- 验证：所有健康检查通过
 
-## Lessons Learned
-- Never migrate during peak hours
-- Add connection pool monitoring
-- Test migration on staging first
+## 经验教训
+- 永不在高峰时段迁移
+- 添加连接池监控
+- 先在 staging 测试迁移
 
-## Next Steps
-- Schedule migration for off-peak hours
-- Add rollback procedure to runbook
+## 下一步
+- 在非高峰时段调度迁移
+- 添加回滚流程到运维手册
 ```
 
-### Pattern 4: Incremental Checkpoint Naming
+### 模式 4：增量 Checkpoint 命名
 
-**When to use:** Complex multi-step operations.
+**何时使用：** 复杂的多步操作。
 
-**Recipe:**
-
-```
-1. Before each major step, note the checkpoint
-2. Use descriptive labels in your messages:
-   "Checkpoint: step-1-models-complete"
-   "Checkpoint: step-2-routes-complete"
-   "Checkpoint: step-3-tests-passing"
-3. If step 3 fails, rewind to step 2
-```
-
-**Example:**
+**配方：**
 
 ```
-You: Starting feature implementation.
-     Checkpoint: "feature-start"
-
-Claude: [Implements models]
-        Models created and migrated.
-
-You: Tests passing. Checkpoint: "feature-models-done"
-
-Claude: [Implements routes]
-        Routes added.
-
-You: Tests passing. Checkpoint: "feature-routes-done"
-
-Claude: [Implements controllers]
-        Controllers added.
-
-You: Tests failing! Rewind to "feature-routes-done"
-
-Claude: [Restored] What went wrong with the controllers?
-
-You: Let's implement them more carefully this time.
+1. 在每个主要步骤前，记录 checkpoint
+2. 在你的消息中使用描述性标签：
+   "Checkpoint：step-1-models-complete"
+   "Checkpoint：step-2-routes-complete"
+   "Checkpoint：step-3-tests-passing"
+3. 如果步骤 3 失败，回滚到步骤 2
 ```
 
-### Pattern 5: Checkpoint as Documentation
-
-**When to use:** Collaborating or documenting decision points.
-
-**Recipe:**
+**示例：**
 
 ```
-1. At key decision points, note the checkpoint
-2. Record the decision made
-3. If revisiting later, checkpoint serves as reference
+你: 开始功能实现。
+     Checkpoint："feature-start"
+
+Claude: [实现模型]
+        模型已创建并迁移。
+
+你: 测试通过。Checkpoint："feature-models-done"
+
+Claude: [实现路由]
+        路由已添加。
+
+你: 测试通过。Checkpoint："feature-routes-done"
+
+Claude: [实现控制器]
+        控制器已添加。
+
+你: 测试失败！回滚到 "feature-routes-done"
+
+Claude: [已恢复] 控制器哪里出了问题？
+
+你: 这次让我们更仔细地实现它们。
 ```
 
-**Example:**
+### 模式 5：Checkpoint 作为文档
+
+**何时使用：** 协作或记录决策点。
+
+**配方：**
+
+```
+1. 在关键决策点，记录 checkpoint
+2. 记录做出的决策
+3. 如果稍后回顾，checkpoint 作为参考
+```
+
+**示例：**
 
 ```markdown
-# Decision Log
+# 决策日志
 
-## 2024-01-15: API Versioning Strategy
+## 2024-01-15：API 版本策略
 
-**Checkpoint:** "api-versioning-decision"
+**Checkpoint：**"api-versioning-decision"
 
-**Options considered:**
-- A: URL path versioning (/v1/users)
-- B: Query parameter versioning (/users?version=1)
-- C: Header versioning (Accept: application/vnd.api.v1+json)
+**考虑的选项：**
+- A：URL 路径版本化（/v1/users）
+- B：查询参数版本化（/users?version=1）
+- C：头部版本化（Accept：application/vnd.api.v1+json）
 
-**Decision:** Option A - URL path versioning
-**Rationale:** Simpler for clients, easier to cache
+**决策：**选项 A - URL 路径版本化
+**理由：**对客户端更简单，更容易缓存
 
-**To revisit:**
-Rewind to checkpoint "api-versioning-decision" and 
-try option B for comparison.
+**回顾：**
+回滚到 checkpoint "api-versioning-decision" 并 
+尝试选项 B 进行比较。
 ```
 
 ---
 
-## Use Cases
+## 用例
 
-| Scenario | Workflow |
-|----------|----------|
-| **Exploring Approaches** | Save → Try A → Save → Rewind → Try B → Compare |
-| **Safe Refactoring** | Save → Refactor → Test → If fail: Rewind |
-| **A/B Testing** | Save → Design A → Save → Rewind → Design B → Compare |
-| **Mistake Recovery** | Notice issue → Rewind to last good state |
-| **Long Running Tasks** | Checkpoint at milestones → Rewind if later steps fail |
-
----
-
-## Using Checkpoints
-
-### Viewing and Rewinding
-
-Press `Esc` twice or use `/rewind` to open the checkpoint browser. You'll see a list of all available checkpoints with timestamps. Select any checkpoint to rewind to that state.
-
-### Checkpoint Details
-
-Each checkpoint shows:
-- Timestamp of when it was created
-- Files that were modified
-- Number of messages in the conversation
-- Tools that were used
+| 场景 | 工作流 |
+|------|--------|
+| **探索方法** | 保存 → 尝试 A → 保存 → 回滚 → 尝试 B → 比较 |
+| **安全重构** | 保存 → 重构 → 测试 → 如果失败：回滚 |
+| **A/B 测试** | 保存 → 设计 A → 保存 → 回滚 → 设计 B → 比较 |
+| **错误恢复** | 注意问题 → 回滚到最后良好状态 |
+| **长期任务** | 在里程碑处 checkpoint → 如果后续步骤失败则回滚 |
 
 ---
 
-## Practical Examples
+## 使用 Checkpoints
 
-### Example 1: Exploring Different Approaches
+### 查看和回滚
 
-```
-User: Let's add a caching layer to the API
+按两次 `Esc` 或使用 `/rewind` 打开 checkpoint 浏览器。你会看到所有可用 checkpoints 的列表及其时间戳。选择任何 checkpoint 回滚到该状态。
 
-Claude: I'll add Redis caching to your API endpoints...
-[Makes changes at checkpoint A]
+### Checkpoint 详情
 
-User: Actually, let's try in-memory caching instead
-
-Claude: I'll rewind to explore a different approach...
-[User presses Esc+Esc and rewinds to checkpoint A]
-[Implements in-memory caching at checkpoint B]
-
-User: Now I can compare both approaches
-```
-
-### Example 2: Recovering from Mistakes
-
-```
-User: Refactor the authentication module to use JWT
-
-Claude: I'll refactor the authentication module...
-[Makes extensive changes]
-
-User: Wait, that broke the OAuth integration. Let's go back.
-
-Claude: I'll help you rewind to before the refactoring...
-[User presses Esc+Esc and selects the checkpoint before the refactor]
-
-User: Let's try a more conservative approach this time
-```
-
-### Example 3: Safe Experimentation
-
-```
-User: Let's try rewriting this in a functional style
-[Creates checkpoint before experiment]
-
-Claude: [Makes experimental changes]
-
-User: The tests are failing. Let's rewind.
-[User presses Esc+Esc and rewinds to the checkpoint]
-
-Claude: I've rewound the changes. Let's try a different approach.
-```
-
-### Example 4: Branching Approaches
-
-```
-User: I want to compare two database designs
-[Takes note of checkpoint - call it "Start"]
-
-Claude: I'll create the first design...
-[Implements Schema A]
-
-User: Now let me go back and try the second approach
-[User presses Esc+Esc and rewinds to "Start"]
-
-Claude: Now I'll implement Schema B...
-[Implements Schema B]
-
-User: Great! Now I have both schemas to choose from
-```
-
-### Example 5: Incremental Feature Development
-
-```
-User: I'm building a new feature. Checkpoint: "feature-start"
-
-Claude: [Implements step 1: Models]
-        Models created.
-
-User: Tests passing. Checkpoint: "feature-step-1"
-
-Claude: [Implements step 2: API routes]
-        Routes created.
-
-User: Tests passing. Checkpoint: "feature-step-2"
-
-Claude: [Implements step 3: Frontend]
-        UI created.
-
-User: Integration tests failing! Rewind to "feature-step-2"
-
-Claude: [Restored] The issue was in the API contract.
-        Let's fix that.
-
-User: Good. Tests passing. Checkpoint: "feature-step-3"
-```
+每个 checkpoint 显示：
+- 创建时的时间戳
+- 修改的文件
+- 会话中的消息数量
+- 使用的工具
 
 ---
 
-## Checkpoint Retention
+## 实际示例
 
-Claude Code automatically manages your checkpoints:
-
-| Policy | Details |
-|--------|---------|
-| Creation | Automatic with every user prompt |
-| Retention | Up to 30 days |
-| Cleanup | Automatic deletion of old checkpoints |
-| Storage | Local disk in Claude Code data directory |
-
----
-
-## Workflow Patterns
-
-### Branching Strategy for Exploration
-
-When exploring multiple approaches:
+### 示例 1：探索不同方法
 
 ```
-1. Start with initial implementation → Checkpoint A
-2. Try Approach 1 → Checkpoint B
-3. Rewind to Checkpoint A
-4. Try Approach 2 → Checkpoint C
-5. Compare results from B and C
-6. Choose best approach and continue
+用户: 让我们给 API 添加一个缓存层
+
+Claude: 我会给你的 API 端点添加 Redis 缓存...
+[在 checkpoint A 处做更改]
+
+用户: 实际上，让我们尝试内存缓存代替
+
+Claude: 我会回滚以探索不同的方法...
+[用户按 Esc+Esc 并回滚到 checkpoint A]
+[在 checkpoint B 处实现内存缓存]
+
+用户: 现在我可以比较两种方法
 ```
 
-### Safe Refactoring Pattern
-
-When making significant changes:
+### 示例 2：从错误恢复
 
 ```
-1. Current state → Checkpoint (auto)
-2. Start refactoring
-3. Run tests
-4. If tests pass → Continue working
-5. If tests fail → Rewind and try different approach
+用户: 重构认证模块以使用 JWT
+
+Claude: 我会重构认证模块...
+[做出大量更改]
+
+用户: 等等，那破坏了 OAuth 集成。让我们回去。
+
+Claude: 我会帮你回滚到重构前...
+[用户按 Esc+Esc 并选择重构前的 checkpoint]
+
+用户: 这次让我们尝试更保守的方法
+```
+
+### 示例 3：安全实验
+
+```
+用户: 让我们尝试用函数式风格重写这个
+[在实验前创建 checkpoint]
+
+Claude: [做出实验性更改]
+
+用户: 测试失败了。让我们回滚。
+[用户按 Esc+Esc 并回滚到 checkpoint]
+
+Claude: 我已回滚更改。让我们尝试不同的方法。
+```
+
+### 示例 4：分支方法
+
+```
+用户: 我想比较两种数据库设计
+[记录 checkpoint - 称之为"起点"]
+
+Claude: 我会创建第一个设计...
+[实现架构 A]
+
+用户: 现在让我回去尝试第二种方法
+[用户按 Esc+Esc 并回滚到"起点"]
+
+Claude: 现在我会实现架构 B...
+[实现架构 B]
+
+用户: 太好了！现在我有两个架构可供选择
+```
+
+### 示例 5：增量功能开发
+
+```
+用户: 我在构建一个新功能。Checkpoint："feature-start"
+
+Claude: [实现步骤 1：模型]
+        模型已创建。
+
+用户: 测试通过。Checkpoint："feature-step-1"
+
+Claude: [实现步骤 2：API 路由]
+        路由已创建。
+
+用户: 测试通过。Checkpoint："feature-step-2"
+
+Claude: [实现步骤 3：前端]
+        UI 已创建。
+
+用户: 集成测试失败！回滚到 "feature-step-2"
+
+Claude: [已恢复] 问题在 API 契约中。
+        让我们修复它。
+
+用户: 好的。测试通过。Checkpoint："feature-step-3"
 ```
 
 ---
 
-## Best Practices
+## Checkpoint 保留
 
-Since checkpoints are created automatically, you can focus on your work without worrying about manually saving state. However, keep these practices in mind:
+Claude Code 自动管理你的 checkpoints：
 
-### Using Checkpoints Effectively
-
-**Do:**
-- Review available checkpoints before rewinding
-- Use rewind when you want to explore different directions
-- Keep checkpoints to compare different approaches
-- Understand what each rewind option does (restore code and conversation, restore conversation, restore code, or summarize)
-- Note checkpoint IDs at important milestones
-- Document decisions made at each checkpoint
-
-**Don't:**
-- Rely on checkpoints alone for code preservation
-- Expect checkpoints to track external file system changes
-- Use checkpoints as a substitute for git commits
-- Forget to verify after rewinding
-- Skip testing after a rewind
-
-### Workflow Best Practices
-
-1. **Before Risky Operations:** Note your checkpoint ID
-2. **After Milestones:** Verify tests pass, note checkpoint
-3. **When Exploring:** Document results at each checkpoint
-4. **When Stuck:** Rewind to last known-good state
+| 策略 | 详情 |
+|------|------|
+| 创建 | 每个用户提示自动创建 |
+| 保留 | 最长 30 天 |
+| 清理 | 自动删除旧的 checkpoints |
+| 存储 | Claude Code 数据目录中的本地磁盘 |
 
 ---
 
-## Limitations
+## 工作流模式
 
-Checkpoints have the following limitations:
+### 用于探索的分支策略
 
-| Limitation | Impact | Mitigation |
-|------------|--------|------------|
-| **Bash command changes NOT tracked** | Operations like `rm`, `mv`, `cp` on the filesystem are not captured | Use with caution; verify after rewind |
-| **External changes NOT tracked** | Changes made outside Claude Code are not captured | Commit important changes to git |
-| **Not a replacement for version control** | No collaboration, history, or branching features | Use git for permanent changes |
-| **Session-scoped storage** | Not designed for long-term archival | Commit successful states to git |
-
-### What Checkpoints Don't Capture
+当探索多种方法时：
 
 ```
-NOT captured:
-├── Bash commands that modify filesystem (rm, mv, cp)
-├── Changes made in your editor
-├── Changes made in terminal outside Claude Code
-├── Git operations (commit, push, pull)
-└── Environment variable changes
+1. 从初始实现开始 → Checkpoint A
+2. 尝试方法 1 → Checkpoint B
+3. 回滚到 Checkpoint A
+4. 尝试方法 2 → Checkpoint C
+5. 比较 B 和 C 的结果
+6. 选择最佳方法并继续
+```
 
-CAPTURED:
-├── All user messages
-├── All assistant responses
-├── File changes made via Edit/Write tools
-├── Tool usage history
-└── Session context
+### 安全重构模式
+
+当做出重大更改时：
+
+```
+1. 当前状态 → Checkpoint（自动）
+2. 开始重构
+3. 运行测试
+4. 如果测试通过 → 继续工作
+5. 如果测试失败 → 回滚并尝试不同方法
 ```
 
 ---
 
-## Troubleshooting
+## 最佳实践
 
-### Missing Checkpoints
+由于 checkpoints 是自动创建的，你可以专注于工作，不必担心手动保存状态。然而，请记住这些实践：
 
-**Problem:** Expected checkpoint not found
+### 有效使用 Checkpoints
 
-**Solutions:**
-1. Check if checkpoints were cleared (manual cleanup or settings)
-2. Verify that `autoCheckpoint` is enabled in your settings
-3. Check available disk space
-4. Look for checkpoints with slightly different timestamps
+**应该：**
+- 在回滚前审查可用的 checkpoints
+- 当你想探索不同方向时使用回滚
+- 保留 checkpoints 以比较不同方法
+- 理解每个回滚选项的作用（恢复代码和会话、恢复会话、恢复代码或摘要）
+- 在重要里程碑记录 checkpoint IDs
+- 记录每个 checkpoint 处做出的决策
 
-**Debugging steps:**
+**不应该：**
+- 仅依赖 checkpoints 进行代码保存
+- 期望 checkpoints 跟踪外部文件系统更改
+- 使用 checkpoints 作为 git 提交的替代
+- 回滚后忘记验证
+- 回滚后跳过测试
 
-```
-You: /rewind
+### 工作流最佳实践
 
-[Checkpoint list appears]
-
-You: I don't see the checkpoint from 2 hours ago.
-
-Claude: Checkpoints are listed by timestamp. 
-        Let me help you find it...
-
-[Scroll through the list or search by date]
-```
-
-### Rewind Failed
-
-**Problem:** Cannot rewind to checkpoint
-
-**Solutions:**
-1. Ensure no uncommitted changes conflict with git
-2. Check if checkpoint is corrupted (rare)
-3. Try rewinding to a different checkpoint
-4. Restart Claude Code and try again
-
-**Error recovery:**
-
-```
-User: [Attempts to rewind]
-Error: Rewind failed - file conflict detected
-
-User: What do I do?
-
-Claude: The file has been modified outside this session.
-        Options:
-        1. Commit or stash your external changes
-        2. Try "Restore code only" to preserve conversation
-        3. Try an earlier checkpoint
-```
-
-### Checkpoint Corruption (Rare)
-
-**Problem:** Checkpoint data is corrupted or incomplete
-
-**Solutions:**
-1. Try a nearby checkpoint (before or after)
-2. Check disk for errors
-3. Restart Claude Code session
-4. As a last resort, start fresh session
+1. **危险操作前：** 记录你的 checkpoint ID
+2. **里程碑后：** 验证测试通过，记录 checkpoint
+3. **探索时：** 在每个 checkpoint 记录结果
+4. **卡住时：** 回滚到最后已知良好状态
 
 ---
 
-## Integration with Git
+## 限制
 
-Checkpoints complement (but don't replace) git:
+Checkpoints 有以下限制：
 
-| Feature | Git | Checkpoints |
-|---------|-----|-------------|
-| **Scope** | File system | Conversation + files |
-| **Persistence** | Permanent | Session-based (30 days) |
-| **Granularity** | Commits | Any point |
-| **Speed** | Slower (commit, push, pull) | Instant |
-| **Sharing** | Yes (remote repos) | Limited (export) |
-| **Branching** | Yes | Via rewind/try again |
-| **History** | Full commit history | Recent session only |
-| **Collaboration** | Multi-user | Single user |
+| 限制 | 影响 | 缓解措施 |
+|------|------|----------|
+| **Bash 命令更改不被跟踪** | `rm`、`mv`、`cp` 等文件系统操作不被捕获 | 谨慎使用；回滚后验证 |
+| **外部更改不被跟踪** | Claude Code 外部做出的更改不被捕获 | 将重要更改提交到 git |
+| **不是版本控制的替代** | 无协作、历史或分支功能 | 用 git 保存永久更改 |
+| **会话范围存储** | 不为长期归档设计 | 将成功状态提交到 git |
 
-### Recommended Integration Pattern
+### Checkpoints 不捕获的内容
 
 ```
-1. Use checkpoints for rapid experimentation
+不被捕获：
+├── 修改文件系统的 Bash 命令（rm, mv, cp）
+├── 在你的编辑器中做出的更改
+├── 在 Claude Code 外的终端中做出的更改
+├── Git 操作（commit, push, pull）
+└── 环境变量更改
+
+被捕获：
+├── 所有用户消息
+├── 所有助手响应
+├── 通过 Edit/Write 工具做出的文件更改
+├── 工具使用历史
+└── 会话上下文
+```
+
+---
+
+## 故障排查
+
+### Checkpoints 缺失
+
+**问题：** 预期的 checkpoint 未找到
+
+**解决方案：**
+1. 检查 checkpoints 是否被清除（手动清理或设置）
+2. 验证设置中 `autoCheckpoint` 已启用
+3. 检查可用磁盘空间
+4. 寻找时间戳略有不同的 checkpoints
+
+**调试步骤：**
+
+```
+你: /rewind
+
+[Checkpoint 列表出现]
+
+你: 我看不到 2 小时前的 checkpoint。
+
+Claude: Checkpoints 按时间戳列出。 
+        让我帮你找到它...
+
+[滚动列表或按日期搜索]
+```
+
+### 回滚失败
+
+**问题：** 无法回滚到 checkpoint
+
+**解决方案：**
+1. 确保没有未提交更改与 git 冲突
+2. 检查 checkpoint 是否损坏（罕见）
+3. 尝试回滚到不同的 checkpoint
+4. 重启 Claude Code 并重试
+
+**错误恢复：**
+
+```
+用户: [尝试回滚]
+错误：回滚失败 - 检测到文件冲突
+
+用户: 我该怎么办？
+
+Claude: 文件已在此会话外被修改。
+        选项：
+        1. 提交或暂存你的外部更改
+        2. 尝试"仅恢复代码"以保留会话
+        3. 尝试更早的 checkpoint
+```
+
+### Checkpoint 损坏（罕见）
+
+**问题：** Checkpoint 数据损坏或不完整
+
+**解决方案：**
+1. 尝试附近的 checkpoint（之前或之后）
+2. 检查磁盘错误
+3. 重启 Claude Code 会话
+4. 作为最后手段，开始新会话
+
+---
+
+## 与 Git 的集成
+
+Checkpoints 补充（但不替代）git：
+
+| 功能 | Git | Checkpoints |
+|------|-----|-------------|
+| **范围** | 文件系统 | 会话 + 文件 |
+| **持久性** | 永久 | 会话基础（30 天） |
+| **粒度** | 提交 | 任意点 |
+| **速度** | 较慢（commit, push, pull） | 即时 |
+| **共享** | 是（远程仓库） | 有限（导出） |
+| **分支** | 是 | 通过回滚/重试 |
+| **历史** | 完整提交历史 | 仅近期会话 |
+| **协作** | 多用户 | 单用户 |
+
+### 推荐集成模式
+
+```
+1. 用 checkpoints 进行快速实验
    ↓
-2. When experiments succeed, commit to git
+2. 当实验成功时，提交到 git
    ↓
-3. Use git commits for permanent code changes
+3. 用 git 提交保存永久代码更改
    ↓
-4. Use git branches for long-running features
+4. 用 git 分支进行长期功能
    ↓
-5. Create checkpoint before git operations
+5. 在 git 操作前创建 checkpoint
    ↓
-6. If git operation fails, rewind checkpoint
+6. 如果 git 操作失败，回滚 checkpoint
 ```
 
-### Git + Checkpoints Workflow
+### Git + Checkpoints 工作流
 
 ```mermaid
 flowchart LR
-    A[Start Work] --> B[Checkpoint Auto-created]
-    B --> C[Experiment]
-    C --> D{Success?}
+    A[开始工作] --> B[Checkpoint 自动创建]
+    B --> C[实验]
+    C --> D{成功？}
     
-    D -->|No| E[Rewind Checkpoint]
+    D -->|否| E[回滚 Checkpoint]
     E --> C
     
-    D -->|Yes| F[Commit to Git]
-    F --> G[Continue Working]
+    D -->|是| F[提交到 Git]
+    F --> G[继续工作]
     G --> B
     
-    subgraph "Checkpoint Zone"
+    subgraph "Checkpoint 区域"
         B
         C
         D
         E
     end
     
-    subgraph "Git Zone"
+    subgraph "Git 区域"
         F
         G
     end
@@ -1269,134 +1269,134 @@ flowchart LR
 
 ---
 
-## Quick Start Guide
+## 快速开始指南
 
-### Basic Workflow
+### 基本工作流
 
-1. **Work normally** - Claude Code creates checkpoints automatically
-2. **Want to go back?** - Press `Esc` twice or use `/rewind`
-3. **Choose checkpoint** - Select from the list to rewind
-4. **Select what to restore** - Choose from restore code and conversation, restore conversation, restore code, summarize from here, or cancel
-5. **Continue working** - You're back at that point
+1. **正常工作** - Claude Code 自动创建 checkpoints
+2. **想回去？** - 按两次 `Esc` 或使用 `/rewind`
+3. **选择 checkpoint** - 从列表中选择以回滚
+4. **选择恢复什么** - 从恢复代码和会话、恢复会话、恢复代码、从此处开始摘要或取消中选择
+5. **继续工作** - 你回到了那个时刻
 
-### Keyboard Shortcuts
+### 键盘快捷键
 
-| Shortcut | Action |
-|----------|--------|
-| `Esc` + `Esc` | Open checkpoint browser |
-| `/rewind` | Alternative way to access checkpoints |
-| `/checkpoint` | Alias for `/rewind` |
+| 快捷键 | 动作 |
+|--------|------|
+| `Esc` + `Esc` | 打开 checkpoint 浏览器 |
+| `/rewind` | 访问 checkpoints 的替代方式 |
+| `/checkpoint` | `/rewind` 的别名 |
 
-### Quick Reference Card
+### 快速参考卡
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│ CHECKPOINT QUICK REFERENCE                          │
+│ CHECKPOINT 快速参考                                 │
 ├─────────────────────────────────────────────────────┤
-│ CREATE:  Automatic on every user message            │
-│ VIEW:    Esc + Esc OR /rewind                       │
-│ REWIND:  Select checkpoint → Choose restore type    │
+│ 创建：每条用户消息自动                               │
+│ 查看：Esc + Esc 或 /rewind                          │
+│ 回滚：选择 checkpoint → 选择恢复类型                │
 │                                                     │
-│ RESTORE OPTIONS:                                    │
-│   • Code + Conversation: Full reset                 │
-│   • Conversation only: Reset context, keep files   │
-│   • Code only: Reset files, keep context           │
-│   • Summarize: Compress history                    │
+│ 恢复选项：                                          │
+│   • 代码 + 会话：完全重置                           │
+│   • 仅会话：重置上下文，保留文件                    │
+│   • 仅代码：重置文件，保留上下文                    │
+│   • 摘要：压缩历史                                  │
 │                                                     │
-│ BEST PRACTICES:                                     │
-│   • Note checkpoints at milestones                  │
-│   • Verify after rewinding                          │
-│   • Use git for permanent changes                   │
+│ 最佳实践：                                          │
+│   • 在里程碑记录 checkpoints                        │
+│   • 回滚后验证                                      │
+│   • 用 git 保存永久更改                             │
 │                                                     │
-│ LIMITATIONS:                                        │
-│   • Bash changes not tracked                        │
-│   • External changes not tracked                    │
-│   • Not a git replacement                           │
+│ 限制：                                              │
+│   • Bash 更改不被跟踪                               │
+│   • 外部更改不被跟踪                                │
+│   • 不是 git 替代                                   │
 └─────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Knowing When to Rewind: Context Monitoring
+## 知道何时回滚：上下文监控
 
-Checkpoints let you go back — but how do you know *when* you should? As your conversation grows, Claude's context window fills up and model quality silently degrades. You might be shipping code from a half-blind model without realizing it.
+Checkpoints 让你可以回去 —— 但你怎么知道*何时*应该回去？随着你的会话增长，Claude 的上下文窗口被填满，模型质量悄然下降。你可能在没有意识到的情况下，从一个半盲的模型那里发布代码。
 
-**[cc-context-stats](https://github.com/luongnv89/cc-context-stats)** solves this by adding real-time **context zones** to your Claude Code status bar. It tracks where you are in the context window — from **Plan** (green, safe to plan and code) through **Code** (yellow, avoid starting new plans) to **Dump** (orange, finish up and rewind). When you see the zone shift, you know it's time to checkpoint and start fresh instead of pushing through with degraded output.
+**[cc-context-stats](https://github.com/luongnv89/cc-context-stats)** 通过向你的 Claude Code 状态栏添加实时**上下文区域**来解决这个问题。它跟踪你在上下文窗口中的位置 —— 从 **Plan**（绿色，安全规划和编码）到 **Code**（黄色，避免开始新计划）再到 **Dump**（橙色，完成工作并回滚）。当你看到区域变化时，就知道该 checkpoint 并重新开始，而不是顶着降级的输出继续推进。
 
-### Context Zone Indicators
+### 上下文区域指示器
 
-| Zone | Context Usage | Recommendation |
-|------|---------------|----------------|
-| **Plan** (Green) | 0-50% | Safe for planning and complex tasks |
-| **Code** (Yellow) | 50-80% | Avoid starting new long tasks |
-| **Dump** (Orange) | 80-100% | Finish current work, rewind soon |
+| 区域 | 上下文使用 | 建议 |
+|------|------------|------|
+| **Plan**（绿色） | 0-50% | 安全进行规划和复杂任务 |
+| **Code**（黄色） | 50-80% | 避免开始新的长任务 |
+| **Dump**（橙色） | 80-100% | 完成当前工作，尽快回滚 |
 
-### Using Context Stats with Checkpoints
+### 使用上下文统计与 Checkpoints
 
 ```
-1. Start complex task in "Plan" zone
-2. Work through "Code" zone
-3. As you approach "Dump" zone:
-   a. Finish current thought
-   b. Note checkpoint ID
-   c. Start fresh session
-   d. Reference old checkpoint if needed
+1. 在 "Plan" 区域开始复杂任务
+2. 通过 "Code" 区域工作
+3. 当接近 "Dump" 区域时：
+   a. 完成当前思路
+   b. 记录 checkpoint ID
+   c. 开始新会话
+   d. 如需要参考旧 checkpoint
 ```
 
 ---
 
-## Related Concepts
+## 相关概念
 
-- **[Advanced Features](../09-advanced-features/)** - Planning mode and other advanced capabilities
-- **[Memory Management](../02-memory/)** - Managing conversation history and context
-- **[Slash Commands](../01-slash-commands/)** - User-invoked shortcuts
-- **[Hooks](../06-hooks/)** - Event-driven automation
-- **[Plugins](../07-plugins/)** - Bundled extension packages
-
----
-
-## Additional Resources
-
-- [Official Checkpointing Documentation](https://code.claude.com/docs/en/checkpointing)
-- [Advanced Features Guide](../09-advanced-features/) - Extended thinking and other capabilities
-- [Context Stats Tool](https://github.com/luongnv89/cc-context-stats) - Real-time context monitoring
+- **[高级功能](../09-advanced-features/)** - 规划模式和其他高级能力
+- **[内存管理](../02-memory/)** - 管理会话历史和上下文
+- **[Slash 命令](../01-slash-commands/)** - 用户调用的快捷键
+- **[Hooks](../06-hooks/)** - 事件驱动自动化
+- **[插件](../07-plugins/)** - 打包的扩展包
 
 ---
 
-## Summary
+## 其他资源
 
-Checkpoints are an automatic feature in Claude Code that lets you safely explore different approaches without fear of losing work. Every user prompt creates a new checkpoint automatically, so you can rewind to any previous point in your session.
+- [官方 Checkpointing 文档](https://code.claude.com/docs/en/checkpointing)
+- [高级功能指南](../09-advanced-features/) - 扩展思考和其他能力
+- [上下文统计工具](https://github.com/luongnv89/cc-context-stats) - 实时上下文监控
 
-### Key Benefits
+---
 
-| Benefit | Description |
-|---------|-------------|
-| **Experiment Fearlessly** | Try multiple approaches without risk |
-| **Recover Quickly** | One keystroke back to working state |
-| **Compare Solutions** | Side-by-side evaluation of alternatives |
-| **Integrate with Git** | Checkpoints for experimentation, git for permanence |
+## 总结
 
-### The Checkpoint Mindset
+Checkpoints 是 Claude Code 中的自动功能，让你安全探索不同方法而不必担心丢失工作。每个用户提示自动创建新 checkpoint，所以你可以回滚到会话中的任何先前时刻。
+
+### 主要好处
+
+| 好处 | 描述 |
+|------|------|
+| **无畏实验** | 尝试多种方法无风险 |
+| **快速恢复** | 一个按键回到工作状态 |
+| **比较方案** | 替代方案的并排评估 |
+| **与 Git 集成** | Checkpoints 用于实验，git 用于持久化 |
+
+### Checkpoint 思维模式
 
 ```
-WITHOUT CHECKPOINTS:
-  Make change → Hope it works → Debug if broken → Panic
+没有 CHECKPOINTS：
+  做更改 → 希望成功 → 如果坏了调试 → 惊慌
 
-WITH CHECKPOINTS:
-  Note checkpoint → Make change → Test → 
-  If works: Continue → 
-  If fails: Rewind → Try different approach
+有了 CHECKPOINTS：
+  记录 checkpoint → 做更改 → 测试 → 
+  如果成功：继续 → 
+  如果失败：回滚 → 尝试不同方法
 ```
 
-### Remember
+### 记住
 
-- Checkpoints are automatic — no manual saving needed
-- Press `Esc` twice to access any checkpoint
-- Choose the right restore option for your situation
-- Use checkpoints for rapid experimentation
-- Use git commits for permanent code changes
-- The best checkpoint is the one you created before you needed it
+- Checkpoints 是自动的 —— 无需手动保存
+- 按两次 `Esc` 访问任何 checkpoint
+- 为你的情况选择正确的恢复选项
+- 用 checkpoints 进行快速实验
+- 用 git 提交保存永久代码更改
+- 最好的 checkpoint 是你在需要之前创建的那个
 
 ---
 
-*Checkpoints: Because "undo" isn't enough when you need to explore multiple futures.*
+*Checkpoints：因为当你需要探索多种未来时，"撤销"是不够的。*

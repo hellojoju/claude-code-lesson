@@ -7,87 +7,87 @@ last_verified: "2026-04-05"
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
 
-> 🟡 **Intermediate** | ⏱ 70 minutes
+> 🟡 **中级** | ⏱ 70 分钟
 >
-> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+> ✅ 已验证 Claude Code **v2.1.92** · 最后验证：2026-04-05
 
-**What you'll build:** Automate workflows with event-driven scripts.
+**你将构建：** 通过事件驱动脚本自动化工作流。
 
 # Hooks
 
-Hooks are automated scripts that execute in response to specific events during Claude Code sessions. They enable automation, validation, permission management, and custom workflows.
+Hooks 是在 Claude Code 会话期间响应特定事件自动执行的脚本。它们支持自动化、验证、权限管理和自定义工作流。
 
-## Overview
+## 概述
 
-Hooks are automated actions (shell commands, HTTP webhooks, LLM prompts, or subagent evaluations) that execute automatically when specific events occur in Claude Code. They receive JSON input and communicate results via exit codes and JSON output.
+Hooks 是自动操作（shell 命令、HTTP webhooks、LLM 提示或子智能体评估），当 Claude Code 中发生特定事件时自动执行。它们接收 JSON 输入，并通过退出码和 JSON 输出传递结果。
 
-**Key features:**
-- Event-driven automation
-- JSON-based input/output
-- Support for command, prompt, HTTP, and agent hook types
-- Pattern matching for tool-specific hooks
-
----
-
-## The Hook Moment
-
-Your CI caught a lint error after 20 minutes of build. Hooks catch it in 2 seconds.
-
-**The pain cycle without hooks:**
-```
-Write code → Commit → Push → CI starts → 5 min install → 10 min build → 5 min test → FAIL → Fix → Repeat
-```
-
-**With hooks:**
-```
-Write code → Hook runs → 2 sec → Fix immediately → Commit clean code → CI passes
-```
-
-Hooks shift validation from "after the fact" to "while you're still thinking about it." They catch secrets before commit, format code before you switch files, and block dangerous commands before they execute.
+**关键特性：**
+- 事件驱动自动化
+- 基于 JSON 的输入/输出
+- 支持命令、提示、HTTP 和智能体 hook 类型
+- 工具特定 hooks 的模式匹配
 
 ---
 
-## Choosing the Right Hook Event
+## Hook 的关键时刻
+
+你的 CI 在 20 分钟构建后发现了 lint 错误。Hooks 能在 2 秒内捕获它。
+
+**没有 hooks 的痛苦循环：**
+```
+编写代码 → 提交 → 推送 → CI 启动 → 5 分钟安装 → 10 分钟构建 → 5 分钟测试 → 失败 → 修复 → 重复
+```
+
+**有了 hooks：**
+```
+编写代码 → Hook 运行 → 2 秒 → 立即修复 → 提交干净代码 → CI 通过
+```
+
+Hooks 将验证从"事后"转变为"你还在思考时"。它们在提交前捕获密钥，在切换文件前格式化代码，在执行危险命令前拦截。
+
+---
+
+## 选择正确的 Hook 事件
 
 ```mermaid
 flowchart TD
-    A["I want to trigger X when Y"] --> B{What event?}
-    
-    B -->|Tool execution| C{When?}
-    C -->|Before| D["PreToolUse<br/>Validate inputs, block dangerous ops"]
-    C -->|After success| E["PostToolUse<br/>Format, log, add context"]
-    C -->|After failure| F["PostToolUseFailure<br/>Error recovery, cleanup"]
-    
-    B -->|User input| G["UserPromptSubmit<br/>Validate/block prompts"]
-    
-    B -->|Session lifecycle| H{Which moment?}
-    H -->|Start| I["SessionStart<br/>Setup env, load config"]
-    H -->|End| J["Stop<br/>Verify completion, cleanup"]
-    H -->|Terminate| K["SessionEnd<br/>Final logging"]
-    
-    B -->|Permission dialog| L["PermissionRequest<br/>Auto-approve/deny"]
-    
-    B -->|Subagent| M{Which phase?}
-    M -->|Spawn| N["SubagentStart<br/>Subagent setup"]
-    M -->|Complete| O["SubagentStop<br/>Validate subagent results"]
-    
-    B -->|File/Dir change| P{What changed?}
-    P -->|Working dir| Q["CwdChanged<br/>Dir-specific setup"]
-    P -->|Watched file| R["FileChanged<br/>Rebuild, reload"]
-    P -->|Config file| S["ConfigChange<br/>React to settings"]
-    
-    B -->|Compaction| T{When?}
-    T -->|Before| U["PreCompact<br/>Save state"]
-    T -->|After| V["PostCompact<br/>Restore context"]
-    
-    D --> W{Need to block?}
-    W -->|Yes| X["Return exit code 2<br/>or permissionDecision: deny"]
-    W -->|No| Y["Return exit code 0<br/>or updatedInput"]
-    
-    E --> Z{Need feedback?}
-    Z -->|Yes| AA["Return additionalContext<br/>or block with reason"]
-    Z -->|No| AB["Silent pass (exit 0)"]
-    
+    A["我想在 Y 时触发 X"] --> B{什么事件？}
+
+    B -->|工具执行| C{何时？}
+    C -->|之前| D["PreToolUse<br/>验证输入，拦截危险操作"]
+    C -->|成功后| E["PostToolUse<br/>格式化，日志，添加上下文"]
+    C -->|失败后| F["PostToolUseFailure<br/>错误恢复，清理"]
+
+    B -->|用户输入| G["UserPromptSubmit<br/>验证/拦截提示"]
+
+    B -->|会话生命周期| H{哪个时刻？}
+    H -->|开始| I["SessionStart<br/>设置环境，加载配置"]
+    H -->|结束| J["Stop<br/>验证完成，清理"]
+    H -->|终止| K["SessionEnd<br/>最终日志"]
+
+    B -->|权限对话框| L["PermissionRequest<br/>自动批准/拒绝"]
+
+    B -->|子智能体| M{哪个阶段？}
+    M -->|启动| N["SubagentStart<br/>子智能体设置"]
+    M -->|完成| O["SubagentStop<br/>验证子智能体结果"]
+
+    B -->|文件/目录变更| P{什么变更？}
+    P -->|工作目录| Q["CwdChanged<br/>目录特定设置"]
+    P -->|监听文件| R["FileChanged<br/>重建，重新加载"]
+    P -->|配置文件| S["ConfigChange<br/>响应设置"]
+
+    B -->|压缩| T{何时？}
+    T -->|之前| U["PreCompact<br/>保存状态"]
+    T -->|之后| V["PostCompact<br/>恢复上下文"]
+
+    D --> W{需要拦截？}
+    W -->|是| X["返回退出码 2<br/>或 permissionDecision: deny"]
+    W -->|否| Y["返回退出码 0<br/>或 updatedInput"]
+
+    E --> Z{需要反馈？}
+    Z -->|是| AA["返回 additionalContext<br/>或带原因拦截"]
+    Z -->|否| AB["静默通过（退出 0）"]
+
     style A fill:#e1f5fe
     style X fill:#ffcdd2
     style Y fill:#c8e6c9
@@ -97,19 +97,19 @@ flowchart TD
 
 ---
 
-## Try It Now: Your First Hook
+## 立即尝试：你的第一个 Hook
 
-Let's create a hook that formats TypeScript files automatically after Claude writes them.
+让我们创建一个 hook，在 Claude 写入 TypeScript 文件后自动格式化它们。
 
-**Step 1: Create the hooks directory**
+**步骤 1：创建 hooks 目录**
 
 ```bash
 mkdir -p .claude/hooks
 ```
 
-**Step 2: Create the format hook**
+**步骤 2：创建格式化 hook**
 
-Create `.claude/hooks/auto-format.sh`:
+创建 `.claude/hooks/auto-format.sh`：
 
 ```bash
 #!/bin/bash
@@ -141,15 +141,15 @@ esac
 exit 0
 ```
 
-**Step 3: Make it executable**
+**步骤 3：使其可执行**
 
 ```bash
 chmod +x .claude/hooks/auto-format.sh
 ```
 
-**Step 4: Configure the hook**
+**步骤 4：配置 hook**
 
-Add to `.claude/settings.json`:
+添加到 `.claude/settings.json`：
 
 ```json
 {
@@ -170,30 +170,30 @@ Add to `.claude/settings.json`:
 }
 ```
 
-**Step 5: Test it**
+**步骤 5：测试它**
 
-Ask Claude to write a TypeScript file. Watch the hook format it automatically:
+让 Claude 写入一个 TypeScript 文件。观察 hook 自动格式化它：
 
 ```
-> Create a simple utils.ts file with a formatDate function
+> 创建一个简单的 utils.ts 文件，包含 formatDate 函数
 
-[Hook] Formatted: utils.ts  ← Hook ran automatically!
+[Hook] Formatted: utils.ts  ← Hook 自动运行！
 ```
 
 ---
 
-## Configuration
+## 配置
 
-Hooks are configured in settings files with a specific structure:
+Hooks 在设置文件中使用特定结构配置：
 
-- `~/.claude/settings.json` - User settings (all projects)
-- `.claude/settings.json` - Project settings (shareable, committed)
-- `.claude/settings.local.json` - Local project settings (not committed)
-- Managed policy - Organization-wide settings
-- Plugin `hooks/hooks.json` - Plugin-scoped hooks
-- Skill/Agent frontmatter - Component lifetime hooks
+- `~/.claude/settings.json` - 用户设置（所有项目）
+- `.claude/settings.json` - 项目设置（可共享，可提交）
+- `.claude/settings.local.json` - 本地项目设置（不提交）
+- 管理策略 - 组织范围设置
+- Plugin `hooks/hooks.json` - 插件范围 hooks
+- Skill/Agent frontmatter - 组件生命周期 hooks
 
-### Basic Configuration Structure
+### 基本配置结构
 
 ```json
 {
@@ -214,33 +214,33 @@ Hooks are configured in settings files with a specific structure:
 }
 ```
 
-**Key fields:**
+**关键字段：**
 
-| Field | Description | Example |
+| 字段 | 描述 | 示例 |
 |-------|-------------|---------|
-| `matcher` | Pattern to match tool names (case-sensitive) | `"Write"`, `"Edit\|Write"`, `"*"` |
-| `hooks` | Array of hook definitions | `[{ "type": "command", ... }]` |
-| `type` | Hook type: `"command"` (bash), `"prompt"` (LLM), `"http"` (webhook), or `"agent"` (subagent) | `"command"` |
-| `command` | Shell command to execute | `"$CLAUDE_PROJECT_DIR/.claude/hooks/format.sh"` |
-| `timeout` | Optional timeout in seconds (default 60) | `30` |
-| `once` | If `true`, run the hook only once per session | `true` |
+| `matcher` | 匹配工具名称的模式（区分大小写） | `"Write"`、`"Edit\|Write"`、`"*"` |
+| `hooks` | Hook 定义数组 | `[{ "type": "command", ... }]` |
+| `type` | Hook 类型：`"command"`（bash）、`"prompt"`（LLM）、`"http"`（webhook）或 `"agent"`（子智能体） | `"command"` |
+| `command` | 要执行的 shell 命令 | `"$CLAUDE_PROJECT_DIR/.claude/hooks/format.sh"` |
+| `timeout` | 可选超时时间（秒，默认 60） | `30` |
+| `once` | 如果为 `true`，每个会话只运行一次 | `true` |
 
-### Matcher Patterns
+### 匹配器模式
 
-| Pattern | Description | Example |
+| 模式 | 描述 | 示例 |
 |---------|-------------|---------|
-| Exact string | Matches specific tool | `"Write"` |
-| Regex pattern | Matches multiple tools | `"Edit\|Write"` |
-| Wildcard | Matches all tools | `"*"` or `""` |
-| MCP tools | Server and tool pattern | `"mcp__memory__.*"` |
+| 精确字符串 | 匹配特定工具 | `"Write"` |
+| 正则模式 | 匹配多个工具 | `"Edit\|Write"` |
+| 通配符 | 匹配所有工具 | `"*"` 或 `""` |
+| MCP 工具 | 服务器和工具模式 | `"mcp__memory__.*"` |
 
-## Hook Types
+## Hook 类型
 
-Claude Code supports four hook types:
+Claude Code 支持四种 hook 类型：
 
-### Command Hooks
+### 命令 Hooks
 
-The default hook type. Executes a shell command and communicates via JSON stdin/stdout and exit codes.
+默认 hook 类型。执行 shell 命令，通过 JSON stdin/stdout 和退出码通信。
 
 ```json
 {
@@ -252,9 +252,9 @@ The default hook type. Executes a shell command and communicates via JSON stdin/
 
 ### HTTP Hooks
 
-> Added in v2.1.63.
+> 在 v2.1.63 中添加。
 
-Remote webhook endpoints that receive the same JSON input as command hooks. HTTP hooks POST JSON to the URL and receive a JSON response. HTTP hooks are routed through the sandbox when sandboxing is enabled. Environment variable interpolation in URLs requires an explicit `allowedEnvVars` list for security.
+远程 webhook 端点，接收与命令 hooks 相同的 JSON 输入。HTTP hooks 将 JSON POST 到 URL 并接收 JSON 响应。启用沙箱时，HTTP hooks 通过沙箱路由。出于安全考虑，URL 中的环境变量插值需要显式 `allowedEnvVars` 列表。
 
 ```json
 {
@@ -268,81 +268,81 @@ Remote webhook endpoints that receive the same JSON input as command hooks. HTTP
 }
 ```
 
-**Key properties:**
-- `"type": "http"` -- identifies this as an HTTP hook
-- `"url"` -- the webhook endpoint URL
-- Routed through sandbox when sandbox is enabled
-- Requires explicit `allowedEnvVars` list for any environment variable interpolation in the URL
+**关键属性：**
+- `"type": "http"` -- 标识为 HTTP hook
+- `"url"` -- webhook 端点 URL
+- 启用沙箱时通过沙箱路由
+- URL 中任何环境变量插值需要显式 `allowedEnvVars` 列表
 
-### Prompt Hooks
+### 提示 Hooks
 
-LLM-evaluated prompts where the hook content is a prompt that Claude evaluates. Primarily used with `Stop` and `SubagentStop` events for intelligent task completion checking.
+LLM 评估的提示，hook 内容是 Claude 评估的提示。主要用于 `Stop` 和 `SubagentStop` 事件进行智能任务完成检查。
 
 ```json
 {
   "type": "prompt",
-  "prompt": "Evaluate if Claude completed all requested tasks.",
+  "prompt": "评估 Claude 是否完成了所有请求的任务。",
   "timeout": 30
 }
 ```
 
-The LLM evaluates the prompt and returns a structured decision (see [Prompt-Based Hooks](#prompt-based-hooks) for details).
+LLM 评估提示并返回结构化决策（详见[基于提示的 Hooks](#基于提示的-hooks)）。
 
-### Agent Hooks
+### 智能体 Hooks
 
-Subagent-based verification hooks that spawn a dedicated agent to evaluate conditions or perform complex checks. Unlike prompt hooks (single-turn LLM evaluation), agent hooks can use tools and perform multi-step reasoning.
+基于子智能体的验证 hooks，启动专用智能体评估条件或执行复杂检查。与提示 hooks（单次 LLM 评估）不同，智能体 hooks 可以使用工具并执行多步推理。
 
 ```json
 {
   "type": "agent",
-  "prompt": "Verify the code changes follow our architecture guidelines. Check the relevant design docs and compare.",
+  "prompt": "验证代码变更遵循我们的架构指南。检查相关设计文档并进行比较。",
   "timeout": 120
 }
 ```
 
-**Key properties:**
-- `"type": "agent"` -- identifies this as an agent hook
-- `"prompt"` -- the task description for the subagent
-- The agent can use tools (Read, Grep, Bash, etc.) to perform its evaluation
-- Returns a structured decision similar to prompt hooks
+**关键属性：**
+- `"type": "agent"` -- 标识为智能体 hook
+- `"prompt"` -- 子智能体的任务描述
+- 智能体可以使用工具（Read、Grep、Bash 等）执行评估
+- 返回类似提示 hooks 的结构化决策
 
-## Hook Events
+## Hook 事件
 
-Claude Code supports **25 hook events**:
+Claude Code 支持 **25 个 hook 事件**：
 
-| Event | When Triggered | Matcher Input | Can Block | Common Use |
+| 事件 | 触发时机 | 匹配器输入 | 可拦截 | 常见用途 |
 |-------|---------------|---------------|-----------|------------|
-| **SessionStart** | Session begins/resumes/clear/compact | startup/resume/clear/compact | No | Environment setup |
-| **InstructionsLoaded** | After CLAUDE.md or rules file loaded | (none) | No | Modify/filter instructions |
-| **UserPromptSubmit** | User submits prompt | (none) | Yes | Validate prompts |
-| **PreToolUse** | Before tool execution | Tool name | Yes (allow/deny/ask) | Validate, modify inputs |
-| **PermissionRequest** | Permission dialog shown | Tool name | Yes | Auto-approve/deny |
-| **PostToolUse** | After tool succeeds | Tool name | No | Add context, feedback |
-| **PostToolUseFailure** | Tool execution fails | Tool name | No | Error handling, logging |
-| **Notification** | Notification sent | Notification type | No | Custom notifications |
-| **SubagentStart** | Subagent spawned | Agent type name | No | Subagent setup |
-| **SubagentStop** | Subagent finishes | Agent type name | Yes | Subagent validation |
-| **Stop** | Claude finishes responding | (none) | Yes | Task completion check |
-| **StopFailure** | API error ends turn | (none) | No | Error recovery, logging |
-| **TeammateIdle** | Agent team teammate idle | (none) | Yes | Teammate coordination |
-| **TaskCompleted** | Task marked complete | (none) | Yes | Post-task actions |
-| **TaskCreated** | Task created via TaskCreate | (none) | No | Task tracking, logging |
-| **ConfigChange** | Config file changes | (none) | Yes (except policy) | React to config updates |
-| **CwdChanged** | Working directory changes | (none) | No | Directory-specific setup |
-| **FileChanged** | Watched file changes | (none) | No | File monitoring, rebuild |
-| **PreCompact** | Before context compaction | manual/auto | No | Pre-compact actions |
-| **PostCompact** | After compaction completes | (none) | No | Post-compact actions |
-| **WorktreeCreate** | Worktree being created | (none) | Yes (path return) | Worktree initialization |
-| **WorktreeRemove** | Worktree being removed | (none) | No | Worktree cleanup |
-| **Elicitation** | MCP server requests user input | (none) | Yes | Input validation |
-| **ElicitationResult** | User responds to elicitation | (none) | Yes | Response processing |
-| **SessionEnd** | Session terminates | (none) | No | Cleanup, final logging |
+| **SessionStart** | 会话开始/恢复/清除/压缩 | startup/resume/clear/compact | 否 | 环境设置 |
+| **InstructionsLoaded** | CLAUDE.md 或规则文件加载后 | （无） | 否 | 修改/过滤指令 |
+| **UserPromptSubmit** | 用户提交提示 | （无） | 是 | 验证提示 |
+| **PreToolUse** | 工具执行前 | 工具名称 | 是（允许/拒绝/询问） | 验证，修改输入 |
+| **PermissionRequest** | 显示权限对话框 | 工具名称 | 是 | 自动批准/拒绝 |
+| **PostToolUse** | 工具成功后 | 工具名称 | 否 | 添加上下文，反馈 |
+| **PostToolUseFailure** | 工具执行失败 | 工具名称 | 否 | 错误处理，日志 |
+| **Notification** | 发送通知 | 通知类型 | 否 | 自定义通知 |
+| **SubagentStart** | 子智能体启动 | 智能体类型名称 | 否 | 子智能体设置 |
+| **SubagentStop** | 子智能体完成 | 智能体类型名称 | 是 | 子智能体验证 |
+| **Stop** | Claude 完成响应 | （无） | 是 | 任务完成检查 |
+| **StopFailure** | API 错误结束轮次 | （无） | 否 | 错误恢复，日志 |
+| **TeammateIdle** | 智能体队友空闲 | （无） | 是 | 队友协调 |
+| **TaskCompleted** | 任务标记完成 | （无） | 是 | 任务后操作 |
+| **TaskCreated** | 通过 TaskCreate 创建任务 | （无） | 否 | 任务跟踪，日志 |
+| **ConfigChange** | 配置文件变更 | （无） | 是（策略除外） | 响应配置更新 |
+| **CwdChanged** | 工作目录变更 | （无） | 否 | 目录特定设置 |
+| **FileChanged** | 监听文件变更 | （无） | 否 | 文件监控，重建 |
+| **PreCompact** | 上下文压缩前 | manual/auto | 否 | 压缩前操作 |
+| **PostCompact** | 压缩完成后 | （无） | 否 | 压缩后操作 |
+| **WorktreeCreate** | 正在创建 worktree | （无） | 是（路径返回） | worktree 初始化 |
+| **WorktreeRemove** | 正在移除 worktree | （无） | 否 | worktree 清理 |
+| **Elicitation** | MCP 服务器请求用户输入 | （无） | 是 | 输入验证 |
+| **ElicitationResult** | 用户响应 elicitation | （无） | 是 | 响应处理 |
+| **SessionEnd** | 会话终止 | （无） | 否 | 清理，最终日志 |
 
 ### PreToolUse
 
-Runs after Claude creates tool parameters and before processing. Use this to validate or modify tool inputs.
+在 Claude 创建工具参数后、处理前运行。用于验证或修改工具输入。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -361,18 +361,18 @@ Runs after Claude creates tool parameters and before processing. Use this to val
 }
 ```
 
-**Common matchers:** `Task`, `Bash`, `Glob`, `Grep`, `Read`, `Edit`, `Write`, `WebFetch`, `WebSearch`
+**常见匹配器：** `Task`、`Bash`、`Glob`、`Grep`、`Read`、`Edit`、`Write`、`WebFetch`、`WebSearch`
 
-**Output control:**
-- `permissionDecision`: `"allow"`, `"deny"`, or `"ask"`
-- `permissionDecisionReason`: Explanation for decision
-- `updatedInput`: Modified tool input parameters
+**输出控制：**
+- `permissionDecision`：`"allow"`、`"deny"` 或 `"ask"`
+- `permissionDecisionReason`：决策解释
+- `updatedInput`：修改后的工具输入参数
 
 ### PostToolUse
 
-Runs immediately after tool completion. Use for verification, logging, or providing context back to Claude.
+工具完成后立即运行。用于验证、日志或向 Claude 提供上下文。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -391,15 +391,15 @@ Runs immediately after tool completion. Use for verification, logging, or provid
 }
 ```
 
-**Output control:**
-- `"block"` decision prompts Claude with feedback
-- `additionalContext`: Context added for Claude
+**输出控制：**
+- `"block"` 决策向 Claude 提示反馈
+- `additionalContext`：为 Claude 添加的上下文
 
 ### UserPromptSubmit
 
-Runs when user submits a prompt, before Claude processes it.
+用户提交提示后、Claude 处理前运行。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -417,18 +417,18 @@ Runs when user submits a prompt, before Claude processes it.
 }
 ```
 
-**Output control:**
-- `decision`: `"block"` to prevent processing
-- `reason`: Explanation if blocked
-- `additionalContext`: Context added to prompt
+**输出控制：**
+- `decision`：`"block"` 阻止处理
+- `reason`：拦截时的解释
+- `additionalContext`：添加到提示的上下文
 
-### Stop and SubagentStop
+### Stop 和 SubagentStop
 
-Run when Claude finishes responding (Stop) or a subagent completes (SubagentStop). Supports prompt-based evaluation for intelligent task completion checking.
+Claude 完成响应（Stop）或子智能体完成（SubagentStop）时运行。支持基于提示的评估进行智能任务完成检查。
 
-**Additional input field:** Both `Stop` and `SubagentStop` hooks receive a `last_assistant_message` field in their JSON input, containing the final message from Claude or the subagent before stopping. This is useful for evaluating task completion.
+**额外输入字段：** `Stop` 和 `SubagentStop` hooks 在 JSON 输入中接收 `last_assistant_message` 字段，包含停止前 Claude 或子智能体的最终消息。这对评估任务完成很有用。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -437,7 +437,7 @@ Run when Claude finishes responding (Stop) or a subagent completes (SubagentStop
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Evaluate if Claude completed all requested tasks.",
+            "prompt": "评估 Claude 是否完成了所有请求的任务。",
             "timeout": 30
           }
         ]
@@ -449,9 +449,9 @@ Run when Claude finishes responding (Stop) or a subagent completes (SubagentStop
 
 ### SubagentStart
 
-Runs when a subagent begins execution. The matcher input is the agent type name, allowing hooks to target specific subagent types.
+子智能体开始执行时运行。匹配器输入是智能体类型名称，允许 hooks 针特定子智能体类型。
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -472,11 +472,11 @@ Runs when a subagent begins execution. The matcher input is the agent type name,
 
 ### SessionStart
 
-Runs when session starts or resumes. Can persist environment variables.
+会话启动或恢复时运行。可以持久化环境变量。
 
-**Matchers:** `startup`, `resume`, `clear`, `compact`
+**匹配器：** `startup`、`resume`、`clear`、`compact`
 
-**Special feature:** Use `CLAUDE_ENV_FILE` to persist environment variables (also available in `CwdChanged` and `FileChanged` hooks):
+**特殊功能：** 使用 `CLAUDE_ENV_FILE` 持久化环境变量（在 `CwdChanged` 和 `FileChanged` hooks 中也可用）：
 
 ```bash
 #!/bin/bash
@@ -488,15 +488,15 @@ exit 0
 
 ### SessionEnd
 
-Runs when session ends to perform cleanup or final logging. Cannot block termination.
+会话结束时运行以执行清理或最终日志。无法拦截终止。
 
-**Reason field values:**
-- `clear` - User cleared the session
-- `logout` - User logged out
-- `prompt_input_exit` - User exited via prompt input
-- `other` - Other reason
+**原因字段值：**
+- `clear` - 用户清除了会话
+- `logout` - 用户登出
+- `prompt_input_exit` - 用户通过提示输入退出
+- `other` - 其他原因
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -514,58 +514,58 @@ Runs when session ends to perform cleanup or final logging. Cannot block termina
 }
 ```
 
-### Notification Event
+### 通知事件
 
-Updated matchers for notification events:
-- `permission_prompt` - Permission request notification
-- `idle_prompt` - Idle state notification
-- `auth_success` - Authentication success
-- `elicitation_dialog` - Dialog shown to user
+通知事件更新的匹配器：
+- `permission_prompt` - 权限请求通知
+- `idle_prompt` - 空闲状态通知
+- `auth_success` - 认证成功
+- `elicitation_dialog` - 向用户显示对话框
 
-## Component-Scoped Hooks
+## 组件范围 Hooks
 
-Hooks can be attached to specific components (skills, agents, commands) in their frontmatter:
+Hooks 可以附加到特定组件（skills、agents、commands）的 frontmatter 中：
 
-**In SKILL.md, agent.md, or command.md:**
+**在 SKILL.md、agent.md 或 command.md 中：**
 
 ```yaml
 ---
 name: secure-operations
-description: Perform operations with security checks
+description: 执行带有安全检查的操作
 hooks:
   PreToolUse:
     - matcher: "Bash"
       hooks:
         - type: command
           command: "./scripts/check.sh"
-          once: true  # Only run once per session
+          once: true  # 每个会话只运行一次
 ---
 ```
 
-**Supported events for component hooks:** `PreToolUse`, `PostToolUse`, `Stop`
+**组件 hooks 支持的事件：** `PreToolUse`、`PostToolUse`、`Stop`
 
-This allows defining hooks directly in the component that uses them, keeping related code together.
+这允许在使用它们的组件中直接定义 hooks，保持相关代码在一起。
 
-### Hooks in Subagent Frontmatter
+### 子智能体 Frontmatter 中的 Hooks
 
-When a `Stop` hook is defined in a subagent's frontmatter, it is automatically converted to a `SubagentStop` hook scoped to that subagent. This ensures that the stop hook only fires when that specific subagent completes, rather than when the main session stops.
+在子智能体的 frontmatter 中定义 `Stop` hook 时，它会自动转换为该子智能体范围的 `SubagentStop` hook。这确保 stop hook 只在该特定子智能体完成时触发，而不是主会话停止时。
 
 ```yaml
 ---
 name: code-review-agent
-description: Automated code review subagent
+description: 自动化代码审查子智能体
 hooks:
   Stop:
     - hooks:
         - type: prompt
-          prompt: "Verify the code review is thorough and complete."
-  # The above Stop hook auto-converts to SubagentStop for this subagent
+          prompt: "验证代码审查是否彻底且完整。"
+  # 上面的 Stop hook 自动转换为该子智能体的 SubagentStop
 ---
 ```
 
-## PermissionRequest Event
+## PermissionRequest 事件
 
-Handles permission requests with custom output format:
+使用自定义输出格式处理权限请求：
 
 ```json
 {
@@ -574,18 +574,18 @@ Handles permission requests with custom output format:
     "decision": {
       "behavior": "allow|deny",
       "updatedInput": {},
-      "message": "Custom message",
+      "message": "自定义消息",
       "interrupt": false
     }
   }
 }
 ```
 
-## Hook Input and Output
+## Hook 输入和输出
 
-### JSON Input (via stdin)
+### JSON 输入（通过 stdin）
 
-All hooks receive JSON input via stdin:
+所有 hooks 通过 stdin 接收 JSON 输入：
 
 ```json
 {
@@ -606,38 +606,38 @@ All hooks receive JSON input via stdin:
 }
 ```
 
-**Common fields:**
+**常见字段：**
 
-| Field | Description |
+| 字段 | 描述 |
 |-------|-------------|
-| `session_id` | Unique session identifier |
-| `transcript_path` | Path to the conversation transcript file |
-| `cwd` | Current working directory |
-| `hook_event_name` | Name of the event that triggered the hook |
-| `agent_id` | Identifier of the agent running this hook |
-| `agent_type` | Type of agent (`"main"`, subagent type name, etc.) |
-| `worktree` | Path to the git worktree, if the agent is running in one |
+| `session_id` | 唯一会话标识符 |
+| `transcript_path` | 对话记录文件路径 |
+| `cwd` | 当前工作目录 |
+| `hook_event_name` | 触发 hook 的事件名称 |
+| `agent_id` | 运行此 hook 的智能体标识符 |
+| `agent_type` | 智能体类型（`"main"`、子智能体类型名称等） |
+| `worktree` | git worktree 路径（如果智能体在 worktree 中运行） |
 
-### Exit Codes
+### 退出码
 
-| Exit Code | Meaning | Behavior |
+| 退出码 | 含义 | 行为 |
 |-----------|---------|----------|
-| **0** | Success | Continue, parse JSON stdout |
-| **2** | Blocking error | Block operation, stderr shown as error |
-| **Other** | Non-blocking error | Continue, stderr shown in verbose mode |
+| **0** | 成功 | 继续，解析 JSON stdout |
+| **2** | 拦截错误 | 拦截操作，stderr 显示为错误 |
+| **其他** | 非拦截错误 | 继续，stderr 在详细模式显示 |
 
-### JSON Output (stdout, exit code 0)
+### JSON 输出（stdout，退出码 0）
 
 ```json
 {
   "continue": true,
-  "stopReason": "Optional message if stopping",
+  "stopReason": "停止时的可选消息",
   "suppressOutput": false,
-  "systemMessage": "Optional warning message",
+  "systemMessage": "可选警告消息",
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
     "permissionDecision": "allow",
-    "permissionDecisionReason": "File is in allowed directory",
+    "permissionDecisionReason": "文件在允许目录中",
     "updatedInput": {
       "file_path": "/modified/path.js"
     }
@@ -645,20 +645,20 @@ All hooks receive JSON input via stdin:
 }
 ```
 
-## Environment Variables
+## 环境变量
 
-| Variable | Availability | Description |
+| 变量 | 可用性 | 描述 |
 |----------|-------------|-------------|
-| `CLAUDE_PROJECT_DIR` | All hooks | Absolute path to project root |
-| `CLAUDE_ENV_FILE` | SessionStart, CwdChanged, FileChanged | File path for persisting env vars |
-| `CLAUDE_CODE_REMOTE` | All hooks | `"true"` if running in remote environments |
-| `${CLAUDE_PLUGIN_ROOT}` | Plugin hooks | Path to plugin directory |
-| `${CLAUDE_PLUGIN_DATA}` | Plugin hooks | Path to plugin data directory |
-| `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` | SessionEnd hooks | Configurable timeout in milliseconds for SessionEnd hooks (overrides default) |
+| `CLAUDE_PROJECT_DIR` | 所有 hooks | 项目根目录绝对路径 |
+| `CLAUDE_ENV_FILE` | SessionStart、CwdChanged、FileChanged | 持久化环境变量文件路径 |
+| `CLAUDE_CODE_REMOTE` | 所有 hooks | 在远程环境运行时为 `"true"` |
+| `${CLAUDE_PLUGIN_ROOT}` | 插件 hooks | 插件目录路径 |
+| `${CLAUDE_PLUGIN_DATA}` | 插件 hooks | 插件数据目录路径 |
+| `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS` | SessionEnd hooks | SessionEnd hooks 可配置超时（毫秒，覆盖默认值） |
 
-## Prompt-Based Hooks
+## 基于提示的 Hooks
 
-For `Stop` and `SubagentStop` events, you can use LLM-based evaluation:
+对于 `Stop` 和 `SubagentStop` 事件，可以使用基于 LLM 的评估：
 
 ```json
 {
@@ -668,7 +668,7 @@ For `Stop` and `SubagentStop` events, you can use LLM-based evaluation:
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Review if all tasks are complete. Return your decision.",
+            "prompt": "审查所有任务是否完成。返回你的决策。",
             "timeout": 30
           }
         ]
@@ -678,21 +678,21 @@ For `Stop` and `SubagentStop` events, you can use LLM-based evaluation:
 }
 ```
 
-**LLM Response Schema:**
+**LLM 响应模式：**
 ```json
 {
   "decision": "approve",
-  "reason": "All tasks completed successfully",
+  "reason": "所有任务成功完成",
   "continue": false,
-  "stopReason": "Task complete"
+  "stopReason": "任务完成"
 }
 ```
 
-## Examples
+## 示例
 
-### Example 1: Bash Command Validator (PreToolUse)
+### 示例 1：Bash 命令验证器（PreToolUse）
 
-**File:** `.claude/hooks/validate-bash.py`
+**文件：** `.claude/hooks/validate-bash.py`
 
 ```python
 #!/usr/bin/env python3
@@ -725,7 +725,7 @@ if __name__ == "__main__":
     main()
 ```
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -744,9 +744,9 @@ if __name__ == "__main__":
 }
 ```
 
-### Example 2: Security Scanner (PostToolUse)
+### 示例 2：安全扫描器（PostToolUse）
 
-**File:** `.claude/hooks/security-scan.py`
+**文件：** `.claude/hooks/security-scan.py`
 
 ```python
 #!/usr/bin/env python3
@@ -790,9 +790,9 @@ if __name__ == "__main__":
     main()
 ```
 
-### Example 3: Auto-Format Code (PostToolUse)
+### 示例 3：自动格式化代码（PostToolUse）
 
-**File:** `.claude/hooks/format-code.sh`
+**文件：** `.claude/hooks/format-code.sh`
 
 ```bash
 #!/bin/bash
@@ -822,9 +822,9 @@ esac
 exit 0
 ```
 
-### Example 4: Prompt Validator (UserPromptSubmit)
+### 示例 4：提示验证器（UserPromptSubmit）
 
-**File:** `.claude/hooks/validate-prompt.py`
+**文件：** `.claude/hooks/validate-prompt.py`
 
 ```python
 #!/usr/bin/env python3
@@ -856,7 +856,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### Example 5: Intelligent Stop Hook (Prompt-Based)
+### 示例 5：智能 Stop Hook（基于提示）
 
 ```json
 {
@@ -866,7 +866,7 @@ if __name__ == "__main__":
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Review if Claude completed all requested tasks. Check: 1) Were all files created/modified? 2) Were there unresolved errors? If incomplete, explain what's missing.",
+            "prompt": "审查 Claude 是否完成了所有请求的任务。检查：1）所有文件是否创建/修改？2）是否有未解决的错误？如果不完整，解释缺少什么。",
             "timeout": 30
           }
         ]
@@ -876,11 +876,11 @@ if __name__ == "__main__":
 }
 ```
 
-### Example 6: Context Usage Tracker (Hook Pairs)
+### 示例 6：上下文使用跟踪器（Hook 配对）
 
-Track token consumption per request using `UserPromptSubmit` (pre-message) and `Stop` (post-response) hooks together.
+使用 `UserPromptSubmit`（消息前）和 `Stop`（响应后）hooks 配合跟踪每个请求的 token 消耗。
 
-**File:** `.claude/hooks/context-tracker.py`
+**文件：** `.claude/hooks/context-tracker.py`
 
 ```python
 #!/usr/bin/env python3
@@ -1014,7 +1014,7 @@ if __name__ == "__main__":
     main()
 ```
 
-**Configuration:**
+**配置：**
 ```json
 {
   "hooks": {
@@ -1042,56 +1042,56 @@ if __name__ == "__main__":
 }
 ```
 
-**How it works:**
-1. `UserPromptSubmit` fires before your prompt is processed - saves current token count
-2. `Stop` fires after Claude responds - calculates delta and reports usage
-3. Each session is isolated via `session_id` in the temp filename
+**工作原理：**
+1. `UserPromptSubmit` 在处理提示前触发 - 保存当前 token 计数
+2. `Stop` 在 Claude 响应后触发 - 计算差值并报告使用情况
+3. 每个会话通过临时文件名中的 `session_id` 隔离
 
-**Token Counting Methods:**
+**Token 计数方法：**
 
-| Method | Accuracy | Dependencies | Speed |
+| 方法 | 准确性 | 依赖 | 速度 |
 |--------|----------|--------------|-------|
-| Character estimation | ~80-90% | None | <1ms |
+| 字符估算 | ~80-90% | 无 | <1ms |
 | tiktoken (p50k_base) | ~90-95% | `pip install tiktoken` | <10ms |
 
-> **Note:** Anthropic hasn't released an official offline tokenizer. Both methods are approximations. The transcript includes user prompts, Claude's responses, and tool outputs, but NOT system prompts or internal context.
+> **注意：** Anthropic 未发布官方离线 tokenizer。两种方法都是近似值。记录包括用户提示、Claude 响应和工具输出，但不包括系统提示或内部上下文。
 
-### Example 7: Seed Auto-Mode Permissions (One-Time Setup Script)
+### 示例 7：种子自动模式权限（一次性设置脚本）
 
-A one-time setup script that seeds `~/.claude/settings.json` with ~67 safe permission rules equivalent to Claude Code's auto-mode baseline — without any hook, without remembering future choices. Run it once; safe to re-run (skips rules already present).
+一次性设置脚本，向 `~/.claude/settings.json` 添加约 67 个安全权限规则，相当于 Claude Code 自动模式基线 — 无需任何 hook，无需记住未来选择。运行一次；可安全重复运行（跳过已存在的规则）。
 
-**File:** `09-advanced-features/setup-auto-mode-permissions.py`
+**文件：** `09-advanced-features/setup-auto-mode-permissions.py`
 
 ```bash
-# Preview what would be added
+# 预览将添加的内容
 python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run
 
-# Apply
+# 应用
 python3 09-advanced-features/setup-auto-mode-permissions.py
 ```
 
-**What gets added:**
+**添加内容：**
 
-| Category | Examples |
+| 类别 | 示例 |
 |----------|---------|
-| Built-in tools | `Read(*)`, `Edit(*)`, `Write(*)`, `Glob(*)`, `Grep(*)`, `Agent(*)`, `WebSearch(*)` |
-| Git read | `Bash(git status:*)`, `Bash(git log:*)`, `Bash(git diff:*)` |
-| Git write (local) | `Bash(git add:*)`, `Bash(git commit:*)`, `Bash(git checkout:*)` |
-| Package managers | `Bash(npm install:*)`, `Bash(pip install:*)`, `Bash(cargo build:*)` |
-| Build & test | `Bash(make:*)`, `Bash(pytest:*)`, `Bash(go test:*)` |
-| Common shell | `Bash(ls:*)`, `Bash(cat:*)`, `Bash(find:*)`, `Bash(cp:*)`, `Bash(mv:*)` |
-| GitHub CLI | `Bash(gh pr view:*)`, `Bash(gh pr create:*)`, `Bash(gh issue list:*)` |
+| 内置工具 | `Read(*)`、`Edit(*)`、`Write(*)`、`Glob(*)`、`Grep(*)`、`Agent(*)`、`WebSearch(*)` |
+| Git 读取 | `Bash(git status:*)`、`Bash(git log:*)`、`Bash(git diff:*)` |
+| Git 写入（本地） | `Bash(git add:*)`、`Bash(git commit:*)`、`Bash(git checkout:*)` |
+| 包管理器 | `Bash(npm install:*)`、`Bash(pip install:*)`、`Bash(cargo build:*)` |
+| 构建和测试 | `Bash(make:*)`、`Bash(pytest:*)`、`Bash(go test:*)` |
+| 常用 shell | `Bash(ls:*)`、`Bash(cat:*)`、`Bash(find:*)`、`Bash(cp:*)`、`Bash(mv:*)` |
+| GitHub CLI | `Bash(gh pr view:*)`、`Bash(gh pr create:*)`、`Bash(gh issue list:*)` |
 
-**What is intentionally excluded** (never added by this script):
-- `rm -rf`, `sudo`, force push, `git reset --hard`
-- `DROP TABLE`, `kubectl delete`, `terraform destroy`
-- `npm publish`, `curl | bash`, production deploys
+**有意排除的内容**（此脚本从不添加）：
+- `rm -rf`、`sudo`、强制推送、`git reset --hard`
+- `DROP TABLE`、`kubectl delete`、`terraform destroy`
+- `npm publish`、`curl | bash`、生产部署
 
-## Plugin Hooks
+## 插件 Hooks
 
-Plugins can include hooks in their `hooks/hooks.json` file:
+插件可以在其 `hooks/hooks.json` 文件中包含 hooks：
 
-**File:** `plugins/hooks/hooks.json`
+**文件：** `plugins/hooks/hooks.json`
 
 ```json
 {
@@ -1111,15 +1111,15 @@ Plugins can include hooks in their `hooks/hooks.json` file:
 }
 ```
 
-**Environment Variables in Plugin Hooks:**
-- `${CLAUDE_PLUGIN_ROOT}` - Path to the plugin directory
-- `${CLAUDE_PLUGIN_DATA}` - Path to the plugin data directory
+**插件 Hooks 中的环境变量：**
+- `${CLAUDE_PLUGIN_ROOT}` - 插件目录路径
+- `${CLAUDE_PLUGIN_DATA}` - 插件数据目录路径
 
-This allows plugins to include custom validation and automation hooks.
+这允许插件包含自定义验证和自动化 hooks。
 
-## MCP Tool Hooks
+## MCP 工具 Hooks
 
-MCP tools follow the pattern `mcp__<server>__<tool>`:
+MCP 工具遵循模式 `mcp__<server>__<tool>`：
 
 ```json
 {
@@ -1139,59 +1139,59 @@ MCP tools follow the pattern `mcp__<server>__<tool>`:
 }
 ```
 
-## Security Considerations
+## 安全考虑
 
-### Disclaimer
+### 免责声明
 
-**USE AT YOUR OWN RISK**: Hooks execute arbitrary shell commands. You are solely responsible for:
-- Commands you configure
-- File access/modification permissions
-- Potential data loss or system damage
-- Testing hooks in safe environments before production use
+**使用风险自负**：Hooks 执行任意 shell 命令。你独自负责：
+- 你配置的命令
+- 文件访问/修改权限
+- 潜在数据丢失或系统损坏
+- 在生产环境使用前在安全环境中测试 hooks
 
-### Security Notes
+### 安全说明
 
-- **Workspace trust required:** The `statusLine` and `fileSuggestion` hook output commands now require workspace trust acceptance before they take effect.
-- **HTTP hooks and environment variables:** HTTP hooks require an explicit `allowedEnvVars` list to use environment variable interpolation in URLs. This prevents accidental leakage of sensitive environment variables to remote endpoints.
-- **Managed settings hierarchy:** The `disableAllHooks` setting now respects the managed settings hierarchy, meaning organization-level settings can enforce hook disablement that individual users cannot override.
+- **需要工作区信任：** `statusLine` 和 `fileSuggestion` hook 输出命令现在需要工作区信任接受才能生效。
+- **HTTP hooks 和环境变量：** HTTP hooks 需要显式 `allowedEnvVars` 列表才能在 URL 中使用环境变量插值。这防止敏感环境变量意外泄露到远程端点。
+- **管理设置层级：** `disableAllHooks` 设置现在遵循管理设置层级，意味着组织级设置可以强制禁用 hooks，个人用户无法覆盖。
 
-### Best Practices
+### 最佳实践
 
-| Do | Don't |
+| 应该 | 不应该 |
 |-----|-------|
-| Validate and sanitize all inputs | Trust input data blindly |
-| Quote shell variables: `"$VAR"` | Use unquoted: `$VAR` |
-| Block path traversal (`..`) | Allow arbitrary paths |
-| Use absolute paths with `$CLAUDE_PROJECT_DIR` | Hardcode paths |
-| Skip sensitive files (`.env`, `.git/`, keys) | Process all files |
-| Test hooks in isolation first | Deploy untested hooks |
-| Use explicit `allowedEnvVars` for HTTP hooks | Expose all env vars to webhooks |
+| 验证和净化所有输入 | 盲目信任输入数据 |
+| 引用 shell 变量：`"$VAR"` | 使用未引用：`$VAR` |
+| 拦截路径遍历（`..`） | 允许任意路径 |
+| 使用 `$CLAUDE_PROJECT_DIR` 的绝对路径 | 硬编码路径 |
+| 跳过敏感文件（`.env`、`.git/`、密钥） | 处理所有文件 |
+| 先单独测试 hooks | 部署未测试的 hooks |
+| HTTP hooks 使用显式 `allowedEnvVars` | 向 webhooks 暴露所有环境变量 |
 
-## Debugging
+## 调试
 
-### Enable Debug Mode
+### 启用调试模式
 
-Run Claude with debug flag for detailed hook logs:
+使用调试标志运行 Claude 以获取详细 hook 日志：
 
 ```bash
 claude --debug
 ```
 
-### Verbose Mode
+### 详细模式
 
-Use `Ctrl+O` in Claude Code to enable verbose mode and see hook execution progress.
+在 Claude Code 中使用 `Ctrl+O` 启用详细模式并查看 hook 执行进度。
 
-### Test Hooks Independently
+### 独立测试 Hooks
 
 ```bash
-# Test with sample JSON input
+# 使用示例 JSON 输入测试
 echo '{"tool_name": "Bash", "tool_input": {"command": "ls -la"}}' | python3 .claude/hooks/validate-bash.py
 
-# Check exit code
+# 检查退出码
 echo $?
 ```
 
-## Complete Configuration Example
+## 完整配置示例
 
 ```json
 {
@@ -1251,7 +1251,7 @@ echo $?
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Verify all tasks are complete before stopping.",
+            "prompt": "停止前验证所有任务已完成。",
             "timeout": 30
           }
         ]
@@ -1261,28 +1261,28 @@ echo $?
 }
 ```
 
-## Hook Execution Details
+## Hook 执行详情
 
-| Aspect | Behavior |
+| 方面 | 行为 |
 |--------|----------|
-| **Timeout** | 60 seconds default, configurable per command |
-| **Parallelization** | All matching hooks run in parallel |
-| **Deduplication** | Identical hook commands deduplicated |
-| **Environment** | Runs in current directory with Claude Code's environment |
+| **超时** | 默认 60 秒，每个命令可配置 |
+| **并行化** | 所有匹配的 hooks 并行运行 |
+| **去重** | 相同的 hook 命令去重 |
+| **环境** | 在当前目录以 Claude Code 环境运行 |
 
 ---
 
-## Patterns & Recipes
+## 模式与配方
 
-Battle-tested hook combinations that solve real problems.
+久经考验的 hook 组合，解决实际问题。
 
-### Pattern 1: Format-on-Save Pipeline
+### 模式 1：保存时格式化管道
 
-The most common hook pattern: automatic formatting after every file write.
+最常见的 hook 模式：每次写入文件后自动格式化。
 
-**Problem:** Code gets committed unformatted. CI fails. Developer time wasted.
+**问题：** 代码未格式化就提交。CI 失败。浪费开发者时间。
 
-**Solution:** Chain formatters as PostToolUse hooks.
+**解决方案：** 将格式化工具链为 PostToolUse hooks。
 
 ```json
 {
@@ -1300,18 +1300,18 @@ The most common hook pattern: automatic formatting after every file write.
 }
 ```
 
-**Benefits:**
-- Every file is formatted before you even see it
-- Lint errors caught instantly, not 20 minutes later in CI
-- Zero mental overhead - it just happens
+**好处：**
+- 每个文件在你看到之前就已格式化
+- Lint 错误立即捕获，而不是 20 分钟后在 CI 中
+- 零心智负担 - 它自动发生
 
-### Pattern 2: Security Gate
+### 模式 2：安全门
 
-Block dangerous operations before they execute.
+在执行前拦截危险操作。
 
-**Problem:** Claude sometimes suggests destructive commands. One wrong `rm -rf` can cost hours.
+**问题：** Claude 有时建议危险命令。一个错误的 `rm -rf` 可能浪费数小时。
 
-**Solution:** PreToolUse validator that blocks dangerous patterns.
+**解决方案：** PreToolUse 验证器拦截危险模式。
 
 ```json
 {
@@ -1331,20 +1331,20 @@ Block dangerous operations before they execute.
 }
 ```
 
-**What it blocks:**
-- `rm -rf /` - Root deletion
-- `sudo rm` - Elevated deletion
-- `git push --force main` - Force push to main
-- `DROP DATABASE` - SQL destruction
-- `kubectl delete namespace` - Cluster destruction
+**拦截内容：**
+- `rm -rf /` - 根目录删除
+- `sudo rm` - 提权删除
+- `git push --force main` - 强制推送到 main
+- `DROP DATABASE` - SQL 破坏
+- `kubectl delete namespace` - 集群破坏
 
-### Pattern 3: Test Guard
+### 模式 3：测试守卫
 
-Run relevant tests when code changes.
+代码变更时运行相关测试。
 
-**Problem:** Changes break tests. You don't know until CI runs.
+**问题：** 变更破坏测试。你直到 CI 运行才知道。
 
-**Solution:** PostToolUse test runner for modified files.
+**解决方案：** PostToolUse 测试运行器用于修改的文件。
 
 ```json
 {
@@ -1365,19 +1365,19 @@ Run relevant tests when code changes.
 }
 ```
 
-**How it works:**
-- Detects which file was modified
-- Finds related test files
-- Runs only those tests (fast feedback)
-- Reports results back to Claude
+**工作原理：**
+- 检测哪个文件被修改
+- 查找相关测试文件
+- 只运行那些测试（快速反馈）
+- 向 Claude 报告结果
 
-### Pattern 4: Session Hygiene
+### 模式 4：会话卫生
 
-Track what happens in each session.
+跟踪每个会话发生的事情。
 
-**Problem:** Long sessions lose context. You forget what was done.
+**问题：** 长会话丢失上下文。你忘记做了什么。
 
-**Solution:** Hook pair that tracks session activity.
+**解决方案：** Hook 配对跟踪会话活动。
 
 ```json
 {
@@ -1401,19 +1401,19 @@ Track what happens in each session.
 }
 ```
 
-**Tracks:**
-- Files created/modified
-- Commands run
-- Tests passed/failed
-- Token usage
+**跟踪：**
+- 创建/修改的文件
+- 运行的命令
+- 通过/失败的测试
+- Token 使用
 
-### Pattern 5: Secret Scanner
+### 模式 5：密钥扫描器
 
-Prevent secrets from ever reaching git.
+防止密钥进入 git。
 
-**Problem:** API keys, passwords, tokens get committed. Public repos leak secrets.
+**问题：** API 密钥、密码、令牌被提交。公开仓库泄露密钥。
 
-**Solution:** PostToolUse security scanner.
+**解决方案：** PostToolUse 安全扫描器。
 
 ```json
 {
@@ -1433,22 +1433,22 @@ Prevent secrets from ever reaching git.
 }
 ```
 
-**Scans for:**
-- Hardcoded passwords
-- API keys and tokens
-- AWS credentials
-- Private keys
-- Uses trufflehog/semgrep if available
+**扫描内容：**
+- 硬编码密码
+- API 密钥和令牌
+- AWS 凭证
+- 私钥
+- 如果可用则使用 trufflehog/semgrep
 
 ---
 
-## Try It Now: Security Guard
+## 立即尝试：安全守卫
 
-Create a hook that blocks dangerous bash commands.
+创建一个拦截危险 bash 命令的 hook。
 
-**Step 1: Create the validator**
+**步骤 1：创建验证器**
 
-`.claude/hooks/prompt-validator.sh`:
+`.claude/hooks/prompt-validator.sh`：
 
 ```bash
 #!/bin/bash
@@ -1495,7 +1495,7 @@ done
 exit 0
 ```
 
-**Step 2: Configure**
+**步骤 2：配置**
 
 ```json
 {
@@ -1515,28 +1515,28 @@ exit 0
 }
 ```
 
-**Step 3: Test**
+**步骤 3：测试**
 
-Try asking Claude to run a dangerous command:
+尝试让 Claude 运行危险命令：
 
 ```
-> Run rm -rf /tmp/test
+> 运行 rm -rf /tmp/test
 
 [Hook] BLOCKED: Dangerous command detected: rm -rf /
 [Hook] Command: rm -rf /tmp/test
 ```
 
-Claude will see the block message and won't execute the command.
+Claude 会看到拦截消息并且不会执行命令。
 
 ---
 
-## Complete Hook Scripts Reference
+## 完整 Hook 脚本参考
 
-Production-ready hook scripts for common use cases. Each script includes error handling, logging, and configuration detection.
+常见用例的生产就绪 hook 脚本。每个脚本包含错误处理、日志和配置检测。
 
 ### auto-format.sh
 
-Multi-language formatter with smart detection.
+智能检测的多语言格式化器。
 
 ```bash
 #!/bin/bash
@@ -1572,7 +1572,7 @@ has_config() {
 # Format based on file extension
 format_file() {
   local ext="${FILE_PATH##*.}"
-  
+
   case "$ext" in
     js|jsx|ts|tsx|json|md|yaml|yml|css|scss)
       if command -v prettier &>/dev/null; then
@@ -1613,7 +1613,7 @@ exit 0
 
 ### security-scan.sh
 
-Secrets and vulnerability scanner.
+密钥和漏洞扫描器。
 
 ```bash
 #!/bin/bash
@@ -1647,22 +1647,22 @@ check_secrets() {
   if grep -qE "(password|passwd|pwd)\s*=\s*['\"][^'\"]{8,}['\"]" "$FILE_PATH" 2>/dev/null; then
     WARNINGS+=("Potential hardcoded password")
   fi
-  
+
   # API keys
   if grep -qE "(api[_-]?key|apikey|access[_-]?token)\s*=\s*['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
     WARNINGS+=("Potential hardcoded API key")
   fi
-  
+
   # AWS keys
   if grep -qE "AKIA[0-9A-Z]{16}" "$FILE_PATH" 2>/dev/null; then
     WARNINGS+=("AWS access key detected")
   fi
-  
+
   # Private keys
   if grep -q "BEGIN.*PRIVATE KEY" "$FILE_PATH" 2>/dev/null; then
     WARNINGS+=("Private key detected")
   fi
-  
+
   # Generic secrets
   if grep -qE "(secret|token)\s*=\s*['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
     WARNINGS+=("Potential hardcoded secret")
@@ -1678,7 +1678,7 @@ run_external_scanners() {
         [[ -n "$detector" ]] && WARNINGS+=("Trufflehog: $detector")
       done
   fi
-  
+
   # Semgrep - vulnerability patterns
   if command -v semgrep &>/dev/null; then
     semgrep --config=auto "$FILE_PATH" --json --quiet 2>/dev/null | \
@@ -1698,7 +1698,7 @@ if [[ ${#WARNINGS[@]} -gt 0 ]]; then
   for warning in "${WARNINGS[@]}"; do
     log "  - $warning"
   done
-  
+
   # Output JSON for Claude
   jq -n --arg file "$FILE_PATH" --arg warnings "$(printf '%s; ' "${WARNINGS[@]}")" \
     '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: "Security scan found issues in \($file): \($warnings)"}}'
@@ -1709,7 +1709,7 @@ exit 0
 
 ### test-runner.sh
 
-Smart test runner for modified files.
+修改文件的智能测试运行器。
 
 ```bash
 #!/bin/bash
@@ -1739,7 +1739,7 @@ find_test_file() {
   local src="$1"
   local base=$(basename "$src" | sed 's/\.[^.]*$//')
   local dir=$(dirname "$src")
-  
+
   # Common test file patterns
   local patterns=(
     "test_${base}.py"
@@ -1749,17 +1749,17 @@ find_test_file() {
     "${base}_test.go"
     "${base}Test.java"
   )
-  
+
   # Check in test directories
   local test_dirs=("tests" "test" "__tests__" "src/__tests__")
-  
+
   for test_dir in "${test_dirs[@]}"; do
     for pattern in "${patterns[@]}"; do
       local candidate="$test_dir/$pattern"
       [[ -f "$candidate" ]] && echo "$candidate" && return
     done
   done
-  
+
   # Check same directory
   for pattern in "${patterns[@]}"; do
     [[ -f "$dir/$pattern" ]] && echo "$dir/$pattern" && return
@@ -1769,7 +1769,7 @@ find_test_file() {
 # Run tests based on framework
 run_tests() {
   local test_file="$1"
-  
+
   if [[ "$test_file" == *.py ]]; then
     if command -v pytest &>/dev/null; then
       log "Running pytest on $test_file"
@@ -1804,7 +1804,7 @@ exit 0
 
 ### prompt-validator.sh
 
-Command and prompt safety validator.
+命令和提示安全验证器。
 
 ```bash
 #!/bin/bash
@@ -1871,7 +1871,7 @@ for pattern in "${BLOCKED_PATTERNS[@]}"; do
     log "BLOCKED: Dangerous pattern detected"
     log "Pattern: $pattern"
     log "Target: $TARGET"
-    
+
     # Return JSON block decision
     jq -n --arg reason "Blocked dangerous operation: $pattern" \
       '{decision: "block", reason: $reason}'
@@ -1893,7 +1893,7 @@ exit 0
 
 ### notify-session-end.sh
 
-Session completion notifications.
+会话完成通知。
 
 ```bash
 #!/bin/bash
@@ -1916,7 +1916,7 @@ log() {
 desktop_notify() {
   local title="Claude Code Session Ended"
   local message="Session complete in $CWD"
-  
+
   if [[ "$(uname)" == "Darwin" ]]; then
     osascript -e 'display notification "'"$message"'" with title "'"$title"'"' 2>/dev/null || true
   elif [[ "$(uname)" == "Linux" ]]; then
@@ -1928,14 +1928,14 @@ desktop_notify() {
 slack_notify() {
   local webhook="${SLACK_WEBHOOK_URL:-}"
   [[ -z "$webhook" ]] && return
-  
+
   local project=$(basename "$CWD")
-  
+
   curl -X POST "$webhook" \
     -H 'Content-Type: application/json' \
     -d '{"text": "Claude Code session ended in *'"$project"'*"}' \
     --silent --max-time 5 || true
-  
+
   log "Slack notification sent"
 }
 
@@ -1943,18 +1943,18 @@ slack_notify() {
 email_notify() {
   local to="${SESSION_EMAIL:-}"
   [[ -z "$to" ]] && return
-  
+
   local subject="Claude Code Session: $(basename "$CWD")"
-  
+
   echo "Session ended in $CWD. Reason: $REASON" | mail -s "$subject" "$to" 2>/dev/null || true
-  
+
   log "Email notification sent"
 }
 
 # Generate session summary
 generate_summary() {
   local transcript=$(echo "$INPUT" | jq -r '.transcript_path // empty')
-  
+
   if [[ -n "$transcript" && -f "$transcript" ]]; then
     local lines=$(wc -l < "$transcript" 2>/dev/null || echo "0")
     log "Session summary: $lines transcript lines"
@@ -1973,52 +1973,52 @@ exit 0
 
 ---
 
-## Troubleshooting
+## 故障排除
 
-### Hook Not Executing
-- Verify JSON configuration syntax is correct
-- Check matcher pattern matches the tool name
-- Ensure script exists and is executable: `chmod +x script.sh`
-- Run `claude --debug` to see hook execution logs
-- Verify hook reads JSON from stdin (not command args)
+### Hook 未执行
+- 验证 JSON 配置语法正确
+- 检查匹配器模式是否匹配工具名称
+- 确保脚本存在且可执行：`chmod +x script.sh`
+- 运行 `claude --debug` 查看 hook 执行日志
+- 验证 hook 从 stdin 读取 JSON（而非命令参数）
 
-### Hook Blocks Unexpectedly
-- Test hook with sample JSON: `echo '{"tool_name": "Write", ...}' | ./hook.py`
-- Check exit code: should be 0 for allow, 2 for block
-- Check stderr output (shown on exit code 2)
+### Hook 意外拦截
+- 使用示例 JSON 测试 hook：`echo '{"tool_name": "Write", ...}' | ./hook.py`
+- 检查退出码：应为 0 表示允许，2 表示拦截
+- 检查 stderr 输出（退出码 2 时显示）
 
-### JSON Parsing Errors
-- Always read from stdin, not command arguments
-- Use proper JSON parsing (not string manipulation)
-- Handle missing fields gracefully
+### JSON 解析错误
+- 始终从 stdin 读取，而非命令参数
+- 使用正确的 JSON 解析（而非字符串操作）
+- 优雅处理缺失字段
 
-## Installation
+## 安装
 
-### Step 1: Create Hooks Directory
+### 步骤 1：创建 Hooks 目录
 ```bash
 mkdir -p ~/.claude/hooks
 ```
 
-### Step 2: Copy Example Hooks
+### 步骤 2：复制示例 Hooks
 ```bash
 cp 06-hooks/*.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/*.sh
 ```
 
-### Step 3: Configure in Settings
-Edit `~/.claude/settings.json` or `.claude/settings.json` with the hook configuration shown above.
+### 步骤 3：在设置中配置
+使用上述 hook 配置编辑 `~/.claude/settings.json` 或 `.claude/settings.json`。
 
-## Related Concepts
+## 相关概念
 
-- **[Checkpoints and Rewind](../08-checkpoints/)** - Save and restore conversation state
-- **[Slash Commands](../01-slash-commands/)** - Create custom slash commands
-- **[Skills](../03-skills/)** - Reusable autonomous capabilities
-- **[Subagents](../04-subagents/)** - Delegated task execution
-- **[Plugins](../07-plugins/)** - Bundled extension packages
-- **[Advanced Features](../09-advanced-features/)** - Explore advanced Claude Code capabilities
+- **[Checkpoints 和 Rewind](../08-checkpoints/)** - 保存和恢复对话状态
+- **[Slash Commands](../01-slash-commands/)** - 创建自定义 slash 命令
+- **[Skills](../03-skills/)** - 可复用自主能力
+- **[Subagents](../04-subagents/)** - 委托任务执行
+- **[Plugins](../07-plugins/)** - 打包扩展包
+- **[高级功能](../09-advanced-features/)** - 探索 Claude Code 高级能力
 
-## Additional Resources
+## 其他资源
 
-- **[Official Hooks Documentation](https://code.claude.com/docs/en/hooks)** - Complete hooks reference
-- **[CLI Reference](https://code.claude.com/docs/en/cli-reference)** - Command-line interface documentation
-- **[Memory Guide](../02-memory/)** - Persistent context configuration
+- **[官方 Hooks 文档](https://code.claude.com/docs/en/hooks)** - 完整 hooks 参考
+- **[CLI 参考](https://code.claude.com/docs/en/cli-reference)** - 命令行界面文档
+- **[Memory 指南](../02-memory/)** - 持久上下文配置
