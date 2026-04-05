@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -1086,6 +1116,20 @@ export GITHUB_TOKEN="your_token"</p><h1>Verify token has correct permissions</h1
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -213,7 +243,7 @@
 <blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将学到：</strong> 学习使用 slash commands 加速工作流程。</p><h1>Slash Commands</h1><h2 id="概述">概述</h2><p>Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它们分为几种类型：</p><ul><li><strong>内置命令</strong>：由 Claude Code 提供（<code>/help</code>、<code>/clear</code>、<code>/model</code>）</li>
 <li><strong>Skills</strong>：用户定义的命令，以 <code>SKILL.md</code> 文件形式创建（<code>/optimize</code>、<code>/pr</code>）</li>
 <li><strong>插件命令</strong>：来自已安装插件的命令（<code>/frontend-design:frontend-design</code>）</li>
-<li><strong>MCP prompts</strong>：来自 MCP servers 的命令（<code>/mcp__github__list_prs</code>）</li><blockquote><strong>注意</strong>：自定义 slash commands 已合并到 skills 中。<code>.claude/commands/</code> 中的文件仍然可用，但 skills（<code>.claude/skills/</code>）现在是推荐的方式。两者都创建 <code>/command-name</code> 快捷方式。参见 <a href="../03-skills/">Skills 指南</a> 获取完整参考。</blockquote><h2 id="内置命令参考">内置命令参考</h2><p>内置命令是常用操作的快捷方式。共有 <strong>55+ 个内置命令</strong> 和 <strong>5 个内置 skills</strong> 可用。在 Claude Code 中输入 <code>/</code> 可查看完整列表，或输入 <code>/</code> 后跟任意字母进行筛选。</p><table>
+<li><strong>MCP prompts</strong>：来自 MCP servers 的命令（<code>/mcp__github__list_prs</code>）</li><blockquote><strong>注意</strong>：自定义 slash commands 已合并到 skills 中。<code>.claude/commands/</code> 中的文件仍然可用，但 skills（<code>.claude/skills/</code>）现在是推荐的方式。两者都创建 <code>/command-name</code> 快捷方式。参见 <a href="/content/03-skills.html">Skills 指南</a> 获取完整参考。</blockquote><h2 id="内置命令参考">内置命令参考</h2><p>内置命令是常用操作的快捷方式。共有 <strong>55+ 个内置命令</strong> 和 <strong>5 个内置 skills</strong> 可用。在 Claude Code 中输入 <code>/</code> 可查看完整列表，或输入 <code>/</code> 后跟任意字母进行筛选。</p><table>
 <thead>
 <tr>
 <th>命令</th>
@@ -998,11 +1028,11 @@ allowed-tools: Bash(git status), Bash(git log), Read
 <li>添加更具体的指令</li>
 <li>在 skill 文件中包含示例</li>
 <li>若使用 bash 命令，检查 </code>allowed-tools`</li>
-<li>先用简单输入测试</li><h3 id="skill-与命令冲突">Skill 与命令冲突</h3><p>若两者同名，<strong>skill 优先</strong>。移除其中一个或重命名。</p><h2 id="相关指南">相关指南</h2><li><strong><a href="../03-skills/">Skills</a></strong> - skills 完整参考（自动调用能力）</li>
-<li><strong><a href="../02-memory/">Memory</a></strong> - CLAUDE.md 持久上下文</li>
-<li><strong><a href="../04-subagents/">Subagents</a></strong> - 委托 AI 代理</li>
-<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包命令集合</li>
-<li><strong><a href="../06-hooks/">Hooks</a></strong> - 事件驱动自动化</li><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a> - 内置命令参考</li>
+<li>先用简单输入测试</li><h3 id="skill-与命令冲突">Skill 与命令冲突</h3><p>若两者同名，<strong>skill 优先</strong>。移除其中一个或重命名。</p><h2 id="相关指南">相关指南</h2><li><strong><a href="/content/03-skills.html">Skills</a></strong> - skills 完整参考（自动调用能力）</li>
+<li><strong><a href="/content/02-memory.html">Memory</a></strong> - CLAUDE.md 持久上下文</li>
+<li><strong><a href="/content/04-subagents.html">Subagents</a></strong> - 委托 AI 代理</li>
+<li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包命令集合</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动自动化</li><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a> - 内置命令参考</li>
 <li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a> - 完整 skills 参考</li>
 <li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - 命令行选项</li></ul><hr><p><em>属于 <a href="../">Claude How To</a> 指南系列</em></p>
         </div>
@@ -1038,6 +1068,20 @@ allowed-tools: Bash(git status), Bash(git log), Read
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

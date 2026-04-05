@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -1159,12 +1189,12 @@ git push origin main
 /plugin disable plugin-name</p><h1>重新启用</h1>
 /plugin enable plugin-name
 </code></pre><h3 id="卸载-plugin">卸载 Plugin</h3><pre><code class="language-bash">/plugin uninstall plugin-name
-</code></pre><h2 id="相关概念">相关概念</h2><p>以下 Claude Code 功能与 plugins 配合使用：</p><li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> — 打包在 plugins 中的单个命令</li>
-<li><strong><a href="../02-memory/">Memory</a></strong> — Plugins 的持久化上下文</li>
-<li><strong><a href="../03-skills/">Skills</a></strong> — 可包装成 plugins 的领域专业知识</li>
-<li><strong><a href="../04-subagents/">Subagents</a></strong> — 作为 plugin 组件包含的专用 agents</li>
-<li><strong><a href="../05-mcp/">MCP Servers</a></strong> — 打包在 plugins 中的 Model Context Protocol 集成</li>
-<li><strong><a href="../06-hooks/">Hooks</a></strong> — 触发 plugin 工作流的事件处理器</li><h2 id="完整示例工作流">完整示例工作流</h2><h3 id="pr-review-plugin-完整工作流">PR Review Plugin 完整工作流</h3><pre><code class="language-">1. 用户：/review-pr</p><li>Plugin 执行：</li>
+</code></pre><h2 id="相关概念">相关概念</h2><p>以下 Claude Code 功能与 plugins 配合使用：</p><li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> — 打包在 plugins 中的单个命令</li>
+<li><strong><a href="/content/02-memory.html">Memory</a></strong> — Plugins 的持久化上下文</li>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> — 可包装成 plugins 的领域专业知识</li>
+<li><strong><a href="/content/04-subagents.html">Subagents</a></strong> — 作为 plugin 组件包含的专用 agents</li>
+<li><strong><a href="/content/05-mcp.html">MCP Servers</a></strong> — 打包在 plugins 中的 Model Context Protocol 集成</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> — 触发 plugin 工作流的事件处理器</li><h2 id="完整示例工作流">完整示例工作流</h2><h3 id="pr-review-plugin-完整工作流">PR Review Plugin 完整工作流</h3><pre><code class="language-">1. 用户：/review-pr</p><li>Plugin 执行：</li>
    ├── pre-review.js hook 验证 git 仓库
    ├── GitHub MCP 获取 PR 数据
    ├── security-reviewer subagent 分析安全
@@ -1199,8 +1229,8 @@ git push origin main
 <li><a href="https://code.claude.com/docs/en/plugin-marketplaces">Plugin Marketplaces</a></li>
 <li><a href="https://code.claude.com/docs/en/plugins-reference">Plugins 参考</a></li>
 <li><a href="https://modelcontextprotocol.io/">MCP Server 参考</a></li>
-<li><a href="../04-subagents/README.md">Subagent 配置指南</a></li>
-<li><a href="../06-hooks/README.md">Hook 系统参考</a></li></ul>
+<li><a href="/content/04-subagents.html">Subagent 配置指南</a></li>
+<li><a href="/content/06-hooks.html">Hook 系统参考</a></li></ul>
         </div>
 
         
@@ -1234,6 +1264,20 @@ git push origin main
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

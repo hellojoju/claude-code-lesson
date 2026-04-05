@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -870,7 +900,7 @@ tools: Agent(worker, researcher), Read, Bash
 <li><strong>Mailbox</strong>：队友通信状态和协调的 agent 间消息传递系统</li>
 <li><strong>Teammates</strong>：独立的 Claude Code 实例，各有自己的上下文窗口</li><h3 id="任务分配和消息传递">任务分配和消息传递</h3><p>团队负责人将工作分解为任务并分配给队友。共享任务列表处理：</p><li><strong>自动依赖管理</strong> — 任务等待其依赖项完成</li>
 <li><strong>状态跟踪</strong> — 队友工作时更新任务状态</li>
-<li><strong>Agent 间消息传递</strong> — 队友通过邮箱发送消息进行协调（例如，"数据库架构已准备好，你可以开始编写查询"）</li><h3 id="计划审批工作流">计划审批工作流</h3><p>对于复杂任务，团队负责人在队友开始工作前创建执行计划。用户审查并批准计划，确保团队的方法在代码更改前与期望一致。</p><h3 id="团队-hook-事件">团队 hook 事件</h3><p>Agent Teams 引入两个额外的 <a href="../06-hooks/">hook 事件</a>：</p><table>
+<li><strong>Agent 间消息传递</strong> — 队友通过邮箱发送消息进行协调（例如，"数据库架构已准备好，你可以开始编写查询"）</li><h3 id="计划审批工作流">计划审批工作流</h3><p>对于复杂任务，团队负责人在队友开始工作前创建执行计划。用户审查并批准计划，确保团队的方法在代码更改前与期望一致。</p><h3 id="团队-hook-事件">团队 hook 事件</h3><p>Agent Teams 引入两个额外的 <a href="/content/06-hooks.html">hook 事件</a>：</p><table>
 <thead>
 <tr>
 <th>事件</th>
@@ -1144,12 +1174,12 @@ cp /path/to/04-subagents/debugger.md ~/.claude/agents/
 │       ├── debugger.md
 │       └── data-scientist.md
 └── ...
-</code></pre><hr><h2 id="相关概念">相关概念</h2><h3 id="相关功能">相关功能</h3><li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 快速用户调用快捷方式</li>
-<li><strong><a href="../02-memory/">Memory</a></strong> - 持久化跨会话上下文</li>
-<li><strong><a href="../03-skills/">Skills</a></strong> - 可复用自主能力</li>
-<li><strong><a href="../05-mcp/">MCP Protocol</a></strong> - 实时外部数据访问</li>
-<li><strong><a href="../06-hooks/">Hooks</a></strong> - 事件驱动的 shell 命令自动化</li>
-<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包的扩展包</li><h3 id="与其他功能比较">与其他功能比较</h3><table>
+</code></pre><hr><h2 id="相关概念">相关概念</h2><h3 id="相关功能">相关功能</h3><li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> - 快速用户调用快捷方式</li>
+<li><strong><a href="/content/02-memory.html">Memory</a></strong> - 持久化跨会话上下文</li>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> - 可复用自主能力</li>
+<li><strong><a href="/content/05-mcp.html">MCP Protocol</a></strong> - 实时外部数据访问</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动的 shell 命令自动化</li>
+<li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包的扩展包</li><h3 id="与其他功能比较">与其他功能比较</h3><table>
 <thead>
 <tr>
 <th>功能</th>
@@ -1213,10 +1243,10 @@ cp /path/to/04-subagents/debugger.md ~/.claude/agents/
     Subagents -->|Isolated| Context["Clean Context<br/>Window"]
 </div><hr><h2 id="其他资源">其他资源</h2><li><a href="https://code.claude.com/docs/en/sub-agents">官方 Subagents 文档</a></li>
 <li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - <code>--agents</code> 标志和其他 CLI 选项</li>
-<li><a href="../07-plugins/">插件指南</a> - 用于将 agents 与其他功能打包</li>
-<li><a href="../03-skills/">Skills 指南</a> - 用于自动调用能力</li>
-<li><a href="../02-memory/">Memory 指南</a> - 用于持久化上下文</li>
-<li><a href="../06-hooks/">Hooks 指南</a> - 用于事件驱动自动化</li></ul><hr><p><em>最后更新：2026 年 3 月</em></p><p><em>本指南涵盖完整的 subagent 配置、委托模式和 Claude Code 最佳实践。</em></p>
+<li><a href="/content/07-plugins.html">插件指南</a> - 用于将 agents 与其他功能打包</li>
+<li><a href="/content/03-skills.html">Skills 指南</a> - 用于自动调用能力</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> - 用于持久化上下文</li>
+<li><a href="/content/06-hooks.html">Hooks 指南</a> - 用于事件驱动自动化</li></ul><hr><p><em>最后更新：2026 年 3 月</em></p><p><em>本指南涵盖完整的 subagent 配置、委托模式和 Claude Code 最佳实践。</em></p>
         </div>
 
         
@@ -1250,6 +1280,20 @@ cp /path/to/04-subagents/debugger.md ~/.claude/agents/
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -1639,14 +1669,14 @@ When I say "experiment" → use fullAccess permissions</p><p>Auto-switch based o
 <li>❌ 不在同一会话中混合无关工作</li><hr><h2 id="更多资源">更多资源</h2><p>了解更多关于 Claude Code 和相关功能:</p><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a></li>
 <li><a href="https://code.claude.com/docs/en/headless">官方 Headless Mode 文档</a></li>
 <li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></li>
-<li><a href="../08-checkpoints/">Checkpoints 指南</a> - 会话管理和回退</li>
-<li><a href="../01-slash-commands/">Slash Commands</a> - 命令参考</li>
-<li><a href="../02-memory/">Memory 指南</a> - 持久上下文</li>
-<li><a href="../03-skills/">Skills 指南</a> - 自主能力</li>
-<li><a href="../04-subagents/">Subagents 指南</a> - 委托任务执行</li>
-<li><a href="../05-mcp/">MCP 指南</a> - 外部数据访问</li>
-<li><a href="../06-hooks/">Hooks 指南</a> - 事件驱动自动化</li>
-<li><a href="../07-plugins/">Plugins 指南</a> - 打包扩展</li>
+<li><a href="/content/08-checkpoints.html">Checkpoints 指南</a> - 会话管理和回退</li>
+<li><a href="/content/01-slash-commands.html">Slash Commands</a> - 命令参考</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> - 持久上下文</li>
+<li><a href="/content/03-skills.html">Skills 指南</a> - 自主能力</li>
+<li><a href="/content/04-subagents.html">Subagents 指南</a> - 委托任务执行</li>
+<li><a href="/content/05-mcp.html">MCP 指南</a> - 外部数据访问</li>
+<li><a href="/content/06-hooks.html">Hooks 指南</a> - 事件驱动自动化</li>
+<li><a href="/content/07-plugins.html">Plugins 指南</a> - 打包扩展</li>
 <li><a href="https://code.claude.com/docs/en/scheduled-tasks">官方定时任务文档</a></li>
 <li><a href="https://code.claude.com/docs/en/chrome">官方 Chrome 集成文档</a></li>
 <li><a href="https://code.claude.com/docs/en/remote-control">官方远程控制文档</a></li>
@@ -1685,6 +1715,20 @@ When I say "experiment" → use fullAccess permissions</p><p>Auto-switch based o
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

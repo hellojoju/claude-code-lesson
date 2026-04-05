@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -923,11 +953,11 @@ chmod +x ~/.claude/skills/my-skill/scripts/*.py
 </code></pre><h3 id="plugin-发布">Plugin 发布</h3><p>将 skills 打包在 plugin 的 </code>skills/<code> 目录中以广泛分发。</p><h2 id="进阶-skill-收集和-skill-管理器">进阶：Skill 收集和 Skill 管理器</h2><p>当你开始认真构建 skills 时，两件事变得必不可少：经验证 skills 的库和管理它们的工具。</p><p><strong><a href="https://github.com/luongnv89/skills">luongnv89/skills</a></strong> — 我在几乎所有项目中日常使用的 skills 收集。亮点包括 </code>logo-designer<code>（即时生成项目 logo）和 </code>ollama-optimizer<code>（为你的硬件调优本地 LLM 性能）。如果你想要即用的 skills，这是很好的起点。</p><p><strong><a href="https://github.com/luongnv89/asm">luongnv89/asm</a></strong> — Agent Skill Manager。处理 skill 开发、重复检测和测试。</code>asm link` 命令让你在任何项目中测试 skill，无需复制文件——当你有超过几个 skills 时必不可少。</p><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a></li>
 <li><a href="https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills 架构博客</a></li>
 <li><a href="https://github.com/luongnv89/skills">Skills 仓库</a> - 即用 skills 收集</li>
-<li><a href="../01-slash-commands/">Slash Commands 指南</a> - 用户发起的快捷方式</li>
-<li><a href="../04-subagents/">Subagents 指南</a> - 委托 AI 智能体</li>
-<li><a href="../02-memory/">Memory 指南</a> - 持久上下文</li>
-<li><a href="../05-mcp/">MCP (Model Context Protocol)</a> - 实时外部数据</li>
-<li><a href="../06-hooks/">Hooks 指南</a> - 事件驱动自动化</li></ul>
+<li><a href="/content/01-slash-commands.html">Slash Commands 指南</a> - 用户发起的快捷方式</li>
+<li><a href="/content/04-subagents.html">Subagents 指南</a> - 委托 AI 智能体</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> - 持久上下文</li>
+<li><a href="/content/05-mcp.html">MCP (Model Context Protocol)</a> - 实时外部数据</li>
+<li><a href="/content/06-hooks.html">Hooks 指南</a> - 事件驱动自动化</li></ul>
         </div>
 
         
@@ -961,6 +991,20 @@ chmod +x ~/.claude/skills/my-skill/scripts/*.py
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

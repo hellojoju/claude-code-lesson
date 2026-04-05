@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -274,7 +304,7 @@
 <tr>
 <td><code>claude mcp</code></td>
 <td>配置 MCP 服务器</td>
-<td>参见 <a href="../05-mcp/">MCP 文档</a></td>
+<td>参见 <a href="/content/05-mcp.html">MCP 文档</a></td>
 </tr>
 <tr>
 <td><code>claude mcp serve</code></td>
@@ -1279,11 +1309,11 @@ claude --dangerously-skip-permissions \
   "Complete the full CI pipeline: test, build, deploy"
 </code></pre><hr><h2 id="更多资源">更多资源</h2><li><strong><a href="https://code.claude.com/docs/en/cli-reference">官方 CLI 参考</a></strong> - 完整命令参考</li>
 <li><strong><a href="https://code.claude.com/docs/en/headless">Headless 模式文档</a></strong> - 自动化执行</li>
-<li><strong><a href="../01-slash-commands/">Slash 命令</a></strong> - Claude 内的自定义快捷方式</li>
-<li><strong><a href="../02-memory/">Memory 指南</a></strong> - 通过 CLAUDE.md 的持久上下文</li>
-<li><strong><a href="../05-mcp/">MCP 协议</a></strong> - 外部工具集成</li>
-<li><strong><a href="../09-advanced-features/">高级功能</a></strong> - 规划模式、扩展思考</li>
-<li><strong><a href="../04-subagents/">Subagent 指南</a></strong> - 委托任务执行</li></ul><hr><p><em><a href="../">Claude How To</a> 指南系列的一部分</em></p>
+<li><strong><a href="/content/01-slash-commands.html">Slash 命令</a></strong> - Claude 内的自定义快捷方式</li>
+<li><strong><a href="/content/02-memory.html">Memory 指南</a></strong> - 通过 CLAUDE.md 的持久上下文</li>
+<li><strong><a href="/content/05-mcp.html">MCP 协议</a></strong> - 外部工具集成</li>
+<li><strong><a href="/content/09-advanced-features.html">高级功能</a></strong> - 规划模式、扩展思考</li>
+<li><strong><a href="/content/04-subagents.html">Subagent 指南</a></strong> - 委托任务执行</li></ul><hr><p><em><a href="../">Claude How To</a> 指南系列的一部分</em></p>
         </div>
 
         
@@ -1317,6 +1347,20 @@ claude --dangerously-skip-permissions \
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

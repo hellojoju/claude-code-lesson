@@ -99,11 +99,41 @@
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 2rem;
+      position: relative;
     }
 
-    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
-    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
     .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -1779,14 +1809,14 @@ email_notify</p><p>exit 0
 <pre><code class="language-bash">cp 06-hooks/*.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/*.sh
 </code></pre><h3 id="步骤-3-在设置中配置">步骤 3：在设置中配置</h3>
-使用上述 hook 配置编辑 <code>~/.claude/settings.json</code> 或 <code>.claude/settings.json</code>。</p><h2 id="相关概念">相关概念</h2><li><strong><a href="../08-checkpoints/">Checkpoints 和 Rewind</a></strong> - 保存和恢复对话状态</li>
-<li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 创建自定义 slash 命令</li>
-<li><strong><a href="../03-skills/">Skills</a></strong> - 可复用自主能力</li>
-<li><strong><a href="../04-subagents/">Subagents</a></strong> - 委托任务执行</li>
-<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包扩展包</li>
-<li><strong><a href="../09-advanced-features/">高级功能</a></strong> - 探索 Claude Code 高级能力</li><h2 id="其他资源">其他资源</h2><li><strong><a href="https://code.claude.com/docs/en/hooks">官方 Hooks 文档</a></strong> - 完整 hooks 参考</li>
+使用上述 hook 配置编辑 <code>~/.claude/settings.json</code> 或 <code>.claude/settings.json</code>。</p><h2 id="相关概念">相关概念</h2><li><strong><a href="/content/08-checkpoints.html">Checkpoints 和 Rewind</a></strong> - 保存和恢复对话状态</li>
+<li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> - 创建自定义 slash 命令</li>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> - 可复用自主能力</li>
+<li><strong><a href="/content/04-subagents.html">Subagents</a></strong> - 委托任务执行</li>
+<li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包扩展包</li>
+<li><strong><a href="/content/09-advanced-features.html">高级功能</a></strong> - 探索 Claude Code 高级能力</li><h2 id="其他资源">其他资源</h2><li><strong><a href="https://code.claude.com/docs/en/hooks">官方 Hooks 文档</a></strong> - 完整 hooks 参考</li>
 <li><strong><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></strong> - 命令行界面文档</li>
-<li><strong><a href="../02-memory/">Memory 指南</a></strong> - 持久上下文配置</li></ul>
+<li><strong><a href="/content/02-memory.html">Memory 指南</a></strong> - 持久上下文配置</li></ul>
         </div>
 
         
@@ -1820,6 +1850,20 @@ chmod +x ~/.claude/hooks/*.sh
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
     });
   </script>
 </body>

@@ -111,6 +111,9 @@ class MarkdownProcessor {
     });
     html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
 
+    // 转换模块间相对链接为绝对路径
+    html = this.convertModuleLinks(html);
+
     // 其余转换规则
     const rules = [
       // 粗体和斜体
@@ -234,6 +237,35 @@ class MarkdownProcessor {
   processMermaid(html) {
     return html.replace(/<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
       '<div class="mermaid">$1</div>');
+  }
+
+  /**
+   * 转换模块间相对链接为网站绝对路径
+   */
+  convertModuleLinks(html) {
+    // 模块 ID 列表
+    const moduleIds = [
+      '01-slash-commands', '02-memory', '03-skills', '04-subagents',
+      '05-mcp', '06-hooks', '07-plugins', '08-checkpoints',
+      '09-advanced-features', '10-cli', '11-multi-agent',
+      '12-background-tasks', '13-channels'
+    ];
+
+    // 转换 ../XX-module-name/ 格式的链接为 /content/XX-module-name.html
+    for (const moduleId of moduleIds) {
+      // 匹配 ../moduleId/ 或 ../moduleId 或 ../moduleId/README.md 等
+      const patterns = [
+        new RegExp(`\\.\\./${moduleId}/README\\.md`, 'g'),
+        new RegExp(`\\.\\./${moduleId}/`, 'g'),
+        new RegExp(`\\.\\./${moduleId}`, 'g'),
+      ];
+
+      for (const pattern of patterns) {
+        html = html.replace(pattern, `/content/${moduleId}.html`);
+      }
+    }
+
+    return html;
   }
 
   /**
