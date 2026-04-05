@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扩展开发 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro/overview.html">源码解析</a> &gt;
+        <span>扩展开发</span>
+    </nav>
+
+    <article class="content">
+        <h1>扩展开发</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-b">可靠性: B</span>
+            <span class="source">来源: Claude Code 行为分析 + 社区研究</span>
+        </div>
+
+        <section>
+            <h2>扩展开发概述</h2>
+            <p>虽然 Claude Code 是闭源产品，但通过 MCP 协议、Skills 系统和 Hooks 机制，开发者可以创建强大的扩展来增强 Claude Code 的能力。本节介绍扩展开发的最佳实践。</p>
+        </section>
+
+        <section>
+            <h2>扩展类型</h2>
+            
+            <pre><code class="language-plaintext">┌─────────────────────────────────────────────────────────────┐
+│                    Extension Types                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. MCP Servers                                            │
+│     ├── 外部数据源集成                                      │
+│     ├── 自定义工具实现                                      │
+│     └── 资源提供者                                          │
+│                                                             │
+│  2. Skills                                                  │
+│     ├── 领域专业知识                                        │
+│     ├── 工作流自动化                                        │
+│     └── 代码生成模板                                        │
+│                                                             │
+│  3. Hooks                                                   │
+│     ├── 事件监听和处理                                      │
+│     ├── 自动化操作                                          │
+│     └── 安全检查                                            │
+│                                                             │
+│  4. 配置扩展                                                │
+│     ├── CLAUDE.md                                           │
+│     ├── .claudeignore                                       │
+│     └── settings.json                                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </section>
+
+        <section>
+            <h2>MCP Server 开发</h2>
+            
+            <h3>项目结构</h3>
+            <pre><code class="language-plaintext">my-mcp-server/
+├── src/
+│   ├── index.ts          # 入口文件
+│   ├── server.ts         # 服务器实现
+│   ├── tools/            # 工具定义
+│   │   ├── index.ts
+│   │   └── my-tool.ts
+│   └── resources/        # 资源定义
+│       └── index.ts
+├── package.json
+├── tsconfig.json
+└── README.md</code></pre>
+
+            <h3>服务器实现</h3>
+            <pre><code class="language-typescript">// src/server.ts
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+const server = new Server(
+    {
+        name: 'my-custom-server',
+        version: '1.0.0'
+    },
+    {
+        capabilities: {
+            tools: {},
+            resources: {}
+        }
+    }
+);
+
+// 注册工具列表处理器
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+    return {
+        tools: [
+            {
+                name: 'my_custom_tool',
+                description: '执行自定义操作',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            type: 'string',
+                            description: '输入参数'
+                        }
+                    },
+                    required: ['input']
+                }
+            }
+        ]
+    };
+});
+
+// 注册工具调用处理器
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    const { name, arguments: args } = request.params;
+
+    switch (name) {
+        case 'my_custom_tool':
+            return {
+                content: [{
+                    type: 'text',
+                    text: await processCustomTool(args.input)
+                }]
+            };
+
+        default:
+            throw new Error(`Unknown tool: ${name}`);
+    }
+});
+
+// 注册资源列表处理器
+server.setRequestHandler(ListResourcesRequestSchema, async () => {
+    return {
+        resources: [
+            {
+                uri: 'custom://data',
+                name: '自定义数据',
+                mimeType: 'application/json'
+            }
+        ]
+    };
+});
+
+// 注册资源读取处理器
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    const { uri } = request.params;
+
+    if (uri === 'custom://data') {
+        return {
+            contents: [{
+                uri,
+                mimeType: 'application/json',
+                text: JSON.stringify({ data: 'custom data' })
+            }]
+        };
+    }
+
+    throw new Error(`Unknown resource: ${uri}`);
+});
+
+// 启动服务器
+async function main() {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+}
+
+main().catch(console.error);</code></pre>
+
+            <h3>工具实现最佳实践</h3>
+            <pre><code class="language-typescript">// src/tools/my-tool.ts
+export interface MyToolParams {
+    input: string;
+    options?: {
+        verbose?: boolean;
+        timeout?: number;
+    };
+}
+
+export async function executeMyTool(params: MyToolParams): Promise&lt;string&gt; {
+    // 1. 验证参数
+    validateParams(params);
+
+    // 2. 执行操作
+    try {
+        const result = await performOperation(params);
+
+        // 3. 格式化输出
+        return formatResult(result);
+    } catch (error) {
+        // 4. 错误处理
+        return formatError(error);
+    }
+}
+
+function validateParams(params: MyToolParams): void {
+    if (!params.input || typeof params.input !== 'string') {
+        throw new Error('input must be a non-empty string');
+    }
+
+    if (params.options?.timeout &amp;&amp; params.options.timeout &lt; 0) {
+        throw new Error('timeout must be positive');
+    }
+}
+
+function formatResult(result: any): string {
+    // 返回结构化的结果
+    return JSON.stringify({
+        success: true,
+        data: result,
+        timestamp: Date.now()
+    }, null, 2);
+}
+
+function formatError(error: Error): string {
+    return JSON.stringify({
+        success: false,
+        error: {
+            message: error.message,
+            type: error.constructor.name
+        }
+    }, null, 2);
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>Skill 开发</h2>
+            
+            <h3>Skill 项目结构</h3>
+            <pre><code class="language-plaintext">my-skill/
+├── skill.yaml            # Skill 定义
+├── prompts/
+│   ├── system.md         # 系统提示词
+│   └── examples/         # 示例
+│       └── example-1.md
+├── templates/            # 模板文件
+│   └── output.md.tmpl
+└── README.md</code></pre>
+
+            <h3>Skill 定义示例</h3>
+            <pre><code class="language-yaml"># skill.yaml
+id: api-designer
+name: API Designer
+version: 1.0.0
+description: 设计 RESTful API 接口
+author: Your Name
+tags:
+  - api
+  - design
+  - rest
+
+triggers:
+  - type: command
+    value: /api-design
+  - type: pattern
+    value: "design (a |an )?api for"
+
+execution:
+  mode: interactive
+  maxSteps: 30
+
+dependencies:
+  tools:
+    - read_file
+    - write_file
+    - search_files
+
+prompts:
+  systemFile: prompts/system.md
+  examplesDir: prompts/examples
+
+configSchema:
+  type: object
+  properties:
+    style:
+      type: string
+      enum: [rest, graphql, grpc]
+      default: rest
+    format:
+      type: string
+      enum: [openapi, asyncapi]
+      default: openapi</code></pre>
+
+            <h3>系统提示词编写</h3>
+            <pre><code class="language-markdown"><!-- prompts/system.md -->
+# API Designer Skill
+
+You are an expert API designer specializing in RESTful architectures.
+
+## Your Task
+
+Design clean, intuitive, and well-documented APIs following industry best practices.
+
+## Design Principles
+
+1. **Resource-Oriented**: Design around resources, not actions
+2. **Consistent Naming**: Use plural nouns for resources
+3. **Proper HTTP Methods**: Use methods semantically
+4. **Versioning**: Include version in URL path
+5. **Error Handling**: Return meaningful error messages
+
+## Output Format
+
+Generate API specifications in the requested format:
+
+### For OpenAPI:
+```yaml
+openapi: 3.0.0
+info:
+  title: API Title
+  version: 1.0.0
+paths:
+  /resources:
+    get:
+      summary: List resources
+      ...
+```
+
+## Process
+
+1. Understand the requirements
+2. Identify resources and relationships
+3. Design endpoints and methods
+4. Define request/response schemas
+5. Add error responses
+6. Generate documentation</code></pre>
+        </section>
+
+        <section>
+            <h2>Hook 开发</h2>
+            
+            <h3>Hook 配置示例</h3>
+            <pre><code class="language-json">{
+  "hooks": [
+    {
+      "id": "auto-format-on-save",
+      "event": "PostToolUse",
+      "type": "function",
+      "function": "async (ctx) => { if (ctx.data.tool === 'write_file' && isCodeFile(ctx.data.params.path)) { await formatFile(ctx.data.params.path); } }",
+      "conditions": [
+        { "type": "tool", "value": "write_file" }
+      ]
+    },
+    {
+      "id": "security-check",
+      "event": "PreToolUse",
+      "type": "command",
+      "command": "node scripts/security-check.js",
+      "conditions": [
+        { "type": "tool", "value": "write_file" }
+      ],
+      "priority": 100
+    },
+    {
+      "id": "notify-completion",
+      "event": "PostResponse",
+      "type": "http",
+      "http": {
+        "url": "${WEBHOOK_URL}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "session": "${sessionId}",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ]
+}</code></pre>
+
+            <h3>Hook 脚本示例</h3>
+            <pre><code class="language-javascript">// scripts/security-check.js
+const fs = require('fs');
+
+async function main() {
+    // 从 stdin 读取上下文
+    const input = JSON.parse(await readStdin());
+    
+    const { tool, params } = input.data;
+
+    if (tool !== 'write_file') {
+        process.exit(0);
+    }
+
+    const content = params.content;
+    const path = params.path;
+
+    // 安全检查
+    const issues = [];
+
+    // 检查敏感信息
+    if (content.includes('password') || content.includes('secret')) {
+        issues.push('Possible sensitive data in code');
+    }
+
+    // 检查 SQL 注入风险
+    if (content.includes('${') && content.includes('SQL')) {
+        issues.push('Possible SQL injection risk');
+    }
+
+    // 检查硬编码的凭证
+    const credentialPatterns = [
+        /api[_-]?key\s*=\s*['"][^'"]+['"]/i,
+        /token\s*=\s*['"][^'"]+['"]/i,
+        /password\s*=\s*['"][^'"]+['"]/i
+    ];
+
+    for (const pattern of credentialPatterns) {
+        if (pattern.test(content)) {
+            issues.push('Hardcoded credentials detected');
+            break;
+        }
+    }
+
+    if (issues.length &gt; 0) {
+        // 输出警告但不阻止
+        console.log(JSON.stringify({
+            modify: {
+                ...input.data,
+                warnings: issues
+            }
+        }));
+    }
+}
+
+function readStdin() {
+    return new Promise((resolve) => {
+        let data = '';
+        process.stdin.on('data', chunk => data += chunk);
+        process.stdin.on('end', () => resolve(data));
+    });
+}
+
+main().catch(console.error);</code></pre>
+        </section>
+
+        <section>
+            <h2>配置文件扩展</h2>
+            
+            <h3>CLAUDE.md 最佳实践</h3>
+            <pre><code class="language-markdown"># Project Context
+
+## Project Overview
+This is a TypeScript-based web application using React and Node.js.
+
+## Tech Stack
+- Frontend: React 18, TypeScript, Tailwind CSS
+- Backend: Node.js, Express, PostgreSQL
+- Testing: Jest, React Testing Library
+
+## Code Style
+- Use functional components with hooks
+- Follow ESLint and Prettier configurations
+- Write tests for new features
+
+## Architecture
+```
+src/
+├── components/     # React components
+├── hooks/          # Custom hooks
+├── services/       # API services
+├── utils/          # Utility functions
+└── types/          # TypeScript types
+```
+
+## Important Files
+- `src/index.tsx` - Application entry point
+- `src/App.tsx` - Main application component
+- `src/api/` - API client implementations
+
+## Development Workflow
+1. Create feature branch from `main`
+2. Implement changes with tests
+3. Run `npm test` before committing
+4. Create PR for review
+
+## Known Issues
+- Auth module needs refactoring (see issue #123)
+- Performance optimization needed for large lists</code></pre>
+
+            <h3>.claudeignore 配置</h3>
+            <pre><code class="language-plaintext"># Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+logs/
+*.log
+
+# Test coverage
+coverage/
+
+# Large files
+*.min.js
+*.min.css
+*.map
+
+# Generated files
+generated/
+__generated__/
+
+# Cache
+.cache/
+.temp/</code></pre>
+        </section>
+
+        <section>
+            <h2>发布和分发</h2>
+            
+            <h3>MCP Server 发布</h3>
+            <pre><code class="language-json">// package.json
+{
+  "name": "@your-org/mcp-server-custom",
+  "version": "1.0.0",
+  "description": "Custom MCP server for Claude Code",
+  "type": "module",
+  "bin": {
+    "mcp-server-custom": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["mcp", "claude", "ai"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}</code></pre>
+
+            <h3>安装配置</h3>
+            <pre><code class="language-json">// ~/.claude/settings.json
+{
+  "mcpServers": {
+    "custom": {
+      "command": "npx",
+      "args": ["-y", "@your-org/mcp-server-custom"],
+      "env": {
+        "API_KEY": "${CUSTOM_API_KEY}"
+      }
+    }
+  }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>调试和测试</h2>
+            
+            <h3>MCP Server 测试</h3>
+            <pre><code class="language-typescript">// tests/server.test.ts
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+
+describe('MCP Server', () => {
+    let client: Client;
+
+    beforeAll(async () => {
+        const transport = new StdioClientTransport({
+            command: 'node',
+            args: ['dist/index.js']
+        });
+
+        client = new Client({ name: 'test', version: '1.0.0' });
+        await client.connect(transport);
+    });
+
+    test('lists tools', async () => {
+        const { tools } = await client.request(
+            { method: 'tools/list' },
+            ListToolsResultSchema
+        );
+
+        expect(tools.length).toBeGreaterThan(0);
+    });
+
+    test('executes tool', async () => {
+        const result = await client.request(
+            {
+                method: 'tools/call',
+                params: {
+                    name: 'my_custom_tool',
+                    arguments: { input: 'test' }
+                }
+            },
+            CallToolResultSchema
+        );
+
+        expect(result.content).toBeDefined();
+    });
+});</code></pre>
+        </section>
+
+        <section>
+            <h2>最佳实践总结</h2>
+            
+            <div class="best-practices">
+                <h3>开发原则</h3>
+                <ul>
+                    <li><strong>单一职责</strong>：每个扩展只做一件事</li>
+                    <li><strong>文档完善</strong>：提供清晰的使用说明</li>
+                    <li><strong>错误处理</strong>：优雅地处理各种异常</li>
+                    <li><strong>性能优先</strong>：避免阻塞主流程</li>
+                </ul>
+
+                <h3>安全考虑</h3>
+                <ul>
+                    <li>验证所有输入参数</li>
+                    <li>使用环境变量存储敏感信息</li>
+                    <li>限制文件系统访问范围</li>
+                    <li>实现适当的权限检查</li>
+                </ul>
+
+                <h3>维护建议</h3>
+                <ul>
+                    <li>使用语义化版本控制</li>
+                    <li>编写完整的测试用例</li>
+                    <li>保持向后兼容性</li>
+                    <li>及时更新依赖</li>
+                </ul>
+            </div>
+        </section>
+
+        <nav class="page-nav">
+            <a href="performance.html" class="prev">← 上一页：性能优化</a>
+            <a href="../../engineering/intro.html" class="next">下一页：工程实践系列 →</a>
+        </nav>
+    </article>
+</body>
+</html>

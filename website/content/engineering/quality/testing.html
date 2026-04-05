@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试实践 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">工程实践</a> &gt;
+        <span>测试实践</span>
+    </nav>
+
+    <article class="content">
+        <h1>测试实践</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 官方文档 + 测试最佳实践</span>
+        </div>
+
+        <section>
+            <h2>测试驱动开发</h2>
+            <p>Claude Code 可以显著提升测试编写效率，帮助实现测试驱动开发（TDD）。本节介绍如何利用 Claude Code 进行高效的测试实践。</p>
+        </section>
+
+        <section>
+            <h2>测试金字塔</h2>
+            
+            <pre><code class="language-plaintext">                    /\
+                   /  \
+                  / E2E\          端到端测试
+                 /------\         - 关键用户流程
+                /        \        - 运行慢，数量少
+               / Integration\     集成测试
+              /--------------\    - API 集成
+             /                \   - 数据库交互
+            /   Unit Tests     \  单元测试
+           /--------------------\ - 函数/组件测试
+                                 - 运行快，数量多</code></pre>
+        </section>
+
+        <section>
+            <h2>单元测试生成</h2>
+            
+            <h3>使用 Claude Code 生成测试</h3>
+            <pre><code class="language-bash"># 为函数生成测试
+claude "为 src/utils/format.ts 中的 formatDate 函数生成单元测试，
+覆盖以下场景：
+- 正常日期格式化
+- 无效日期处理
+- 不同时区处理
+- 边界值（最小/最大日期）"
+
+# 为组件生成测试
+claude "为 src/components/UserProfile.tsx 生成 React Testing Library 测试，
+包括：
+- 渲染测试
+- 用户交互测试
+- Props 变化测试
+- 边界情况测试"
+
+# 为 API 生成测试
+claude "为 src/api/users.ts 生成 API 测试，
+使用 MSW 模拟后端响应"</code></pre>
+
+            <h3>测试模板</h3>
+            <pre><code class="language-typescript">// 测试文件模板
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { functionToTest } from './module';
+
+describe('functionToTest', () => {
+    describe('正常情况', () => {
+        it('应该返回正确结果', () => {
+            const result = functionToTest('input');
+            expect(result).toBe('expected');
+        });
+    });
+
+    describe('边界情况', () => {
+        it('应该处理空输入', () => {
+            expect(() => functionToTest('')).toThrow();
+        });
+
+        it('应该处理 null', () => {
+            expect(() => functionToTest(null)).toThrow();
+        });
+    });
+
+    describe('错误情况', () => {
+        it('应该抛出有意义的错误', () => {
+            expect(() => functionToTest('invalid'))
+                .toThrow('Invalid input');
+        });
+    });
+});</code></pre>
+        </section>
+
+        <section>
+            <h2>测试覆盖率</h2>
+            
+            <h3>覆盖率配置</h3>
+            <pre><code class="language-json">// vitest.config.ts
+export default {
+    test: {
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+            exclude: [
+                'node_modules/',
+                'tests/',
+                '**/*.d.ts',
+                '**/*.config.*'
+            ],
+            thresholds: {
+                lines: 80,
+                functions: 80,
+                branches: 75,
+                statements: 80
+            }
+        }
+    }
+};</code></pre>
+
+            <h3>覆盖率分析</h3>
+            <pre><code class="language-bash"># 运行覆盖率测试
+npm run test:coverage
+
+# 使用 Claude Code 分析覆盖率报告
+claude "分析 coverage/coverage-final.json，
+找出覆盖率低于 70% 的文件，
+并提供增加覆盖率的建议"</code></pre>
+        </section>
+
+        <section>
+            <h2>集成测试</h2>
+            
+            <h3>API 集成测试</h3>
+            <pre><code class="language-typescript">// tests/integration/api.test.ts
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupServer } from 'msw/node';
+import { rest } from 'msw';
+
+const server = setupServer(
+    rest.get('/api/users', (req, res, ctx) => {
+        return res(ctx.json({ users: [] }));
+    })
+);
+
+beforeAll(() => server.listen());
+afterAll(() => server.close());
+
+describe('User API', () => {
+    it('应该返回用户列表', async () => {
+        const response = await fetch('/api/users');
+        const data = await response.json();
+        
+        expect(response.status).toBe(200);
+        expect(data.users).toBeDefined();
+    });
+});</code></pre>
+
+            <h3>数据库集成测试</h3>
+            <pre><code class="language-typescript">// tests/integration/database.test.ts
+import { describe, it, expect, beforeEach } from 'vitest';
+import { db } from '../src/db';
+import { users } from '../src/db/schema';
+
+describe('Database Operations', () => {
+    beforeEach(async () => {
+        await db.delete(users);
+    });
+
+    it('应该创建用户', async () => {
+        const user = await db.insert(users).values({
+            name: 'Test User',
+            email: 'test@example.com'
+        }).returning();
+
+        expect(user[0].id).toBeDefined();
+        expect(user[0].name).toBe('Test User');
+    });
+});</code></pre>
+        </section>
+
+        <section>
+            <h2>E2E 测试</h2>
+            
+            <h3>Playwright 测试示例</h3>
+            <pre><code class="language-typescript">// e2e/login.spec.ts
+import { test, expect } from '@playwright/test';
+
+test.describe('登录流程', () => {
+    test('用户可以登录', async ({ page }) => {
+        await page.goto('/login');
+        
+        await page.fill('input[name="email"]', 'user@example.com');
+        await page.fill('input[name="password"]', 'password123');
+        await page.click('button[type="submit"]');
+        
+        await expect(page).toHaveURL('/dashboard');
+        await expect(page.locator('.user-name')).toBeVisible();
+    });
+
+    test('登录失败显示错误信息', async ({ page }) => {
+        await page.goto('/login');
+        
+        await page.fill('input[name="email"]', 'wrong@example.com');
+        await page.fill('input[name="password"]', 'wrongpassword');
+        await page.click('button[type="submit"]');
+        
+        await expect(page.locator('.error-message')).toBeVisible();
+    });
+});</code></pre>
+
+            <h3>生成 E2E 测试</h3>
+            <pre><code class="language-bash"># 使用 Claude Code 生成 E2E 测试
+claude "为用户注册流程生成 Playwright E2E 测试，
+包括：
+- 正常注册流程
+- 表单验证
+- 错误处理
+- 邮箱验证流程"</code></pre>
+        </section>
+
+        <section>
+            <h2>测试最佳实践</h2>
+            
+            <div class="best-practices">
+                <h3>测试原则</h3>
+                <ul>
+                    <li><strong>FAST</strong>：测试应该快速执行</li>
+                    <li><strong>Independent</strong>：测试之间相互独立</li>
+                    <li><strong>Repeatable</strong>：测试结果可重复</li>
+                    <li><strong>Self-Validating</strong>：测试自动验证结果</li>
+                    <li><strong>Timely</strong>：及时编写测试</li>
+                </ul>
+
+                <h3>命名规范</h3>
+                <pre><code class="language-typescript">// 好的测试命名
+it('应该在用户未登录时重定向到登录页', () => {});
+it('应该在输入无效邮箱时显示错误提示', () => {});
+
+// 不好的测试命名
+it('test1', () => {});
+it('works', () => {});</code></pre>
+
+                <h3>断言技巧</h3>
+                <pre><code class="language-typescript">// 使用具体的断言
+expect(result).toBe(42);           // 精确匹配
+expect(result).toEqual({ a: 1 });  // 深度匹配
+expect(result).toContain('text');  // 包含
+expect(result).toThrow();          // 抛出异常
+expect(result).resolves.toBe(1);   // Promise 成功
+expect(result).rejects.toThrow();  // Promise 失败</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>测试自动化</h2>
+            
+            <h3>CI 集成</h3>
+            <pre><code class="language-yaml"># .github/workflows/test.yml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+            - run: npm ci
+            - run: npm test
+            - run: npm run test:coverage
+            - uses: codecov/codecov-action@v3
+              with:
+                  files: ./coverage/coverage-final.json</code></pre>
+
+            <h3>测试 Hook</h3>
+            <pre><code class="language-json">{
+  "hooks": [
+    {
+      "id": "run-related-tests",
+      "event": "PostToolUse",
+      "conditions": [
+        { "type": "tool", "value": "write_file" },
+        { "type": "file", "value": "src/**/*.ts" }
+      ],
+      "type": "function",
+      "function": "async (ctx) => { const file = ctx.data.params.path; const testFile = file.replace('/src/', '/tests/').replace('.ts', '.test.ts'); if (await exists(testFile)) { await runCommand(`npm test -- ${testFile}`); } }"
+    }
+  ]
+}</code></pre>
+        </section>
+
+        <nav class="page-nav">
+            <a href="../collaboration/code-review.html" class="prev">← 上一页：代码审查流程</a>
+            <a href="documentation.html" class="next">下一页：文档生成 →</a>
+        </nav>
+    </article>
+</body>
+</html>

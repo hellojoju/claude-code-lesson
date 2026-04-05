@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环境变量配置 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../installation/overview.html" class="active"><i class="fas fa-book"></i> 基础教程</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../installation/overview.html">基础教程</a> &gt;
+                <span>环境变量配置</span>
+            </nav>
+            
+            <h1><i class="fas fa-cogs"></i> 环境变量配置详解</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 官方文档和 GitHub 社区最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方文档 + 社区验证</p>
+            </div>
+
+            <section id="overview">
+                <h2>环境变量概述</h2>
+                <p>Claude Code 通过环境变量来控制其行为和配置。正确配置环境变量是使用 Claude Code 的关键步骤，特别是对于需要自定义 API 端点或代理设置的用户。</p>
+                
+                <h3>配置文件位置</h3>
+                <p>Claude Code 支持多种配置文件位置，按优先级从高到低：</p>
+                <ol>
+                    <li><code>.env</code> - 项目目录下的环境变量文件</li>
+                    <li><code>~/.claude/.env</code> - 用户级配置文件</li>
+                    <li>系统环境变量 - 通过 shell 配置</li>
+                </ol>
+            </section>
+
+            <section id="api-keys">
+                <h2>API 密钥配置</h2>
+                
+                <h3>Anthropic API 密钥</h3>
+                <p>最基本的环境变量是 Anthropic API 密钥，用于认证 API 请求：</p>
+                <pre><code class="language-bash"># 在 ~/.bashrc 或 ~/.zshrc 中添加
+export ANTHROPIC_API_KEY="your-api-key-here"</code></pre>
+                
+                <div class="warning-box">
+                    <p><i class="fas fa-exclamation-triangle"></i> <strong>安全警告：</strong></p>
+                    <ul>
+                        <li>不要将 API 密钥提交到版本控制系统</li>
+                        <li>使用 <code>.gitignore</code> 排除 <code>.env</code> 文件</li>
+                        <li>定期轮换 API 密钥</li>
+                    </ul>
+                </div>
+
+                <h3>使用 .env 文件</h3>
+                <p>推荐使用 <code>.env</code> 文件管理环境变量：</p>
+                <pre><code class="language-bash"># 创建项目级 .env 文件
+cd /path/to/your/project
+touch .env
+
+# 编辑 .env 文件
+echo "ANTHROPIC_API_KEY=your-api-key-here" >> .env</code></pre>
+                
+                <pre><code class="language-bash"># .gitignore 中添加
+.env
+.env.local
+.env.*.local</code></pre>
+            </section>
+
+            <section id="proxy">
+                <h2>代理配置</h2>
+                
+                <h3>HTTP/HTTPS 代理</h3>
+                <p>如果需要通过代理访问 API：</p>
+                <pre><code class="language-bash"># HTTP 代理
+export HTTP_PROXY="http://proxy.example.com:8080"
+export HTTPS_PROXY="http://proxy.example.com:8080"
+
+# 不走代理的地址
+export NO_PROXY="localhost,127.0.0.1"</code></pre>
+
+                <h3>SOCKS5 代理</h3>
+                <pre><code class="language-bash"># SOCKS5 代理
+export ALL_PROXY="socks5://127.0.0.1:1080"</code></pre>
+            </section>
+
+            <section id="router">
+                <h2>Claude Code Router 配置</h2>
+                <p>Claude Code Router 是一个强大的工具，允许将 Claude Code 请求路由到不同的 LLM 提供商。这对于国内用户特别有用。</p>
+                
+                <div class="info-box">
+                    <p><strong>来源：</strong><a href="https://github.com/musistudio/claude-code-router" target="_blank">Claude Code Router GitHub 项目</a></p>
+                    <p><strong>可靠性：</strong><span class="reliability reliability-A">A</span> 活跃维护的开源项目</p>
+                </div>
+
+                <h3>安装 Claude Code Router</h3>
+                <pre><code class="language-bash"># 全局安装
+npm install -g claude-code-router
+
+# 或使用 npx 直接运行
+npx claude-code-router</code></pre>
+
+                <h3>配置路由规则</h3>
+                <p>创建配置文件 <code>~/.claude-router/config.json</code>：</p>
+                <pre><code class="language-json">{
+  "providers": {
+    "anthropic": {
+      "apiKey": "${ANTHROPIC_API_KEY}",
+      "baseUrl": "https://api.anthropic.com"
+    },
+    "openrouter": {
+      "apiKey": "${OPENROUTER_API_KEY}",
+      "baseUrl": "https://openrouter.ai/api/v1"
+    },
+    "nvidia": {
+      "apiKey": "${NVIDIA_API_KEY}",
+      "baseUrl": "https://integrate.api.nvidia.com/v1"
+    }
+  },
+  "defaultProvider": "anthropic",
+  "routing": {
+    "claude-3-opus": "anthropic",
+    "claude-3-sonnet": "openrouter",
+    "fallback": "nvidia"
+  }
+}</code></pre>
+
+                <h3>启动路由服务</h3>
+                <pre><code class="language-bash"># 启动路由服务
+claude-code-router start
+
+# 检查服务状态
+claude-code-router status
+
+# 设置环境变量指向路由
+export ANTHROPIC_BASE_URL="http://localhost:3000"</code></pre>
+            </section>
+
+            <section id="advanced">
+                <h2>高级环境变量</h2>
+                
+                <h3>模型配置</h3>
+                <pre><code class="language-bash"># 指定默认模型
+export CLAUDE_MODEL="claude-3-opus-20240229"
+
+# 最大输出 token 数
+export CLAUDE_MAX_TOKENS="4096"
+
+# 温度参数
+export CLAUDE_TEMPERATURE="0.7"</code></pre>
+
+                <h3>调试选项</h3>
+                <pre><code class="language-bash"># 启用调试日志
+export CLAUDE_DEBUG="true"
+
+# 日志级别
+export CLAUDE_LOG_LEVEL="debug"
+
+# 日志文件路径
+export CLAUDE_LOG_FILE="/path/to/claude.log"</code></pre>
+
+                <h3>性能调优</h3>
+                <pre><code class="language-bash"># 并发请求数
+export CLAUDE_MAX_CONCURRENT="5"
+
+# 请求超时（毫秒）
+export CLAUDE_TIMEOUT="60000"
+
+# 重试次数
+export CLAUDE_MAX_RETRIES="3"</code></pre>
+            </section>
+
+            <section id="verification">
+                <h2>配置验证</h2>
+                
+                <h3>检查环境变量</h3>
+                <pre><code class="language-bash"># 查看所有 Claude 相关环境变量
+env | grep -i claude
+
+# 查看特定变量
+echo $ANTHROPIC_API_KEY
+echo $ANTHROPIC_BASE_URL</code></pre>
+
+                <h3>测试 API 连接</h3>
+                <pre><code class="language-bash"># 使用 curl 测试 API 连接
+curl -X POST https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-3-sonnet-20240229",
+    "max_tokens": 100,
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'</code></pre>
+
+                <h3>在 Claude Code 中验证</h3>
+                <pre><code class="language-bash"># 启动 Claude Code
+claude
+
+# 在 Claude Code 中执行
+> /config show</code></pre>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>常见问题排查</h2>
+                
+                <h3>API 密钥无效</h3>
+                <div class="warning-box">
+                    <p><strong>症状：</strong>认证失败错误</p>
+                    <p><strong>解决方案：</strong></p>
+                    <ol>
+                        <li>检查 API 密钥是否正确设置：<code>echo $ANTHROPIC_API_KEY</code></li>
+                        <li>确认 API 密钥格式正确（以 <code>sk-ant-</code> 开头）</li>
+                        <li>验证 API 密钥是否有效且未过期</li>
+                    </ol>
+                </div>
+
+                <h3>代理连接问题</h3>
+                <div class="warning-box">
+                    <p><strong>症状：</strong>连接超时或网络错误</p>
+                    <p><strong>解决方案：</strong></p>
+                    <ol>
+                        <li>验证代理服务器是否运行</li>
+                        <li>检查代理端口是否正确</li>
+                        <li>尝试直接连接排除代理问题</li>
+                    </ol>
+                </div>
+
+                <h3>环境变量不生效</h3>
+                <div class="warning-box">
+                    <p><strong>症状：</strong>配置的环境变量未被读取</p>
+                    <p><strong>解决方案：</strong></p>
+                    <ol>
+                        <li>重新加载 shell 配置：<code>source ~/.bashrc</code> 或 <code>source ~/.zshrc</code></li>
+                        <li>检查配置文件语法是否正确</li>
+                        <li>确认没有其他配置文件覆盖设置</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="best-practices">
+                <h2>最佳实践</h2>
+                
+                <h3>安全管理</h3>
+                <ul>
+                    <li>使用环境变量而非硬编码敏感信息</li>
+                    <li>为不同项目使用不同的 API 密钥</li>
+                    <li>定期轮换密钥和凭证</li>
+                    <li>使用密钥管理服务存储敏感配置</li>
+                </ul>
+
+                <h3>配置管理</h3>
+                <ul>
+                    <li>使用 <code>.env.example</code> 模板文件记录所需变量</li>
+                    <li>在文档中说明每个环境变量的用途</li>
+                    <li>为开发、测试、生产环境使用不同配置</li>
+                </ul>
+
+                <h3>示例 .env.example</h3>
+                <pre><code class="language-bash"># Claude Code 配置模板
+# 复制此文件为 .env 并填入实际值
+
+# 必需：Anthropic API 密钥
+ANTHROPIC_API_KEY=your-api-key-here
+
+# 可选：API 基础 URL（用于代理或路由）
+# ANTHROPIC_BASE_URL=https://api.anthropic.com
+
+# 可选：默认模型
+# CLAUDE_MODEL=claude-3-opus-20240229
+
+# 可选：代理设置
+# HTTP_PROXY=http://proxy.example.com:8080
+# HTTPS_PROXY=http://proxy.example.com:8080</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://docs.anthropic.com/" target="_blank">Anthropic 官方文档</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/musistudio/claude-code-router" target="_blank">Claude Code Router 项目</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://blog.csdn.net/gitblog_01171/article/details/151084569" target="_blank">Claude Code Router 终极集成指南</a> <span class="reliability reliability-B">B</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../usage/natural-language.html" class="prev"><i class="fas fa-arrow-left"></i> 自然语言指令</a>
+                <a href="permissions.html" class="next">权限管理 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

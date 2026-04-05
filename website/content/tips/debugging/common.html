@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>常见问题排查 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">技巧系列</a> &gt;
+        <span>常见问题排查</span>
+    </nav>
+
+    <article class="content">
+        <h1>常见问题排查</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 官方文档 + 社区经验</span>
+        </div>
+
+        <section>
+            <h2>常见错误及解决方案</h2>
+        </section>
+
+        <section>
+            <h2>安装问题</h2>
+            
+            <div class="problem-solution">
+                <h3>问题：npm 安装失败</h3>
+                <pre><code class="language-bash"># 解决方案：使用官方安装脚本
+curl -fsSL https://claude.ai/install.sh | sh
+
+# 或使用 npx
+npx @anthropic-ai/claude-code</code></pre>
+            </div>
+
+            <div class="problem-solution">
+                <h3>问题：权限错误</h3>
+                <pre><code class="language-bash"># 解决方案：修复 npm 权限
+sudo chown -R $(whoami) ~/.npm
+sudo chown -R $(whoami) /usr/local/lib/node_modules</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>认证问题</h2>
+            
+            <div class="problem-solution">
+                <h3>问题：API Key 无效</h3>
+                <pre><code class="language-bash"># 检查 API Key 配置
+cat ~/.claude/config.json
+
+# 重新设置 API Key
+claude config set apiKey YOUR_API_KEY
+
+# 或使用环境变量
+export ANTHROPIC_API_KEY=YOUR_API_KEY</code></pre>
+            </div>
+
+            <div class="problem-solution">
+                <h3>问题：认证过期</h3>
+                <pre><code class="language-bash"># 重新登录
+claude logout
+claude login</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>文件操作问题</h2>
+            
+            <div class="problem-solution">
+                <h3>问题：文件访问被拒绝</h3>
+                <pre><code class="language-json">// 检查权限配置
+// ~/.claude/settings.json
+{
+  "permissions": {
+    "allow": ["read(**)", "write(src/**)"]
+  }
+}</code></pre>
+            </div>
+
+            <div class="problem-solution">
+                <h3>问题：找不到文件</h3>
+                <pre><code class="language-bash"># 检查 .claudeignore 配置
+cat .claudeignore
+
+# 使用绝对路径
+claude "读取 /absolute/path/to/file.ts"</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>性能问题</h2>
+            
+            <div class="problem-solution">
+                <h3>问题：响应缓慢</h3>
+                <ul>
+                    <li>使用 /compact 压缩历史</li>
+                    <li>减少上下文文件数量</li>
+                    <li>检查网络连接</li>
+                    <li>使用更快的模型</li>
+                </ul>
+            </div>
+
+            <div class="problem-solution">
+                <h3>问题：内存占用高</h3>
+                <pre><code class="language-bash"># 清理缓存
+rm -rf ~/.claude/cache/*
+
+# 重启 Claude Code
+claude --restart</code></pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>调试技巧</h2>
+            
+            <pre><code class="language-bash"># 启用调试模式
+export CLAUDE_DEBUG=1
+export CLAUDE_LOG_LEVEL=debug
+
+# 查看日志
+tail -f ~/.claude/logs/claude-$(date +%Y-%m-%d).log
+
+# 详细输出
+claude --verbose "your prompt"</code></pre>
+        </section>
+
+        <nav class="page-nav">
+            <a href="../efficiency/workflow.html" class="prev">← 上一页：工作流技巧</a>
+            <a href="performance.html" class="next">下一页：性能问题排查 →</a>
+        </nav>
+    </article>
+</body>
+</html>

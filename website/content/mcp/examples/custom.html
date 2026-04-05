@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义MCP服务器 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../05-mcp.html"><i class="fas fa-server"></i> MCP服务器</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../05-mcp.html">MCP服务器</a> &gt;
+                <span>自定义MCP服务器</span>
+            </nav>
+            
+            <h1><i class="fas fa-cogs"></i> 自定义MCP服务器</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示如何开发自定义 MCP 服务器。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方 SDK 文档</p>
+            </div>
+
+            <section id="overview">
+                <h2>开发概述</h2>
+                <p>MCP 提供了多种语言的 SDK，帮助开发者快速创建自定义服务器。</p>
+                
+                <h3>支持的 SDK</h3>
+                <ul>
+                    <li>TypeScript/JavaScript (@modelcontextprotocol/sdk)</li>
+                    <li>Python (mcp)</li>
+                    <li>Go (go-mcp)</li>
+                    <li>Rust (mcp-rust-sdk)</li>
+                </ul>
+            </section>
+
+            <section id="typescript">
+                <h2>TypeScript 服务器开发</h2>
+                
+                <h3>项目初始化</h3>
+                <pre><code class="language-bash"># 创建项目
+mkdir my-mcp-server && cd my-mcp-server
+
+# 初始化 npm
+npm init -y
+
+# 安装 SDK
+npm install @modelcontextprotocol/sdk</code></pre>
+
+                <h3>服务器代码</h3>
+                <pre><code class="language-typescript">// src/index.ts
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+
+// 创建服务器实例
+const server = new Server(
+  {
+    name: 'my-custom-server',
+    version: '1.0.0',
+  },
+  {
+    capabilities: {
+      tools: {},
+      resources: {},
+    },
+  }
+);
+
+// 注册工具列表
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return {
+    tools: [
+      {
+        name: 'hello',
+        description: '返回问候语',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              description: '用户名',
+            },
+          },
+          required: ['name'],
+        },
+      },
+    ],
+  };
+});
+
+// 处理工具调用
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  if (request.params.name === 'hello') {
+    const { name } = request.params.arguments;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `你好，${name}！欢迎使用自定义 MCP 服务器。`,
+        },
+      ],
+    };
+  }
+  throw new Error('Unknown tool');
+});
+
+// 启动服务器
+const transport = new StdioServerTransport();
+await server.connect(transport);</code></pre>
+
+                <h3>编译和运行</h3>
+                <pre><code class="language-bash"># 编译 TypeScript
+npx tsc
+
+# 运行服务器
+node dist/index.js</code></pre>
+            </section>
+
+            <section id="python">
+                <h2>Python 服务器开发</h2>
+                
+                <h3>安装 SDK</h3>
+                <pre><code class="language-bash"># 安装 MCP Python SDK
+pip install mcp</code></pre>
+
+                <h3>服务器代码</h3>
+                <pre><code class="language-python"># server.py
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp.types import Tool, TextContent
+
+# 创建服务器
+server = Server("my-python-server")
+
+# 注册工具
+@server.list_tools()
+async def list_tools():
+    return [
+        Tool(
+            name="calculate",
+            description="执行数学计算",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "数学表达式"
+                    }
+                },
+                "required": ["expression"]
+            }
+        )
+    ]
+
+# 处理工具调用
+@server.call_tool()
+async def call_tool(name: str, arguments: dict):
+    if name == "calculate":
+        expression = arguments["expression"]
+        try:
+            result = eval(expression)
+            return [TextContent(type="text", text=f"结果: {result}")]
+        except Exception as e:
+            return [TextContent(type="text", text=f"错误: {str(e)}")]
+    raise ValueError(f"Unknown tool: {name}")
+
+# 运行服务器
+async def main():
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(read_stream, write_stream)
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())</code></pre>
+            </section>
+
+            <section id="resources">
+                <h2>添加资源支持</h2>
+                
+                <h3>定义资源</h3>
+                <pre><code class="language-typescript">// 注册资源列表
+server.setRequestHandler(ListResourcesRequestSchema, async () => {
+  return {
+    resources: [
+      {
+        uri: 'custom://config',
+        name: '配置信息',
+        description: '服务器配置',
+        mimeType: 'application/json',
+      },
+    ],
+  };
+});
+
+// 处理资源读取
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  if (request.params.uri === 'custom://config') {
+    return {
+      contents: [
+        {
+          uri: 'custom://config',
+          mimeType: 'application/json',
+          text: JSON.stringify({
+            version: '1.0.0',
+            features: ['tools', 'resources'],
+          }),
+        },
+      ],
+    };
+  }
+  throw new Error('Resource not found');
+});</code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>配置使用</h2>
+                
+                <h3>添加到 Claude Code</h3>
+                <pre><code class="language-json">// ~/.claude/mcp-config.json
+{
+  "servers": {
+    "my-custom": {
+      "command": "node",
+      "args": ["/path/to/my-server/dist/index.js"],
+      "env": {
+        "LOG_LEVEL": "debug"
+      }
+    }
+  }
+}</code></pre>
+
+                <h3>测试服务器</h3>
+                <pre><code class="language-bash"># 列出工具
+> /mcp tools my-custom
+
+# 调用工具
+> /mcp call my-custom.hello --name "张三"</code></pre>
+            </section>
+
+            <section id="best-practices">
+                <h2>最佳实践</h2>
+                
+                <h3>错误处理</h3>
+                <pre><code class="language-typescript">try {
+  // 执行操作
+  const result = await someOperation();
+  return { content: [{ type: 'text', text: result }] };
+} catch (error) {
+  return {
+    content: [{
+      type: 'text',
+      text: `错误: ${error.message}`
+    }],
+    isError: true
+  };
+}</code></pre>
+
+                <h3>日志记录</h3>
+                <pre><code class="language-typescript">import { logging } from '@modelcontextprotocol/sdk';
+
+// 发送日志
+server.sendLoggingMessage({
+  level: 'info',
+  message: '操作完成',
+  data: { duration: 100 }
+});</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/modelcontextprotocol/typescript-sdk" target="_blank">TypeScript SDK</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/modelcontextprotocol/python-sdk" target="_blank">Python SDK</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="rest-api.html" class="prev"><i class="fas fa-arrow-left"></i> REST API集成案例</a>
+                <a href="../../hooks/intro/concepts.html" class="next">钩子概念详解 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

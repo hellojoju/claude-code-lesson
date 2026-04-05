@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>命令插件案例 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../07-plugins.html"><i class="fas fa-puzzle-piece"></i> 插件开发</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../07-plugins.html">插件开发</a> &gt;
+                <span>命令插件案例</span>
+            </nav>
+            
+            <h1><i class="fas fa-terminal"></i> 命令插件案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的命令插件实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>插件概述</h2>
+                <p>本案例实现一个代码片段管理插件，支持保存、搜索和插入代码片段。</p>
+                
+                <h3>功能特性</h3>
+                <ul>
+                    <li>保存代码片段</li>
+                    <li>搜索代码片段</li>
+                    <li>插入代码片段</li>
+                    <li>管理代码片段</li>
+                </ul>
+            </section>
+
+            <section id="package-json">
+                <h2>package.json</h2>
+                
+                <pre><code class="language-json">{
+  "name": "claude-code-plugin-snippets",
+  "version": "1.0.0",
+  "description": "代码片段管理插件",
+  "main": "dist/index.js",
+  "claudeCode": {
+    "name": "snippets",
+    "displayName": "代码片段管理器",
+    "description": "保存和管理代码片段",
+    "categories": ["productivity", "commands"],
+    "activationEvents": ["onCommand:snippets.save"],
+    "contributes": {
+      "commands": [
+        {
+          "command": "snippets.save",
+          "title": "保存代码片段",
+          "icon": "$(save)"
+        },
+        {
+          "command": "snippets.search",
+          "title": "搜索代码片段",
+          "icon": "$(search)"
+        },
+        {
+          "command": "snippets.insert",
+          "title": "插入代码片段",
+          "icon": "$(insert)"
+        },
+        {
+          "command": "snippets.list",
+          "title": "列出所有片段",
+          "icon": "$(list)"
+        }
+      ],
+      "configuration": {
+        "title": "代码片段配置",
+        "properties": {
+          "snippets.storagePath": {
+            "type": "string",
+            "default": "~/.claude/snippets",
+            "description": "片段存储路径"
+          },
+          "snippets.maxResults": {
+            "type": "number",
+            "default": 20,
+            "description": "搜索结果最大数量"
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="implementation">
+                <h2>实现代码</h2>
+                
+                <pre><code class="language-typescript">// src/index.ts
+import { Plugin, PluginContext } from '@anthropic/claude-code-api';
+import * as fs from 'fs';
+import * as path from 'path';
+
+interface Snippet {
+  id: string;
+  name: string;
+  language: string;
+  code: string;
+  tags: string[];
+  createdAt: Date;
+}
+
+class SnippetManager {
+  private snippets: Map<string, Snippet> = new Map();
+  private storagePath: string;
+  
+  constructor(storagePath: string) {
+    this.storagePath = storagePath;
+    this.load();
+  }
+  
+  private load() {
+    const file = path.join(this.storagePath, 'snippets.json');
+    if (fs.existsSync(file)) {
+      const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+      data.forEach((s: Snippet) => this.snippets.set(s.id, s));
+    }
+  }
+  
+  private save() {
+    const file = path.join(this.storagePath, 'snippets.json');
+    fs.writeFileSync(file, JSON.stringify([...this.snippets.values()]));
+  }
+  
+  add(snippet: Omit<Snippet, 'id' | 'createdAt'>): Snippet {
+    const id = Date.now().toString();
+    const newSnippet = {
+      ...snippet,
+      id,
+      createdAt: new Date()
+    };
+    this.snippets.set(id, newSnippet);
+    this.save();
+    return newSnippet;
+  }
+  
+  search(query: string): Snippet[] {
+    const lower = query.toLowerCase();
+    return [...this.snippets.values()].filter(s =>
+      s.name.toLowerCase().includes(lower) ||
+      s.tags.some(t => t.toLowerCase().includes(lower))
+    );
+  }
+  
+  get(id: string): Snippet | undefined {
+    return this.snippets.get(id);
+  }
+  
+  list(): Snippet[] {
+    return [...this.snippets.values()];
+  }
+  
+  delete(id: string): boolean {
+    const result = this.snippets.delete(id);
+    if (result) this.save();
+    return result;
+  }
+}
+
+let manager: SnippetManager;
+
+export const plugin: Plugin = {
+  async activate(context: PluginContext) {
+    const storagePath = context.getConfiguration('snippets').get('storagePath');
+    
+    // 确保存储目录存在
+    if (!fs.existsSync(storagePath)) {
+      fs.mkdirSync(storagePath, { recursive: true });
+    }
+    
+    manager = new SnippetManager(storagePath);
+    
+    // 注册命令
+    context.registerCommand('snippets.save', async () => {
+      const name = await context.showInputBox({
+        prompt: '片段名称',
+        placeHolder: 'my-snippet'
+      });
+      
+      if (!name) return;
+      
+      const code = await context.showInputBox({
+        prompt: '代码内容',
+        placeHolder: 'console.log("hello");'
+      });
+      
+      if (!code) return;
+      
+      const language = await context.showQuickPick(
+        ['JavaScript', 'TypeScript', 'Python', 'Go', 'Rust'],
+        { placeHolder: '选择语言' }
+      );
+      
+      const tagsInput = await context.showInputBox({
+        prompt: '标签（逗号分隔）',
+        placeHolder: 'utility, helper'
+      });
+      
+      const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()) : [];
+      
+      const snippet = manager.add({ name, code, language, tags });
+      
+      context.showInformationMessage(`片段 "${snippet.name}" 已保存`);
+    });
+    
+    context.registerCommand('snippets.search', async () => {
+      const query = await context.showInputBox({
+        prompt: '搜索片段',
+        placeHolder: '输入关键词'
+      });
+      
+      if (!query) return;
+      
+      const results = manager.search(query);
+      
+      if (results.length === 0) {
+        context.showInformationMessage('没有找到匹配的片段');
+        return;
+      }
+      
+      const selected = await context.showQuickPick(
+        results.map(s => ({
+          label: s.name,
+          description: s.language,
+          detail: s.code.substring(0, 50) + '...',
+          snippet: s
+        })),
+        { placeHolder: '选择片段' }
+      );
+      
+      if (selected) {
+        // 插入选中的片段
+        context.showInformationMessage(`已选择: ${selected.snippet.name}`);
+      }
+    });
+    
+    context.registerCommand('snippets.list', async () => {
+      const snippets = manager.list();
+      
+      if (snippets.length === 0) {
+        context.showInformationMessage('没有保存的片段');
+        return;
+      }
+      
+      const selected = await context.showQuickPick(
+        snippets.map(s => ({
+          label: s.name,
+          description: s.language,
+          detail: s.tags.join(', ')
+        })),
+        { placeHolder: '所有片段' }
+      );
+    });
+  },
+  
+  async deactivate() {
+    // 清理资源
+  }
+};
+
+export default plugin;</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用示例</h2>
+                
+                <pre><code class="language-bash"># 保存代码片段
+> /snippets.save
+
+# 搜索片段
+> /snippets.search
+
+# 列出所有片段
+> /snippets.list</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../development/testing.html" class="prev"><i class="fas fa-arrow-left"></i> 插件测试</a>
+                <a href="integration.html" class="next">集成插件案例 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

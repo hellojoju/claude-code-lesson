@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 安装详解 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="overview.html" class="active"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../../slash-commands/basic/intro.html"><i class="fas fa-cogs"></i> 高级技巧</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">首页</a> &gt; <a href="overview.html">基础教程</a> &gt; <a href="overview.html">安装与配置</a> &gt; <span>Windows 安装详解</span>
+        </div>
+
+        <div class="page-navigation">
+            <a href="overview.html" class="prev"><i class="fas fa-arrow-left"></i> 上一页：安装概览</a>
+            <a href="macos.html" class="next">下一页：macOS 安装详解 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <article class="content">
+            <h1><i class="fab fa-windows"></i> Windows 安装详解</h1>
+            <div class="source-info">
+                <span class="reliability reliability-a">可靠性: A</span>
+                <span class="source">来源: Claude Code 官方文档</span>
+            </div>
+            <p class="meta">
+                <i class="fas fa-clock"></i> 预计阅读时间: 25 分钟 |
+                <i class="fas fa-signal"></i> 难度: 初级
+            </p>
+
+            <section id="prerequisites">
+                <h2><i class="fas fa-check-circle"></i> 安装前准备</h2>
+                <p>在 Windows 上安装 Claude Code，您需要先安装 WSL 2（Windows Subsystem for Linux）。</p>
+                
+                <div class="important">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>重要：</strong>Claude Code 目前不支持直接在 Windows 上运行，必须通过 WSL 2 使用。
+                </div>
+
+                <h3>系统要求</h3>
+                <ul>
+                    <li>Windows 10 版本 2004+ 或 Windows 11</li>
+                    <li>支持虚拟化的 CPU</li>
+                    <li>至少 8GB RAM（推荐 16GB）</li>
+                    <li>至少 20GB 可用磁盘空间</li>
+                </ul>
+            </section>
+
+            <section id="install-wsl">
+                <h2><i class="fas fa-download"></i> 安装 WSL 2</h2>
+                
+                <div class="step">
+                    <h4>步骤 1：启用 WSL</h4>
+                    <p>以管理员身份打开 PowerShell，运行：</p>
+                    <pre><code class="language-powershell">wsl --install</code></pre>
+                    <p><strong>预期输出：</strong></p>
+                    <pre><code>正在安装: Windows 子系统 for Linux
+Windows 子系统 for Linux 已安装。
+正在安装: Ubuntu
+Ubuntu 已安装。</code></pre>
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> <strong>来源：</strong>
+                        <a href="https://docs.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 2：重启计算机</h4>
+                    <p>安装完成后，重启计算机以完成 WSL 2 的安装。</p>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 3：设置 Ubuntu</h4>
+                    <p>重启后，Ubuntu 会自动启动。首次启动需要设置用户名和密码：</p>
+                    <pre><code>Enter new UNIX username: your_username
+New password: 
+Retype new password:</code></pre>
+                </div>
+            </section>
+
+            <section id="install-nodejs">
+                <h2><i class="fas fa-node-js"></i> 安装 Node.js</h2>
+                
+                <div class="step">
+                    <h4>步骤 1：更新包管理器</h4>
+                    <p>在 Ubuntu 终端中运行：</p>
+                    <pre><code class="language-bash">sudo apt update && sudo apt upgrade -y</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 2：安装 Node.js 20.x</h4>
+                    <pre><code class="language-bash">curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs</code></pre>
+                    <p><strong>验证安装：</strong></p>
+                    <pre><code class="language-bash">node --version
+# 预期输出：v20.x.x
+npm --version
+# 预期输出：10.x.x</code></pre>
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> <strong>来源：</strong>
+                        <a href="https://github.com/nodesource/distributions" target="_blank">NodeSource GitHub 仓库</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="install-claude-code">
+                <h2><i class="fas fa-robot"></i> 安装 Claude Code</h2>
+                
+                <div class="step">
+                    <h4>步骤 1：安装 Claude Code</h4>
+                    <pre><code class="language-bash">npm install -g @anthropic-ai/claude-code</code></pre>
+                    <p><strong>预期输出：</strong></p>
+                    <pre><code>added 1 package in 5s</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 2：验证安装</h4>
+                    <pre><code class="language-bash">claude --version
+# 预期输出：claude-code version x.x.x</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 3：配置 API 密钥</h4>
+                    <pre><code class="language-bash">export ANTHROPIC_API_KEY=sk-ant-xxxxx</code></pre>
+                    <div class="note">
+                        <i class="fas fa-key"></i> <strong>获取 API 密钥：</strong>
+                        <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 4：启动 Claude Code</h4>
+                    <pre><code class="language-bash">claude</code></pre>
+                    <p><strong>预期输出：</strong></p>
+                    <pre><code>Welcome to Claude Code!
+Version: x.x.x
+
+Do you trust this project? (yes/no)</code></pre>
+                </div>
+            </section>
+
+            <section id="troubleshooting">
+                <h2><i class="fas fa-bug"></i> 常见问题</h2>
+                
+                <div class="problem">
+                    <h3>问题 1：WSL 2 安装失败</h3>
+                    <p><strong>解决方案：</strong></p>
+                    <pre><code class="language-powershell"># 启用虚拟机平台
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+# 启用 WSL
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# 重启计算机
+# 下载并安装 WSL 2 Linux 内核更新包
+# https://aka.ms/wsl2kernel</code></pre>
+                </div>
+
+                <div class="problem">
+                    <h3>问题 2：npm 权限错误</h3>
+                    <p><strong>解决方案：</strong></p>
+                    <pre><code class="language-bash"># 方法 1：使用 sudo
+sudo npm install -g @anthropic-ai/claude-code
+
+# 方法 2：修改 npm 全局目录
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc</code></pre>
+                </div>
+            </section>
+
+            <section id="next-steps">
+                <h2><i class="fas fa-arrow-right"></i> 下一步</h2>
+                <ul>
+                    <li><a href="../usage/getting-started.html">开始使用 Claude Code</a></li>
+                    <li><a href="china.html">国内使用方法详解</a></li>
+                </ul>
+            </section>
+
+            <section id="references">
+                <h2><i class="fas fa-book"></i> 参考资料</h2>
+                <ul>
+                    <li><a href="https://docs.microsoft.com/en-us/windows/wsl/install" target="_blank">Microsoft WSL 官方文档</a></li>
+                    <li><a href="https://github.com/nodesource/distributions" target="_blank">NodeSource GitHub 仓库</a></li>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code 官方 GitHub 仓库</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <div class="sidebar">
+            <div class="toc">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#prerequisites">安装前准备</a></li>
+                    <li><a href="#install-wsl">安装 WSL 2</a></li>
+                    <li><a href="#install-nodejs">安装 Node.js</a></li>
+                    <li><a href="#install-claude-code">安装 Claude Code</a></li>
+                    <li><a href="#troubleshooting">常见问题</a></li>
+                    <li><a href="#next-steps">下一步</a></li>
+                    <li><a href="#references">参考资料</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Claude Code 中文教程</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-powershell.min.js"></script>
+</body>
+</html>

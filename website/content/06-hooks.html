@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hooks - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Hooks 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 目录 */
+    .toc {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc a { color: var(--primary); }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/content/basics/installation.html">入门指南</a></li>
+        <li><a href="/content/modules/">核心模块</a></li>
+        <li><a href="/content/cases/intro.html">实战案例</a></li>
+        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <article>
+        <nav class="breadcrumb">
+          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Hooks
+        </nav>
+
+        <div class="meta">
+          <span class="badge badge-intermediate">
+            🟡 中级
+          </span>
+          <span class="badge">✅ Claude Code v2.1.92</span>
+        </div>
+
+        <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#hook-的关键时刻">Hook 的关键时刻</a></li><li ><a href="#选择正确的-hook-事件">选择正确的 Hook 事件</a></li><li ><a href="#立即尝试-你的第一个-hook">立即尝试：你的第一个 Hook</a></li><li ><a href="#配置">配置</a></li><li ><a href="#基本配置结构">基本配置结构</a></li><li ><a href="#匹配器模式">匹配器模式</a></li><li ><a href="#hook-类型">Hook 类型</a></li><li ><a href="#命令-hooks">命令 Hooks</a></li><li ><a href="#http-hooks">HTTP Hooks</a></li><li ><a href="#提示-hooks">提示 Hooks</a></li><li ><a href="#智能体-hooks">智能体 Hooks</a></li><li ><a href="#hook-事件">Hook 事件</a></li><li ><a href="#pretooluse">PreToolUse</a></li><li ><a href="#posttooluse">PostToolUse</a></li><li ><a href="#userpromptsubmit">UserPromptSubmit</a></li><li ><a href="#stop-和-subagentstop">Stop 和 SubagentStop</a></li><li ><a href="#subagentstart">SubagentStart</a></li><li ><a href="#sessionstart">SessionStart</a></li><li ><a href="#sessionend">SessionEnd</a></li><li ><a href="#通知事件">通知事件</a></li><li ><a href="#组件范围-hooks">组件范围 Hooks</a></li><li ><a href="#子智能体-frontmatter-中的-hooks">子智能体 Frontmatter 中的 Hooks</a></li><li ><a href="#permissionrequest-事件">PermissionRequest 事件</a></li><li ><a href="#hook-输入和输出">Hook 输入和输出</a></li><li ><a href="#json-输入-通过-stdin">JSON 输入（通过 stdin）</a></li><li ><a href="#退出码">退出码</a></li><li ><a href="#json-输出-stdout-退出码-0">JSON 输出（stdout，退出码 0）</a></li><li ><a href="#环境变量">环境变量</a></li><li ><a href="#基于提示的-hooks">基于提示的 Hooks</a></li><li ><a href="#示例">示例</a></li><li ><a href="#示例-1-bash-命令验证器-pretooluse">示例 1：Bash 命令验证器（PreToolUse）</a></li><li ><a href="#示例-2-安全扫描器-posttooluse">示例 2：安全扫描器（PostToolUse）</a></li><li ><a href="#示例-3-自动格式化代码-posttooluse">示例 3：自动格式化代码（PostToolUse）</a></li><li ><a href="#示例-4-提示验证器-userpromptsubmit">示例 4：提示验证器（UserPromptSubmit）</a></li><li ><a href="#示例-5-智能-stop-hook-基于提示">示例 5：智能 Stop Hook（基于提示）</a></li><li ><a href="#示例-6-上下文使用跟踪器-hook-配对">示例 6：上下文使用跟踪器（Hook 配对）</a></li><li ><a href="#示例-7-种子自动模式权限-一次性设置脚本">示例 7：种子自动模式权限（一次性设置脚本）</a></li><li ><a href="#插件-hooks">插件 Hooks</a></li><li ><a href="#mcp-工具-hooks">MCP 工具 Hooks</a></li><li ><a href="#安全考虑">安全考虑</a></li><li ><a href="#免责声明">免责声明</a></li><li ><a href="#安全说明">安全说明</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#调试">调试</a></li><li ><a href="#启用调试模式">启用调试模式</a></li><li ><a href="#详细模式">详细模式</a></li><li ><a href="#独立测试-hooks">独立测试 Hooks</a></li><li ><a href="#完整配置示例">完整配置示例</a></li><li ><a href="#hook-执行详情">Hook 执行详情</a></li><li ><a href="#模式与配方">模式与配方</a></li><li ><a href="#模式-1-保存时格式化管道">模式 1：保存时格式化管道</a></li><li ><a href="#模式-2-安全门">模式 2：安全门</a></li><li ><a href="#模式-3-测试守卫">模式 3：测试守卫</a></li><li ><a href="#模式-4-会话卫生">模式 4：会话卫生</a></li><li ><a href="#模式-5-密钥扫描器">模式 5：密钥扫描器</a></li><li ><a href="#立即尝试-安全守卫">立即尝试：安全守卫</a></li><li ><a href="#完整-hook-脚本参考">完整 Hook 脚本参考</a></li><li ><a href="#auto-format-sh">auto-format.sh</a></li><li ><a href="#security-scan-sh">security-scan.sh</a></li><li ><a href="#test-runner-sh">test-runner.sh</a></li><li ><a href="#prompt-validator-sh">prompt-validator.sh</a></li><li ><a href="#notify-session-end-sh">notify-session-end.sh</a></li><li ><a href="#故障排除">故障排除</a></li><li ><a href="#hook-未执行">Hook 未执行</a></li><li ><a href="#hook-意外拦截">Hook 意外拦截</a></li><li ><a href="#json-解析错误">JSON 解析错误</a></li><li ><a href="#安装">安装</a></li><li ><a href="#步骤-1-创建-hooks-目录">步骤 1：创建 Hooks 目录</a></li><li ><a href="#步骤-2-复制示例-hooks">步骤 2：复制示例 Hooks</a></li><li ><a href="#步骤-3-在设置中配置">步骤 3：在设置中配置</a></li><li ><a href="#相关概念">相关概念</a></li><li ><a href="#其他资源">其他资源</a></li></ul></div>
+
+        <div class="content">
+          <p><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
+  <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
+</picture></p><blockquote>🟡 <strong>中级</strong> | ⏱ 70 分钟</blockquote>
+>
+<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将构建：</strong> 通过事件驱动脚本自动化工作流。</p><h1>Hooks</h1><p>Hooks 是在 Claude Code 会话期间响应特定事件自动执行的脚本。它们支持自动化、验证、权限管理和自定义工作流。</p><h2 id="概述">概述</h2><p>Hooks 是自动操作（shell 命令、HTTP webhooks、LLM 提示或子智能体评估），当 Claude Code 中发生特定事件时自动执行。它们接收 JSON 输入，并通过退出码和 JSON 输出传递结果。</p><p><strong>关键特性：</strong>
+<ul><li>事件驱动自动化</li>
+<li>基于 JSON 的输入/输出</li>
+<li>支持命令、提示、HTTP 和智能体 hook 类型</li>
+<li>工具特定 hooks 的模式匹配</li><hr><h2 id="Hook 的关键时刻">Hook 的关键时刻</h2><p>你的 CI 在 20 分钟构建后发现了 lint 错误。Hooks 能在 2 秒内捕获它。</p><p><strong>没有 hooks 的痛苦循环：</strong>
+<pre><code class="language-">编写代码 → 提交 → 推送 → CI 启动 → 5 分钟安装 → 10 分钟构建 → 5 分钟测试 → 失败 → 修复 → 重复
+</code></pre><p><strong>有了 hooks：</strong>
+<pre><code class="language-">编写代码 → Hook 运行 → 2 秒 → 立即修复 → 提交干净代码 → CI 通过
+</code></pre><p>Hooks 将验证从"事后"转变为"你还在思考时"。它们在提交前捕获密钥，在切换文件前格式化代码，在执行危险命令前拦截。</p><hr><h2 id="选择正确的 Hook 事件">选择正确的 Hook 事件</h2><div class="mermaid">flowchart TD
+    A["我想在 Y 时触发 X"] --> B{什么事件？}</p><p>    B -->|工具执行| C{何时？}
+    C -->|之前| D["PreToolUse<br/>验证输入，拦截危险操作"]
+    C -->|成功后| E["PostToolUse<br/>格式化，日志，添加上下文"]
+    C -->|失败后| F["PostToolUseFailure<br/>错误恢复，清理"]</p><p>    B -->|用户输入| G["UserPromptSubmit<br/>验证/拦截提示"]</p><p>    B -->|会话生命周期| H{哪个时刻？}
+    H -->|开始| I["SessionStart<br/>设置环境，加载配置"]
+    H -->|结束| J["Stop<br/>验证完成，清理"]
+    H -->|终止| K["SessionEnd<br/>最终日志"]</p><p>    B -->|权限对话框| L["PermissionRequest<br/>自动批准/拒绝"]</p><p>    B -->|子智能体| M{哪个阶段？}
+    M -->|启动| N["SubagentStart<br/>子智能体设置"]
+    M -->|完成| O["SubagentStop<br/>验证子智能体结果"]</p><p>    B -->|文件/目录变更| P{什么变更？}
+    P -->|工作目录| Q["CwdChanged<br/>目录特定设置"]
+    P -->|监听文件| R["FileChanged<br/>重建，重新加载"]
+    P -->|配置文件| S["ConfigChange<br/>响应设置"]</p><p>    B -->|压缩| T{何时？}
+    T -->|之前| U["PreCompact<br/>保存状态"]
+    T -->|之后| V["PostCompact<br/>恢复上下文"]</p><p>    D --> W{需要拦截？}
+    W -->|是| X["返回退出码 2<br/>或 permissionDecision: deny"]
+    W -->|否| Y["返回退出码 0<br/>或 updatedInput"]</p><p>    E --> Z{需要反馈？}
+    Z -->|是| AA["返回 additionalContext<br/>或带原因拦截"]
+    Z -->|否| AB["静默通过（退出 0）"]</p><p>    style A fill:#e1f5fe
+    style X fill:#ffcdd2
+    style Y fill:#c8e6c9
+    style AA fill:#fff9c4
+    style AB fill:#c8e6c9
+</div><hr><h2 id="立即尝试：你的第一个 Hook">立即尝试：你的第一个 Hook</h2><p>让我们创建一个 hook，在 Claude 写入 TypeScript 文件后自动格式化它们。</p><p><strong>步骤 1：创建 hooks 目录</strong></p><pre><code class="language-bash">mkdir -p .claude/hooks
+</code></pre><p><strong>步骤 2：创建格式化 hook</strong></p><p>创建 <code>.claude/hooks/auto-format.sh</code>：</p><pre><code class="language-bash">#!/bin/bash
+<h1>Auto-format code after Write/Edit</h1>
+<h1>Receives JSON via stdin from Claude Code</h1><p>INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')</p><h1>Skip if no file path</h1>
+[ -z "$FILE_PATH" ] && exit 0</p><h1>Format based on extension</h1>
+case "$FILE_PATH" in
+  <em>.ts|</em>.tsx|<em>.js|</em>.jsx|<em>.json|</em>.md)
+    prettier --write "$FILE_PATH" 2>/dev/null && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+  *.py)
+    black "$FILE_PATH" 2>/dev/null && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+  *.go)
+    gofmt -w "$FILE_PATH" && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+esac</p><p>exit 0
+</code></pre><p><strong>步骤 3：使其可执行</strong></p><pre><code class="language-bash">chmod +x .claude/hooks/auto-format.sh
+</code></pre><p><strong>步骤 4：配置 hook</strong></p><p>添加到 <code>.claude/settings.json</code>：</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>步骤 5：测试它</strong></p><p>让 Claude 写入一个 TypeScript 文件。观察 hook 自动格式化它：</p><pre><code class="language-">> 创建一个简单的 utils.ts 文件，包含 formatDate 函数</p><p>[Hook] Formatted: utils.ts  ← Hook 自动运行！
+</code></pre><hr><h2 id="配置">配置</h2><p>Hooks 在设置文件中使用特定结构配置：</p><li><code>~/.claude/settings.json</code> - 用户设置（所有项目）</li>
+<li><code>.claude/settings.json</code> - 项目设置（可共享，可提交）</li>
+<li><code>.claude/settings.local.json</code> - 本地项目设置（不提交）</li>
+<li>管理策略 - 组织范围设置</li>
+<li>Plugin <code>hooks/hooks.json</code> - 插件范围 hooks</li>
+<li>Skill/Agent frontmatter - 组件生命周期 hooks</li><h3>基本配置结构</h3><pre><code class="language-json">{
+  "hooks": {
+    "EventName": [
+      {
+        "matcher": "ToolPattern",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "your-command-here",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>关键字段：</strong></p><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matcher</code></td>
+<td>匹配工具名称的模式（区分大小写）</td>
+<td><code>"Write"</code>、<code>"Edit\</td>
+<td>Write"</code>、<code>"*"</code></td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>Hook 定义数组</td>
+<td><code>[{ "type": "command", ... }]</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Hook 类型：<code>"command"</code>（bash）、<code>"prompt"</code>（LLM）、<code>"http"</code>（webhook）或 <code>"agent"</code>（子智能体）</td>
+<td><code>"command"</code></td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td>要执行的 shell 命令</td>
+<td><code>"$CLAUDE_PROJECT_DIR/.claude/hooks/format.sh"</code></td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td>可选超时时间（秒，默认 60）</td>
+<td><code>30</code></td>
+</tr>
+<tr>
+<td><code>once</code></td>
+<td>如果为 <code>true</code>，每个会话只运行一次</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h3>匹配器模式</h3><table>
+<thead>
+<tr>
+<th>模式</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>精确字符串</td>
+<td>匹配特定工具</td>
+<td><code>"Write"</code></td>
+</tr>
+<tr>
+<td>正则模式</td>
+<td>匹配多个工具</td>
+<td><code>"Edit\</td>
+<td>Write"</code></td>
+</tr>
+<tr>
+<td>通配符</td>
+<td>匹配所有工具</td>
+<td><code>"*"</code> 或 <code>""</code></td>
+</tr>
+<tr>
+<td>MCP 工具</td>
+<td>服务器和工具模式</td>
+<td><code>"mcp__memory__.*"</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Hook 类型">Hook 类型</h2><p>Claude Code 支持四种 hook 类型：</p><h3>命令 Hooks</h3><p>默认 hook 类型。执行 shell 命令，通过 JSON stdin/stdout 和退出码通信。</p><pre><code class="language-json">{
+  "type": "command",
+  "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate.py\"",
+  "timeout": 60
+}
+</code></pre><h3>HTTP Hooks</h3><blockquote>在 v2.1.63 中添加。</blockquote><p>远程 webhook 端点，接收与命令 hooks 相同的 JSON 输入。HTTP hooks 将 JSON POST 到 URL 并接收 JSON 响应。启用沙箱时，HTTP hooks 通过沙箱路由。出于安全考虑，URL 中的环境变量插值需要显式 <code>allowedEnvVars</code> 列表。</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [{
+      "type": "http",
+      "url": "https://my-webhook.example.com/hook",
+      "matcher": "Write"
+    }]
+  }
+}
+</code></pre><p><strong>关键属性：</strong>
+<li><code>"type": "http"</code> -- 标识为 HTTP hook</li>
+<li><code>"url"</code> -- webhook 端点 URL</li>
+<li>启用沙箱时通过沙箱路由</li>
+<li>URL 中任何环境变量插值需要显式 <code>allowedEnvVars</code> 列表</li><h3>提示 Hooks</h3><p>LLM 评估的提示，hook 内容是 Claude 评估的提示。主要用于 <code>Stop</code> 和 <code>SubagentStop</code> 事件进行智能任务完成检查。</p><pre><code class="language-json">{
+  "type": "prompt",
+  "prompt": "评估 Claude 是否完成了所有请求的任务。",
+  "timeout": 30
+}
+</code></pre><p>LLM 评估提示并返回结构化决策（详见<a href="#基于提示的-hooks">基于提示的 Hooks</a>）。</p><h3>智能体 Hooks</h3><p>基于子智能体的验证 hooks，启动专用智能体评估条件或执行复杂检查。与提示 hooks（单次 LLM 评估）不同，智能体 hooks 可以使用工具并执行多步推理。</p><pre><code class="language-json">{
+  "type": "agent",
+  "prompt": "验证代码变更遵循我们的架构指南。检查相关设计文档并进行比较。",
+  "timeout": 120
+}
+</code></pre><p><strong>关键属性：</strong>
+<li><code>"type": "agent"</code> -- 标识为智能体 hook</li>
+<li><code>"prompt"</code> -- 子智能体的任务描述</li>
+<li>智能体可以使用工具（Read、Grep、Bash 等）执行评估</li>
+<li>返回类似提示 hooks 的结构化决策</li><h2 id="Hook 事件">Hook 事件</h2><p>Claude Code 支持 <strong>25 个 hook 事件</strong>：</p><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+<th>匹配器输入</th>
+<th>可拦截</th>
+<th>常见用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SessionStart</strong></td>
+<td>会话开始/恢复/清除/压缩</td>
+<td>startup/resume/clear/compact</td>
+<td>否</td>
+<td>环境设置</td>
+</tr>
+<tr>
+<td><strong>InstructionsLoaded</strong></td>
+<td>CLAUDE.md 或规则文件加载后</td>
+<td>（无）</td>
+<td>否</td>
+<td>修改/过滤指令</td>
+</tr>
+<tr>
+<td><strong>UserPromptSubmit</strong></td>
+<td>用户提交提示</td>
+<td>（无）</td>
+<td>是</td>
+<td>验证提示</td>
+</tr>
+<tr>
+<td><strong>PreToolUse</strong></td>
+<td>工具执行前</td>
+<td>工具名称</td>
+<td>是（允许/拒绝/询问）</td>
+<td>验证，修改输入</td>
+</tr>
+<tr>
+<td><strong>PermissionRequest</strong></td>
+<td>显示权限对话框</td>
+<td>工具名称</td>
+<td>是</td>
+<td>自动批准/拒绝</td>
+</tr>
+<tr>
+<td><strong>PostToolUse</strong></td>
+<td>工具成功后</td>
+<td>工具名称</td>
+<td>否</td>
+<td>添加上下文，反馈</td>
+</tr>
+<tr>
+<td><strong>PostToolUseFailure</strong></td>
+<td>工具执行失败</td>
+<td>工具名称</td>
+<td>否</td>
+<td>错误处理，日志</td>
+</tr>
+<tr>
+<td><strong>Notification</strong></td>
+<td>发送通知</td>
+<td>通知类型</td>
+<td>否</td>
+<td>自定义通知</td>
+</tr>
+<tr>
+<td><strong>SubagentStart</strong></td>
+<td>子智能体启动</td>
+<td>智能体类型名称</td>
+<td>否</td>
+<td>子智能体设置</td>
+</tr>
+<tr>
+<td><strong>SubagentStop</strong></td>
+<td>子智能体完成</td>
+<td>智能体类型名称</td>
+<td>是</td>
+<td>子智能体验证</td>
+</tr>
+<tr>
+<td><strong>Stop</strong></td>
+<td>Claude 完成响应</td>
+<td>（无）</td>
+<td>是</td>
+<td>任务完成检查</td>
+</tr>
+<tr>
+<td><strong>StopFailure</strong></td>
+<td>API 错误结束轮次</td>
+<td>（无）</td>
+<td>否</td>
+<td>错误恢复，日志</td>
+</tr>
+<tr>
+<td><strong>TeammateIdle</strong></td>
+<td>智能体队友空闲</td>
+<td>（无）</td>
+<td>是</td>
+<td>队友协调</td>
+</tr>
+<tr>
+<td><strong>TaskCompleted</strong></td>
+<td>任务标记完成</td>
+<td>（无）</td>
+<td>是</td>
+<td>任务后操作</td>
+</tr>
+<tr>
+<td><strong>TaskCreated</strong></td>
+<td>通过 TaskCreate 创建任务</td>
+<td>（无）</td>
+<td>否</td>
+<td>任务跟踪，日志</td>
+</tr>
+<tr>
+<td><strong>ConfigChange</strong></td>
+<td>配置文件变更</td>
+<td>（无）</td>
+<td>是（策略除外）</td>
+<td>响应配置更新</td>
+</tr>
+<tr>
+<td><strong>CwdChanged</strong></td>
+<td>工作目录变更</td>
+<td>（无）</td>
+<td>否</td>
+<td>目录特定设置</td>
+</tr>
+<tr>
+<td><strong>FileChanged</strong></td>
+<td>监听文件变更</td>
+<td>（无）</td>
+<td>否</td>
+<td>文件监控，重建</td>
+</tr>
+<tr>
+<td><strong>PreCompact</strong></td>
+<td>上下文压缩前</td>
+<td>manual/auto</td>
+<td>否</td>
+<td>压缩前操作</td>
+</tr>
+<tr>
+<td><strong>PostCompact</strong></td>
+<td>压缩完成后</td>
+<td>（无）</td>
+<td>否</td>
+<td>压缩后操作</td>
+</tr>
+<tr>
+<td><strong>WorktreeCreate</strong></td>
+<td>正在创建 worktree</td>
+<td>（无）</td>
+<td>是（路径返回）</td>
+<td>worktree 初始化</td>
+</tr>
+<tr>
+<td><strong>WorktreeRemove</strong></td>
+<td>正在移除 worktree</td>
+<td>（无）</td>
+<td>否</td>
+<td>worktree 清理</td>
+</tr>
+<tr>
+<td><strong>Elicitation</strong></td>
+<td>MCP 服务器请求用户输入</td>
+<td>（无）</td>
+<td>是</td>
+<td>输入验证</td>
+</tr>
+<tr>
+<td><strong>ElicitationResult</strong></td>
+<td>用户响应 elicitation</td>
+<td>（无）</td>
+<td>是</td>
+<td>响应处理</td>
+</tr>
+<tr>
+<td><strong>SessionEnd</strong></td>
+<td>会话终止</td>
+<td>（无）</td>
+<td>否</td>
+<td>清理，最终日志</td>
+</tr>
+</tbody>
+</table>
+<h3>PreToolUse</h3><p>在 Claude 创建工具参数后、处理前运行。用于验证或修改工具输入。</p><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/validate-bash.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>常见匹配器：</strong> <code>Task</code>、<code>Bash</code>、<code>Glob</code>、<code>Grep</code>、<code>Read</code>、<code>Edit</code>、<code>Write</code>、<code>WebFetch</code>、<code>WebSearch</code></p><p><strong>输出控制：</strong>
+<li><code>permissionDecision</code>：<code>"allow"</code>、<code>"deny"</code> 或 <code>"ask"</code></li>
+<li><code>permissionDecisionReason</code>：决策解释</li>
+<li><code>updatedInput</code>：修改后的工具输入参数</li><h3>PostToolUse</h3><p>工具完成后立即运行。用于验证、日志或向 Claude 提供上下文。</p><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/security-scan.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>输出控制：</strong>
+<li><code>"block"</code> 决策向 Claude 提示反馈</li>
+<li><code>additionalContext</code>：为 Claude 添加的上下文</li><h3>UserPromptSubmit</h3><p>用户提交提示后、Claude 处理前运行。</p><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/validate-prompt.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>输出控制：</strong>
+<li><code>decision</code>：<code>"block"</code> 阻止处理</li>
+<li><code>reason</code>：拦截时的解释</li>
+<li><code>additionalContext</code>：添加到提示的上下文</li><h3>Stop 和 SubagentStop</h3><p>Claude 完成响应（Stop）或子智能体完成（SubagentStop）时运行。支持基于提示的评估进行智能任务完成检查。</p><p><strong>额外输入字段：</strong> <code>Stop</code> 和 <code>SubagentStop</code> hooks 在 JSON 输入中接收 <code>last_assistant_message</code> 字段，包含停止前 Claude 或子智能体的最终消息。这对评估任务完成很有用。</p><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "评估 Claude 是否完成了所有请求的任务。",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h3>SubagentStart</h3><p>子智能体开始执行时运行。匹配器输入是智能体类型名称，允许 hooks 针特定子智能体类型。</p><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "code-review",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/subagent-init.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h3>SessionStart</h3><p>会话启动或恢复时运行。可以持久化环境变量。</p><p><strong>匹配器：</strong> <code>startup</code>、<code>resume</code>、<code>clear</code>、<code>compact</code></p><p><strong>特殊功能：</strong> 使用 <code>CLAUDE_ENV_FILE</code> 持久化环境变量（在 <code>CwdChanged</code> 和 <code>FileChanged</code> hooks 中也可用）：</p><pre><code class="language-bash">#!/bin/bash
+if [ -n "$CLAUDE_ENV_FILE" ]; then
+  echo 'export NODE_ENV=development' >> "$CLAUDE_ENV_FILE"
+fi
+exit 0
+</code></pre><h3>SessionEnd</h3><p>会话结束时运行以执行清理或最终日志。无法拦截终止。</p><p><strong>原因字段值：</strong>
+<li><code>clear</code> - 用户清除了会话</li>
+<li><code>logout</code> - 用户登出</li>
+<li><code>prompt_input_exit</code> - 用户通过提示输入退出</li>
+<li><code>other</code> - 其他原因</li><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-cleanup.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h3>通知事件</h3><p>通知事件更新的匹配器：
+<li><code>permission_prompt</code> - 权限请求通知</li>
+<li><code>idle_prompt</code> - 空闲状态通知</li>
+<li><code>auth_success</code> - 认证成功</li>
+<li><code>elicitation_dialog</code> - 向用户显示对话框</li><h2 id="组件范围 Hooks">组件范围 Hooks</h2><p>Hooks 可以附加到特定组件（skills、agents、commands）的 frontmatter 中：</p><p><strong>在 SKILL.md、agent.md 或 command.md 中：</strong></p><pre><code class="language-yaml">---
+name: secure-operations
+description: 执行带有安全检查的操作
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/check.sh"
+          once: true  # 每个会话只运行一次
+<hr>
+</code></pre><p><strong>组件 hooks 支持的事件：</strong> <code>PreToolUse</code>、<code>PostToolUse</code>、<code>Stop</code></p><p>这允许在使用它们的组件中直接定义 hooks，保持相关代码在一起。</p><h3>子智能体 Frontmatter 中的 Hooks</h3><p>在子智能体的 frontmatter 中定义 <code>Stop</code> hook 时，它会自动转换为该子智能体范围的 <code>SubagentStop</code> hook。这确保 stop hook 只在该特定子智能体完成时触发，而不是主会话停止时。</p><pre><code class="language-yaml">---
+name: code-review-agent
+description: 自动化代码审查子智能体
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: "验证代码审查是否彻底且完整。"
+  # 上面的 Stop hook 自动转换为该子智能体的 SubagentStop
+<hr>
+</code></pre><h2 id="PermissionRequest 事件">PermissionRequest 事件</h2><p>使用自定义输出格式处理权限请求：</p><pre><code class="language-json">{
+  "hookSpecificOutput": {
+    "hookEventName": "PermissionRequest",
+    "decision": {
+      "behavior": "allow|deny",
+      "updatedInput": {},
+      "message": "自定义消息",
+      "interrupt": false
+    }
+  }
+}
+</code></pre><h2 id="Hook 输入和输出">Hook 输入和输出</h2><h3>JSON 输入（通过 stdin）</h3><p>所有 hooks 通过 stdin 接收 JSON 输入：</p><pre><code class="language-json">{
+  "session_id": "abc123",
+  "transcript_path": "/path/to/transcript.jsonl",
+  "cwd": "/current/working/directory",
+  "permission_mode": "default",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/path/to/file.js",
+    "content": "..."
+  },
+  "tool_use_id": "toolu_01ABC123...",
+  "agent_id": "agent-abc123",
+  "agent_type": "main",
+  "worktree": "/path/to/worktree"
+}
+</code></pre><p><strong>常见字段：</strong></p><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session_id</code></td>
+<td>唯一会话标识符</td>
+</tr>
+<tr>
+<td><code>transcript_path</code></td>
+<td>对话记录文件路径</td>
+</tr>
+<tr>
+<td><code>cwd</code></td>
+<td>当前工作目录</td>
+</tr>
+<tr>
+<td><code>hook_event_name</code></td>
+<td>触发 hook 的事件名称</td>
+</tr>
+<tr>
+<td><code>agent_id</code></td>
+<td>运行此 hook 的智能体标识符</td>
+</tr>
+<tr>
+<td><code>agent_type</code></td>
+<td>智能体类型（<code>"main"</code>、子智能体类型名称等）</td>
+</tr>
+<tr>
+<td><code>worktree</code></td>
+<td>git worktree 路径（如果智能体在 worktree 中运行）</td>
+</tr>
+</tbody>
+</table>
+<h3>退出码</h3><table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>成功</td>
+<td>继续，解析 JSON stdout</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>拦截错误</td>
+<td>拦截操作，stderr 显示为错误</td>
+</tr>
+<tr>
+<td><strong>其他</strong></td>
+<td>非拦截错误</td>
+<td>继续，stderr 在详细模式显示</td>
+</tr>
+</tbody>
+</table>
+<h3>JSON 输出（stdout，退出码 0）</h3><pre><code class="language-json">{
+  "continue": true,
+  "stopReason": "停止时的可选消息",
+  "suppressOutput": false,
+  "systemMessage": "可选警告消息",
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "allow",
+    "permissionDecisionReason": "文件在允许目录中",
+    "updatedInput": {
+      "file_path": "/modified/path.js"
+    }
+  }
+}
+</code></pre><h2 id="环境变量">环境变量</h2><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>可用性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_PROJECT_DIR</code></td>
+<td>所有 hooks</td>
+<td>项目根目录绝对路径</td>
+</tr>
+<tr>
+<td><code>CLAUDE_ENV_FILE</code></td>
+<td>SessionStart、CwdChanged、FileChanged</td>
+<td>持久化环境变量文件路径</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_REMOTE</code></td>
+<td>所有 hooks</td>
+<td>在远程环境运行时为 <code>"true"</code></td>
+</tr>
+<tr>
+<td><code>${CLAUDE_PLUGIN_ROOT}</code></td>
+<td>插件 hooks</td>
+<td>插件目录路径</td>
+</tr>
+<tr>
+<td><code>${CLAUDE_PLUGIN_DATA}</code></td>
+<td>插件 hooks</td>
+<td>插件数据目录路径</td>
+</tr>
+<tr>
+<td><code>CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS</code></td>
+<td>SessionEnd hooks</td>
+<td>SessionEnd hooks 可配置超时（毫秒，覆盖默认值）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="基于提示的 Hooks">基于提示的 Hooks</h2><p>对于 <code>Stop</code> 和 <code>SubagentStop</code> 事件，可以使用基于 LLM 的评估：</p><pre><code class="language-json">{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "审查所有任务是否完成。返回你的决策。",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>LLM 响应模式：</strong>
+<pre><code class="language-json">{
+  "decision": "approve",
+  "reason": "所有任务成功完成",
+  "continue": false,
+  "stopReason": "任务完成"
+}
+</code></pre><h2 id="示例">示例</h2><h3>示例 1：Bash 命令验证器（PreToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-bash.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+import json
+import sys
+import re</p><p>BLOCKED_PATTERNS = [
+    (r"\brm\s+-rf\s+/", "Blocking dangerous rm -rf / command"),
+    (r"\bsudo\s+rm", "Blocking sudo rm command"),
+]</p><p>def main():
+    input_data = json.load(sys.stdin)</p><p>    tool_name = input_data.get("tool_name", "")
+    if tool_name != "Bash":
+        sys.exit(0)</p><p>    command = input_data.get("tool_input", {}).get("command", "")</p><p>    for pattern, message in BLOCKED_PATTERNS:
+        if re.search(pattern, command):
+            print(message, file=sys.stderr)
+            sys.exit(2)  # Exit 2 = blocking error</p><p>    sys.exit(0)</p><p>if __name__ == "__main__":
+    main()
+</code></pre><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-bash.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h3>示例 2：安全扫描器（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/security-scan.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+import json
+import sys
+import re</p><p>SECRET_PATTERNS = [
+    (r"password\s<em>=\s</em>['\"][^'\"]+['\"]", "Potential hardcoded password"),
+    (r"api[_-]?key\s<em>=\s</em>['\"][^'\"]+['\"]", "Potential hardcoded API key"),
+]</p><p>def main():
+    input_data = json.load(sys.stdin)</p><p>    tool_name = input_data.get("tool_name", "")
+    if tool_name not in ["Write", "Edit"]:
+        sys.exit(0)</p><p>    tool_input = input_data.get("tool_input", {})
+    content = tool_input.get("content", "") or tool_input.get("new_string", "")
+    file_path = tool_input.get("file_path", "")</p><p>    warnings = []
+    for pattern, message in SECRET_PATTERNS:
+        if re.search(pattern, content, re.IGNORECASE):
+            warnings.append(message)</p><p>    if warnings:
+        output = {
+            "hookSpecificOutput": {
+                "hookEventName": "PostToolUse",
+                "additionalContext": f"Security warnings for {file_path}: " + "; ".join(warnings)
+            }
+        }
+        print(json.dumps(output))</p><p>    sys.exit(0)</p><p>if __name__ == "__main__":
+    main()
+</code></pre><h3>示例 3：自动格式化代码（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/format-code.sh</code></p><pre><code class="language-bash">#!/bin/bash</p><h1>Read JSON from stdin</h1>
+INPUT=$(cat)
+TOOL_NAME=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('tool_name', ''))")
+FILE_PATH=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('tool_input', {}).get('file_path', ''))")</p><p>if [ "$TOOL_NAME" != "Write" ] && [ "$TOOL_NAME" != "Edit" ]; then
+    exit 0
+fi</p><h1>Format based on file extension</h1>
+case "$FILE_PATH" in
+    <em>.js|</em>.jsx|<em>.ts|</em>.tsx|*.json)
+        command -v prettier &>/dev/null && prettier --write "$FILE_PATH" 2>/dev/null
+        ;;
+    *.py)
+        command -v black &>/dev/null && black "$FILE_PATH" 2>/dev/null
+        ;;
+    *.go)
+        command -v gofmt &>/dev/null && gofmt -w "$FILE_PATH" 2>/dev/null
+        ;;
+esac</p><p>exit 0
+</code></pre><h3>示例 4：提示验证器（UserPromptSubmit）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-prompt.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+import json
+import sys
+import re</p><p>BLOCKED_PATTERNS = [
+    (r"delete\s+(all\s+)?database", "Dangerous: database deletion"),
+    (r"rm\s+-rf\s+/", "Dangerous: root deletion"),
+]</p><p>def main():
+    input_data = json.load(sys.stdin)
+    prompt = input_data.get("user_prompt", "") or input_data.get("prompt", "")</p><p>    for pattern, message in BLOCKED_PATTERNS:
+        if re.search(pattern, prompt, re.IGNORECASE):
+            output = {
+                "decision": "block",
+                "reason": f"Blocked: {message}"
+            }
+            print(json.dumps(output))
+            sys.exit(0)</p><p>    sys.exit(0)</p><p>if __name__ == "__main__":
+    main()
+</code></pre><h3>示例 5：智能 Stop Hook（基于提示）</h3><pre><code class="language-json">{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "审查 Claude 是否完成了所有请求的任务。检查：1）所有文件是否创建/修改？2）是否有未解决的错误？如果不完整，解释缺少什么。",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h3>示例 6：上下文使用跟踪器（Hook 配对）</h3><p>使用 <code>UserPromptSubmit</code>（消息前）和 <code>Stop</code>（响应后）hooks 配合跟踪每个请求的 token 消耗。</p><p><strong>文件：</strong> <code>.claude/hooks/context-tracker.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+"""
+Context Usage Tracker - Tracks token consumption per request.</p><p>Uses UserPromptSubmit as "pre-message" hook and Stop as "post-response" hook
+to calculate the delta in token usage for each request.</p><p>Token Counting Methods:
+<li>Character estimation (default): ~4 chars per token, no dependencies</li>
+<li>tiktoken (optional): More accurate (~90-95%), requires: pip install tiktoken</li>
+"""
+import json
+import os
+import sys
+import tempfile</p><h1>Configuration</h1>
+CONTEXT_LIMIT = 128000  # Claude's context window (adjust for your model)
+USE_TIKTOKEN = False    # Set True if tiktoken is installed for better accuracy</p><p>
+def get_state_file(session_id: str) -> str:
+    """Get temp file path for storing pre-message token count, isolated by session."""
+    return os.path.join(tempfile.gettempdir(), f"claude-context-{session_id}.json")</p><p>
+def count_tokens(text: str) -> int:
+    """
+    Count tokens in text.</p><p>    Uses tiktoken with p50k_base encoding if available (~90-95% accuracy),
+    otherwise falls back to character estimation (~80-90% accuracy).
+    """
+    if USE_TIKTOKEN:
+        try:
+            import tiktoken
+            enc = tiktoken.get_encoding("p50k_base")
+            return len(enc.encode(text))
+        except ImportError:
+            pass  # Fall back to estimation</p><p>    # Character-based estimation: ~4 characters per token for English
+    return len(text) // 4</p><p>
+def read_transcript(transcript_path: str) -> str:
+    """Read and concatenate all content from transcript file."""
+    if not transcript_path or not os.path.exists(transcript_path):
+        return ""</p><p>    content = []
+    with open(transcript_path, "r") as f:
+        for line in f:
+            try:
+                entry = json.loads(line.strip())
+                # Extract text content from various message formats
+                if "message" in entry:
+                    msg = entry["message"]
+                    if isinstance(msg.get("content"), str):
+                        content.append(msg["content"])
+                    elif isinstance(msg.get("content"), list):
+                        for block in msg["content"]:
+                            if isinstance(block, dict) and block.get("type") == "text":
+                                content.append(block.get("text", ""))
+            except json.JSONDecodeError:
+                continue</p><p>    return "\n".join(content)</p><p>
+def handle_user_prompt_submit(data: dict) -> None:
+    """Pre-message hook: Save current token count before request."""
+    session_id = data.get("session_id", "unknown")
+    transcript_path = data.get("transcript_path", "")</p><p>    transcript_content = read_transcript(transcript_path)
+    current_tokens = count_tokens(transcript_content)</p><p>    # Save to temp file for later comparison
+    state_file = get_state_file(session_id)
+    with open(state_file, "w") as f:
+        json.dump({"pre_tokens": current_tokens}, f)</p><p>
+def handle_stop(data: dict) -> None:
+    """Post-response hook: Calculate and report token delta."""
+    session_id = data.get("session_id", "unknown")
+    transcript_path = data.get("transcript_path", "")</p><p>    transcript_content = read_transcript(transcript_path)
+    current_tokens = count_tokens(transcript_content)</p><p>    # Load pre-message count
+    state_file = get_state_file(session_id)
+    pre_tokens = 0
+    if os.path.exists(state_file):
+        try:
+            with open(state_file, "r") as f:
+                state = json.load(f)
+                pre_tokens = state.get("pre_tokens", 0)
+        except (json.JSONDecodeError, IOError):
+            pass</p><p>    # Calculate delta
+    delta_tokens = current_tokens - pre_tokens
+    remaining = CONTEXT_LIMIT - current_tokens
+    percentage = (current_tokens / CONTEXT_LIMIT) * 100</p><p>    # Report usage
+    method = "tiktoken" if USE_TIKTOKEN else "estimated"
+    print(f"Context ({method}): ~{current_tokens:,} tokens ({percentage:.1f}% used, ~{remaining:,} remaining)", file=sys.stderr)
+    if delta_tokens > 0:
+        print(f"This request: ~{delta_tokens:,} tokens", file=sys.stderr)</p><p>
+def main():
+    data = json.load(sys.stdin)
+    event = data.get("hook_event_name", "")</p><p>    if event == "UserPromptSubmit":
+        handle_user_prompt_submit(data)
+    elif event == "Stop":
+        handle_stop(data)</p><p>    sys.exit(0)</p><p>
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>配置：</strong>
+<pre><code class="language-json">{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/context-tracker.py\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/context-tracker.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>工作原理：</strong>
+<li><code>UserPromptSubmit</code> 在处理提示前触发 - 保存当前 token 计数</li>
+<li><code>Stop</code> 在 Claude 响应后触发 - 计算差值并报告使用情况</li>
+<li>每个会话通过临时文件名中的 <code>session_id</code> 隔离</li><p><strong>Token 计数方法：</strong></p><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>准确性</th>
+<th>依赖</th>
+<th>速度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符估算</td>
+<td>~80-90%</td>
+<td>无</td>
+<td><1ms</td>
+</tr>
+<tr>
+<td>tiktoken (p50k_base)</td>
+<td>~90-95%</td>
+<td><code>pip install tiktoken</code></td>
+<td><10ms</td>
+</tr>
+</tbody>
+</table>
+<blockquote><strong>注意：</strong> Anthropic 未发布官方离线 tokenizer。两种方法都是近似值。记录包括用户提示、Claude 响应和工具输出，但不包括系统提示或内部上下文。</blockquote><h3>示例 7：种子自动模式权限（一次性设置脚本）</h3><p>一次性设置脚本，向 <code>~/.claude/settings.json</code> 添加约 67 个安全权限规则，相当于 Claude Code 自动模式基线 — 无需任何 hook，无需记住未来选择。运行一次；可安全重复运行（跳过已存在的规则）。</p><p><strong>文件：</strong> <code>09-advanced-features/setup-auto-mode-permissions.py</code></p><pre><code class="language-bash"><h1>预览将添加的内容</h1>
+python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run</p><h1>应用</h1>
+python3 09-advanced-features/setup-auto-mode-permissions.py
+</code></pre><p><strong>添加内容：</strong></p><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内置工具</td>
+<td><code>Read(<em>)</code>、<code>Edit(</em>)</code>、<code>Write(<em>)</code>、<code>Glob(</em>)</code>、<code>Grep(<em>)</code>、<code>Agent(</em>)</code>、<code>WebSearch(*)</code></td>
+</tr>
+<tr>
+<td>Git 读取</td>
+<td><code>Bash(git status:<em>)</code>、<code>Bash(git log:</em>)</code>、<code>Bash(git diff:*)</code></td>
+</tr>
+<tr>
+<td>Git 写入（本地）</td>
+<td><code>Bash(git add:<em>)</code>、<code>Bash(git commit:</em>)</code>、<code>Bash(git checkout:*)</code></td>
+</tr>
+<tr>
+<td>包管理器</td>
+<td><code>Bash(npm install:<em>)</code>、<code>Bash(pip install:</em>)</code>、<code>Bash(cargo build:*)</code></td>
+</tr>
+<tr>
+<td>构建和测试</td>
+<td><code>Bash(make:<em>)</code>、<code>Bash(pytest:</em>)</code>、<code>Bash(go test:*)</code></td>
+</tr>
+<tr>
+<td>常用 shell</td>
+<td><code>Bash(ls:<em>)</code>、<code>Bash(cat:</em>)</code>、<code>Bash(find:<em>)</code>、<code>Bash(cp:</em>)</code>、<code>Bash(mv:*)</code></td>
+</tr>
+<tr>
+<td>GitHub CLI</td>
+<td><code>Bash(gh pr view:<em>)</code>、<code>Bash(gh pr create:</em>)</code>、<code>Bash(gh issue list:*)</code></td>
+</tr>
+</tbody>
+</table>
+<strong>有意排除的内容</strong>（此脚本从不添加）：
+<li><code>rm -rf</code>、<code>sudo</code>、强制推送、<code>git reset --hard</code></li>
+<li><code>DROP TABLE</code>、<code>kubectl delete</code>、<code>terraform destroy</code></li>
+<li><code>npm publish</code>、<code>curl | bash</code>、生产部署</li><h2 id="插件 Hooks">插件 Hooks</h2><p>插件可以在其 <code>hooks/hooks.json</code> 文件中包含 hooks：</p><p><strong>文件：</strong> <code>plugins/hooks/hooks.json</code></p><pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/validate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>插件 Hooks 中的环境变量：</strong>
+<li><code>${CLAUDE_PLUGIN_ROOT}</code> - 插件目录路径</li>
+<li><code>${CLAUDE_PLUGIN_DATA}</code> - 插件数据目录路径</li><p>这允许插件包含自定义验证和自动化 hooks。</p><h2 id="MCP 工具 Hooks">MCP 工具 Hooks</h2><p>MCP 工具遵循模式 <code>mcp__<server>__<tool></code>：</p><pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__memory__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"systemMessage\": \"Memory operation logged\"}'"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h2 id="安全考虑">安全考虑</h2><h3>免责声明</h3><p><strong>使用风险自负</strong>：Hooks 执行任意 shell 命令。你独自负责：
+<li>你配置的命令</li>
+<li>文件访问/修改权限</li>
+<li>潜在数据丢失或系统损坏</li>
+<li>在生产环境使用前在安全环境中测试 hooks</li><h3>安全说明</h3><li><strong>需要工作区信任：</strong> <code>statusLine</code> 和 <code>fileSuggestion</code> hook 输出命令现在需要工作区信任接受才能生效。</li>
+<li><strong>HTTP hooks 和环境变量：</strong> HTTP hooks 需要显式 <code>allowedEnvVars</code> 列表才能在 URL 中使用环境变量插值。这防止敏感环境变量意外泄露到远程端点。</li>
+<li><strong>管理设置层级：</strong> <code>disableAllHooks</code> 设置现在遵循管理设置层级，意味着组织级设置可以强制禁用 hooks，个人用户无法覆盖。</li><h3>最佳实践</h3><table>
+<thead>
+<tr>
+<th>应该</th>
+<th>不应该</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>验证和净化所有输入</td>
+<td>盲目信任输入数据</td>
+</tr>
+<tr>
+<td>引用 shell 变量：<code>"$VAR"</code></td>
+<td>使用未引用：<code>$VAR</code></td>
+</tr>
+<tr>
+<td>拦截路径遍历（<code>..</code>）</td>
+<td>允许任意路径</td>
+</tr>
+<tr>
+<td>使用 <code>$CLAUDE_PROJECT_DIR</code> 的绝对路径</td>
+<td>硬编码路径</td>
+</tr>
+<tr>
+<td>跳过敏感文件（<code>.env</code>、<code>.git/</code>、密钥）</td>
+<td>处理所有文件</td>
+</tr>
+<tr>
+<td>先单独测试 hooks</td>
+<td>部署未测试的 hooks</td>
+</tr>
+<tr>
+<td>HTTP hooks 使用显式 <code>allowedEnvVars</code></td>
+<td>向 webhooks 暴露所有环境变量</td>
+</tr>
+</tbody>
+</table>
+<h2 id="调试">调试</h2><h3>启用调试模式</h3><p>使用调试标志运行 Claude 以获取详细 hook 日志：</p><pre><code class="language-bash">claude --debug
+</code></pre><h3>详细模式</h3><p>在 Claude Code 中使用 <code>Ctrl+O</code> 启用详细模式并查看 hook 执行进度。</p><h3>独立测试 Hooks</h3><pre><code class="language-bash"><h1>使用示例 JSON 输入测试</h1>
+echo '{"tool_name": "Bash", "tool_input": {"command": "ls -la"}}' | python3 .claude/hooks/validate-bash.py</p><h1>检查退出码</h1>
+echo $?
+</code></pre><h2 id="完整配置示例">完整配置示例</h2><pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-bash.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/format-code.sh\"",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/security-scan.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-prompt.py\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-init.sh\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "停止前验证所有任务已完成。",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><h2 id="Hook 执行详情">Hook 执行详情</h2><table>
+<thead>
+<tr>
+<th>方面</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>超时</strong></td>
+<td>默认 60 秒，每个命令可配置</td>
+</tr>
+<tr>
+<td><strong>并行化</strong></td>
+<td>所有匹配的 hooks 并行运行</td>
+</tr>
+<tr>
+<td><strong>去重</strong></td>
+<td>相同的 hook 命令去重</td>
+</tr>
+<tr>
+<td><strong>环境</strong></td>
+<td>在当前目录以 Claude Code 环境运行</td>
+</tr>
+</tbody>
+</table>
+<hr></p><h2 id="模式与配方">模式与配方</h2><p>久经考验的 hook 组合，解决实际问题。</p><h3>模式 1：保存时格式化管道</h3><p>最常见的 hook 模式：每次写入文件后自动格式化。</p><p><strong>问题：</strong> 代码未格式化就提交。CI 失败。浪费开发者时间。</p><p><strong>解决方案：</strong> 将格式化工具链为 PostToolUse hooks。</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh" },
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lint-check.sh" }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>好处：</strong>
+<li>每个文件在你看到之前就已格式化</li>
+<li>Lint 错误立即捕获，而不是 20 分钟后在 CI 中</li>
+<li>零心智负担 - 它自动发生</li><h3>模式 2：安全门</h3><p>在执行前拦截危险操作。</p><p><strong>问题：</strong> Claude 有时建议危险命令。一个错误的 <code>rm -rf</code> 可能浪费数小时。</p><p><strong>解决方案：</strong> PreToolUse 验证器拦截危险模式。</p><pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>拦截内容：</strong>
+<li><code>rm -rf /</code> - 根目录删除</li>
+<li><code>sudo rm</code> - 提权删除</li>
+<li><code>git push --force main</code> - 强制推送到 main</li>
+<li><code>DROP DATABASE</code> - SQL 破坏</li>
+<li><code>kubectl delete namespace</code> - 集群破坏</li><h3>模式 3：测试守卫</h3><p>代码变更时运行相关测试。</p><p><strong>问题：</strong> 变更破坏测试。你直到 CI 运行才知道。</p><p><strong>解决方案：</strong> PostToolUse 测试运行器用于修改的文件。</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/test-runner.sh",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>工作原理：</strong>
+<li>检测哪个文件被修改</li>
+<li>查找相关测试文件</li>
+<li>只运行那些测试（快速反馈）</li>
+<li>向 Claude 报告结果</li><h3>模式 4：会话卫生</h3><p>跟踪每个会话发生的事情。</p><p><strong>问题：</strong> 长会话丢失上下文。你忘记做了什么。</p><p><strong>解决方案：</strong> Hook 配对跟踪会话活动。</p><pre><code class="language-json">{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-init.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-summary.sh" }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>跟踪：</strong>
+<li>创建/修改的文件</li>
+<li>运行的命令</li>
+<li>通过/失败的测试</li>
+<li>Token 使用</li><h3>模式 5：密钥扫描器</h3><p>防止密钥进入 git。</p><p><strong>问题：</strong> API 密钥、密码、令牌被提交。公开仓库泄露密钥。</p><p><strong>解决方案：</strong> PostToolUse 安全扫描器。</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/security-scan.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>扫描内容：</strong>
+<li>硬编码密码</li>
+<li>API 密钥和令牌</li>
+<li>AWS 凭证</li>
+<li>私钥</li>
+<li>如果可用则使用 trufflehog/semgrep</li><hr><h2 id="立即尝试：安全守卫">立即尝试：安全守卫</h2><p>创建一个拦截危险 bash 命令的 hook。</p><p><strong>步骤 1：创建验证器</strong></p><p><code>.claude/hooks/prompt-validator.sh</code>：</p><pre><code class="language-bash">#!/bin/bash
+<h1>Block dangerous bash commands</h1>
+<h1>Hook: PreToolUse:Bash</h1><p>INPUT=$(cat)
+CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty')</p><h1>Dangerous patterns - exit 2 to block</h1>
+BLOCKED=(
+  'rm -rf /'
+  'rm -rf ~'
+  'sudo rm'
+  'git push --force main'
+  'git push --force master'
+  'DROP DATABASE'
+  'kubectl delete namespace'
+  ':(){ :|:& };:'  # Fork bomb
+)</p><p>for pattern in "${BLOCKED[@]}"; do
+  if [[ "$CMD" == <em>"$pattern"</em> ]]; then
+    echo "[Hook] BLOCKED: Dangerous command detected: $pattern" >&2
+    echo "[Hook] Command: $CMD" >&2
+    exit 2  # Exit 2 = blocking error
+  fi
+done</p><h1>Warn but allow for risky patterns</h1>
+WARN=(
+  'git reset --hard'
+  'npm publish'
+  'docker system prune'
+)</p><p>for pattern in "${WARN[@]}"; do
+  if [[ "$CMD" == <em>"$pattern"</em> ]]; then
+    echo "[Hook] WARNING: Risky command: $pattern" >&2
+    # Continue but Claude sees the warning
+  fi
+done</p><p>exit 0
+</code></pre><p><strong>步骤 2：配置</strong></p><pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre><p><strong>步骤 3：测试</strong></p><p>尝试让 Claude 运行危险命令：</p><pre><code class="language-">> 运行 rm -rf /tmp/test</p><p>[Hook] BLOCKED: Dangerous command detected: rm -rf /
+[Hook] Command: rm -rf /tmp/test
+</code></pre><p>Claude 会看到拦截消息并且不会执行命令。</p><hr><h2 id="完整 Hook 脚本参考">完整 Hook 脚本参考</h2><p>常见用例的生产就绪 hook 脚本。每个脚本包含错误处理、日志和配置检测。</p><h3>auto-format.sh</h3><p>智能检测的多语言格式化器。</p><pre><code class="language-bash">#!/bin/bash
+<h1>auto-format.sh - Multi-language code formatter</h1>
+<h1>Hook: PostToolUse (Write|Edit)</h1>
+<h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><h1>Parse JSON input</h1>
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')</p><h1>Skip if not Write/Edit</h1>
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi</p><h1>Skip if no file path</h1>
+[[ -z "$FILE_PATH" || ! -f "$FILE_PATH" ]] && exit 0</p><h1>Log function</h1>
+log() {
+  echo "[Hook:format] $1" >&2
+}</p><h1>Check for formatter config</h1>
+has_config() {
+  [[ -f ".prettierrc" || -f ".prettierrc.json" || -f "pyproject.toml" || -f ".rustfmt.toml" ]]
+}</p><h1>Format based on file extension</h1>
+format_file() {
+  local ext="${FILE_PATH##*.}"</p><p>  case "$ext" in
+    js|jsx|ts|tsx|json|md|yaml|yml|css|scss)
+      if command -v prettier &>/dev/null; then
+        prettier --write "$FILE_PATH" 2>/dev/null && log "Formatted (prettier): $FILE_PATH"
+      fi
+      ;;
+    py)
+      if command -v black &>/dev/null; then
+        black "$FILE_PATH" 2>/dev/null && log "Formatted (black): $FILE_PATH"
+      elif command -v autopep8 &>/dev/null; then
+        autopep8 --in-place "$FILE_PATH" && log "Formatted (autopep8): $FILE_PATH"
+      fi
+      ;;
+    go)
+      if command -v gofmt &>/dev/null; then
+        gofmt -w "$FILE_PATH" && log "Formatted (gofmt): $FILE_PATH"
+      fi
+      ;;
+    rs)
+      if command -v rustfmt &>/dev/null; then
+        rustfmt "$FILE_PATH" && log "Formatted (rustfmt): $FILE_PATH"
+      fi
+      ;;
+    java)
+      if command -v google-java-format &>/dev/null; then
+        google-java-format -i "$FILE_PATH" && log "Formatted (google-java-format): $FILE_PATH"
+      fi
+      ;;
+    *)
+      # Unknown extension, skip
+      ;;
+  esac
+}</p><p>format_file
+exit 0
+</code></pre><h3>security-scan.sh</h3><p>密钥和漏洞扫描器。</p><pre><code class="language-bash">#!/bin/bash
+<h1>security-scan.sh - Security scanner for secrets and vulnerabilities</h1>
+<h1>Hook: PostToolUse (Write|Edit)</h1>
+<h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+CONTENT=$(echo "$INPUT" | jq -r '.tool_input.content // .tool_input.new_string // empty')</p><h1>Skip if not Write/Edit</h1>
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi</p><p>[[ -z "$FILE_PATH" || ! -f "$FILE_PATH" ]] && exit 0</p><p>log() {
+  echo "[Hook:security] $1" >&2
+}</p><p>WARNINGS=()</p><h1>Regex patterns for secrets</h1>
+check_secrets() {
+  # Hardcoded passwords
+  if grep -qE "(password|passwd|pwd)\s<em>=\s</em>['\"][^'\"]{8,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded password")
+  fi</p><p>  # API keys
+  if grep -qE "(api[_-]?key|apikey|access[_-]?token)\s<em>=\s</em>['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded API key")
+  fi</p><p>  # AWS keys
+  if grep -qE "AKIA[0-9A-Z]{16}" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("AWS access key detected")
+  fi</p><p>  # Private keys
+  if grep -q "BEGIN.*PRIVATE KEY" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Private key detected")
+  fi</p><p>  # Generic secrets
+  if grep -qE "(secret|token)\s<em>=\s</em>['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded secret")
+  fi
+}</p><h1>Run external scanners if available</h1>
+run_external_scanners() {
+  # Trufflehog - verified secrets only
+  if command -v trufflehog &>/dev/null; then
+    trufflehog filesystem "$FILE_PATH" --only-verified --json 2>/dev/null | \
+      jq -r '.DetectorName // empty' | while read detector; do
+        [[ -n "$detector" ]] && WARNINGS+=("Trufflehog: $detector")
+      done
+  fi</p><p>  # Semgrep - vulnerability patterns
+  if command -v semgrep &>/dev/null; then
+    semgrep --config=auto "$FILE_PATH" --json --quiet 2>/dev/null | \
+      jq -r '.results[].check_id // empty' | while read check; do
+        [[ -n "$check" ]] && WARNINGS+=("Semgrep: $check")
+      done
+  fi
+}</p><h1>Main</h1>
+check_secrets
+run_external_scanners</p><h1>Report warnings</h1>
+if [[ ${#WARNINGS[@]} -gt 0 ]]; then
+  log "Security warnings for $FILE_PATH:"
+  for warning in "${WARNINGS[@]}"; do
+    log "  - $warning"
+  done</p><p>  # Output JSON for Claude
+  jq -n --arg file "$FILE_PATH" --arg warnings "$(printf '%s; ' "${WARNINGS[@]}")" \
+    '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: "Security scan found issues in \($file): \($warnings)"}}'
+fi</p><p>exit 0
+</code></pre><h3>test-runner.sh</h3><p>修改文件的智能测试运行器。</p><pre><code class="language-bash">#!/bin/bash
+<h1>test-runner.sh - Run tests related to modified files</h1>
+<h1>Hook: PostToolUse (Write|Edit)</h1>
+<h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')</p><h1>Skip if not Write/Edit</h1>
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi</p><p>[[ -z "$FILE_PATH" ]] && exit 0</p><p>log() {
+  echo "[Hook:test] $1" >&2
+}</p><h1>Find test file for source file</h1>
+find_test_file() {
+  local src="$1"
+  local base=$(basename "$src" | sed 's/\.[^.]*$//')
+  local dir=$(dirname "$src")</p><p>  # Common test file patterns
+  local patterns=(
+    "test_${base}.py"
+    "${base}_test.py"
+    "${base}.test.ts"
+    "${base}.test.js"
+    "${base}_test.go"
+    "${base}Test.java"
+  )</p><p>  # Check in test directories
+  local test_dirs=("tests" "test" "__tests__" "src/__tests__")</p><p>  for test_dir in "${test_dirs[@]}"; do
+    for pattern in "${patterns[@]}"; do
+      local candidate="$test_dir/$pattern"
+      [[ -f "$candidate" ]] && echo "$candidate" && return
+    done
+  done</p><p>  # Check same directory
+  for pattern in "${patterns[@]}"; do
+    [[ -f "$dir/$pattern" ]] && echo "$dir/$pattern" && return
+  done
+}</p><h1>Run tests based on framework</h1>
+run_tests() {
+  local test_file="$1"</p><p>  if [[ "$test_file" == *.py ]]; then
+    if command -v pytest &>/dev/null; then
+      log "Running pytest on $test_file"
+      pytest "$test_file" -v --tb=short 2>&1 | tail -5 >&2
+    fi
+  elif [[ "$test_file" == <em>.ts || "$test_file" == </em>.js ]]; then
+    if command -v jest &>/dev/null; then
+      log "Running jest on $test_file"
+      jest "$test_file" --passWithNoTests 2>&1 | tail -5 >&2
+    elif command -v vitest &>/dev/null; then
+      log "Running vitest on $test_file"
+      vitest run "$test_file" 2>&1 | tail -5 >&2
+    fi
+  elif [[ "$test_file" == *.go ]]; then
+    log "Running go test"
+    go test -v "$(dirname "$test_file")" 2>&1 | tail -5 >&2
+  fi
+}</p><h1>Main</h1>
+TEST_FILE=$(find_test_file "$FILE_PATH")</p><p>if [[ -n "$TEST_FILE" ]]; then
+  log "Found test file: $TEST_FILE"
+  run_tests "$TEST_FILE"
+else
+  log "No test file found for $FILE_PATH"
+fi</p><p>exit 0
+</code></pre><h3>prompt-validator.sh</h3><p>命令和提示安全验证器。</p><pre><code class="language-bash">#!/bin/bash
+<h1>prompt-validator.sh - Validate bash commands and user prompts</h1>
+<h1>Hook: PreToolUse (Bash) or UserPromptSubmit</h1>
+<h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+EVENT=$(echo "$INPUT" | jq -r '.hook_event_name // empty')</p><p>log() {
+  echo "[Hook:validator] $1" >&2
+}</p><h1>Get command or prompt based on event</h1>
+get_target() {
+  if [[ "$EVENT" == "PreToolUse" ]]; then
+    echo "$INPUT" | jq -r '.tool_input.command // empty'
+  elif [[ "$EVENT" == "UserPromptSubmit" ]]; then
+    echo "$INPUT" | jq -r '.user_prompt // .prompt // empty'
+  fi
+}</p><p>TARGET=$(get_target)
+[[ -z "$TARGET" ]] && exit 0</p><h1>Patterns that BLOCK execution (exit 2)</h1>
+BLOCKED_PATTERNS=(
+  'rm -rf /'
+  'rm -rf ~'
+  'rm -rf /*'
+  'sudo rm -rf'
+  'dd if=/dev/zero'
+  'dd if=/dev/urandom'
+  ':(){ :|:& };:'
+  'mkfs'
+  'git push --force main'
+  'git push --force master'
+  'git push --force origin main'
+  'git push --force origin master'
+  'DROP DATABASE'
+  'TRUNCATE TABLE'
+  'kubectl delete namespace'
+  'kubectl delete all'
+  'terraform destroy'
+)</p><h1>Patterns that WARN but allow</h1>
+WARN_PATTERNS=(
+  'git reset --hard'
+  'npm publish'
+  'yarn publish'
+  'docker system prune'
+  'helm uninstall'
+  'kubectl delete'
+)</p><h1>Check blocked patterns</h1>
+for pattern in "${BLOCKED_PATTERNS[@]}"; do
+  if [[ "$TARGET" == <em>"$pattern"</em> ]]; then
+    log "BLOCKED: Dangerous pattern detected"
+    log "Pattern: $pattern"
+    log "Target: $TARGET"</p><p>    # Return JSON block decision
+    jq -n --arg reason "Blocked dangerous operation: $pattern" \
+      '{decision: "block", reason: $reason}'
+    exit 0
+  fi
+done</p><h1>Check warn patterns</h1>
+for pattern in "${WARN_PATTERNS[@]}"; do
+  if [[ "$TARGET" == <em>"$pattern"</em> ]]; then
+    log "WARNING: Risky operation: $pattern"
+    # Continue but Claude sees warning in stderr
+  fi
+done</p><p>log "Validation passed"
+exit 0
+</code></pre><h3>notify-session-end.sh</h3><p>会话完成通知。</p><pre><code class="language-bash">#!/bin/bash
+<h1>notify-session-end.sh - Send notifications when session ends</h1>
+<h1>Hook: SessionEnd or Stop</h1>
+<h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
+CWD=$(echo "$INPUT" | jq -r '.cwd // empty')
+REASON=$(echo "$INPUT" | jq -r '.reason // empty')</p><p>log() {
+  echo "[Hook:notify] $1" >&2
+}</p><h1>Desktop notification (macOS/Linux)</h1>
+desktop_notify() {
+  local title="Claude Code Session Ended"
+  local message="Session complete in $CWD"</p><p>  if [[ "$(uname)" == "Darwin" ]]; then
+    osascript -e 'display notification "'"$message"'" with title "'"$title"'"' 2>/dev/null || true
+  elif [[ "$(uname)" == "Linux" ]]; then
+    notify-send "$title" "$message" 2>/dev/null || true
+  fi
+}</p><h1>Slack notification</h1>
+slack_notify() {
+  local webhook="${SLACK_WEBHOOK_URL:-}"
+  [[ -z "$webhook" ]] && return</p><p>  local project=$(basename "$CWD")</p><p>  curl -X POST "$webhook" \
+    -H 'Content-Type: application/json' \
+    -d '{"text": "Claude Code session ended in <em>'"$project"'</em>"}' \
+    --silent --max-time 5 || true</p><p>  log "Slack notification sent"
+}</p><h1>Email notification</h1>
+email_notify() {
+  local to="${SESSION_EMAIL:-}"
+  [[ -z "$to" ]] && return</p><p>  local subject="Claude Code Session: $(basename "$CWD")"</p><p>  echo "Session ended in $CWD. Reason: $REASON" | mail -s "$subject" "$to" 2>/dev/null || true</p><p>  log "Email notification sent"
+}</p><h1>Generate session summary</h1>
+generate_summary() {
+  local transcript=$(echo "$INPUT" | jq -r '.transcript_path // empty')</p><p>  if [[ -n "$transcript" && -f "$transcript" ]]; then
+    local lines=$(wc -l < "$transcript" 2>/dev/null || echo "0")
+    log "Session summary: $lines transcript lines"
+  fi
+}</p><h1>Main</h1>
+log "Session ending: $REASON"
+generate_summary
+desktop_notify
+slack_notify
+email_notify</p><p>exit 0
+</code></pre><hr><h2 id="故障排除">故障排除</h2><h3>Hook 未执行</h3>
+<li>验证 JSON 配置语法正确</li>
+<li>检查匹配器模式是否匹配工具名称</li>
+<li>确保脚本存在且可执行：<code>chmod +x script.sh</code></li>
+<li>运行 <code>claude --debug</code> 查看 hook 执行日志</li>
+<li>验证 hook 从 stdin 读取 JSON（而非命令参数）</li><h3>Hook 意外拦截</h3>
+<li>使用示例 JSON 测试 hook：<code>echo '{"tool_name": "Write", ...}' | ./hook.py</code></li>
+<li>检查退出码：应为 0 表示允许，2 表示拦截</li>
+<li>检查 stderr 输出（退出码 2 时显示）</li><h3>JSON 解析错误</h3>
+<li>始终从 stdin 读取，而非命令参数</li>
+<li>使用正确的 JSON 解析（而非字符串操作）</li>
+<li>优雅处理缺失字段</li><h2 id="安装">安装</h2><h3>步骤 1：创建 Hooks 目录</h3>
+<pre><code class="language-bash">mkdir -p ~/.claude/hooks
+</code></pre><h3>步骤 2：复制示例 Hooks</h3>
+<pre><code class="language-bash">cp 06-hooks/*.sh ~/.claude/hooks/
+chmod +x ~/.claude/hooks/*.sh
+</code></pre><h3>步骤 3：在设置中配置</h3>
+使用上述 hook 配置编辑 <code>~/.claude/settings.json</code> 或 <code>.claude/settings.json</code>。</p><h2 id="相关概念">相关概念</h2><li><strong><a href="../08-checkpoints/">Checkpoints 和 Rewind</a></strong> - 保存和恢复对话状态</li>
+<li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 创建自定义 slash 命令</li>
+<li><strong><a href="../03-skills/">Skills</a></strong> - 可复用自主能力</li>
+<li><strong><a href="../04-subagents/">Subagents</a></strong> - 委托任务执行</li>
+<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包扩展包</li>
+<li><strong><a href="../09-advanced-features/">高级功能</a></strong> - 探索 Claude Code 高级能力</li><h2 id="其他资源">其他资源</h2><li><strong><a href="https://code.claude.com/docs/en/hooks">官方 Hooks 文档</a></strong> - 完整 hooks 参考</li>
+<li><strong><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></strong> - 命令行界面文档</li>
+<li><strong><a href="../02-memory/">Memory 指南</a></strong> - 持久上下文配置</li></ul>
+        </div>
+
+        
+    <div class="nav-buttons">
+      <a href="/content/05-mcp.html">← MCP</a>
+      <a href="/content/07-plugins.html">Plugins →</a>
+    </div>
+  
+      </article>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技能模板库 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../03-skills.html"><i class="fas fa-magic"></i> 技能系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../03-skills.html">技能系统</a> &gt;
+                <span>技能模板库</span>
+            </nav>
+            
+            <h1><i class="fas fa-copy"></i> 技能模板库</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 社区贡献整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区验证</p>
+            </div>
+
+            <section id="react-component">
+                <h2>React 组件模板</h2>
+                
+                <h3>模板文件</h3>
+                <pre><code class="language-typescript">// templates/react-component.tsx
+import React from 'react';
+
+interface {{pascalCase name}}Props {
+  {{#each props}}
+  {{camelCase name}}?: {{type}};
+  {{/each}}
+  children?: React.ReactNode;
+}
+
+export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({
+  {{#each props}}
+  {{camelCase name}},
+  {{/each}}
+  children,
+}) => {
+  return (
+    &lt;div className="{{kebabCase name}}"&gt;
+      {children}
+    &lt;/div&gt;
+  );
+};
+
+export default {{pascalCase name}};</code></pre>
+
+                <h3>技能配置</h3>
+                <pre><code class="language-json">{
+  "name": "create-react-component",
+  "inputs": {
+    "name": { "type": "string", "required": true },
+    "props": { "type": "array", "default": [] }
+  },
+  "template": "react-component.tsx",
+  "output": "src/components/{{pascalCase name}}.tsx"
+}</code></pre>
+            </section>
+
+            <section id="api-route">
+                <h2>API 路由模板</h2>
+                
+                <h3>模板文件</h3>
+                <pre><code class="language-typescript">// templates/api-route.ts
+import { NextApiRequest, NextApiResponse } from 'next';
+
+{{#if auth}}
+import { verifyToken } from '@/lib/auth';
+{{/if}}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  {{#if auth}}
+  // 验证认证
+  const user = await verifyToken(req);
+  if (!user) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  {{/if}}
+
+  // 处理请求方法
+  switch (req.method) {
+    case 'GET':
+      return handleGet(req, res);
+    {{#if allowPost}}
+    case 'POST':
+      return handlePost(req, res);
+    {{/if}}
+    {{#if allowPut}}
+    case 'PUT':
+      return handlePut(req, res);
+    {{/if}}
+    {{#if allowDelete}}
+    case 'DELETE':
+      return handleDelete(req, res);
+    {{/if}}
+    default:
+      return res.status(405).json({ error: 'Method not allowed' });
+  }
+}
+
+async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  try {
+    // TODO: 实现 GET 逻辑
+    res.status(200).json({ data: [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}</code></pre>
+            </section>
+
+            <section id="test-file">
+                <h2>测试文件模板</h2>
+                
+                <h3>模板文件</h3>
+                <pre><code class="language-typescript">// templates/test-file.ts
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+{{#if hasComponent}}
+import { render, screen } from '@testing-library/react';
+import { {{componentName}} } from './{{componentFile}}';
+{{/if}}
+
+describe('{{testName}}', () => {
+  {{#if hasBeforeEach}}
+  beforeEach(() => {
+    // 设置测试环境
+  });
+  {{/if}}
+
+  {{#if hasAfterEach}}
+  afterEach(() => {
+    // 清理测试环境
+  });
+  {{/if}}
+
+  it('should {{shouldStatement}}', () => {
+    // Arrange
+    {{#if hasComponent}}
+    render(&lt;{{componentName}} /&gt;);
+    {{/if}}
+
+    // Act
+
+    // Assert
+    expect(true).toBe(true);
+  });
+});</code></pre>
+            </section>
+
+            <section id="hook-template">
+                <h2>React Hook 模板</h2>
+                
+                <h3>模板文件</h3>
+                <pre><code class="language-typescript">// templates/react-hook.ts
+import { useState, useEffect, useCallback {{#if hasRef}}, useRef{{/if}} } from 'react';
+
+interface Use{{hookName}}Options {
+  {{#each options}}
+  {{name}}?: {{type}};
+  {{/each}}
+}
+
+interface Use{{hookName}}Return {
+  {{#each returns}}
+  {{name}}: {{type}};
+  {{/each}}
+}
+
+export function use{{hookName}}(options: Use{{hookName}}Options = {}): Use{{hookName}}Return {
+  {{#each state}}
+  const [{{name}}, set{{pascalCase name}}] = useState&lt;{{type}}&gt;({{default}});
+  {{/each}}
+
+  {{#if hasEffect}}
+  useEffect(() => {
+    // 副作用逻辑
+    return () => {
+      // 清理逻辑
+    };
+  }, [{{effectDeps}}]);
+  {{/if}}
+
+  {{#each callbacks}}
+  const {{name}} = useCallback({{#if hasParams}}({{params}}) =>{{/if}} {
+    // {{description}}
+  }, [{{deps}}]);
+  {{/each}}
+
+  return {
+    {{#each returns}}
+    {{name}},
+    {{/each}}
+  };
+}</code></pre>
+            </section>
+
+            <section id="util-template">
+                <h2>工具函数模板</h2>
+                
+                <h3>模板文件</h3>
+                <pre><code class="language-typescript">// templates/util-function.ts
+/**
+ * {{description}}
+ * 
+ * @param {{paramName}} - {{paramDescription}}
+ * @returns {{returnDescription}}
+ * 
+ * @example
+ * ```ts
+ * const result = {{functionName}}({{exampleInput}});
+ * // result: {{exampleOutput}}
+ * ```
+ */
+export function {{functionName}}&lt;T = {{defaultType}}&gt;(
+  {{paramName}}: {{paramType}}
+): {{returnType}} {
+  // 实现
+  {{#if isAsync}}
+  return await {{#if hasPromise}}Promise.resolve({{/if}}result{{#if hasPromise}}){{/if}};
+  {{else}}
+  return result;
+  {{/if}}
+}</code></pre>
+            </section>
+
+            <section id="using-templates">
+                <h2>使用模板</h2>
+                
+                <h3>创建技能使用模板</h3>
+                <pre><code class="language-bash"># 使用模板创建组件
+> /skill run create-react-component --name Button --props '[{"name": "onClick", "type": "() => void"}]'
+
+# 使用模板创建 API 路由
+> /skill run create-api-route --name users --auth true --allowPost true
+
+# 使用模板创建测试
+> /skill run create-test --name "Button component" --hasComponent true</code></pre>
+
+                <h3>自定义模板</h3>
+                <pre><code class="language-bash"># 创建自定义模板目录
+mkdir -p ~/.claude/templates
+
+# 添加模板文件
+cp my-template.tsx ~/.claude/templates/
+
+# 在技能中引用
+{
+  "template": "~/.claude/templates/my-template.tsx"
+}</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/trending/claude-howto" target="_blank">Claude Code 教程项目</a> <span class="reliability reliability-B">B</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="advanced.html" class="prev"><i class="fas fa-arrow-left"></i> 创建高级技能</a>
+                <a href="../examples/code-review.html" class="next">代码审查技能 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

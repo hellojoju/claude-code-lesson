@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本使用 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="installation/overview.html" class="active"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../01-slash-commands.html"><i class="fas fa-cogs"></i> 高级技巧</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../index.html">首页</a> &gt; <a href="installation/overview.html">基础教程</a> &gt; <span>基本使用</span>
+        </div>
+
+        <article class="content">
+            <h1><i class="fas fa-play-circle"></i> 基本使用</h1>
+            <div class="source-info">
+                <span class="reliability reliability-a">可靠性: A</span>
+                <span class="source">来源: Claude Code 官方文档</span>
+            </div>
+            <p class="meta">
+                <i class="fas fa-clock"></i> 预计阅读时间: 25 分钟 |
+                <i class="fas fa-signal"></i> 难度: 初级
+            </p>
+
+            <section id="start">
+                <h2><i class="fas fa-rocket"></i> 启动 Claude Code</h2>
+                
+                <div class="step">
+                    <h4>步骤 1：打开终端</h4>
+                    <p>在您的项目目录中打开终端。</p>
+                    <pre><code class="language-bash">cd /path/to/your/project</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 2：启动 Claude Code</h4>
+                    <pre><code class="language-bash">claude</code></pre>
+                    <p><strong>预期输出：</strong></p>
+                    <pre><code>Welcome to Claude Code!
+Version: 2.1.88
+
+Do you trust this project? (yes/no)</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 3：确认信任项目</h4>
+                    <pre><code>yes</code></pre>
+                    <p>Claude Code 会扫描项目文件，这可能需要几秒钟。</p>
+                </div>
+
+                <div class="step">
+                    <h4>步骤 4：开始使用</h4>
+                    <p>看到提示符 <code>></code> 表示启动成功，您可以开始输入指令了。</p>
+                </div>
+            </section>
+
+            <section id="modes">
+                <h2><i class="fas fa-exchange-alt"></i> 使用模式</h2>
+                
+                <div class="command-card">
+                    <h3>交互模式（推荐）</h3>
+                    <p><strong>启动：</strong></p>
+                    <pre><code class="language-bash">claude</code></pre>
+                    <p><strong>特点：</strong></p>
+                    <ul>
+                        <li>支持多轮对话</li>
+                        <li>可以保存和加载会话</li>
+                        <li>适合复杂任务</li>
+                    </ul>
+                </div>
+
+                <div class="command-card">
+                    <h3>继续上次会话</h3>
+                    <p><strong>启动：</strong></p>
+                    <pre><code class="language-bash">claude -c</code></pre>
+                    <p><strong>特点：</strong></p>
+                    <ul>
+                        <li>自动加载上次的会话历史</li>
+                        <li>保持上下文连续性</li>
+                        <li>适合长期项目</li>
+                    </ul>
+                </div>
+
+                <div class="command-card">
+                    <h3>单次模式</h3>
+                    <p><strong>用法：</strong></p>
+                    <pre><code class="language-bash">claude -p "你的问题或任务"</code></pre>
+                    <p><strong>示例：</strong></p>
+                    <pre><code class="language-bash">claude -p "帮我创建一个 README.md 文件"
+claude -p "分析 package.json 中的依赖"</code></pre>
+                    <p><strong>特点：</strong></p>
+                    <ul>
+                        <li>快速执行单个任务</li>
+                        <li>不需要进入交互模式</li>
+                        <li>适合简单查询</li>
+                    </ul>
+                </div>
+
+                <div class="command-card">
+                    <h3>快速模式（跳过权限确认）</h3>
+                    <p><strong>启动：</strong></p>
+                    <pre><code class="language-bash">claude --dangerously-skip-permissions</code></pre>
+                    <div class="important">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>警告：</strong>此模式会自动执行所有操作，请谨慎使用！建议仅在受信任的环境中使用。
+                    </div>
+                </div>
+            </section>
+
+            <section id="basic-operations">
+                <h2><i class="fas fa-tasks"></i> 基本操作</h2>
+                
+                <div class="command-card">
+                    <h3>文件操作</h3>
+                    <p><strong>读取文件：</strong></p>
+                    <pre><code class="language-bash">> /read package.json</code></pre>
+                    
+                    <p><strong>写入文件：</strong></p>
+                    <pre><code class="language-bash">> /write hello.txt "Hello, World!"</code></pre>
+                    
+                    <p><strong>编辑文件：</strong></p>
+                    <pre><code class="language-bash">> /edit config.json</code></pre>
+                    
+                    <p><strong>列出目录：</strong></p>
+                    <pre><code class="language-bash">> /ls</code></pre>
+                </div>
+
+                <div class="command-card">
+                    <h3>代码执行</h3>
+                    <p><strong>运行代码：</strong></p>
+                    <pre><code class="language-bash">> /run</code></pre>
+                    
+                    <p><strong>执行系统命令：</strong></p>
+                    <pre><code class="language-bash">> /exec "npm install"
+> /exec "git status"</code></pre>
+                </div>
+
+                <div class="command-card">
+                    <h3>会话管理</h3>
+                    <p><strong>保存会话：</strong></p>
+                    <pre><code class="language-bash">> /save my-project-session</code></pre>
+                    
+                    <p><strong>加载会话：</strong></p>
+                    <pre><code class="language-bash">> /load my-project-session</code></pre>
+                    
+                    <p><strong>清除会话：</strong></p>
+                    <pre><code class="language-bash">> /clear</code></pre>
+                </div>
+            </section>
+
+            <section id="natural-language">
+                <h2><i class="fas fa-comments"></i> 自然语言指令</h2>
+                <p>Claude Code 支持自然语言指令，您可以用日常语言描述任务：</p>
+                
+                <div class="tip-card">
+                    <h3>示例 1：创建功能</h3>
+                    <pre><code class="language-bash">> 我想添加一个用户登录功能，包括：
+> 1. 登录表单
+> 2. 验证逻辑
+> 3. 错误处理</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>示例 2：修复 Bug</h3>
+                    <pre><code class="language-bash">> 我遇到了一个错误：TypeError: Cannot read property 'x' of undefined
+> 请帮我找到问题并修复</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>示例 3：代码重构</h3>
+                    <pre><code class="language-bash">> 请重构 src/utils.js 文件，使其更易读和维护</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>示例 4：代码解释</h3>
+                    <pre><code class="language-bash">> 请解释这段代码的作用：
+> [粘贴代码]</code></pre>
+                </div>
+            </section>
+
+            <section id="best-practices">
+                <h2><i class="fas fa-star"></i> 最佳实践</h2>
+                
+                <div class="tip-card">
+                    <h3>1. 清晰描述需求</h3>
+                    <p>越具体的描述，得到的结果越好：</p>
+                    <pre><code class="language-bash"># ❌ 不好的例子
+> 帮我写个函数
+
+# ✅ 好的例子
+> 创建一个验证邮箱格式的函数，要求：
+> - 接受字符串参数
+> - 返回布尔值
+> - 支持常见邮箱格式</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>2. 使用 Plan 模式</h3>
+                    <p>对于复杂任务，先规划再执行：</p>
+                    <pre><code class="language-bash">> /plan
+> 我想创建一个完整的用户管理系统</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>3. 分步骤执行</h3>
+                    <p>将大任务拆分成小步骤：</p>
+                    <pre><code class="language-bash">> 步骤1：创建数据库模型
+> 步骤2：实现 API 接口
+> 步骤3：添加前端页面
+> 步骤4：编写测试用例</code></pre>
+                </div>
+
+                <div class="tip-card">
+                    <h3>4. 及时保存会话</h3>
+                    <p>定期保存会话，避免丢失工作进度：</p>
+                    <pre><code class="language-bash">> /save project-2024-01-15</code></pre>
+                </div>
+            </section>
+
+            <section id="examples">
+                <h2><i class="fas fa-code"></i> 实战示例</h2>
+                
+                <div class="command-card">
+                    <h3>示例 1：创建 Node.js 项目</h3>
+                    <pre><code class="language-bash">> 我想创建一个简单的 Node.js 项目，包括：
+> 1. package.json 文件
+> 2. index.js 主文件
+> 3. README.md 说明文档
+
+# Claude Code 会：
+# - 创建 package.json 并初始化
+# - 创建 index.js 并添加基本代码
+# - 创建 README.md 并添加项目说明</code></pre>
+                </div>
+
+                <div class="command-card">
+                    <h3>示例 2：添加测试</h3>
+                    <pre><code class="language-bash">> 为 src/calculator.js 文件添加单元测试
+
+# Claude Code 会：
+# - 分析 calculator.js 的功能
+# - 创建测试文件
+# - 编写测试用例
+# - 运行测试验证</code></pre>
+                </div>
+
+                <div class="command-card">
+                    <h3>示例 3：代码优化</h3>
+                    <pre><code class="language-bash">> 优化 src/api.js 的性能，目前响应时间太长
+
+# Claude Code 会：
+# - 分析代码瓶颈
+# - 提出优化建议
+# - 实施优化方案
+# - 测试性能改进</code></pre>
+                </div>
+            </section>
+
+            <section id="next-steps">
+                <h2><i class="fas fa-arrow-right"></i> 下一步</h2>
+                <ul>
+                    <li><a href="../01-slash-commands.html">学习斜杠命令</a></li>
+                    <li><a href="../index.html#tutorials">查看更多教程</a></li>
+                </ul>
+            </section>
+        </article>
+
+        <div class="sidebar">
+            <div class="toc">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#start">启动 Claude Code</a></li>
+                    <li><a href="#modes">使用模式</a></li>
+                    <li><a href="#basic-operations">基本操作</a></li>
+                    <li><a href="#natural-language">自然语言指令</a></li>
+                    <li><a href="#best-practices">最佳实践</a></li>
+                    <li><a href="#examples">实战示例</a></li>
+                    <li><a href="#next-steps">下一步</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Claude Code 中文教程</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+</body>
+</html>

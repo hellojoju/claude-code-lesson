@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动测试钩子 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../06-hooks.html"><i class="fas fa-anchor"></i> 钩子系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../06-hooks.html">钩子系统</a> &gt;
+                <span>自动测试钩子</span>
+            </nav>
+            
+            <h1><i class="fas fa-vial"></i> 自动测试钩子案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的自动测试钩子实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>钩子概述</h2>
+                <p>自动测试钩子在文件保存后自动运行相关测试，提供即时反馈。</p>
+                
+                <h3>功能特性</h3>
+                <ul>
+                    <li>检测文件变更</li>
+                    <li>智能识别相关测试</li>
+                    <li>并行运行测试</li>
+                    <li>实时报告结果</li>
+                </ul>
+            </section>
+
+            <section id="implementation">
+                <h2>实现代码</h2>
+                
+                <pre><code class="language-javascript">// hooks/auto-test.js
+const { execSync, spawn } = require('child_process');
+const path = require('path');
+const chokidar = require('chokidar');
+
+class AutoTestHook {
+  constructor() {
+    this.testQueue = new Set();
+    this.isRunning = false;
+    this.watcher = null;
+  }
+  
+  async init(context) {
+    // 启动文件监控
+    this.watcher = chokidar.watch('./src/**/*.{js,jsx,ts,tsx}', {
+      ignored: /node_modules/,
+      persistent: true
+    });
+    
+    this.watcher.on('change', (filePath) => {
+      this.onFileChange(filePath);
+    });
+    
+    console.log('🔍 自动测试监控已启动');
+  }
+  
+  async onFileChange(filePath) {
+    // 查找相关测试文件
+    const testFiles = this.findRelatedTests(filePath);
+    
+    if (testFiles.length === 0) {
+      return;
+    }
+    
+    // 添加到测试队列
+    testFiles.forEach(f => this.testQueue.add(f));
+    
+    // 执行测试
+    await this.runTests();
+  }
+  
+  findRelatedTests(sourceFile) {
+    const tests = [];
+    const dir = path.dirname(sourceFile);
+    const base = path.basename(sourceFile, path.extname(sourceFile));
+    
+    // 可能的测试文件位置
+    const possibleTests = [
+      path.join(dir, `${base}.test.js`),
+      path.join(dir, `${base}.test.ts`),
+      path.join(dir, `${base}.spec.js`),
+      path.join(dir, `${base}.spec.ts`),
+      path.join(dir, '__tests__', `${base}.test.js`),
+      path.join('tests', sourceFile.replace('src/', '').replace(/\.(js|ts)$/, '.test.js'))
+    ];
+    
+    for (const testFile of possibleTests) {
+      if (fs.existsSync(testFile)) {
+        tests.push(testFile);
+      }
+    }
+    
+    return tests;
+  }
+  
+  async runTests() {
+    if (this.isRunning || this.testQueue.size === 0) {
+      return;
+    }
+    
+    this.isRunning = true;
+    const tests = Array.from(this.testQueue);
+    this.testQueue.clear();
+    
+    console.log(`\n🧪 运行 ${tests.length} 个测试文件...\n`);
+    
+    try {
+      const result = execSync(
+        `npx jest ${tests.join(' ')} --passWithNoTests --coverage=false`,
+        { encoding: 'utf8' }
+      );
+      
+      console.log('✅ 测试通过\n');
+      this.notifyResult(true, result);
+    } catch (error) {
+      console.log('❌ 测试失败\n');
+      console.log(error.stdout);
+      this.notifyResult(false, error.stdout);
+    } finally {
+      this.isRunning = false;
+      
+      // 检查是否还有待运行的测试
+      if (this.testQueue.size > 0) {
+        await this.runTests();
+      }
+    }
+  }
+  
+  notifyResult(success, output) {
+    // 发送桌面通知
+    const title = success ? '✅ 测试通过' : '❌ 测试失败';
+    const notification = {
+      title,
+      body: success ? '所有测试用例通过' : '部分测试用例失败'
+    };
+    
+    // 可以集成系统通知
+    if (process.platform === 'darwin') {
+      execSync(`osascript -e 'display notification "${notification.body}" with title "${notification.title}"'`);
+    }
+  }
+  
+  async cleanup() {
+    if (this.watcher) {
+      await this.watcher.close();
+    }
+  }
+}
+
+const hook = new AutoTestHook();
+
+module.exports = async (context) => {
+  const { event } = context;
+  
+  switch (event) {
+    case 'on-ready':
+      await hook.init(context);
+      break;
+      
+    case 'after-save':
+      await hook.onFileChange(context.data.file);
+      break;
+      
+    case 'on-shutdown':
+      await hook.cleanup();
+      break;
+  }
+  
+  return { action: 'continue' };
+};</code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>配置</h2>
+                
+                <pre><code class="language-json">{
+  "hooks": {
+    "auto-test": {
+      "enabled": true,
+      "handlers": [
+        {
+          "name": "auto-test",
+          "script": "auto-test.js",
+          "events": ["on-ready", "after-save", "on-shutdown"]
+        }
+      ],
+      "config": {
+        "watchPatterns": ["src/**/*.{js,jsx,ts,tsx}"],
+        "testPatterns": ["**/*.test.{js,ts}", "**/*.spec.{js,ts}"],
+        "runOnSave": true,
+        "parallel": true,
+        "notifications": true
+      }
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用示例</h2>
+                
+                <h3>自动运行</h3>
+                <pre><code class="language-text"># 修改源文件
+编辑 src/utils/formatDate.ts
+
+# 钩子自动触发
+🔍 检测到文件变更: src/utils/formatDate.ts
+
+🧪 运行 1 个测试文件...
+
+ PASS  src/utils/formatDate.test.ts
+  ✓ should format date correctly (5ms)
+  ✓ should handle invalid date (3ms)
+
+✅ 测试通过
+
+# 桌面通知
+✅ 测试通过
+所有测试用例通过</code></pre>
+
+                <h3>测试失败</h3>
+                <pre><code class="language-text"># 修改代码引入 bug
+编辑 src/utils/formatDate.ts
+
+# 钩子自动触发
+🔍 检测到文件变更: src/utils/formatDate.ts
+
+🧪 运行 1 个测试文件...
+
+ FAIL  src/utils/formatDate.test.ts
+  ✕ should format date correctly (10ms)
+  
+  ● should format date correctly
+    Expected: "2026-04-04"
+    Received: "2026-04-05"
+
+❌ 测试失败
+
+# 桌面通知
+❌ 测试失败
+部分测试用例失败</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="pre-commit.html" class="prev"><i class="fas fa-arrow-left"></i> 提交前钩子</a>
+                <a href="../../plugins/intro/concepts.html" class="next">插件概念详解 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

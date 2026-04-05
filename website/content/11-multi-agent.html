@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多 Agent 协作 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code 多 Agent 协作 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 目录 */
+    .toc {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc a { color: var(--primary); }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/content/basics/installation.html">入门指南</a></li>
+        <li><a href="/content/modules/">核心模块</a></li>
+        <li><a href="/content/cases/intro.html">实战案例</a></li>
+        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <article>
+        <nav class="breadcrumb">
+          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / 多 Agent 协作
+        </nav>
+
+        <div class="meta">
+          <span class="badge badge-intermediate">
+            🟡 中级
+          </span>
+          <span class="badge">✅ Claude Code v2.1.92</span>
+        </div>
+
+        <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#协作模式">协作模式</a></li><li ><a href="#1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</a></li><li ><a href="#2-并行执行模式">2. 并行执行模式</a></li><li ><a href="#3-层级管理模式">3. 层级管理模式</a></li><li ><a href="#4-流水线模式">4. 流水线模式</a></li><li ><a href="#5-点对点协作模式">5. 点对点协作模式</a></li><li ><a href="#agent-工具详解">Agent 工具详解</a></li><li ><a href="#基本用法">基本用法</a></li><li ><a href="#可用代理类型">可用代理类型</a></li><li ><a href="#并行调度技巧">并行调度技巧</a></li><li ><a href="#实战案例">实战案例</a></li><li ><a href="#案例-完整功能开发">案例：完整功能开发</a></li><li ><a href="#案例-代码审查流水线">案例：代码审查流水线</a></li><li ><a href="#案例-探索与研究">案例：探索与研究</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#何时使用多-agent">何时使用多 Agent</a></li><li ><a href="#性能优化">性能优化</a></li><li ><a href="#避免的模式">避免的模式</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-并行代码审查">🎯 练习 1：并行代码审查</a></li><li ><a href="#练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</a></li><li ><a href="#练习-3-探索模式">🎯 练习 3：探索模式</a></li><li ><a href="#相关资源">相关资源</a></li></ul></div>
+
+        <div class="content">
+          <blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote><h1>多 Agent 协作</h1><h2 id="概述">概述</h2><p>Claude Code 支持多种多 Agent 协作模式，让你能够同时运行多个专业化的智能体来处理复杂任务。</p><h2 id="协作模式">协作模式</h2><h3>1. Orchestrator-Workers 模式</h3><p>中央协调器将任务分发给专业工作者：</p><div class="mermaid">graph TD
+    A[Orchestrator] --> B[Worker 1: 代码审查]
+    A --> C[Worker 2: 测试]
+    A --> D[Worker 3: 文档]
+    B --> E[结果合并]
+    C --> E
+    D --> E
+</div><p><strong>使用场景：</strong> 复杂功能开发、大规模重构</p><p><strong>实现方式：</strong>
+<pre><code class="language-bash"><h1>在 Claude Code 中使用 Agent 工具</h1>
+Claude 会自动调度多个子代理并行处理任务
+</code></pre><h3>2. 并行执行模式</h3><p>多个 Agent 同时处理独立子任务：</p><pre><code class="language-bash"><h1>在 Claude Code 中请求并行执行</h1>
+"同时运行 3 个子任务：
+<ul><li>安全审查 - 检查认证模块</li>
+<li>性能分析 - 检查数据库查询</li>
+<li>代码质量 - 检查代码风格</li><p>完成后汇总报告。"
+</code></pre><p><strong>使用场景：</strong> 代码审查、测试执行、文档更新</p><h3>3. 层级管理模式</h3><p>多层管理结构处理大型项目：</p><div class="mermaid">graph TD
+    M[Manager Agent] --> F[Frontend Lead]
+    M --> B[Backend Lead]
+    F --> C1[Component Writer]
+    F --> S[Style Specialist]
+    B --> A[API Developer]
+    B --> D[Database Expert]
+</div><p><strong>使用场景：</strong> 大型团队项目、复杂系统重构</p><h3>4. 流水线模式</h3><p>顺序处理带依赖的任务：</p><pre><code class="language-bash">"按顺序执行：
+<li>设计 API 结构（等待完成）</li>
+<li>实现端点（等待完成）</li>
+<li>编写测试（等待完成）</li>
+<li>生成文档"</li>
+</code></pre><p><strong>使用场景：</strong> 有严格依赖关系的开发流程</p><h3>5. 点对点协作模式</h3><p>平等的 Agent 共享上下文协作：</p><pre><code class="language-bash">"启动两个协作 Agent：
+<li>Agent A: 实现功能</li>
+<li>Agent B: 同时编写测试</li><p>它们共享代码变更，实时同步。"
+</code></pre><p><strong>使用场景：</strong> 功能开发与测试同步进行</p><h2 id="Agent 工具详解">Agent 工具详解</h2><h3>基本用法</h3><p>Claude Code 使用 Agent 工具来调度子代理：</p><pre><code class="language-">Agent 工具参数：
+<li>subagent_type: 代理类型（如 general-purpose, Explore, Plan）</li>
+<li>prompt: 任务描述</li>
+<li>description: 简短任务摘要（3-5词）</li>
+<li>isolation: 是否隔离运行（worktree 模式）</li>
+<li>run_in_background: 是否后台运行</li>
+</code></pre><h3>可用代理类型</h3><table>
+<thead>
+<tr>
+<th>代理类型</th>
+<th>用途</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>general-purpose</td>
+<td>通用任务</td>
+<td>搜索代码、执行多步任务</td>
+</tr>
+<tr>
+<td>Explore</td>
+<td>快速探索</td>
+<td>文件搜索、关键词查找</td>
+</tr>
+<tr>
+<td>Plan</td>
+<td>实现规划</td>
+<td>设计实现策略</td>
+</tr>
+<tr>
+<td>code-reviewer</td>
+<td>代码审查</td>
+<td>所有代码变更</td>
+</tr>
+<tr>
+<td>security-reviewer</td>
+<td>安全分析</td>
+<td>安全敏感代码</td>
+</tr>
+<tr>
+<td>build-error-resolver</td>
+<td>构建修复</td>
+<td>构建失败时</td>
+</tr>
+<tr>
+<td>tdd-guide</td>
+<td>TDD 指导</td>
+<td>新功能、bug 修复</td>
+</tr>
+<tr>
+<td>architect</td>
+<td>架构设计</td>
+<td>架构决策</td>
+</tr>
+</tbody>
+</table>
+<h3>并行调度技巧</h3><p>在一条消息中发送多个 Agent 调用：</p><pre><code class="language-markdown"><h1>正确：并行执行</h1>
+同时启动 3 个 Agent：
+<li>security-reviewer 分析认证模块</li>
+<li>performance-optimizer 分析数据库查询</li>
+<li>code-reviewer 检查代码风格</li><h1>错误：不必要的顺序</h1>
+先 Agent 1，等完成，再 Agent 2
+</code></pre><h2 id="实战案例">实战案例</h2><h3>案例：完整功能开发</h3><pre><code class="language-bash"><h1>使用 Orchestrator 模式开发新功能</h1>
+"我需要实现用户认证功能。使用多 Agent 协作：</p><li>Plan Agent：设计认证架构</li>
+<li>TypeScript Agent：实现前端登录 UI</li>
+<li>Python Agent：实现后端 API</li>
+<li>tdd-guide Agent：编写测试用例</li>
+<li>doc-updater Agent：更新文档</li><p>协调这些 Agent 完成任务。"
+</code></pre><h3>案例：代码审查流水线</h3><pre><code class="language-bash">"对当前变更执行多 Agent 审查：</p><p>并行启动：
+<li>security-reviewer：检查漏洞</li>
+<li>performance-optimizer：检查性能问题</li>
+<li>code-reviewer：检查代码风格</li><p>完成后生成综合报告。"
+</code></pre><h3>案例：探索与研究</h3><pre><code class="language-bash">"使用 Explore Agent：
+<li>探索代码库中的认证相关代码</li>
+<li>搜索关键词 'auth' 和 'login'</li>
+<li>回答：认证流程是如何实现的？"</li>
+</code></pre><h2 id="最佳实践">最佳实践</h2><h3>何时使用多 Agent</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐模式</th>
+<th>代理类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复杂功能开发</td>
+<td>Orchestrator-Workers</td>
+<td>Plan + 专业代理</td>
+</tr>
+<tr>
+<td>并行审查</td>
+<td>并行执行</td>
+<td>reviewer 类代理</td>
+</tr>
+<tr>
+<td>大型重构</td>
+<td>层级管理</td>
+<td>architect + planner</td>
+</tr>
+<tr>
+<td>有依赖的任务</td>
+<td>流水线</td>
+<td>顺序调度</td>
+</tr>
+<tr>
+<td>创意头脑风暴</td>
+<td>点对点协作</td>
+<td>general-purpose</td>
+</tr>
+</tbody>
+</table>
+<h3>性能优化</h3><li><strong>限制并行数量</strong>：建议 ≤ 5 个并行 Agent</li>
+<li><strong>使用 worktree 隔离</strong>：避免冲突</li>
+<li><strong>共享只读上下文</strong>：减少重复读取</li>
+<li><strong>后台运行独立任务</strong>：使用 <code>run_in_background</code></li><h3>避免的模式</h3><pre><code class="language-markdown"><h1>不要做</h1>
+<li>不要在简单任务上使用多 Agent</li>
+<li>不要让 Agent 相互等待不必要</li>
+<li>不要在主会话中执行长任务（用后台）</li>
+<li>不要硬闯阻塞——停下来问</li>
+</code></pre><h2 id="立即尝试">立即尝试</h2><h3>🎯 练习 1：并行代码审查</h3><pre><code class="language-bash"><h1>在 Claude Code 中输入：</h1>
+"使用并行 Agent 审查 src/ 目录：
+<li>security-reviewer 检查安全</li>
+<li>performance-optimizer 检查性能  </li>
+<li>code-reviewer 检查风格</li><p>生成合并报告。"
+</code></pre><h3>🎯 练习 2：功能开发流水线</h3><pre><code class="language-bash">"使用流水线模式：
+<li>Plan 设计数据模型</li>
+<li>TypeScript 实现 CRUD API</li>
+<li>tdd-guide 编写单元测试</li>
+<li>doc-updater 生成 API 文档</li><p>每步等待前一步完成。"
+</code></pre><h3>🎯 练习 3：探索模式</h3><pre><code class="language-bash">"使用 Explore Agent（thoroughness: medium）：
+<li>查找所有 API 端点</li>
+<li>搜索错误处理模式</li>
+<li>回答：API 层的架构是什么？"</li>
+</code></pre><h2 id="相关资源">相关资源</h2><li><a href="../04-subagents/">Subagents 参考</a></li>
+<li><a href="../12-background-tasks/">后台任务</a></li>
+<li><a href="../10-cli/">CLI 命令</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code/agents">官方文档 - Agents</a></li></ul>
+        </div>
+
+        
+    <div class="nav-buttons">
+      <a href="/content/10-cli.html">← CLI</a>
+      <a href="/content/12-background-tasks.html">后台任务 →</a>
+    </div>
+  
+      </article>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+  </script>
+</body>
+</html>

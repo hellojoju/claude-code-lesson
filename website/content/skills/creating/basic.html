@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建基础技能 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../03-skills.html"><i class="fas fa-magic"></i> 技能系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../03-skills.html">技能系统</a> &gt;
+                <span>创建基础技能</span>
+            </nav>
+            
+            <h1><i class="fas fa-plus-circle"></i> 创建基础技能</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 官方文档和社区最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方文档 + 社区验证</p>
+            </div>
+
+            <section id="quick-start">
+                <h2>快速开始</h2>
+                
+                <h3>创建第一个技能</h3>
+                <pre><code class="language-bash"># 创建技能目录
+mkdir -p ~/.claude/skills/hello-world
+
+# 创建技能配置
+cat > ~/.claude/skills/hello-world/skill.json << 'EOF'
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "简单的问候技能",
+  "triggers": {
+    "manual": true
+  }
+}
+EOF
+
+# 创建提示词文件
+cat > ~/.claude/skills/hello-world/prompt.md << 'EOF'
+你是一个友好的助手。请向用户问好，并简单介绍你能做什么。
+EOF</code></pre>
+
+                <h3>使用技能</h3>
+                <pre><code class="language-bash"># 安装技能
+> /skill install ~/.claude/skills/hello-world
+
+# 运行技能
+> /skill run hello-world</code></pre>
+            </section>
+
+            <section id="skill-structure">
+                <h2>技能结构详解</h2>
+                
+                <h3>必需文件</h3>
+                <pre><code class="language-text">my-skill/
+├── skill.json    # 技能配置（必需）
+└── prompt.md     # 主提示词（必需）</code></pre>
+
+                <h3>可选文件</h3>
+                <pre><code class="language-text">my-skill/
+├── templates/    # 模板文件
+├── examples/     # 示例文件
+├── lib/          # 辅助代码
+└── tests/        # 测试文件</code></pre>
+            </section>
+
+            <section id="skill-config">
+                <h2>技能配置</h2>
+                
+                <h3>基础配置</h3>
+                <pre><code class="language-json">{
+  "name": "my-skill",
+  "version": "1.0.0",
+  "description": "技能描述",
+  "author": "作者名",
+  "triggers": {
+    "manual": true
+  }
+}</code></pre>
+
+                <h3>完整配置</h3>
+                <pre><code class="language-json">{
+  "name": "code-review",
+  "version": "1.0.0",
+  "description": "代码审查技能",
+  "author": "your-name",
+  "license": "MIT",
+  
+  "triggers": {
+    "manual": true,
+    "auto": ["on-save"],
+    "keywords": ["审查", "review", "检查代码"]
+  },
+  
+  "inputs": {
+    "file": {
+      "type": "file",
+      "required": true,
+      "description": "要审查的文件"
+    },
+    "focus": {
+      "type": "string",
+      "options": ["security", "performance", "style"],
+      "default": "security",
+      "description": "审查重点"
+    }
+  },
+  
+  "outputs": {
+    "report": {
+      "type": "markdown",
+      "description": "审查报告"
+    }
+  },
+  
+  "dependencies": {
+    "skills": ["analyze"],
+    "packages": []
+  }
+}</code></pre>
+            </section>
+
+            <section id="prompt-file">
+                <h2>提示词文件</h2>
+                
+                <h3>基本提示词</h3>
+                <pre><code class="language-markdown"># prompt.md
+
+你是一个代码审查专家。请审查用户提供的代码，关注以下方面：
+
+1. 代码质量
+2. 安全问题
+3. 性能考虑
+4. 最佳实践
+
+请提供具体的改进建议。</code></pre>
+
+                <h3>带变量的提示词</h3>
+                <pre><code class="language-markdown"># prompt.md
+
+你是一个 {{focus}} 领域的专家。
+
+请审查以下代码：
+{{file}}
+
+审查重点：{{focus}}
+
+请提供详细的审查报告。</code></pre>
+
+                <h3>使用变量</h3>
+                <pre><code class="language-bash"># 传递变量
+> /skill run code-review --file src/index.js --focus security</code></pre>
+            </section>
+
+            <section id="inputs-outputs">
+                <h2>输入输出定义</h2>
+                
+                <h3>输入类型</h3>
+                <pre><code class="language-json">{
+  "inputs": {
+    "file": {
+      "type": "file",
+      "required": true
+    },
+    "text": {
+      "type": "string",
+      "required": false
+    },
+    "number": {
+      "type": "number",
+      "default": 10
+    },
+    "choice": {
+      "type": "string",
+      "options": ["a", "b", "c"],
+      "default": "a"
+    },
+    "boolean": {
+      "type": "boolean",
+      "default": false
+    },
+    "array": {
+      "type": "array",
+      "items": "string"
+    }
+  }
+}</code></pre>
+
+                <h3>输出类型</h3>
+                <pre><code class="language-json">{
+  "outputs": {
+    "report": {
+      "type": "markdown"
+    },
+    "data": {
+      "type": "json"
+    },
+    "file": {
+      "type": "file",
+      "extension": ".js"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="triggers">
+                <h2>触发器配置</h2>
+                
+                <h3>手动触发</h3>
+                <pre><code class="language-json">{
+  "triggers": {
+    "manual": true
+  }
+}</code></pre>
+
+                <h3>关键词触发</h3>
+                <pre><code class="language-json">{
+  "triggers": {
+    "manual": true,
+    "keywords": ["审查", "review", "检查代码"]
+  }
+}</code></pre>
+
+                <h3>事件触发</h3>
+                <pre><code class="language-json">{
+  "triggers": {
+    "auto": ["on-save", "on-commit"]
+  }
+}</code></pre>
+
+                <h3>条件触发</h3>
+                <pre><code class="language-json">{
+  "triggers": {
+    "auto": ["on-save"],
+    "conditions": {
+      "filePattern": "*.js",
+      "exclude": ["*.test.js"]
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="examples">
+                <h2>完整示例</h2>
+                
+                <h3>示例：代码格式化技能</h3>
+                <pre><code class="language-json">// skill.json
+{
+  "name": "format-code",
+  "version": "1.0.0",
+  "description": "代码格式化技能",
+  "triggers": {
+    "manual": true,
+    "keywords": ["格式化", "format", "美化代码"]
+  },
+  "inputs": {
+    "file": {
+      "type": "file",
+      "required": true
+    },
+    "style": {
+      "type": "string",
+      "options": ["standard", "prettier", "airbnb"],
+      "default": "prettier"
+    }
+  }
+}</code></pre>
+
+                <pre><code class="language-markdown"># prompt.md
+
+你是一个代码格式化专家。请按照 {{style}} 风格格式化以下代码：
+
+{{file}}
+
+要求：
+1. 保持代码功能不变
+2. 遵循 {{style}} 代码规范
+3. 添加适当的空格和换行
+4. 优化代码结构
+
+请输出格式化后的代码。</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://docs.anthropic.com/" target="_blank">Anthropic 官方文档</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../intro/builtin.html" class="prev"><i class="fas fa-arrow-left"></i> 内置技能详解</a>
+                <a href="advanced.html" class="next">创建高级技能 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

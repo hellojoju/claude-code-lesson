@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义 Hook 开发案例 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">案例研究</a> &gt;
+        <span>自定义 Hook 开发</span>
+    </nav>
+
+    <article class="content">
+        <h1>自定义 Hook 开发案例</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 实战经验</span>
+        </div>
+
+        <section>
+            <h2>场景描述</h2>
+            <p>开发一组常用的自定义 Hooks，包括数据请求、表单处理、本地存储、窗口尺寸等功能。这些 Hooks 可以在多个项目中复用。</p>
+        </section>
+
+        <section>
+            <h2>useRequest Hook</h2>
+            
+            <h3>功能需求</h3>
+            <ul>
+                <li>自动/手动请求</li>
+                <li>加载状态管理</li>
+                <li>错误处理</li>
+                <li>请求取消</li>
+                <li>防抖/节流</li>
+                <li>缓存支持</li>
+            </ul>
+
+            <pre><code class="language-typescript">// useRequest.ts
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+interface RequestOptions&lt;T, P&gt; {
+    manual?: boolean;
+    defaultParams?: P;
+    debounceWait?: number;
+    throttleWait?: number;
+    cacheKey?: string;
+    onSuccess?: (data: T) => void;
+    onError?: (error: Error) => void;
+}
+
+interface RequestResult&lt;T, P&gt; {
+    data: T | undefined;
+    loading: boolean;
+    error: Error | undefined;
+    run: (params?: P) => Promise&lt;T&gt;;
+    cancel: () => void;
+    refresh: () => Promise&lt;T&gt;;
+}
+
+export function useRequest&lt;T, P = void&gt;(
+    service: (params: P) => Promise&lt;T&gt;,
+    options: RequestOptions&lt;T, P&gt; = {}
+): RequestResult&lt;T, P&gt; {
+    const {
+        manual = false,
+        defaultParams,
+        debounceWait,
+        cacheKey,
+        onSuccess,
+        onError
+    } = options;
+
+    const [data, setData] = useState&lt;T | undefined&gt;();
+    const [loading, setLoading] = useState(!manual);
+    const [error, setError] = useState&lt;Error | undefined&gt;();
+
+    const cancelRef = useRef&lt;AbortController | null&gt;(null);
+    const debounceRef = useRef&lt;NodeJS.Timeout | null&gt;(null);
+
+    const run = useCallback(async (params?: P) => {
+        // 取消之前的请求
+        cancelRef.current?.abort();
+        cancelRef.current = new AbortController();
+
+        // 清除防抖定时器
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        // 防抖处理
+        if (debounceWait) {
+            return new Promise&lt;T&gt;((resolve, reject) => {
+                debounceRef.current = setTimeout(async () => {
+                    try {
+                        const result = await executeRequest(params as P);
+                        resolve(result);
+                    } catch (err) {
+                        reject(err);
+                    }
+                }, debounceWait);
+            });
+        }
+
+        return executeRequest(params as P);
+    }, [service, debounceWait]);
+
+    const executeRequest = async (params: P): Promise&lt;T&gt; {
+        setLoading(true);
+        setError(undefined);
+
+        try {
+            // 检查缓存
+            if (cacheKey) {
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    setData(parsed);
+                    setLoading(false);
+                    return parsed;
+                }
+            }
+
+            const result = await service(params);
+            
+            // 更新缓存
+            if (cacheKey) {
+                localStorage.setItem(cacheKey, JSON.stringify(result));
+            }
+
+            setData(result);
+            onSuccess?.(result);
+            return result;
+        } catch (err) {
+            const error = err as Error;
+            setError(error);
+            onError?.(error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const cancel = useCallback(() => {
+        cancelRef.current?.abort();
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+        setLoading(false);
+    }, []);
+
+    const refresh = useCallback(() => {
+        return run(defaultParams);
+    }, [run, defaultParams]);
+
+    useEffect(() => {
+        if (!manual) {
+            run(defaultParams);
+        }
+        return cancel;
+    }, []);
+
+    return { data, loading, error, run, cancel, refresh };
+}</code></pre>
+
+            <h3>使用示例</h3>
+            <pre><code class="language-typescript">// 使用 useRequest
+function UserProfile({ userId }: { userId: string }) {
+    const { data: user, loading, error, refresh } = useRequest(
+        async (id: string) => {
+            const res = await fetch(`/api/users/${id}`);
+            return res.json();
+        },
+        {
+            defaultParams: userId,
+            cacheKey: `user-${userId}`,
+            debounceWait: 300
+        }
+    );
+
+    if (loading) return &lt;div&gt;加载中...&lt;/div&gt;;
+    if (error) return &lt;div&gt;错误: {error.message}&lt;/div&gt;;
+
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;{user?.name}&lt;/h1&gt;
+            &lt;button onClick={refresh}&gt;刷新&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>useForm Hook</h2>
+            
+            <pre><code class="language-typescript">// useForm.ts
+import { useState, useCallback } from 'react';
+
+interface FormOptions&lt;T&gt; {
+    initialValues: T;
+    validate?: (values: T) => Partial&lt;Record&lt;keyof T, string&gt;&gt;;
+    onSubmit: (values: T) => Promise&lt;void&gt; | void;
+}
+
+interface FormResult&lt;T&gt; {
+    values: T;
+    errors: Partial&lt;Record&lt;keyof T, string&gt;&gt;;
+    touched: Partial&lt;Record&lt;keyof T, boolean&gt;&gt;;
+    isSubmitting: boolean;
+    handleChange: (name: keyof T) => (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; void;
+    handleBlur: (name: keyof T) => () =&gt; void;
+    handleSubmit: (e: React.FormEvent) =&gt; Promise&lt;void&gt;;
+    setFieldValue: (name: keyof T, value: any) =&gt; void;
+    setValues: (values: Partial&lt;T&gt;) =&gt; void;
+    resetForm: () =&gt; void;
+}
+
+export function useForm&lt;T extends Record&lt;string, any&gt;&gt;(
+    options: FormOptions&lt;T&gt;
+): FormResult&lt;T&gt; {
+    const { initialValues, validate, onSubmit } = options;
+
+    const [values, setValuesState] = useState&lt;T&gt;(initialValues);
+    const [errors, setErrors] = useState&lt;Partial&lt;Record&lt;keyof T, string&gt;&gt;&gt;({});
+    const [touched, setTouched] = useState&lt;Partial&lt;Record&lt;keyof T, boolean&gt;&gt;&gt;({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = useCallback(
+        (name: keyof T) =&gt; (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+            const value = e.target.type === 'checkbox' 
+                ? e.target.checked 
+                : e.target.value;
+            setValuesState(prev =&gt; ({ ...prev, [name]: value }));
+        },
+        []
+    );
+
+    const handleBlur = useCallback((name: keyof T) =&gt; () =&gt; {
+        setTouched(prev =&gt; ({ ...prev, [name]: true }));
+    }, []);
+
+    const handleSubmit = useCallback(async (e: React.FormEvent) =&gt; {
+        e.preventDefault();
+
+        // 标记所有字段为已触碰
+        const allTouched = Object.keys(values).reduce(
+            (acc, key) =&gt; ({ ...acc, [key]: true }),
+            {}
+        );
+        setTouched(allTouched);
+
+        // 验证
+        if (validate) {
+            const validationErrors = validate(values);
+            setErrors(validationErrors);
+            if (Object.keys(validationErrors).length &gt; 0) {
+                return;
+            }
+        }
+
+        // 提交
+        setIsSubmitting(true);
+        try {
+            await onSubmit(values);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }, [values, validate, onSubmit]);
+
+    const setFieldValue = useCallback((name: keyof T, value: any) =&gt; {
+        setValuesState(prev =&gt; ({ ...prev, [name]: value }));
+    }, []);
+
+    const setValues = useCallback((newValues: Partial&lt;T&gt;) =&gt; {
+        setValuesState(prev =&gt; ({ ...prev, ...newValues }));
+    }, []);
+
+    const resetForm = useCallback(() =&gt; {
+        setValuesState(initialValues);
+        setErrors({});
+        setTouched({});
+    }, [initialValues]);
+
+    return {
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        setFieldValue,
+        setValues,
+        resetForm
+    };
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>useLocalStorage Hook</h2>
+            
+            <pre><code class="language-typescript">// useLocalStorage.ts
+import { useState, useEffect } from 'react';
+
+export function useLocalStorage&lt;T&gt;(
+    key: string,
+    initialValue: T
+): [T, (value: T | ((prev: T) =&gt; T)) =&gt; void] {
+    const [storedValue, setStoredValue] = useState&lt;T&gt;(() =&gt; {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        } catch {
+            return initialValue;
+        }
+    });
+
+    const setValue = (value: T | ((prev: T) =&gt; T)) =&gt; {
+        try {
+            const valueToStore = value instanceof Function 
+                ? value(storedValue) 
+                : value;
+            setStoredValue(valueToStore);
+            localStorage.setItem(key, JSON.stringify(valueToStore));
+        } catch (error) {
+            console.error('Error saving to localStorage:', error);
+        }
+    };
+
+    useEffect(() =&gt; {
+        const handleStorageChange = (e: StorageEvent) =&gt; {
+            if (e.key === key && e.newValue) {
+                setStoredValue(JSON.parse(e.newValue));
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () =&gt; window.removeEventListener('storage', handleStorageChange);
+    }, [key]);
+
+    return [storedValue, setValue];
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>最佳实践</h2>
+            
+            <div class="best-practices">
+                <h3>Hook 设计原则</h3>
+                <ul>
+                    <li>命名以 use 开头</li>
+                    <li>返回值保持一致性</li>
+                    <li>提供合理的默认值</li>
+                    <li>支持 TypeScript 类型推断</li>
+                    <li>正确处理依赖数组</li>
+                </ul>
+
+                <h3>性能优化</h3>
+                <ul>
+                    <li>使用 useCallback 缓存函数</li>
+                    <li>使用 useMemo 缓存计算结果</li>
+                    <li>避免在渲染期间创建新对象</li>
+                    <li>正确设置 useEffect 依赖</li>
+                </ul>
+            </div>
+        </section>
+
+        <nav class="page-nav">
+            <a href="component.html" class="prev">← 上一页：React 组件开发</a>
+            <a href="optimization.html" class="next">下一页：性能优化实践 →</a>
+        </nav>
+    </article>
+</body>
+</html>

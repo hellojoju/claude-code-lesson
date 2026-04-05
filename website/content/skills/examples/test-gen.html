@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试生成技能 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../03-skills.html"><i class="fas fa-magic"></i> 技能系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../03-skills.html">技能系统</a> &gt;
+                <span>测试生成技能</span>
+            </nav>
+            
+            <h1><i class="fas fa-vial"></i> 测试生成技能案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的测试生成技能实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>技能概述</h2>
+                <p>这个测试生成技能可以自动为代码生成单元测试，支持多种测试框架。</p>
+                
+                <h3>功能特性</h3>
+                <ul>
+                    <li>支持多种测试框架（Jest、Vitest、Mocha 等）</li>
+                    <li>自动识别函数边界和参数类型</li>
+                    <li>生成边界条件和异常测试</li>
+                    <li>支持 React 组件测试</li>
+                </ul>
+            </section>
+
+            <section id="skill-config">
+                <h2>技能配置</h2>
+                
+                <pre><code class="language-json">{
+  "name": "test-gen",
+  "version": "2.0.0",
+  "description": "智能测试生成技能",
+  
+  "triggers": {
+    "manual": true,
+    "keywords": ["生成测试", "写测试", "test", "generate test"]
+  },
+  
+  "inputs": {
+    "file": {
+      "type": "file",
+      "required": true,
+      "description": "源文件"
+    },
+    "framework": {
+      "type": "string",
+      "options": ["jest", "vitest", "mocha", "pytest"],
+      "default": "jest",
+      "description": "测试框架"
+    },
+    "type": {
+      "type": "string",
+      "options": ["unit", "integration", "e2e"],
+      "default": "unit",
+      "description": "测试类型"
+    },
+    "coverage": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否追求高覆盖率"
+    }
+  },
+  
+  "outputs": {
+    "testFile": {
+      "type": "file",
+      "description": "生成的测试文件"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="prompt-file">
+                <h2>提示词文件</h2>
+                
+                <pre><code class="language-markdown"># prompt.md
+
+你是一位测试专家。请为以下代码生成全面的测试用例。
+
+## 源文件
+- 文件：{{file.path}}
+- 语言：{{file.language}}
+
+## 代码内容
+```
+{{file.content}}
+```
+
+## 测试框架
+{{framework}}
+
+## 测试类型
+{{type}}
+
+## 测试要求
+
+### 1. 测试覆盖
+- 正常情况测试
+- 边界条件测试
+- 异常情况测试
+- 空值/undefined 测试
+
+### 2. 测试结构
+{{#if (eq framework "jest")}}
+```javascript
+describe('功能模块', () => {
+  describe('具体功能', () => {
+    it('应该...', () => {
+      // arrange
+      // act
+      // assert
+    });
+  });
+});
+```
+{{/if}}
+
+{{#if (eq framework "vitest")}}
+```typescript
+import { describe, it, expect } from 'vitest';
+
+describe('功能模块', () => {
+  it('应该...', () => {
+    expect(true).toBe(true);
+  });
+});
+```
+{{/if}}
+
+### 3. 测试原则
+- 每个测试只验证一个行为
+- 使用描述性的测试名称
+- 遵循 AAA 模式（Arrange-Act-Assert）
+- 使用有意义的测试数据
+
+### 4. Mock 规范
+- 外部依赖需要 mock
+- 使用清晰的 mock 名称
+- 验证 mock 调用
+
+## 输出要求
+
+请生成完整的测试文件，包括：
+1. 必要的导入
+2. Mock 设置
+3. 测试用例
+4. 清理逻辑</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用方法</h2>
+                
+                <h3>基本使用</h3>
+                <pre><code class="language-bash"># 生成单元测试
+> /skill run test-gen --file src/utils.js
+
+# 指定测试框架
+> /skill run test-gen --file src/utils.js --framework vitest
+
+# 生成集成测试
+> /skill run test-gen --file src/api.js --type integration</code></pre>
+
+                <h3>React 组件测试</h3>
+                <pre><code class="language-bash"># 生成 React 组件测试
+> /skill run test-gen --file src/components/Button.tsx --framework vitest
+
+# 输出示例
+// Button.test.tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('should render with correct text', () => {
+    render(&lt;Button&gt;Click me&lt;/Button&gt;);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+
+  it('should call onClick when clicked', () => {
+    const handleClick = vi.fn();
+    render(&lt;Button onClick={handleClick}&gt;Click me&lt;/Button&gt;);
+    screen.getByText('Click me').click();
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be disabled when disabled prop is true', () => {
+    render(&lt;Button disabled&gt;Click me&lt;/Button&gt;);
+    expect(screen.getByText('Click me')).toBeDisabled();
+  });
+});</code></pre>
+            </section>
+
+            <section id="output-example">
+                <h2>输出示例</h2>
+                
+                <h3>源文件</h3>
+                <pre><code class="language-typescript">// src/utils/formatDate.ts
+export function formatDate(date: Date | string, format: string = 'YYYY-MM-DD'): string {
+  if (!date) {
+    throw new Error('Date is required');
+  }
+  
+  const d = typeof date === 'string' ? new Date(date) : date;
+  
+  if (isNaN(d.getTime())) {
+    throw new Error('Invalid date');
+  }
+  
+  return format
+    .replace('YYYY', d.getFullYear().toString())
+    .replace('MM', (d.getMonth() + 1).toString().padStart(2, '0'))
+    .replace('DD', d.getDate().toString().padStart(2, '0'));
+}</code></pre>
+
+                <h3>生成的测试</h3>
+                <pre><code class="language-typescript">// src/utils/formatDate.test.ts
+import { describe, it, expect, beforeEach } from 'vitest';
+import { formatDate } from './formatDate';
+
+describe('formatDate', () => {
+  describe('正常情况', () => {
+    it('应该正确格式化日期对象', () => {
+      const date = new Date('2026-04-04');
+      expect(formatDate(date)).toBe('2026-04-04');
+    });
+
+    it('应该正确格式化日期字符串', () => {
+      expect(formatDate('2026-04-04')).toBe('2026-04-04');
+    });
+
+    it('应该支持自定义格式', () => {
+      const date = new Date('2026-04-04');
+      expect(formatDate(date, 'YYYY/MM/DD')).toBe('2026/04/04');
+    });
+  });
+
+  describe('边界条件', () => {
+    it('应该正确处理月份边界', () => {
+      const date = new Date('2026-01-01');
+      expect(formatDate(date)).toBe('2026-01-01');
+    });
+
+    it('应该正确处理年末日期', () => {
+      const date = new Date('2026-12-31');
+      expect(formatDate(date)).toBe('2026-12-31');
+    });
+  });
+
+  describe('异常情况', () => {
+    it('应该在日期为空时抛出错误', () => {
+      expect(() => formatDate(null as any)).toThrow('Date is required');
+    });
+
+    it('应该在日期无效时抛出错误', () => {
+      expect(() => formatDate('invalid-date')).toThrow('Invalid date');
+    });
+  });
+});</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="code-review.html" class="prev"><i class="fas fa-arrow-left"></i> 代码审查技能</a>
+                <a href="doc-gen.html" class="next">文档生成技能 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

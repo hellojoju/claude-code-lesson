@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API集成案例 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../05-mcp.html"><i class="fas fa-server"></i> MCP服务器</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../05-mcp.html">MCP服务器</a> &gt;
+                <span>REST API集成案例</span>
+            </nav>
+            
+            <h1><i class="fas fa-exchange-alt"></i> REST API集成案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的 REST API MCP 集成案例。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="setup">
+                <h2>案例背景</h2>
+                <p>本案例演示如何集成一个电商 REST API，实现商品查询、订单管理等功能。</p>
+                
+                <h3>API 规范</h3>
+                <pre><code class="language-text">基础 URL: https://api.shop.example.com/v1
+
+端点:
+- GET    /products      获取商品列表
+- GET    /products/{id} 获取单个商品
+- POST   /orders        创建订单
+- GET    /orders/{id}   获取订单详情
+- PUT    /orders/{id}   更新订单状态</code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>配置 MCP</h2>
+                
+                <h3>配置文件</h3>
+                <pre><code class="language-json">// ~/.claude/mcp-config.json
+{
+  "servers": {
+    "shop-api": {
+      "command": "mcp-server-rest",
+      "env": {
+        "API_BASE_URL": "https://api.shop.example.com/v1",
+        "API_KEY": "your-api-key-here"
+      },
+      "config": {
+        "headers": {
+          "Authorization": "Bearer ${API_KEY}",
+          "Content-Type": "application/json"
+        },
+        "endpoints": [
+          {
+            "name": "listProducts",
+            "method": "GET",
+            "path": "/products",
+            "description": "获取商品列表",
+            "parameters": [
+              {"name": "category", "in": "query", "type": "string"},
+              {"name": "page", "in": "query", "type": "integer"},
+              {"name": "limit", "in": "query", "type": "integer"}
+            ]
+          },
+          {
+            "name": "getProduct",
+            "method": "GET",
+            "path": "/products/{id}",
+            "description": "获取商品详情",
+            "parameters": [
+              {"name": "id", "in": "path", "required": true, "type": "integer"}
+            ]
+          },
+          {
+            "name": "createOrder",
+            "method": "POST",
+            "path": "/orders",
+            "description": "创建订单",
+            "body": {
+              "type": "object",
+              "properties": {
+                "product_id": {"type": "integer"},
+                "quantity": {"type": "integer"},
+                "user_id": {"type": "integer"}
+              }
+            }
+          },
+          {
+            "name": "getOrder",
+            "method": "GET",
+            "path": "/orders/{id}",
+            "description": "获取订单详情"
+          },
+          {
+            "name": "updateOrder",
+            "method": "PUT",
+            "path": "/orders/{id}",
+            "description": "更新订单状态"
+          }
+        ]
+      }
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用示例</h2>
+                
+                <h3>查询商品</h3>
+                <pre><code class="language-bash"># 查询商品列表
+> 获取所有商品
+
+# Claude 调用
+GET /products
+
+# 带参数查询
+> 获取电子产品类别的商品，第 2 页
+
+# Claude 调用
+GET /products?category=electronics&page=2&limit=20
+
+# 查询单个商品
+> 获取商品 ID 为 123 的详情
+
+# Claude 调用
+GET /products/123</code></pre>
+
+                <h3>创建订单</h3>
+                <pre><code class="language-bash"># 创建订单
+> 为用户 1 创建一个订单，商品 ID 123，数量 2
+
+# Claude 调用
+POST /orders
+{
+  "user_id": 1,
+  "product_id": 123,
+  "quantity": 2
+}</code></pre>
+
+                <h3>更新订单</h3>
+                <pre><code class="language-bash"># 更新订单状态
+> 将订单 456 的状态更新为已发货
+
+# Claude 调用
+PUT /orders/456
+{
+  "status": "shipped"
+}</code></pre>
+            </section>
+
+            <section id="advanced">
+                <h2>高级用法</h2>
+                
+                <h3>错误处理</h3>
+                <pre><code class="language-json">{
+  "errorHandling": {
+    "retry": {
+      "maxAttempts": 3,
+      "delay": 1000,
+      "retryOn": [429, 500, 502, 503]
+    },
+    "fallback": {
+      "enabled": true,
+      "message": "API 暂时不可用，请稍后重试"
+    }
+  }
+}</code></pre>
+
+                <h3>缓存配置</h3>
+                <pre><code class="language-json">{
+  "cache": {
+    "enabled": true,
+    "ttl": 300,
+    "methods": ["GET"],
+    "excludePaths": ["/orders"]
+  }
+}</code></pre>
+
+                <h3>请求限流</h3>
+                <pre><code class="language-json">{
+  "rateLimit": {
+    "enabled": true,
+    "requests": 100,
+    "window": 60000
+  }
+}</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/modelcontextprotocol/servers" target="_blank">MCP 官方服务器</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="postgres.html" class="prev"><i class="fas fa-arrow-left"></i> PostgreSQL集成案例</a>
+                <a href="custom.html" class="next">自定义MCP服务器 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

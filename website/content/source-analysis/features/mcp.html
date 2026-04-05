@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP 实现 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro/overview.html">源码解析</a> &gt;
+        <span>MCP 实现</span>
+    </nav>
+
+    <article class="content">
+        <h1>MCP 实现</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: MCP 官方规范 + Claude Code 文档</span>
+        </div>
+
+        <section>
+            <h2>MCP 协议概述</h2>
+            <p>MCP (Model Context Protocol) 是 Anthropic 开发的开放协议，用于 AI 模型与外部工具/数据源的标准化通信。本节深入分析 MCP 在 Claude Code 中的实现原理。</p>
+        </section>
+
+        <section>
+            <h2>协议架构</h2>
+            
+            <pre><code class="language-plaintext">┌─────────────────────────────────────────────────────────────┐
+│                     Claude Code (Host)                      │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │                  MCP Client                         │   │
+│  │  - 连接管理                                          │   │
+│  │  - 消息路由                                          │   │
+│  │  - 能力协商                                          │   │
+│  └──────────────────────┬──────────────────────────────┘   │
+│                         │                                   │
+│  ┌──────────────────────┼──────────────────────────────┐   │
+│  │                      │                              │   │
+│  │  ┌─────────────┐    │    ┌─────────────┐          │   │
+│  │  │  Transport  │────┼────│  Transport  │          │   │
+│  │  │  (stdio)    │    │    │  (SSE)      │          │   │
+│  │  └──────┬──────┘    │    └──────┬──────┘          │   │
+│  └─────────┼───────────┘           ┼──────────────────┘   │
+│            │                       │                       │
+└────────────┼───────────────────────┼───────────────────────┘
+             │                       │
+             ▼                       ▼
+┌────────────────────┐    ┌────────────────────┐
+│   MCP Server 1     │    │   MCP Server 2     │
+│   (Filesystem)     │    │   (Database)       │
+└────────────────────┘    └────────────────────┘</code></pre>
+        </section>
+
+        <section>
+            <h2>消息类型</h2>
+            
+            <h3>JSON-RPC 2.0 基础</h3>
+            <pre><code class="language-typescript">// MCP 基于 JSON-RPC 2.0
+interface JSONRPCRequest {
+    jsonrpc: '2.0';
+    id: string | number;
+    method: string;
+    params?: any;
+}
+
+interface JSONRPCResponse {
+    jsonrpc: '2.0';
+    id: string | number;
+    result?: any;
+    error?: {
+        code: number;
+        message: string;
+        data?: any;
+    };
+}
+
+interface JSONRPCNotification {
+    jsonrpc: '2.0';
+    method: string;
+    params?: any;
+}</code></pre>
+
+            <h3>MCP 特定消息</h3>
+            <pre><code class="language-typescript">// 初始化请求
+interface InitializeRequest {
+    protocolVersion: string;
+    capabilities: ClientCapabilities;
+    clientInfo: {
+        name: string;
+        version: string;
+    };
+}
+
+// 初始化响应
+interface InitializeResponse {
+    protocolVersion: string;
+    capabilities: ServerCapabilities;
+    serverInfo: {
+        name: string;
+        version: string;
+    };
+}
+
+// 工具列表请求
+interface ListToolsRequest {
+    cursor?: string;
+}
+
+// 工具列表响应
+interface ListToolsResponse {
+    tools: ToolDefinition[];
+    nextCursor?: string;
+}
+
+// 工具调用请求
+interface CallToolRequest {
+    name: string;
+    arguments: Record&lt;string, any&gt;;
+}
+
+// 工具调用响应
+interface CallToolResponse {
+    content: ContentBlock[];
+    isError?: boolean;
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>客户端实现</h2>
+            
+            <h3>连接管理</h3>
+            <pre><code class="language-typescript">// 推测的 MCP 客户端实现
+class MCPClient {
+    private transport: Transport;
+    private pendingRequests: Map&lt;string, PendingRequest&gt; = new Map();
+    private tools: Map&lt;string, ToolDefinition&gt; = new Map();
+    private resources: Map&lt;string, ResourceDefinition&gt; = new Map();
+    private capabilities: ServerCapabilities | null = null;
+
+    async connect(config: ServerConfig): Promise&lt;void&gt; {
+        // 创建传输层
+        this.transport = this.createTransport(config);
+
+        // 设置消息处理器
+        this.transport.onMessage(this.handleMessage.bind(this));
+
+        // 建立连接
+        await this.transport.connect();
+
+        // 初始化协议
+        await this.initialize();
+    }
+
+    private createTransport(config: ServerConfig): Transport {
+        switch (config.type) {
+            case 'stdio':
+                return new StdioTransport(config.command, config.args);
+            case 'sse':
+                return new SSETransport(config.url);
+            case 'websocket':
+                return new WebSocketTransport(config.url);
+            default:
+                throw new Error(`Unknown transport: ${config.type}`);
+        }
+    }
+
+    private async initialize(): Promise&lt;void&gt; {
+        const response = await this.sendRequest&lt;InitializeResponse&gt;(
+            'initialize',
+            {
+                protocolVersion: '2024-11-05',
+                capabilities: {
+                    tools: {},
+                    resources: {}
+                },
+                clientInfo: {
+                    name: 'claude-code',
+                    version: '1.0.0'
+                }
+            }
+        );
+
+        this.capabilities = response.capabilities;
+
+        // 发送 initialized 通知
+        this.sendNotification('notifications/initialized', {});
+
+        // 加载工具和资源
+        await this.loadTools();
+        await this.loadResources();
+    }
+
+    private handleMessage(message: JSONRPCMessage): void {
+        if ('id' in message) {
+            // 响应消息
+            const pending = this.pendingRequests.get(message.id);
+            if (pending) {
+                if ('result' in message) {
+                    pending.resolve(message.result);
+                } else {
+                    pending.reject(new MCPError(message.error));
+                }
+                this.pendingRequests.delete(message.id);
+            }
+        } else {
+            // 通知消息
+            this.handleNotification(message);
+        }
+    }
+
+    async callTool(
+        name: string, 
+        args: Record&lt;string, any&gt;
+    ): Promise&lt;CallToolResponse&gt; {
+        if (!this.tools.has(name)) {
+            throw new Error(`Unknown tool: ${name}`);
+        }
+
+        return this.sendRequest&lt;CallToolResponse&gt;('tools/call', {
+            name,
+            arguments: args
+        });
+    }
+
+    private sendRequest&lt;T&gt;(
+        method: string, 
+        params: any
+    ): Promise&lt;T&gt; {
+        return new Promise((resolve, reject) => {
+            const id = this.generateId();
+            
+            this.pendingRequests.set(id, { resolve, reject });
+
+            this.transport.send({
+                jsonrpc: '2.0',
+                id,
+                method,
+                params
+            });
+
+            // 超时处理
+            setTimeout(() => {
+                if (this.pendingRequests.has(id)) {
+                    this.pendingRequests.delete(id);
+                    reject(new TimeoutError(`Request ${method} timed out`));
+                }
+            }, 30000);
+        });
+    }
+}</code></pre>
+
+            <h3>传输层实现</h3>
+            <pre><code class="language-typescript">// Stdio 传输层
+class StdioTransport implements Transport {
+    private process: ChildProcess;
+    private buffer: string = '';
+    private messageHandler: ((msg: JSONRPCMessage) =&gt; void) | null = null;
+
+    constructor(
+        private command: string, 
+        private args: string[]
+    ) {}
+
+    async connect(): Promise&lt;void&gt; {
+        this.process = spawn(this.command, this.args, {
+            stdio: ['pipe', 'pipe', 'pipe']
+        });
+
+        this.process.stdout.on('data', (data) => {
+            this.handleData(data.toString());
+        });
+
+        this.process.stderr.on('data', (data) => {
+            console.error(`MCP Server stderr: ${data}`);
+        });
+
+        this.process.on('close', (code) => {
+            console.log(`MCP Server exited with code ${code}`);
+        });
+    }
+
+    private handleData(data: string): void {
+        this.buffer += data;
+
+        // 解析完整的 JSON 消息
+        const lines = this.buffer.split('\n');
+        this.buffer = lines.pop() || '';
+
+        for (const line of lines) {
+            if (line.trim()) {
+                try {
+                    const message = JSON.parse(line);
+                    this.messageHandler?.(message);
+                } catch (e) {
+                    console.error('Failed to parse message:', line);
+                }
+            }
+        }
+    }
+
+    send(message: JSONRPCMessage): void {
+        const json = JSON.stringify(message);
+        this.process.stdin.write(json + '\n');
+    }
+
+    onMessage(handler: (msg: JSONRPCMessage) =&gt; void): void {
+        this.messageHandler = handler;
+    }
+
+    async close(): Promise&lt;void&gt; {
+        this.process.kill();
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>服务端实现</h2>
+            
+            <h3>基础服务器</h3>
+            <pre><code class="language-typescript">// MCP 服务器基类
+class MCPServer {
+    private tools: Map&lt;string, ToolHandler&gt; = new Map();
+    private resources: Map&lt;string, ResourceHandler&gt; = new Map();
+    private transport: Transport;
+
+    constructor(private serverInfo: ServerInfo) {}
+
+    registerTool(
+        name: string, 
+        definition: ToolDefinition, 
+        handler: ToolHandler
+    ): void {
+        this.tools.set(name, { definition, handler });
+    }
+
+    async start(transport: Transport): Promise&lt;void&gt; {
+        this.transport = transport;
+        transport.onMessage(this.handleMessage.bind(this));
+        await transport.connect();
+    }
+
+    private async handleMessage(message: JSONRPCMessage): Promise&lt;void&gt; {
+        if ('method' in message) {
+            const response = await this.handleRequest(message);
+            if (response && 'id' in message) {
+                this.transport.send({
+                    jsonrpc: '2.0',
+                    id: message.id,
+                    ...response
+                });
+            }
+        }
+    }
+
+    private async handleRequest(
+        request: JSONRPCRequest
+    ): Promise&lt;{ result?: any; error?: any } | null&gt; {
+        try {
+            switch (request.method) {
+                case 'initialize':
+                    return { result: this.handleInitialize(request.params) };
+
+                case 'tools/list':
+                    return { result: this.handleListTools() };
+
+                case 'tools/call':
+                    return { result: await this.handleCallTool(request.params) };
+
+                case 'resources/list':
+                    return { result: this.handleListResources() };
+
+                case 'resources/read':
+                    return { result: await this.handleReadResource(request.params) };
+
+                default:
+                    return {
+                        error: {
+                            code: -32601,
+                            message: `Method not found: ${request.method}`
+                        }
+                    };
+            }
+        } catch (error) {
+            return {
+                error: {
+                    code: -32603,
+                    message: error.message
+                }
+            };
+        }
+    }
+
+    private handleInitialize(params: InitializeRequest): InitializeResponse {
+        return {
+            protocolVersion: '2024-11-05',
+            capabilities: {
+                tools: { listChanged: true },
+                resources: { subscribe: true, listChanged: true }
+            },
+            serverInfo: this.serverInfo
+        };
+    }
+
+    private handleListTools(): ListToolsResponse {
+        return {
+            tools: Array.from(this.tools.entries()).map(([name, { definition }]) => ({
+                name,
+                ...definition
+            }))
+        };
+    }
+
+    private async handleCallTool(params: CallToolRequest): Promise&lt;CallToolResponse&gt; {
+        const { handler } = this.tools.get(params.name) || {};
+        
+        if (!handler) {
+            throw new Error(`Unknown tool: ${params.name}`);
+        }
+
+        const result = await handler(params.arguments);
+        
+        return {
+            content: [{ type: 'text', text: result }]
+        };
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>工具集成</h2>
+            
+            <h3>将 MCP 工具映射到 Claude Code</h3>
+            <pre><code class="language-typescript">// 推测的工具集成实现
+class MCPToolAdapter {
+    private mcpClients: Map&lt;string, MCPClient&gt; = new Map();
+
+    async loadMCPServers(configs: ServerConfig[]): Promise&lt;void&gt; {
+        for (const config of configs) {
+            const client = new MCPClient();
+            await client.connect(config);
+            this.mcpClients.set(config.name, client);
+        }
+    }
+
+    getToolDefinitions(): ToolDefinition[] {
+        const tools: ToolDefinition[] = [];
+
+        for (const [serverName, client] of this.mcpClients) {
+            for (const [toolName, tool] of client.getTools()) {
+                tools.push({
+                    name: `mcp_${serverName}_${toolName}`,
+                    description: tool.description,
+                    input_schema: tool.inputSchema,
+                    // 添加服务器信息
+                    annotations: {
+                        server: serverName,
+                        originalName: toolName
+                    }
+                });
+            }
+        }
+
+        return tools;
+    }
+
+    async executeTool(
+        name: string, 
+        args: Record&lt;string, any&gt;
+    ): Promise&lt;any&gt; {
+        // 解析工具名称
+        const [prefix, serverName, ...toolNameParts] = name.split('_');
+        const toolName = toolNameParts.join('_');
+
+        const client = this.mcpClients.get(serverName);
+        if (!client) {
+            throw new Error(`Unknown MCP server: ${serverName}`);
+        }
+
+        const response = await client.callTool(toolName, args);
+
+        // 处理响应内容
+        return this.processToolResponse(response);
+    }
+
+    private processToolResponse(response: CallToolResponse): any {
+        const contents: string[] = [];
+
+        for (const block of response.content) {
+            if (block.type === 'text') {
+                contents.push(block.text);
+            } else if (block.type === 'image') {
+                contents.push(`[Image: ${block.mimeType}]`);
+            } else if (block.type === 'resource') {
+                contents.push(`[Resource: ${block.resource.uri}]`);
+            }
+        }
+
+        return contents.join('\n');
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>资源系统</h2>
+            
+            <h3>资源订阅</h3>
+            <pre><code class="language-typescript">// 资源订阅实现
+class ResourceManager {
+    private subscriptions: Map&lt;string, Set&lt;string&gt;&gt; = new Map();
+
+    async subscribe(uri: string, clientId: string): Promise&lt;void&gt; {
+        if (!this.subscriptions.has(uri)) {
+            this.subscriptions.set(uri, new Set());
+        }
+        this.subscriptions.get(uri)!.add(clientId);
+
+        // 发送订阅请求
+        await this.sendRequest('resources/subscribe', { uri });
+    }
+
+    async unsubscribe(uri: string, clientId: string): Promise&lt;void&gt; {
+        const subscribers = this.subscriptions.get(uri);
+        if (subscribers) {
+            subscribers.delete(clientId);
+            if (subscribers.size === 0) {
+                await this.sendRequest('resources/unsubscribe', { uri });
+                this.subscriptions.delete(uri);
+            }
+        }
+    }
+
+    handleResourceUpdate(notification: ResourceUpdatedNotification): void {
+        const { uri, contents } = notification.params;
+
+        // 通知所有订阅者
+        const subscribers = this.subscriptions.get(uri);
+        if (subscribers) {
+            for (const clientId of subscribers) {
+                this.notifyClient(clientId, {
+                    type: 'resource/updated',
+                    uri,
+                    contents
+                });
+            }
+        }
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>最佳实践</h2>
+            
+            <div class="best-practices">
+                <h3>服务器配置</h3>
+                <pre><code class="language-json">{
+  "mcpServers": {
+    "filesystem": {
+      "command": "mcp-server-filesystem",
+      "args": ["/path/to/project"],
+      "env": {}
+    },
+    "database": {
+      "type": "sse",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}</code></pre>
+
+                <h3>错误处理</h3>
+                <ul>
+                    <li>实现超时机制避免无限等待</li>
+                    <li>处理服务器崩溃和重启</li>
+                    <li>提供有意义的错误信息</li>
+                    <li>记录详细的调试日志</li>
+                </ul>
+
+                <h3>性能优化</h3>
+                <ul>
+                    <li>缓存工具列表减少请求</li>
+                    <li>批量处理资源请求</li>
+                    <li>使用连接池管理多个服务器</li>
+                    <li>实现请求限流保护服务器</li>
+                </ul>
+            </div>
+        </section>
+
+        <nav class="page-nav">
+            <a href="../core/context.html" class="prev">← 上一页：上下文管理</a>
+            <a href="hooks.html" class="next">下一页：Hooks 实现 →</a>
+        </nav>
+    </article>
+</body>
+</html>

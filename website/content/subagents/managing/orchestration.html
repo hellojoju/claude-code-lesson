@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理编排 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../04-subagents.html"><i class="fas fa-users"></i> 子代理</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../04-subagents.html">子代理</a> &gt;
+                <span>代理编排</span>
+            </nav>
+            
+            <h1><i class="fas fa-project-diagram"></i> 代理编排</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 官方文档和最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方文档 + 实践验证</p>
+            </div>
+
+            <section id="overview">
+                <h2>编排概述</h2>
+                <p>代理编排是指协调多个子代理协同工作的过程，包括任务分配、执行顺序、结果合并等。</p>
+                
+                <h3>编排模式</h3>
+                <ul>
+                    <li><strong>顺序执行</strong>：按顺序依次执行</li>
+                    <li><strong>并行执行</strong>：多个代理同时执行</li>
+                    <li><strong>条件执行</strong>：根据条件决定执行路径</li>
+                    <li><strong>循环执行</strong>：重复执行直到满足条件</li>
+                </ul>
+            </section>
+
+            <section id="sequential">
+                <h2>顺序编排</h2>
+                
+                <h3>定义工作流</h3>
+                <pre><code class="language-json">{
+  "name": "code-pipeline",
+  "type": "sequential",
+  "steps": [
+    {
+      "name": "analyze",
+      "agent": "code-analyzer",
+      "inputs": {
+        "file": "${input.file}"
+      }
+    },
+    {
+      "name": "review",
+      "agent": "code-reviewer",
+      "inputs": {
+        "file": "${input.file}",
+        "analysis": "${steps.analyze.result}"
+      }
+    },
+    {
+      "name": "fix",
+      "agent": "code-fixer",
+      "inputs": {
+        "file": "${input.file}",
+        "issues": "${steps.review.issues}"
+      }
+    }
+  ]
+}</code></pre>
+
+                <h3>执行流程</h3>
+                <pre><code class="language-text">输入文件
+    ↓
+代码分析代理 → 分析结果
+    ↓
+代码审查代理 → 审查报告
+    ↓
+代码修复代理 → 修复后代码
+    ↓
+输出结果</code></pre>
+            </section>
+
+            <section id="parallel">
+                <h2>并行编排</h2>
+                
+                <h3>定义并行工作流</h3>
+                <pre><code class="language-json">{
+  "name": "parallel-review",
+  "type": "parallel",
+  "branches": [
+    {
+      "name": "security",
+      "agent": "security-reviewer",
+      "inputs": {
+        "file": "${input.file}"
+      }
+    },
+    {
+      "name": "performance",
+      "agent": "performance-reviewer",
+      "inputs": {
+        "file": "${input.file}"
+      }
+    },
+    {
+      "name": "style",
+      "agent": "style-reviewer",
+      "inputs": {
+        "file": "${input.file}"
+      }
+    }
+  ],
+  "merge": {
+    "strategy": "combine",
+    "output": "combined-report"
+  }
+}</code></pre>
+
+                <h3>执行流程</h3>
+                <pre><code class="language-text">        输入文件
+            │
+    ┌───────┼───────┐
+    │       │       │
+    ▼       ▼       ▼
+┌──────┐ ┌──────┐ ┌──────┐
+│安全  │ │性能  │ │风格  │
+│审查  │ │审查  │ │审查  │
+└──────┘ └──────┘ └──────┘
+    │       │       │
+    └───────┼───────┘
+            │
+            ▼
+        合并报告</code></pre>
+            </section>
+
+            <section id="conditional">
+                <h2>条件编排</h2>
+                
+                <h3>条件分支</h3>
+                <pre><code class="language-json">{
+  "name": "smart-review",
+  "type": "conditional",
+  "conditions": [
+    {
+      "when": "${input.file.extension == 'js'}",
+      "then": {
+        "agent": "js-reviewer"
+      }
+    },
+    {
+      "when": "${input.file.extension == 'py'}",
+      "then": {
+        "agent": "python-reviewer"
+      }
+    },
+    {
+      "when": "${input.file.extension == 'ts'}",
+      "then": {
+        "agent": "typescript-reviewer"
+      }
+    }
+  ],
+  "default": {
+    "agent": "general-reviewer"
+  }
+}</code></pre>
+
+                <h3>复杂条件</h3>
+                <pre><code class="language-json">{
+  "conditions": [
+    {
+      "when": {
+        "and": [
+          {"file.extension": "js"},
+          {"file.size": {"<": 10000}}
+        ]
+      },
+      "then": {
+        "agent": "quick-reviewer"
+      }
+    },
+    {
+      "when": {
+        "or": [
+          {"file.extension": "ts"},
+          {"file.extension": "tsx"}
+        ]
+      },
+      "then": {
+        "agent": "typescript-reviewer"
+      }
+    }
+  ]
+}</code></pre>
+            </section>
+
+            <section id="loop">
+                <h2>循环编排</h2>
+                
+                <h3>遍历执行</h3>
+                <pre><code class="language-json">{
+  "name": "batch-review",
+  "type": "loop",
+  "iterator": {
+    "source": "${input.files}",
+    "variable": "file"
+  },
+  "body": {
+    "agent": "code-reviewer",
+    "inputs": {
+      "file": "${file}"
+    }
+  },
+  "collect": {
+    "strategy": "array",
+    "output": "reports"
+  }
+}</code></pre>
+
+                <h3>条件循环</h3>
+                <pre><code class="language-json">{
+  "name": "iterative-fix",
+  "type": "while",
+  "condition": "${issues.length > 0}",
+  "maxIterations": 5,
+  "body": [
+    {
+      "agent": "code-fixer",
+      "inputs": {
+        "issues": "${issues}"
+      }
+    },
+    {
+      "agent": "code-reviewer",
+      "outputs": {
+        "issues": "issues"
+      }
+    }
+  ]
+}</code></pre>
+            </section>
+
+            <section id="composition">
+                <h2>组合编排</h2>
+                
+                <h3>嵌套工作流</h3>
+                <pre><code class="language-json">{
+  "name": "full-pipeline",
+  "type": "sequential",
+  "steps": [
+    {
+      "name": "parallel-review",
+      "type": "parallel",
+      "branches": [
+        {"agent": "security-reviewer"},
+        {"agent": "performance-reviewer"}
+      ]
+    },
+    {
+      "name": "conditional-fix",
+      "type": "conditional",
+      "conditions": [
+        {
+          "when": "${steps.parallel-review.hasIssues}",
+          "then": {"agent": "code-fixer"}
+        }
+      ],
+      "default": {"action": "skip"}
+    },
+    {
+      "agent": "report-generator",
+      "inputs": {
+        "reviewResults": "${steps.parallel-review}",
+        "fixResults": "${steps.conditional-fix}"
+      }
+    }
+  ]
+}</code></pre>
+            </section>
+
+            <section id="error-handling">
+                <h2>错误处理</h2>
+                
+                <h3>错误策略</h3>
+                <pre><code class="language-json">{
+  "errorHandling": {
+    "strategy": "continue",
+    "fallback": {
+      "agent": "fallback-agent"
+    },
+    "retry": {
+      "maxAttempts": 3,
+      "delay": 1000,
+      "backoff": "exponential"
+    },
+    "timeout": {
+      "duration": 60000,
+      "action": "cancel"
+    }
+  }
+}</code></pre>
+
+                <h3>错误传播</h3>
+                <pre><code class="language-json">{
+  "errorPropagation": {
+    "mode": "bubble",
+    "handlers": [
+      {
+        "errorType": "timeout",
+        "action": "retry"
+      },
+      {
+        "errorType": "validation",
+        "action": "skip"
+      },
+      {
+        "errorType": "*",
+        "action": "fail"
+      }
+    ]
+  }
+}</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../creating/basic.html" class="prev"><i class="fas fa-arrow-left"></i> 创建子代理</a>
+                <a href="../examples/code-team.html" class="next">代码团队代理 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

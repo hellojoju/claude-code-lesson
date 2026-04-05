@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认证系统实现案例 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">案例研究</a> &gt;
+        <span>认证系统实现</span>
+    </nav>
+
+    <article class="content">
+        <h1>认证系统实现案例</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 实战经验</span>
+        </div>
+
+        <section>
+            <h2>场景描述</h2>
+            <p>实现一个完整的用户认证系统，包括注册、登录、JWT Token 管理、密码重置等功能。</p>
+        </section>
+
+        <section>
+            <h2>认证流程</h2>
+            
+            <pre><code class="language-plaintext">注册流程:
+用户填写信息 → 验证输入 → 检查邮箱唯一性 → 密码哈希 → 创建用户 → 发送验证邮件
+
+登录流程:
+用户输入凭证 → 验证输入 → 查找用户 → 验证密码 → 生成 JWT → 返回 Token
+
+Token 刷新:
+客户端发送 Refresh Token → 验证 Token → 生成新 Access Token → 返回新 Token</code></pre>
+        </section>
+
+        <section>
+            <h2>核心实现</h2>
+            
+            <h3>密码处理</h3>
+            <pre><code class="language-typescript">// utils/password.ts
+import bcrypt from 'bcrypt';
+
+const SALT_ROUNDS = 12;
+
+export async function hashPassword(password: string): Promise&lt;string&gt; {
+    return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+export async function verifyPassword(
+    password: string, 
+    hash: string
+): Promise&lt;boolean&gt; {
+    return bcrypt.compare(password, hash);
+}</code></pre>
+
+            <h3>JWT 处理</h3>
+            <pre><code class="language-typescript">// utils/jwt.ts
+import jwt from 'jsonwebtoken';
+
+interface TokenPayload {
+    userId: string;
+    email: string;
+}
+
+export function generateAccessToken(payload: TokenPayload): string {
+    return jwt.sign(payload, process.env.JWT_SECRET!, {
+        expiresIn: '15m'
+    });
+}
+
+export function generateRefreshToken(payload: TokenPayload): string {
+    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, {
+        expiresIn: '7d'
+    });
+}
+
+export function verifyAccessToken(token: string): TokenPayload {
+    return jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload;
+}
+
+export function verifyRefreshToken(token: string): TokenPayload {
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET!) as TokenPayload;
+}</code></pre>
+
+            <h3>认证中间件</h3>
+            <pre><code class="language-typescript">// middlewares/auth.ts
+import { Request, Response, NextFunction } from 'express';
+import { verifyAccessToken } from '../utils/jwt';
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: { userId: string; email: string };
+        }
+    }
+}
+
+export function auth(req: Request, res: Response, next: NextFunction) {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({
+            code: 1001,
+            message: '未提供认证令牌'
+        });
+    }
+
+    const token = authHeader.slice(7);
+
+    try {
+        const payload = verifyAccessToken(token);
+        req.user = payload;
+        next();
+    } catch (error) {
+        return res.status(401).json({
+            code: 1002,
+            message: '令牌无效或已过期'
+        });
+    }
+}</code></pre>
+
+            <h3>认证服务</h3>
+            <pre><code class="language-typescript">// services/auth.ts
+import { PrismaClient } from '@prisma/client';
+import { hashPassword, verifyPassword } from '../utils/password';
+import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
+
+const prisma = new PrismaClient();
+
+export async function register(data: {
+    email: string;
+    password: string;
+    name: string;
+}) {
+    // 检查邮箱是否已注册
+    const existing = await prisma.user.findUnique({
+        where: { email: data.email }
+    });
+
+    if (existing) {
+        throw new Error('邮箱已被注册');
+    }
+
+    // 创建用户
+    const hashedPassword = await hashPassword(data.password);
+    
+    const user = await prisma.user.create({
+        data: {
+            email: data.email,
+            password: hashedPassword,
+            name: data.name
+        }
+    });
+
+    // 生成 Token
+    const payload = { userId: user.id, email: user.email };
+    
+    return {
+        user: { id: user.id, email: user.email, name: user.name },
+        accessToken: generateAccessToken(payload),
+        refreshToken: generateRefreshToken(payload)
+    };
+}
+
+export async function login(email: string, password: string) {
+    // 查找用户
+    const user = await prisma.user.findUnique({
+        where: { email }
+    });
+
+    if (!user) {
+        throw new Error('用户不存在');
+    }
+
+    // 验证密码
+    const valid = await verifyPassword(password, user.password);
+    
+    if (!valid) {
+        throw new Error('密码错误');
+    }
+
+    // 生成 Token
+    const payload = { userId: user.id, email: user.email };
+    
+    return {
+        user: { id: user.id, email: user.email, name: user.name },
+        accessToken: generateAccessToken(payload),
+        refreshToken: generateRefreshToken(payload)
+    };
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>最佳实践</h2>
+            
+            <div class="best-practices">
+                <h3>安全建议</h3>
+                <ul>
+                    <li>使用强密码哈希算法（bcrypt）</li>
+                    <li>JWT 设置合理的过期时间</li>
+                    <li>使用 HTTPS 传输</li>
+                    <li>实现 Token 黑名单机制</li>
+                    <li>记录登录日志</li>
+                </ul>
+            </div>
+        </section>
+
+        <nav class="page-nav">
+            <a href="database.html" class="prev">← 上一页：数据库设计</a>
+            <a href="../fullstack/crud.html" class="next">下一页：CRUD 应用开发 →</a>
+        </nav>
+    </article>
+</body>
+</html>

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Skills 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 目录 */
+    .toc {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc a { color: var(--primary); }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/content/basics/installation.html">入门指南</a></li>
+        <li><a href="/content/modules/">核心模块</a></li>
+        <li><a href="/content/cases/intro.html">实战案例</a></li>
+        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <article>
+        <nav class="breadcrumb">
+          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Skills
+        </nav>
+
+        <div class="meta">
+          <span class="badge badge-beginner">
+            🟢 初级
+          </span>
+          <span class="badge">✅ Claude Code v2.1.92</span>
+        </div>
+
+        <div class="toc"><h3>目录</h3><ul><li ><a href="#overview">Overview</a></li><li ><a href="#key-benefits">Key Benefits</a></li><li ><a href="#how-skills-work-progressive-disclosure">How Skills Work: Progressive Disclosure</a></li><li ><a href="#three-levels-of-loading">Three Levels of Loading</a></li><li ><a href="#skill-loading-process">Skill Loading Process</a></li><li ><a href="#skill-types-locations">Skill Types & Locations</a></li><li ><a href="#automatic-discovery">Automatic Discovery</a></li><li ><a href="#creating-custom-skills">Creating Custom Skills</a></li><li ><a href="#basic-directory-structure">Basic Directory Structure</a></li><li ><a href="#skill-md-format">SKILL.md Format</a></li><li ><a href="#instructions">Instructions</a></li><li ><a href="#examples">Examples</a></li><li ><a href="#required-fields">Required Fields</a></li><li ><a href="#optional-frontmatter-fields">Optional Frontmatter Fields</a></li><li ><a href="#skill-content-types">Skill Content Types</a></li><li ><a href="#reference-content">Reference Content</a></li><li ><a href="#task-content">Task Content</a></li><li ><a href="#controlling-skill-invocation">Controlling Skill Invocation</a></li><li ><a href="#string-substitutions">String Substitutions</a></li><li ><a href="#injecting-dynamic-context">Injecting Dynamic Context</a></li><li ><a href="#pull-request-context">Pull request context</a></li><li ><a href="#your-task">Your task</a></li><li ><a href="#running-skills-in-subagents">Running Skills in Subagents</a></li><li ><a href="#practical-examples">Practical Examples</a></li><li ><a href="#example-1-code-review-skill">Example 1: Code Review Skill</a></li><li ><a href="#review-template">Review Template</a></li><li ><a href="#summary">Summary</a></li><li ><a href="#critical-issues-if-any">Critical Issues (if any)</a></li><li ><a href="#example-2-codebase-visualizer-skill">Example 2: Codebase Visualizer Skill</a></li><li ><a href="#usage">Usage</a></li><li ><a href="#what-the-visualization-shows">What the visualization shows</a></li><li ><a href="#example-3-deploy-skill-user-invoked-only">Example 3: Deploy Skill (User-Invoked Only)</a></li><li ><a href="#example-4-brand-voice-skill-background-knowledge">Example 4: Brand Voice Skill (Background Knowledge)</a></li><li ><a href="#tone-of-voice">Tone of Voice</a></li><li ><a href="#writing-guidelines">Writing Guidelines</a></li><li ><a href="#example-5-claude-md-generator-skill">Example 5: CLAUDE.md Generator Skill</a></li><li ><a href="#core-principles">Core Principles</a></li><li ><a href="#the-golden-rules">The Golden Rules</a></li><li ><a href="#essential-sections">Essential Sections</a></li><li ><a href="#example-6-refactoring-skill-with-scripts">Example 6: Refactoring Skill with Scripts</a></li><li ><a href="#workflow">Workflow</a></li><li ><a href="#core-principles">Core Principles</a></li><li ><a href="#supporting-files">Supporting Files</a></li><li ><a href="#managing-skills">Managing Skills</a></li><li ><a href="#viewing-available-skills">Viewing Available Skills</a></li><li ><a href="#testing-a-skill">Testing a Skill</a></li><li ><a href="#updating-a-skill">Updating a Skill</a></li><li ><a href="#restricting-claude-s-skill-access">Restricting Claude's Skill Access</a></li><li ><a href="#try-it-now">Try It Now</a></li><li ><a href="#exercise-1-create-your-first-skill">🎯 Exercise 1: Create Your First Skill</a></li><li ><a href="#exercise-2-skill-with-dynamic-context">🎯 Exercise 2: Skill with Dynamic Context</a></li><li ><a href="#git-context">Git Context</a></li><li ><a href="#package-info">Package Info</a></li><li ><a href="#summary">Summary</a></li><li ><a href="#exercise-3-skill-with-arguments">🎯 Exercise 3: Skill with Arguments</a></li><li ><a href="#steps">Steps</a></li><li ><a href="#output-format">Output Format</a></li><li ><a href="#exercise-4-multi-file-skill-directory">🎯 Exercise 4: Multi-File Skill Directory</a></li><li ><a href="#current-changes">Current Changes</a></li><li ><a href="#review-process">Review Process</a></li><li ><a href="#output-template">Output Template</a></li><li ><a href="#security">Security</a></li><li ><a href="#quality">Quality</a></li><li ><a href="#performance">Performance</a></li><li ><a href="#testing">Testing</a></li><li ><a href="#files-reviewed">Files Reviewed</a></li><li ><a href="#issues-found">Issues Found</a></li><li ><a href="#summary">Summary</a></li><li ><a href="#recommendation">Recommendation</a></li><li ><a href="#exercise-5-user-only-skill-no-auto-invocation">🎯 Exercise 5: User-Only Skill (No Auto-Invocation)</a></li><li ><a href="#pre-flight-checks">Pre-flight Checks</a></li><li ><a href="#deploy-steps">Deploy Steps</a></li><li ><a href="#post-deploy">Post-deploy</a></li><li ><a href="#rollback-plan">Rollback Plan</a></li><li ><a href="#best-practices">Best Practices</a></li><li ><a href="#1-make-descriptions-specific">1. Make Descriptions Specific</a></li><li ><a href="#2-keep-skills-focused">2. Keep Skills Focused</a></li><li ><a href="#3-include-trigger-terms">3. Include Trigger Terms</a></li><li ><a href="#4-keep-skill-md-under-500-lines">4. Keep SKILL.md Under 500 Lines</a></li><li ><a href="#5-reference-supporting-files">5. Reference Supporting Files</a></li><li ><a href="#additional-resources">Additional resources</a></li><li ><a href="#do-s">Do's</a></li><li ><a href="#don-ts">Don'ts</a></li><li ><a href="#troubleshooting">Troubleshooting</a></li><li ><a href="#quick-reference">Quick Reference</a></li><li ><a href="#skill-not-triggering">Skill Not Triggering</a></li><li ><a href="#skill-triggers-too-often">Skill Triggers Too Often</a></li><li ><a href="#claude-doesn-t-see-all-skills">Claude Doesn't See All Skills</a></li><li ><a href="#security-considerations">Security Considerations</a></li><li ><a href="#skills-vs-other-features">Skills vs Other Features</a></li><li ><a href="#bundled-skills">Bundled Skills</a></li><li ><a href="#sharing-skills">Sharing Skills</a></li><li ><a href="#project-skills-team-sharing">Project Skills (Team Sharing)</a></li><li ><a href="#personal-skills">Personal Skills</a></li><li ><a href="#plugin-distribution">Plugin Distribution</a></li><li ><a href="#going-further-a-skill-collection-and-a-skill-manager">Going Further: A Skill Collection and a Skill Manager</a></li><li ><a href="#additional-resources">Additional Resources</a></li></ul></div>
+
+        <div class="content">
+          <p><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
+  <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
+</picture></p><blockquote>🟢 <strong>Beginner</strong> | ⏱ 40 minutes</blockquote>
+>
+<blockquote>✅ Verified against Claude Code <strong>v2.1.92</strong> · Last verified: 2026-04-05</blockquote><p><strong>What you'll build:</strong> Create reusable, auto-invoked capabilities for Claude.</p><h1>Agent Skills Guide</h1><p>Agent Skills are reusable, filesystem-based capabilities that extend Claude's functionality. They package domain-specific expertise, workflows, and best practices into discoverable components that Claude automatically uses when relevant.</p><h2 id="Overview">Overview</h2><p><strong>Agent Skills</strong> are modular capabilities that transform general-purpose agents into specialists. Unlike prompts (conversation-level instructions for one-off tasks), Skills load on-demand and eliminate the need to repeatedly provide the same guidance across multiple conversations.</p><h3>Key Benefits</h3><ul><li><strong>Specialize Claude</strong>: Tailor capabilities for domain-specific tasks</li>
+<li><strong>Reduce repetition</strong>: Create once, use automatically across conversations</li>
+<li><strong>Compose capabilities</strong>: Combine Skills to build complex workflows</li>
+<li><strong>Scale workflows</strong>: Reuse skills across multiple projects and teams</li>
+<li><strong>Maintain quality</strong>: Embed best practices directly into your workflow</li><p>Skills follow the <a href="https://agentskills.io">Agent Skills</a> open standard, which works across multiple AI tools. Claude Code extends the standard with additional features like invocation control, subagent execution, and dynamic context injection.</p><blockquote><strong>Note</strong>: Custom slash commands have been merged into skills. <code>.claude/commands/</code> files still work and support the same frontmatter fields. Skills are recommended for new development. When both exist at the same path (e.g., <code>.claude/commands/review.md</code> and <code>.claude/skills/review/SKILL.md</code>), the skill takes precedence.</blockquote><h2 id="How Skills Work: Progressive Disclosure">How Skills Work: Progressive Disclosure</h2><p>Skills leverage a <strong>progressive disclosure</strong> architecture—Claude loads information in stages as needed, rather than consuming context upfront. This enables efficient context management while maintaining unlimited scalability.</p><h3>Three Levels of Loading</h3><div class="mermaid">graph TB
+    subgraph "Level 1: Metadata (Always Loaded)"
+        A["YAML Frontmatter"]
+        A1["~100 tokens per skill"]
+        A2["name + description"]
+    end</p><p>    subgraph "Level 2: Instructions (When Triggered)"
+        B["SKILL.md Body"]
+        B1["Under 5k tokens"]
+        B2["Workflows & guidance"]
+    end</p><p>    subgraph "Level 3: Resources (As Needed)"
+        C["Bundled Files"]
+        C1["Effectively unlimited"]
+        C2["Scripts, templates, docs"]
+    end</p><p>    A --> B
+    B --> C
+</div><table>
+<thead>
+<tr>
+<th>Level</th>
+<th>When Loaded</th>
+<th>Token Cost</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Level 1: Metadata</strong></td>
+<td>Always (at startup)</td>
+<td>~100 tokens per Skill</td>
+<td><code>name</code> and <code>description</code> from YAML frontmatter</td>
+</tr>
+<tr>
+<td><strong>Level 2: Instructions</strong></td>
+<td>When Skill is triggered</td>
+<td>Under 5k tokens</td>
+<td>SKILL.md body with instructions and guidance</td>
+</tr>
+<tr>
+<td><strong>Level 3+: Resources</strong></td>
+<td>As needed</td>
+<td>Effectively unlimited</td>
+<td>Bundled files executed via bash without loading contents into context</td>
+</tr>
+</tbody>
+</table>
+This means you can install many Skills without context penalty—Claude only knows each Skill exists and when to use it until actually triggered.</p><h2 id="Skill Loading Process">Skill Loading Process</h2><div class="mermaid">sequenceDiagram
+    participant User
+    participant Claude as Claude
+    participant System as System
+    participant Skill as Skill</p><p>    User->>Claude: "Review this code for security issues"
+    Claude->>System: Check available skills (metadata)
+    System-->>Claude: Skill descriptions loaded at startup
+    Claude->>Claude: Match request to skill description
+    Claude->>Skill: bash: read code-review/SKILL.md
+    Skill-->>Claude: Instructions loaded into context
+    Claude->>Claude: Determine: Need templates?
+    Claude->>Skill: bash: read templates/checklist.md
+    Skill-->>Claude: Template loaded
+    Claude->>Claude: Execute skill instructions
+    Claude->>User: Comprehensive code review
+</div><h2 id="Skill Types & Locations">Skill Types & Locations</h2><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Location</th>
+<th>Scope</th>
+<th>Shared</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>Managed settings</td>
+<td>All org users</td>
+<td>Yes</td>
+<td>Organization-wide standards</td>
+</tr>
+<tr>
+<td><strong>Personal</strong></td>
+<td><code>~/.claude/skills/<skill-name>/SKILL.md</code></td>
+<td>Individual</td>
+<td>No</td>
+<td>Personal workflows</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td><code>.claude/skills/<skill-name>/SKILL.md</code></td>
+<td>Team</td>
+<td>Yes (via git)</td>
+<td>Team standards</td>
+</tr>
+<tr>
+<td><strong>Plugin</strong></td>
+<td><code><plugin>/skills/<skill-name>/SKILL.md</code></td>
+<td>Where enabled</td>
+<td>Depends</td>
+<td>Bundled with plugins</td>
+</tr>
+</tbody>
+</table>
+When skills share the same name across levels, higher-priority locations win: <strong>enterprise > personal > project</strong>. Plugin skills use a <code>plugin-name:skill-name</code> namespace, so they cannot conflict.</p><h3>Automatic Discovery</h3><p><strong>Nested directories</strong>: When you work with files in subdirectories, Claude Code automatically discovers skills from nested <code>.claude/skills/</code> directories. For example, if you're editing a file in <code>packages/frontend/</code>, Claude Code also looks for skills in <code>packages/frontend/.claude/skills/</code>. This supports monorepo setups where packages have their own skills.</p><p><strong><code>--add-dir</code> directories</strong>: Skills from directories added via <code>--add-dir</code> are loaded automatically with live change detection. Any edits to skill files in those directories take effect immediately without restarting Claude Code.</p><p><strong>Description budget</strong>: Skill descriptions (Level 1 metadata) are capped at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). If you have many skills installed, some may be excluded. Run <code>/context</code> to check for warnings. Override the budget with the <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code> environment variable.</p><h2 id="Creating Custom Skills">Creating Custom Skills</h2><h3>Basic Directory Structure</h3><pre><code class="language-">my-skill/
+├── SKILL.md           # Main instructions (required)
+├── template.md        # Template for Claude to fill in
+├── examples/
+│   └── sample.md      # Example output showing expected format
+└── scripts/
+    └── validate.sh    # Script Claude can execute
+</code></pre><h3>SKILL.md Format</h3><pre><code class="language-yaml">---
+name: your-skill-name
+description: Brief description of what this Skill does and when to use it
+<hr></p><h1>Your Skill Name</h1><h2 id="Instructions">Instructions</h2>
+Provide clear, step-by-step guidance for Claude.</p><h2 id="Examples">Examples</h2>
+Show concrete examples of using this Skill.
+</code></pre><h3>Required Fields</h3><li><strong>name</strong>: lowercase letters, numbers, hyphens only (max 64 characters). Cannot contain "anthropic" or "claude".</li>
+<li><strong>description</strong>: what the Skill does AND when to use it (max 1024 characters). This is critical for Claude to know when to activate the skill.</li><h3>Optional Frontmatter Fields</h3><pre><code class="language-yaml">---
+name: my-skill
+description: What this skill does and when to use it
+argument-hint: "[filename] [format]"        # Hint for autocomplete
+disable-model-invocation: true              # Only user can invoke
+user-invocable: false                       # Hide from slash menu
+allowed-tools: Read, Grep, Glob             # Restrict tool access
+model: opus                                 # Specific model to use
+effort: high                                # Effort level override (low, medium, high, max)
+context: fork                               # Run in isolated subagent
+agent: Explore                              # Which agent type (with context: fork)
+shell: bash                                 # Shell for commands: bash (default) or powershell
+hooks:                                      # Skill-scoped hooks
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/validate.sh"
+<hr>
+</code></pre><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Lowercase letters, numbers, hyphens only (max 64 chars). Cannot contain "anthropic" or "claude".</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>What the Skill does AND when to use it (max 1024 chars). Critical for auto-invocation matching.</td>
+</tr>
+<tr>
+<td><code>argument-hint</code></td>
+<td>Hint shown in the <code>/</code> autocomplete menu (e.g., <code>"[filename] [format]"</code>).</td>
+</tr>
+<tr>
+<td><code>disable-model-invocation</code></td>
+<td><code>true</code> = only the user can invoke via <code>/name</code>. Claude will never auto-invoke.</td>
+</tr>
+<tr>
+<td><code>user-invocable</code></td>
+<td><code>false</code> = hidden from the <code>/</code> menu. Only Claude can invoke it automatically.</td>
+</tr>
+<tr>
+<td><code>allowed-tools</code></td>
+<td>Comma-separated list of tools the skill may use without permission prompts.</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>Model override while the skill is active (e.g., <code>opus</code>, <code>sonnet</code>).</td>
+</tr>
+<tr>
+<td><code>effort</code></td>
+<td>Effort level override while the skill is active: <code>low</code>, <code>medium</code>, <code>high</code>, or <code>max</code>.</td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td><code>fork</code> to run the skill in a forked subagent context with its own context window.</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>Subagent type when <code>context: fork</code> (e.g., <code>Explore</code>, <code>Plan</code>, <code>general-purpose</code>).</td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td>Shell used for <code>!</code>command`<code> substitutions and scripts: </code>bash<code> (default) or </code>powershell<code>.</td>
+</tr>
+<tr>
+<td></code>hooks<code></td>
+<td>Hooks scoped to this skill's lifecycle (same format as global hooks).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Skill Content Types">Skill Content Types</h2><p>Skills can contain two types of content, each suited for different purposes:</p><h3>Reference Content</h3><p>Adds knowledge Claude applies to your current work—conventions, patterns, style guides, domain knowledge. Runs inline with your conversation context.</p><pre><code class="language-yaml">---
+name: api-conventions
+description: API design patterns for this codebase
+<hr></p><p>When writing API endpoints:
+<li>Use RESTful naming conventions</li>
+<li>Return consistent error formats</li>
+<li>Include request validation</li>
+</code></pre><h3>Task Content</h3><p>Step-by-step instructions for specific actions. Often invoked directly with </code>/skill-name<code>.</p><pre><code class="language-yaml">---
+name: deploy
+description: Deploy the application to production
+context: fork
+disable-model-invocation: true
+<hr></p><p>Deploy the application:
+<li>Run the test suite</li>
+<li>Build the application</li>
+<li>Push to the deployment target</li>
+</code></pre><h2 id="Controlling Skill Invocation">Controlling Skill Invocation</h2><p>By default, both you and Claude can invoke any skill. Two frontmatter fields control the three invocation modes:</p><table>
+<thead>
+<tr>
+<th>Frontmatter</th>
+<th>You can invoke</th>
+<th>Claude can invoke</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(default)</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td></code>disable-model-invocation: true<code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td></code>user-invocable: false<code></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<strong>Use </code>disable-model-invocation: true<code></strong> for workflows with side effects: </code>/commit<code>, </code>/deploy<code>, </code>/send-slack-message<code>. You don't want Claude deciding to deploy because your code looks ready.</p><p><strong>Use </code>user-invocable: false<code></strong> for background knowledge that isn't actionable as a command. A </code>legacy-system-context<code> skill explains how an old system works—useful for Claude, but not a meaningful action for users.</p><h2 id="String Substitutions">String Substitutions</h2><p>Skills support dynamic values that are resolved before the skill content reaches Claude:</p><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></code>$ARGUMENTS<code></td>
+<td>All arguments passed when invoking the skill</td>
+</tr>
+<tr>
+<td></code>$ARGUMENTS[N]<code> or </code>$N<code></td>
+<td>Access specific argument by index (0-based)</td>
+</tr>
+<tr>
+<td></code>${CLAUDE_SESSION_ID}<code></td>
+<td>Current session ID</td>
+</tr>
+<tr>
+<td></code>${CLAUDE_SKILL_DIR}<code></td>
+<td>Directory containing the skill's SKILL.md file</td>
+</tr>
+<tr>
+<td></code><code> !</code>command<code> </code><code></td>
+<td>Dynamic context injection — runs a shell command and inlines the output</td>
+</tr>
+</tbody>
+</table>
+<strong>Example:</strong></p><pre><code class="language-yaml">---
+name: fix-issue
+description: Fix a GitHub issue
+<hr></p><p>Fix GitHub issue $ARGUMENTS following our coding standards.
+<li>Read the issue description</li>
+<li>Implement the fix</li>
+<li>Write tests</li>
+<li>Create a commit</li>
+</code></pre><p>Running </code>/fix-issue 123<code> replaces </code>$ARGUMENTS<code> with </code>123<code>.</p><h2 id="Injecting Dynamic Context">Injecting Dynamic Context</h2><p>The </code>!<code>command</code><code> syntax runs shell commands before the skill content is sent to Claude:</p><pre><code class="language-yaml">---
+name: pr-summary
+description: Summarize changes in a pull request
+context: fork
+agent: Explore
+<hr></p><h2 id="Pull request context">Pull request context</h2>
+<li>PR diff: !</code>gh pr diff<code></li>
+<li>PR comments: !</code>gh pr view --comments<code></li>
+<li>Changed files: !</code>gh pr diff --name-only<code></li><h2 id="Your task">Your task</h2>
+Summarize this pull request...
+</code></pre><p>Commands execute immediately; Claude only sees the final output. By default, commands run in </code>bash<code>. Set </code>shell: powershell<code> in frontmatter to use PowerShell instead.</p><h2 id="Running Skills in Subagents">Running Skills in Subagents</h2><p>Add </code>context: fork<code> to run a skill in an isolated subagent context. The skill content becomes the task for a dedicated subagent with its own context window, keeping the main conversation uncluttered.</p><p>The </code>agent<code> field specifies which agent type to use:</p><table>
+<thead>
+<tr>
+<th>Agent Type</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></code>Explore<code></td>
+<td>Read-only research, codebase analysis</td>
+</tr>
+<tr>
+<td></code>Plan<code></td>
+<td>Creating implementation plans</td>
+</tr>
+<tr>
+<td></code>general-purpose<code></td>
+<td>Broad tasks requiring all tools</td>
+</tr>
+<tr>
+<td>Custom agents</td>
+<td>Specialized agents defined in your configuration</td>
+</tr>
+</tbody>
+</table>
+<strong>Example frontmatter:</strong></p><pre><code class="language-yaml">---
+context: fork
+agent: Explore
+<hr>
+</code></pre><p><strong>Full skill example:</strong></p><pre><code class="language-yaml">---
+name: deep-research
+description: Research a topic thoroughly
+context: fork
+agent: Explore
+<hr></p><p>Research $ARGUMENTS thoroughly:
+<li>Find relevant files using Glob and Grep</li>
+<li>Read and analyze the code</li>
+<li>Summarize findings with specific file references</li>
+</code></pre><h2 id="Practical Examples">Practical Examples</h2><h3>Example 1: Code Review Skill</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/code-review/
+├── SKILL.md
+├── templates/
+│   ├── review-checklist.md
+│   └── finding-template.md
+└── scripts/
+    ├── analyze-metrics.py
+    └── compare-complexity.py
+</code></pre><p><strong>File:</strong> </code>~/.claude/skills/code-review/SKILL.md<code></p><pre><code class="language-yaml">---
+name: code-review-specialist
+description: Comprehensive code review with security, performance, and quality analysis. Use when users ask to review code, analyze code quality, evaluate pull requests, or mention code review, security analysis, or performance optimization.
+<hr></p><h1>Code Review Skill</h1><p>This skill provides comprehensive code review capabilities focusing on:</p><li><strong>Security Analysis</strong></li>
+   - Authentication/authorization issues
+   - Data exposure risks
+   - Injection vulnerabilities
+   - Cryptographic weaknesses</p><li><strong>Performance Review</strong></li>
+   - Algorithm efficiency (Big O analysis)
+   - Memory optimization
+   - Database query optimization
+   - Caching opportunities</p><li><strong>Code Quality</strong></li>
+   - SOLID principles
+   - Design patterns
+   - Naming conventions
+   - Test coverage</p><li><strong>Maintainability</strong></li>
+   - Code readability
+   - Function size (should be < 50 lines)
+   - Cyclomatic complexity
+   - Type safety</p><h2 id="Review Template">Review Template</h2><p>For each piece of code reviewed, provide:</p><h3>Summary</h3>
+<li>Overall quality assessment (1-5)</li>
+<li>Key findings count</li>
+<li>Recommended priority areas</li><h3>Critical Issues (if any)</h3>
+<li><strong>Issue</strong>: Clear description</li>
+<li><strong>Location</strong>: File and line number</li>
+<li><strong>Impact</strong>: Why this matters</li>
+<li><strong>Severity</strong>: Critical/High/Medium</li>
+<li><strong>Fix</strong>: Code example</li><p>For detailed checklists, see <a href="templates/review-checklist.md">templates/review-checklist.md</a>.
+</code></pre><h3>Example 2: Codebase Visualizer Skill</h3><p>A skill that generates interactive HTML visualizations:</p><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/codebase-visualizer/
+├── SKILL.md
+└── scripts/
+    └── visualize.py
+</code></pre><p><strong>File:</strong> </code>~/.claude/skills/codebase-visualizer/SKILL.md<code></p><pre><code class="language-yaml">---
+name: codebase-visualizer
+description: Generate an interactive collapsible tree visualization of your codebase. Use when exploring a new repo, understanding project structure, or identifying large files.
+allowed-tools: Bash(python *)
+<hr></p><h1>Codebase Visualizer</h1><p>Generate an interactive HTML tree view showing your project's file structure.</p><h2 id="Usage">Usage</h2><p>Run the visualization script from your project root:</p><p></code></pre>bash
+python ~/.claude/skills/codebase-visualizer/scripts/visualize.py .
+<pre><code class="language-">
+This creates </code>codebase-map.html<code> and opens it in your default browser.</p><h2 id="What the visualization shows">What the visualization shows</h2><li><strong>Collapsible directories</strong>: Click folders to expand/collapse</li>
+<li><strong>File sizes</strong>: Displayed next to each file</li>
+<li><strong>Colors</strong>: Different colors for different file types</li>
+<li><strong>Directory totals</strong>: Shows aggregate size of each folder</li>
+</code></pre><p>The bundled Python script does the heavy lifting while Claude handles orchestration.</p><h3>Example 3: Deploy Skill (User-Invoked Only)</h3><pre><code class="language-yaml">---
+name: deploy
+description: Deploy the application to production
+disable-model-invocation: true
+allowed-tools: Bash(npm <em>), Bash(git </em>)
+<hr></p><p>Deploy $ARGUMENTS to production:</p><li>Run the test suite: </code>npm test<code></li>
+<li>Build the application: </code>npm run build<code></li>
+<li>Push to the deployment target</li>
+<li>Verify the deployment succeeded</li>
+<li>Report deployment status</li>
+</code></pre><h3>Example 4: Brand Voice Skill (Background Knowledge)</h3><pre><code class="language-yaml">---
+name: brand-voice
+description: Ensure all communication matches brand voice and tone guidelines. Use when creating marketing copy, customer communications, or public-facing content.
+user-invocable: false
+<hr></p><h2 id="Tone of Voice">Tone of Voice</h2>
+<li><strong>Friendly but professional</strong> - approachable without being casual</li>
+<li><strong>Clear and concise</strong> - avoid jargon</li>
+<li><strong>Confident</strong> - we know what we're doing</li>
+<li><strong>Empathetic</strong> - understand user needs</li><h2 id="Writing Guidelines">Writing Guidelines</h2>
+<li>Use "you" when addressing readers</li>
+<li>Use active voice</li>
+<li>Keep sentences under 20 words</li>
+<li>Start with value proposition</li><p>For templates, see <a href="templates/">templates/</a>.
+</code></pre><h3>Example 5: CLAUDE.md Generator Skill</h3><pre><code class="language-yaml">---
+name: claude-md
+description: Create or update CLAUDE.md files following best practices for optimal AI agent onboarding. Use when users mention CLAUDE.md, project documentation, or AI onboarding.
+<hr></p><h2 id="Core Principles">Core Principles</h2><p><strong>LLMs are stateless</strong>: CLAUDE.md is the only file automatically included in every conversation.</p><h3>The Golden Rules</h3><li><strong>Less is More</strong>: Keep under 300 lines (ideally under 100)</li>
+<li><strong>Universal Applicability</strong>: Only include information relevant to EVERY session</li>
+<li><strong>Don't Use Claude as a Linter</strong>: Use deterministic tools instead</li>
+<li><strong>Never Auto-Generate</strong>: Craft it manually with careful consideration</li><h2 id="Essential Sections">Essential Sections</h2><li><strong>Project Name</strong>: Brief one-line description</li>
+<li><strong>Tech Stack</strong>: Primary language, frameworks, database</li>
+<li><strong>Development Commands</strong>: Install, test, build commands</li>
+<li><strong>Critical Conventions</strong>: Only non-obvious, high-impact conventions</li>
+<li><strong>Known Issues / Gotchas</strong>: Things that trip up developers</li>
+</code></pre><h3>Example 6: Refactoring Skill with Scripts</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">refactor/
+├── SKILL.md
+├── references/
+│   ├── code-smells.md
+│   └── refactoring-catalog.md
+├── templates/
+│   └── refactoring-plan.md
+└── scripts/
+    ├── analyze-complexity.py
+    └── detect-smells.py
+</code></pre><p><strong>File:</strong> </code>refactor/SKILL.md<code></p><pre><code class="language-yaml">---
+name: code-refactor
+description: Systematic code refactoring based on Martin Fowler's methodology. Use when users ask to refactor code, improve code structure, reduce technical debt, or eliminate code smells.
+<hr></p><h1>Code Refactoring Skill</h1><p>A phased approach emphasizing safe, incremental changes backed by tests.</p><h2 id="Workflow">Workflow</h2><p>Phase 1: Research & Analysis → Phase 2: Test Coverage Assessment →
+Phase 3: Code Smell Identification → Phase 4: Refactoring Plan Creation →
+Phase 5: Incremental Implementation → Phase 6: Review & Iteration</p><h2 id="Core Principles">Core Principles</h2><li><strong>Behavior Preservation</strong>: External behavior must remain unchanged</li>
+<li><strong>Small Steps</strong>: Make tiny, testable changes</li>
+<li><strong>Test-Driven</strong>: Tests are the safety net</li>
+<li><strong>Continuous</strong>: Refactoring is ongoing, not a one-time event</li><p>For code smell catalog, see <a href="references/code-smells.md">references/code-smells.md</a>.
+For refactoring techniques, see <a href="references/refactoring-catalog.md">references/refactoring-catalog.md</a>.
+</code></pre><h2 id="Supporting Files">Supporting Files</h2><p>Skills can include multiple files in their directory beyond </code>SKILL.md<code>. These supporting files (templates, examples, scripts, reference documents) let you keep the main skill file focused while providing Claude with additional resources it can load as needed.</p><pre><code class="language-">my-skill/
+├── SKILL.md              # Main instructions (required, keep under 500 lines)
+├── templates/            # Templates for Claude to fill in
+│   └── output-format.md
+├── examples/             # Example outputs showing expected format
+│   └── sample-output.md
+├── references/           # Domain knowledge and specifications
+│   └── api-spec.md
+└── scripts/              # Scripts Claude can execute
+    └── validate.sh
+</code></pre><p>Guidelines for supporting files:</p><li>Keep </code>SKILL.md<code> under <strong>500 lines</strong>. Move detailed reference material, large examples, and specifications to separate files.</li>
+<li>Reference additional files from </code>SKILL.md<code> using <strong>relative paths</strong> (e.g., </code><a href="references/api-spec.md">API reference</a><code>).</li>
+<li>Supporting files are loaded at Level 3 (as needed), so they do not consume context until Claude actually reads them.</li><h2 id="Managing Skills">Managing Skills</h2><h3>Viewing Available Skills</h3><p>Ask Claude directly:
+<pre><code class="language-">What Skills are available?
+</code></pre><p>Or check the filesystem:
+<pre><code class="language-bash"><h1>List personal Skills</h1>
+ls ~/.claude/skills/</p><h1>List project Skills</h1>
+ls .claude/skills/
+</code></pre><h3>Testing a Skill</h3><p>Two ways to test:</p><p><strong>Let Claude invoke it automatically</strong> by asking something that matches the description:
+<pre><code class="language-">Can you help me review this code for security issues?
+</code></pre><p><strong>Or invoke it directly</strong> with the skill name:
+<pre><code class="language-">/code-review src/auth/login.ts
+</code></pre><h3>Updating a Skill</h3><p>Edit the </code>SKILL.md<code> file directly. Changes take effect on next Claude Code startup.</p><pre><code class="language-bash"><h1>Personal Skill</h1>
+code ~/.claude/skills/my-skill/SKILL.md</p><h1>Project Skill</h1>
+code .claude/skills/my-skill/SKILL.md
+</code></pre><h3>Restricting Claude's Skill Access</h3><p>Three ways to control which skills Claude can invoke:</p><p><strong>Disable all skills</strong> in </code>/permissions<code>:
+<pre><code class="language-"><h1>Add to deny rules:</h1>
+Skill
+</code></pre><p><strong>Allow or deny specific skills</strong>:
+<pre><code class="language-"><h1>Allow only specific skills</h1>
+Skill(commit)
+Skill(review-pr *)</p><h1>Deny specific skills</h1>
+Skill(deploy *)
+</code></pre><p><strong>Hide individual skills</strong> by adding </code>disable-model-invocation: true<code> to their frontmatter.</p><h2 id="Try It Now">Try It Now</h2><h3>🎯 Exercise 1: Create Your First Skill</h3><p>Build a </code>/hello<code> skill that greets team members:</p><p><strong>Step 1: Create skill directory</strong>
+<pre><code class="language-bash">mkdir -p .claude/skills/hello
+</code></pre><p><strong>Step 2: Create SKILL.md</strong>
+<pre><code class="language-markdown">---
+name: hello
+description: Greet team members. Use when user says hello or starts a session.
+<hr></p><h1>Hello Skill</h1><p>Greet the user with:
+<li>Current date and time</li>
+<li>Quick project status (branch, recent commits)</li>
+<li>Ask what they'd like to work on</li><p>Be warm but concise.
+</code></pre><p><strong>Step 3: Test it</strong>
+<pre><code class="language-bash"><h1>In Claude Code:</h1>
+/hello</p><h1>Or just type "hello" and Claude should auto-invoke</h1>
+</code></pre><h3>🎯 Exercise 2: Skill with Dynamic Context</h3><p>Create a </code>/status<code> skill using shell commands:</p><pre><code class="language-markdown">---
+name: status
+description: Show comprehensive project status. Use when user asks about project health or status.
+allowed-tools: Bash(git <em>), Bash(npm </em>), Read
+<hr></p><h1>Project Status</h1><h2 id="Git Context">Git Context</h2>
+<li>Branch: !</code>git branch --show-current<code></li>
+<li>Changes: !</code>git status --short | head -10<code></li>
+<li>Recent: !</code>git log --oneline -5<code></li><h2 id="Package Info">Package Info</h2>
+<li>Version: !</code>node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A"<code></li>
+<li>Dependencies: !</code>npm ls --depth=0 2>/dev/null | head -15 || echo "Run npm install first"<code></li><h2 id="Summary">Summary</h2>
+Provide a brief health report with recommendations.
+</code></pre><p><strong>Test:</strong>
+<pre><code class="language-bash">/status
+</code></pre><h3>🎯 Exercise 3: Skill with Arguments</h3><p>Create a </code>/fix-issue<code> skill that takes an issue number:</p><pre><code class="language-markdown">---
+name: fix-issue
+description: Fix a GitHub issue by number. Use when user mentions fixing an issue.
+argument-hint: issue-number
+allowed-tools: Bash(git <em>), Bash(gh </em>), Read, Edit, Write
+<hr></p><h1>Fix Issue #$ARGUMENTS</h1><h2 id="Steps">Steps</h2><li><strong>Fetch Issue Details</strong></li>
+   - Title and description from GitHub
+   - Labels and priority
+   - Related files based on issue context</p><li><strong>Analyze Codebase</strong></li>
+   - Find relevant files
+   - Understand current implementation
+   - Identify root cause</p><li><strong>Implement Fix</strong></li>
+   - Make minimal, focused changes
+   - Add/update tests
+   - Follow project conventions from CLAUDE.md</p><li><strong>Verify</strong></li>
+   - Tests pass
+   - Fix addresses the issue
+   - No side effects</p><li><strong>Commit</strong></li>
+   - Reference issue in commit message
+   - Include co-authorship if collaborative</p><h2 id="Output Format">Output Format</h2>
+Report: issue title, changes made, tests added, verification results
+</code></pre><p><strong>Test:</strong>
+<pre><code class="language-bash">/fix-issue 123
+</code></pre><h3>🎯 Exercise 4: Multi-File Skill Directory</h3><p>Create a complete </code>/review<code> skill with supporting files:</p><p><strong>Directory structure:</strong>
+<pre><code class="language-bash">mkdir -p .claude/skills/review
+touch .claude/skills/review/SKILL.md
+touch .claude/skills/review/checklist.md
+touch .claude/skills/review/template.md
+</code></pre><p><strong>SKILL.md:</strong>
+<pre><code class="language-markdown">---
+name: review
+description: Comprehensive code review. Use before commits or PRs.
+allowed-tools: Read, Grep, Glob, Bash(git *)
+<hr></p><h1>Code Review</h1><p>Load checklist: @checklist.md</p><h2 id="Current Changes">Current Changes</h2>
+!</code>git diff HEAD<code></p><h2 id="Review Process">Review Process</h2>
+<li>Load each changed file</li>
+<li>Check against checklist items</li>
+<li>Note issues by severity (CRITICAL, HIGH, MEDIUM, LOW)</li>
+<li>Provide actionable recommendations</li><h2 id="Output Template">Output Template</h2>
+Use: @template.md
+</code></pre><p><strong>checklist.md:</strong>
+<pre><code class="language-markdown"><h1>Review Checklist</h1><h2 id="Security">Security</h2>
+<li>[ ] No hardcoded secrets</li>
+<li>[ ] Input validation present</li>
+<li>[ ] Proper error handling</li>
+<li>[ ] No SQL injection risks</li><h2 id="Quality">Quality</h2>
+<li>[ ] Functions < 50 lines</li>
+<li>[ ] Files < 800 lines</li>
+<li>[ ] No deep nesting (>4 levels)</li>
+<li>[ ] Clear naming</li><h2 id="Performance">Performance</h2>
+<li>[ ] No N+1 queries</li>
+<li>[ ] Efficient algorithms</li>
+<li>[ ] No memory leaks</li><h2 id="Testing">Testing</h2>
+<li>[ ] Tests for new code</li>
+<li>[ ] Edge cases covered</li>
+<li>[ ] Mocks properly configured</li>
+</code></pre><p><strong>template.md:</strong>
+<pre><code class="language-markdown"><h1>Review Report</h1><h2 id="Files Reviewed">Files Reviewed</h2>
+<li>List each file with severity summary</li><h2 id="Issues Found">Issues Found</h2><p>| Severity | File | Line | Issue | Fix |
+|----------|------|------|-------|-----|</p><h2 id="Summary">Summary</h2>
+<li>Critical issues: X (must fix)</li>
+<li>High issues: Y (should fix)  </li>
+<li>Medium issues: Z (consider)</li>
+<li>Low issues: W (optional)</li><h2 id="Recommendation">Recommendation</h2>
+[Approve / Block / Warn]
+</code></pre><p><strong>Test:</strong>
+<pre><code class="language-bash">/review
+</code></pre><h3>🎯 Exercise 5: User-Only Skill (No Auto-Invocation)</h3><p>Create a </code>/deploy<code> skill that Claude shouldn't trigger automatically:</p><pre><code class="language-markdown">---
+name: deploy
+description: Deploy to production. Only invoke when user explicitly requests deploy.
+disable-model-invocation: true
+allowed-tools: Bash(npm <em>), Bash(git </em>)
+<hr></p><h1>Deploy to Production</h1><h2 id="Pre-flight Checks">Pre-flight Checks</h2>
+<li>Tests passing: !</code>npm test 2>&1 | tail -5<code></li>
+<li>Build succeeds: !</code>npm run build 2>&1 | tail -5<code></li>
+<li>No uncommitted changes: !</code>git status --short<code></li><h2 id="Deploy Steps">Deploy Steps</h2>
+<li>Tag release: !</code>git tag -a v!<code>node -e "console.log(require('./package.json').version)"</code> -m "Release"<code></li>
+<li>Push tag: git push origin --tags</li>
+<li>Trigger CI: npm run deploy:trigger</li><h2 id="Post-deploy">Post-deploy</h2>
+<li>Verify health: curl health endpoint</li>
+<li>Notify team: post to Slack</li><h2 id="Rollback Plan">Rollback Plan</h2>
+If deployment fails:
+<li>Revert to previous tag</li>
+<li>Run rollback script</li>
+<li>Notify team immediately</li>
+</code></pre><p><strong>Test (only works when explicitly invoked):</strong>
+<pre><code class="language-bash">/deploy</p><h1>Claude will NOT auto-invoke this even if you say "let's deploy"</h1>
+<h1>It requires explicit /deploy command</h1>
+</code></pre><h2 id="Best Practices">Best Practices</h2><h3>1. Make Descriptions Specific</h3><li><strong>Bad (Vague)</strong>: "Helps with documents"</li>
+<li><strong>Good (Specific)</strong>: "Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."</li><h3>2. Keep Skills Focused</h3><li>One Skill = one capability</li>
+<li>✅ "PDF form filling"</li>
+<li>❌ "Document processing" (too broad)</li><h3>3. Include Trigger Terms</h3><p>Add keywords in descriptions that match user requests:
+<pre><code class="language-yaml">description: Analyze Excel spreadsheets, generate pivot tables, create charts. Use when working with Excel files, spreadsheets, or .xlsx files.
+</code></pre><h3>4. Keep SKILL.md Under 500 Lines</h3><p>Move detailed reference material to separate files that Claude loads as needed.</p><h3>5. Reference Supporting Files</h3><pre><code class="language-markdown"><h2 id="Additional resources">Additional resources</h2><li>For complete API details, see <a href="reference.md">reference.md</a></li>
+<li>For usage examples, see <a href="examples.md">examples.md</a></li>
+</code></pre><h3>Do's</h3><li>Use clear, descriptive names</li>
+<li>Include comprehensive instructions</li>
+<li>Add concrete examples</li>
+<li>Package related scripts and templates</li>
+<li>Test with real scenarios</li>
+<li>Document dependencies</li><h3>Don'ts</h3><li>Don't create skills for one-time tasks</li>
+<li>Don't duplicate existing functionality</li>
+<li>Don't make skills too broad</li>
+<li>Don't skip the description field</li>
+<li>Don't install skills from untrusted sources without auditing</li><h2 id="Troubleshooting">Troubleshooting</h2><h3>Quick Reference</h3><table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude doesn't use Skill</td>
+<td>Make description more specific with trigger terms</td>
+</tr>
+<tr>
+<td>Skill file not found</td>
+<td>Verify path: </code>~/.claude/skills/name/SKILL.md<code></td>
+</tr>
+<tr>
+<td>YAML errors</td>
+<td>Check </code>---<code> markers, indentation, no tabs</td>
+</tr>
+<tr>
+<td>Skills conflict</td>
+<td>Use distinct trigger terms in descriptions</td>
+</tr>
+<tr>
+<td>Scripts not running</td>
+<td>Check permissions: </code>chmod +x scripts/*.py<code></td>
+</tr>
+<tr>
+<td>Claude doesn't see all skills</td>
+<td>Too many skills; check </code>/context<code> for warnings</td>
+</tr>
+</tbody>
+</table>
+<h3>Skill Not Triggering</h3><p>If Claude doesn't use your skill when expected:</p><li>Check the description includes keywords users would naturally say</li>
+<li>Verify the skill appears when asking "What skills are available?"</li>
+<li>Try rephrasing your request to match the description</li>
+<li>Invoke directly with </code>/skill-name<code> to test</li><h3>Skill Triggers Too Often</h3><p>If Claude uses your skill when you don't want it:</p><li>Make the description more specific</li>
+<li>Add </code>disable-model-invocation: true<code> for manual-only invocation</li><h3>Claude Doesn't See All Skills</h3><p>Skill descriptions are loaded at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). Run </code>/context<code> to check for warnings about excluded skills. Override the budget with the </code>SLASH_COMMAND_TOOL_CHAR_BUDGET<code> environment variable.</p><h2 id="Security Considerations">Security Considerations</h2><p><strong>Only use Skills from trusted sources.</strong> Skills provide Claude with capabilities through instructions and code—a malicious Skill can direct Claude to invoke tools or execute code in harmful ways.</p><p><strong>Key security considerations:</strong></p><li><strong>Audit thoroughly</strong>: Review all files in the Skill directory</li>
+<li><strong>External sources are risky</strong>: Skills that fetch from external URLs can be compromised</li>
+<li><strong>Tool misuse</strong>: Malicious Skills can invoke tools in harmful ways</li>
+<li><strong>Treat like installing software</strong>: Only use Skills from trusted sources</li><h2 id="Skills vs Other Features">Skills vs Other Features</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Invocation</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skills</strong></td>
+<td>Auto or </code>/name<code></td>
+<td>Reusable expertise, workflows</td>
+</tr>
+<tr>
+<td><strong>Slash Commands</strong></td>
+<td>User-initiated </code>/name<code></td>
+<td>Quick shortcuts (merged into skills)</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong></td>
+<td>Auto-delegated</td>
+<td>Isolated task execution</td>
+</tr>
+<tr>
+<td><strong>Memory (CLAUDE.md)</strong></td>
+<td>Always loaded</td>
+<td>Persistent project context</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>Real-time</td>
+<td>External data/service access</td>
+</tr>
+<tr>
+<td><strong>Hooks</strong></td>
+<td>Event-driven</td>
+<td>Automated side effects</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Bundled Skills">Bundled Skills</h2><p>Claude Code ships with several built-in skills that are always available without installation:</p><table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></code>/simplify<code></td>
+<td>Review changed files for reuse, quality, and efficiency; spawns 3 parallel review agents</td>
+</tr>
+<tr>
+<td></code>/batch <instruction><code></td>
+<td>Orchestrate large-scale parallel changes across codebase using git worktrees</td>
+</tr>
+<tr>
+<td></code>/debug [description]<code></td>
+<td>Troubleshoot current session by reading debug log</td>
+</tr>
+<tr>
+<td></code>/loop [interval] <prompt><code></td>
+<td>Run prompt repeatedly on interval (e.g., </code>/loop 5m check the deploy<code>)</td>
+</tr>
+<tr>
+<td></code>/claude-api<code></td>
+<td>Load Claude API/SDK reference; auto-activates on </code>anthropic<code>/</code>@anthropic-ai/sdk<code> imports</td>
+</tr>
+</tbody>
+</table>
+These skills are available out-of-the-box and do not need to be installed or configured. They follow the same SKILL.md format as custom skills.</p><h2 id="Sharing Skills">Sharing Skills</h2><h3>Project Skills (Team Sharing)</h3><li>Create Skill in </code>.claude/skills/<code></li>
+<li>Commit to git</li>
+<li>Team members pull changes — Skills available immediately</li><h3>Personal Skills</h3><pre><code class="language-bash"><h1>Copy to personal directory</h1>
+cp -r my-skill ~/.claude/skills/</p><h1>Make scripts executable</h1>
+chmod +x ~/.claude/skills/my-skill/scripts/*.py
+</code></pre><h3>Plugin Distribution</h3><p>Package skills in a plugin's </code>skills/<code> directory for broader distribution.</p><h2 id="Going Further: A Skill Collection and a Skill Manager">Going Further: A Skill Collection and a Skill Manager</h2><p>Once you start building skills seriously, two things become essential: a library of proven skills and a tool to manage them.</p><p><strong><a href="https://github.com/luongnv89/skills">luongnv89/skills</a></strong> — A collection of skills I use daily across almost all my projects. Highlights include </code>logo-designer<code> (generates project logos on the fly) and </code>ollama-optimizer<code> (tunes local LLM performance for your hardware). Great starting point if you want ready-to-use skills.</p><p><strong><a href="https://github.com/luongnv89/asm">luongnv89/asm</a></strong> — Agent Skill Manager. Handles skill development, duplicate detection, and testing. The </code>asm link` command lets you test a skill in any project without copying files around — essential once you have more than a handful of skills.</p><h2 id="Additional Resources">Additional Resources</h2><li><a href="https://code.claude.com/docs/en/skills">Official Skills Documentation</a></li>
+<li><a href="https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills Architecture Blog</a></li>
+<li><a href="https://github.com/luongnv89/skills">Skills Repository</a> - Collection of ready-to-use skills</li>
+<li><a href="../01-slash-commands/">Slash Commands Guide</a> - User-initiated shortcuts</li>
+<li><a href="../04-subagents/">Subagents Guide</a> - Delegated AI agents</li>
+<li><a href="../02-memory/">Memory Guide</a> - Persistent context</li>
+<li><a href="../05-mcp/">MCP (Model Context Protocol)</a> - Real-time external data</li>
+<li><a href="../06-hooks/">Hooks Guide</a> - Event-driven automation</li></ul>
+</p>
+        </div>
+
+        
+    <div class="nav-buttons">
+      <a href="/content/02-memory.html">← Memory</a>
+      <a href="/content/04-subagents.html">Subagents →</a>
+    </div>
+  
+      </article>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+  </script>
+</body>
+</html>

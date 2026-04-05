@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP协议规范 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../05-mcp.html"><i class="fas fa-server"></i> MCP服务器</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../05-mcp.html">MCP服务器</a> &gt;
+                <span>协议规范</span>
+            </nav>
+            
+            <h1><i class="fas fa-file-contract"></i> MCP协议规范</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 MCP 官方规范文档整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方规范</p>
+            </div>
+
+            <section id="overview">
+                <h2>协议概述</h2>
+                <p>MCP 协议定义了客户端和服务器之间的通信规范，包括消息格式、传输方式、能力协商等。</p>
+                
+                <h3>协议版本</h3>
+                <pre><code class="language-text">当前版本: 2024-11-05
+协议标识: mcp/1.0</code></pre>
+            </section>
+
+            <section id="transport">
+                <h2>传输层</h2>
+                
+                <h3>支持的传输方式</h3>
+                <table class="info-table">
+                    <thead>
+                        <tr>
+                            <th>传输方式</th>
+                            <th>说明</th>
+                            <th>适用场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>stdio</strong></td>
+                            <td>标准输入输出</td>
+                            <td>本地进程通信</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTTP</strong></td>
+                            <td>HTTP 请求响应</td>
+                            <td>远程服务</td>
+                        </tr>
+                        <tr>
+                            <td><strong>WebSocket</strong></td>
+                            <td>双向实时通信</td>
+                            <td>实时交互</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>stdio 传输</h3>
+                <pre><code class="language-json">{
+  "transport": {
+    "type": "stdio",
+    "command": "mcp-server-postgres",
+    "args": ["--port", "5432"]
+  }
+}</code></pre>
+
+                <h3>HTTP 传输</h3>
+                <pre><code class="language-json">{
+  "transport": {
+    "type": "http",
+    "url": "http://localhost:3000/mcp",
+    "headers": {
+      "Authorization": "Bearer token"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="messages">
+                <h2>消息格式</h2>
+                
+                <h3>请求消息</h3>
+                <pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": "request-001",
+  "method": "tools/call",
+  "params": {
+    "name": "query",
+    "arguments": {
+      "sql": "SELECT * FROM users"
+    }
+  }
+}</code></pre>
+
+                <h3>响应消息</h3>
+                <pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": "request-001",
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "[{\"id\": 1, \"name\": \"Alice\"}]"
+      }
+    ]
+  }
+}</code></pre>
+
+                <h3>错误消息</h3>
+                <pre><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": "request-001",
+  "error": {
+    "code": -32600,
+    "message": "Invalid Request",
+    "data": {
+      "details": "Missing required parameter: sql"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="capabilities">
+                <h2>能力协商</h2>
+                
+                <h3>初始化握手</h3>
+                <pre><code class="language-text">客户端                          服务器
+   │                              │
+   │──── initialize ────────────>│
+   │                              │
+   │<─── initializeResult ───────│
+   │                              │
+   │──── initialized ───────────>│
+   │                              │</code></pre>
+
+                <h3>客户端能力</h3>
+                <pre><code class="language-json">{
+  "capabilities": {
+    "experimental": {},
+    "roots": {
+      "listChanged": true
+    },
+    "sampling": {}
+  }
+}</code></pre>
+
+                <h3>服务器能力</h3>
+                <pre><code class="language-json">{
+  "capabilities": {
+    "experimental": {},
+    "resources": {
+      "subscribe": true,
+      "listChanged": true
+    },
+    "tools": {},
+    "prompts": {}
+  }
+}</code></pre>
+            </section>
+
+            <section id="resources">
+                <h2>资源规范</h2>
+                
+                <h3>资源列表</h3>
+                <pre><code class="language-json">// 请求
+{
+  "method": "resources/list"
+}
+
+// 响应
+{
+  "result": {
+    "resources": [
+      {
+        "uri": "postgres://users",
+        "name": "Users Table",
+        "description": "用户表",
+        "mimeType": "application/json"
+      }
+    ]
+  }
+}</code></pre>
+
+                <h3>资源读取</h3>
+                <pre><code class="language-json">// 请求
+{
+  "method": "resources/read",
+  "params": {
+    "uri": "postgres://users"
+  }
+}
+
+// 响应
+{
+  "result": {
+    "contents": [
+      {
+        "uri": "postgres://users",
+        "mimeType": "application/json",
+        "text": "[{\"id\": 1, \"name\": \"Alice\"}]"
+      }
+    ]
+  }
+}</code></pre>
+            </section>
+
+            <section id="tools">
+                <h2>工具规范</h2>
+                
+                <h3>工具列表</h3>
+                <pre><code class="language-json">// 请求
+{
+  "method": "tools/list"
+}
+
+// 响应
+{
+  "result": {
+    "tools": [
+      {
+        "name": "query",
+        "description": "执行 SQL 查询",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string",
+              "description": "SQL 查询语句"
+            }
+          },
+          "required": ["sql"]
+        }
+      }
+    ]
+  }
+}</code></pre>
+
+                <h3>工具调用</h3>
+                <pre><code class="language-json">// 请求
+{
+  "method": "tools/call",
+  "params": {
+    "name": "query",
+    "arguments": {
+      "sql": "SELECT * FROM users LIMIT 10"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="prompts">
+                <h2>提示词规范</h2>
+                
+                <h3>提示词列表</h3>
+                <pre><code class="language-json">{
+  "result": {
+    "prompts": [
+      {
+        "name": "analyze-table",
+        "description": "分析数据库表结构",
+        "arguments": [
+          {
+            "name": "table",
+            "description": "表名",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+                <h3>获取提示词</h3>
+                <pre><code class="language-json">// 请求
+{
+  "method": "prompts/get",
+  "params": {
+    "name": "analyze-table",
+    "arguments": {
+      "table": "users"
+    }
+  }
+}
+
+// 响应
+{
+  "result": {
+    "description": "分析 users 表",
+    "messages": [
+      {
+        "role": "user",
+        "content": {
+          "type": "text",
+          "text": "请分析 users 表的结构和数据..."
+        }
+      }
+    ]
+  }
+}</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://modelcontextprotocol.io/specification" target="_blank">MCP 规范文档</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="concepts.html" class="prev"><i class="fas fa-arrow-left"></i> MCP概念详解</a>
+                <a href="../integration/database.html" class="next">数据库集成 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

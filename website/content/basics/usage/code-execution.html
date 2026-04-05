@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码执行详解 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="../installation/overview.html" class="active"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../../01-slash-commands.html"><i class="fas fa-cogs"></i> 高级技巧</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">首页</a> &gt; <a href="../installation/overview.html">基础教程</a> &gt; <a href="getting-started.html">基本使用</a> &gt; <span>代码执行</span>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#intro">概述</a></li>
+                    <li><a href="#bash">Bash 命令执行</a></li>
+                    <li><a href="#run">运行代码</a></li>
+                    <li><a href="#scripts">脚本执行</a></li>
+                    <li><a href="#safety">安全机制</a></li>
+                    <li><a href="#best-practices">最佳实践</a></li>
+                </ul>
+            </aside>
+
+            <article class="content">
+                <h1><i class="fas fa-play-circle"></i> 代码执行详解</h1>
+                
+                <div class="source-info">
+                    <span class="reliability reliability-a">可靠性: A</span>
+                    <span class="source">来源: Claude Code 官方文档</span>
+                </div>
+
+                <p class="meta">
+                    <i class="fas fa-clock"></i> 更新时间: 2025-04-04
+                    <i class="fas fa-user"></i> 作者: Claude Code 教程团队
+                </p>
+
+                <section id="intro">
+                    <h2>概述</h2>
+                    <p>Claude Code 可以在你的系统上执行命令和代码，这是它区别于普通 AI 助手的关键能力之一。通过 Bash 工具，Claude 可以运行 shell 命令、执行脚本、管理进程等。</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> <strong>核心能力：</strong>执行构建命令、运行测试、启动开发服务器、安装依赖、Git 操作等。</p>
+                    </div>
+                </section>
+
+                <section id="bash">
+                    <h2>Bash 命令执行</h2>
+                    <p>Claude Code 通过 Bash 工具执行 shell 命令，支持所有常见的命令行操作。</p>
+                    
+                    <h3>基本用法</h3>
+                    <pre><code class="language-bash"># 自然语言方式
+> 运行 npm install
+> 执行 npm test
+> 启动开发服务器</code></pre>
+
+                    <h3>常用命令示例</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>类别</th>
+                                <th>命令示例</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>包管理</td>
+                                <td><code>npm install</code>, <code>pip install</code></td>
+                                <td>安装项目依赖</td>
+                            </tr>
+                            <tr>
+                                <td>构建</td>
+                                <td><code>npm run build</code>, <code>make</code></td>
+                                <td>构建项目</td>
+                            </tr>
+                            <tr>
+                                <td>测试</td>
+                                <td><code>npm test</code>, <code>pytest</code></td>
+                                <td>运行测试套件</td>
+                            </tr>
+                            <tr>
+                                <td>开发</td>
+                                <td><code>npm run dev</code>, <code>python app.py</code></td>
+                                <td>启动开发服务器</td>
+                            </tr>
+                            <tr>
+                                <td>Git</td>
+                                <td><code>git status</code>, <code>git commit</code></td>
+                                <td>版本控制操作</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>命令权限控制</h3>
+                    <p>每次执行命令前，Claude 会请求你的确认。你可以：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>允许</strong> - 执行该命令</li>
+                        <li><i class="fas fa-times"></i> <strong>拒绝</strong> - 取消执行</li>
+                        <li><i class="fas fa-edit"></i> <strong>修改</strong> - 编辑命令后再执行</li>
+                    </ul>
+                </section>
+
+                <section id="run">
+                    <h2>运行代码</h2>
+                    <p>Claude Code 可以直接运行各种编程语言的代码片段。</p>
+                    
+                    <h3>支持的运行方式</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fab fa-node-js"></i> Node.js</h3>
+                            <pre><code class="language-bash">> 运行这段 JavaScript 代码
+node -e "console.log('Hello, World!')"</code></pre>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fab fa-python"></i> Python</h3>
+                            <pre><code class="language-bash">> 执行这个 Python 脚本
+python3 script.py</code></pre>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-terminal"></i> Shell</h3>
+                            <pre><code class="language-bash">> 运行这个 shell 脚本
+bash deploy.sh</code></pre>
+                        </div>
+                    </div>
+
+                    <h3>交互式命令</h3>
+                    <p>对于需要用户输入的交互式命令，Claude Code 会提示你输入：</p>
+                    <pre><code class="language-bash"># 交互式命令示例
+> 运行 npm init
+# Claude 会提示你输入包名、版本等信息</code></pre>
+                </section>
+
+                <section id="scripts">
+                    <h2>脚本执行</h2>
+                    <p>Claude Code 可以创建并执行脚本文件。</p>
+                    
+                    <h3>创建并运行脚本</h3>
+                    <pre><code class="language-bash"># 让 Claude 创建并运行脚本
+> 创建一个部署脚本并执行它
+> 写一个数据迁移脚本然后运行</code></pre>
+
+                    <h3>脚本模板</h3>
+                    <pre><code class="language-bash">#!/bin/bash
+# Claude Code 生成的部署脚本示例
+
+echo "开始部署..."
+
+# 安装依赖
+npm install --production
+
+# 构建项目
+npm run build
+
+# 运行测试
+npm test
+
+# 部署到服务器
+rsync -avz dist/ user@server:/var/www/app/
+
+echo "部署完成!"</code></pre>
+                </section>
+
+                <section id="safety">
+                    <h2>安全机制</h2>
+                    <p>Claude Code 内置了多层安全机制，确保命令执行的安全性。</p>
+                    
+                    <h3>权限确认</h3>
+                    <div class="warning-box">
+                        <p><i class="fas fa-shield-alt"></i> <strong>默认行为：</strong>所有命令执行前都需要用户确认，防止意外操作。</p>
+                    </div>
+
+                    <h3>自动接受模式</h3>
+                    <p>按 <code>Shift+Tab</code> 可以切换自动接受模式：</p>
+                    <pre><code class="language-bash"># 自动接受模式
+# Claude 会自动执行命令，但仍会显示操作内容</code></pre>
+
+                    <h3>权限配置</h3>
+                    <p>在 <code>.claude/settings.json</code> 中配置命令权限：</p>
+                    <pre><code class="language-json">{
+  "permissions": {
+    "allowedTools": ["Bash(git:*)", "Bash(npm:*)"],
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(sudo:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}</code></pre>
+
+                    <h3>危险命令检测</h3>
+                    <p>Claude Code 会自动检测并警告危险命令：</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>危险命令</th>
+                                <th>风险</th>
+                                <th>建议</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>rm -rf /</code></td>
+                                <td>删除系统文件</td>
+                                <td>永远不要执行</td>
+                            </tr>
+                            <tr>
+                                <td><code>sudo ...</code></td>
+                                <td>提权操作</td>
+                                <td>谨慎使用</td>
+                            </tr>
+                            <tr>
+                                <td><code>git push --force</code></td>
+                                <td>强制推送</td>
+                                <td>确认后再执行</td>
+                            </tr>
+                            <tr>
+                                <td><code>DROP DATABASE</code></td>
+                                <td>删除数据库</td>
+                                <td>备份后执行</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="best-practices">
+                    <h2>最佳实践</h2>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-eye"></i> 审查命令</h3>
+                            <p>执行前仔细审查 Claude 生成的命令，确保理解其作用。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-code-branch"></i> 提交代码</h3>
+                            <p>执行可能修改文件的命令前，先提交当前更改。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-database"></i> 备份数据</h3>
+                            <p>执行数据库操作前，确保有备份。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-flask"></i> 测试环境</h3>
+                            <p>先在测试环境验证，再在生产环境执行。</p>
+                        </div>
+                    </div>
+
+                    <h3>常见问题</h3>
+                    <div class="problem">
+                        <h3><i class="fas fa-question-circle"></i> 命令执行超时？</h3>
+                        <p>对于长时间运行的命令，Claude 会显示进度信息。你可以：</p>
+                        <pre><code class="language-bash"># 使用后台运行
+> 在后台启动开发服务器
+
+# 或者使用 nohup
+nohup npm run dev &</code></pre>
+                    </div>
+
+                    <div class="problem">
+                        <h3><i class="fas fa-question-circle"></i> 命令找不到？</h3>
+                        <p>确保命令已安装并在 PATH 中。Claude 可以帮你安装：</p>
+                        <pre><code class="language-bash"># 安装缺失的工具
+> 安装 ripgrep
+brew install ripgrep  # macOS
+apt install ripgrep   # Linux</code></pre>
+                    </div>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="file-operations.html" class="prev"><i class="fas fa-arrow-left"></i> 上一页：文件操作</a>
+                    <a href="session-management.html" class="next">下一页：会话管理 <i class="fas fa-arrow-right"></i></a>
+                </nav>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Claude Code 中文教程. 基于 Claude Code 官方文档编写.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>

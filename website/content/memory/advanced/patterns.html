@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记忆模式 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../02-memory.html"><i class="fas fa-brain"></i> 记忆系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../02-memory.html">记忆系统</a> &gt;
+                <span>记忆模式</span>
+            </nav>
+            
+            <h1><i class="fas fa-project-diagram"></i> 记忆模式</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 社区最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区验证</p>
+            </div>
+
+            <section id="patterns-overview">
+                <h2>记忆模式概述</h2>
+                <p>记忆模式是一套经过验证的记忆使用方法，帮助用户更有效地组织和管理记忆。</p>
+                
+                <h3>常见模式</h3>
+                <ul>
+                    <li><strong>项目配置模式</strong>：存储项目级配置信息</li>
+                    <li><strong>知识库模式</strong>：构建个人知识库</li>
+                    <li><strong>决策记录模式</strong>：记录重要决策及其原因</li>
+                    <li><strong>问题解决模式</strong>：保存解决方案供复用</li>
+                </ul>
+            </section>
+
+            <section id="project-config-pattern">
+                <h2>项目配置模式</h2>
+                
+                <h3>模式描述</h3>
+                <p>将项目相关的配置信息集中存储在项目记忆中，便于 Claude 理解项目背景。</p>
+                
+                <h3>实现方式</h3>
+                <pre><code class="language-bash"># 项目初始化时创建配置记忆
+> /memory save --type project --tags "config,init" "项目名称: my-app"
+> /memory save --type project --tags "config,tech" "技术栈: React 18 + TypeScript + Vite"
+> /memory save --type project --tags "config,build" "构建工具: Vite"
+> /memory save --type project --tags "config,test" "测试框架: Vitest + Testing Library"
+
+# 目录结构记忆
+> /memory save --type project --tags "structure" "源码目录: src/"
+> /memory save --type project --tags "structure" "组件目录: src/components/"
+> /memory save --type project --tags "structure" "页面目录: src/pages/"
+
+# API 配置记忆
+> /memory save --type project --tags "api" "API 基础地址: https://api.example.com/v1"
+> /memory save --type project --tags "api" "认证方式: JWT Bearer Token"</code></pre>
+
+                <h3>使用效果</h3>
+                <pre><code class="language-bash"># Claude 会自动使用这些记忆
+> 创建一个新组件
+# Claude 知道使用 TypeScript 和 React 18，放在 src/components/
+
+> 调用用户 API
+# Claude 知道 API 基础地址和认证方式</code></pre>
+            </section>
+
+            <section id="knowledge-base-pattern">
+                <h2>知识库模式</h2>
+                
+                <h3>模式描述</h3>
+                <p>构建个人知识库，存储通用知识和最佳实践。</p>
+                
+                <h3>实现方式</h3>
+                <pre><code class="language-bash"># React 最佳实践
+> /memory save --type global --tags "react,best-practices" "使用函数组件和 Hooks"
+> /memory save --type global --tags "react,best-practices" "状态提升到最近公共父组件"
+> /memory save --type global --tags "react,best-practices" "使用 React.memo 优化性能"
+
+# TypeScript 最佳实践
+> /memory save --type global --tags "typescript,best-practices" "优先使用 interface 定义类型"
+> /memory save --type global --tags "typescript,best-practices" "避免使用 any，使用 unknown"
+
+# 安全最佳实践
+> /memory save --type global --tags "security" "不在前端存储敏感信息"
+> /memory save --type global --tags "security" "使用 HTTPS 传输敏感数据"
+> /memory save --type global --tags "security" "对用户输入进行验证和清理"</code></pre>
+
+                <h3>知识库结构</h3>
+                <pre><code class="language-text">知识库
+├── 技术知识
+│   ├── React
+│   ├── TypeScript
+│   └── Node.js
+├── 最佳实践
+│   ├── 代码规范
+│   ├── 安全实践
+│   └── 性能优化
+└── 解决方案
+    ├── 常见问题
+    └── Bug 修复</code></pre>
+            </section>
+
+            <section id="decision-record-pattern">
+                <h2>决策记录模式</h2>
+                
+                <h3>模式描述</h3>
+                <p>记录重要的技术决策及其原因，便于后续参考和团队协作。</p>
+                
+                <h3>实现方式</h3>
+                <pre><code class="language-bash"># 架构决策记录 (ADR)
+> /memory save --type project --tags "adr,architecture" "
+决策: 使用微前端架构
+原因: 支持多团队独立开发，技术栈灵活
+日期: 2026-04-04
+影响: 需要引入 qiankun 框架
+"
+
+# 技术选型决策
+> /memory save --type project --tags "adr,tech-choice" "
+决策: 选择 Zustand 作为状态管理
+原因: 轻量级，API 简单，TypeScript 支持好
+替代方案: Redux (太重), MobX (学习曲线陡)
+日期: 2026-04-04
+"
+
+# 样式方案决策
+> /memory save --type project --tags "adr,style" "
+决策: 使用 Tailwind CSS + CSS Modules
+原因: Tailwind 快速开发，CSS Modules 处理复杂样式
+日期: 2026-04-04
+"</code></pre>
+
+                <h3>决策记录模板</h3>
+                <pre><code class="language-markdown"># 决策记录模板
+
+## 决策内容
+[简述决策]
+
+## 背景
+[为什么需要做这个决策]
+
+## 考虑的方案
+1. 方案 A: [描述]
+2. 方案 B: [描述]
+3. 方案 C: [描述]
+
+## 决策结果
+[选择的方案及原因]
+
+## 影响
+[这个决策带来的影响]</code></pre>
+            </section>
+
+            <section id="solution-pattern">
+                <h2>问题解决模式</h2>
+                
+                <h3>模式描述</h3>
+                <p>保存遇到的问题和解决方案，避免重复解决相同问题。</p>
+                
+                <h3>实现方式</h3>
+                <pre><code class="language-bash"># 问题解决记录
+> /memory save --type global --tags "solution,cors" "
+问题: CORS 错误
+场景: 前端调用后端 API 时出现跨域错误
+解决方案: 在 vite.config.ts 中配置 proxy
+代码:
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
+  }
+"
+
+# Bug 修复记录
+> /memory save --type project --tags "solution,bug" "
+问题: React useEffect 无限循环
+原因: 依赖数组中使用了每次渲染都会变化的对象
+解决方案: 使用 useMemo 缓存对象，或提取到组件外部
+"
+
+# 性能问题记录
+> /memory save --type global --tags "solution,performance" "
+问题: React 组件渲染慢
+诊断: 使用 React DevTools Profiler 分析
+解决方案: 
+1. 使用 React.memo 避免不必要渲染
+2. 使用 useMemo/useCallback 缓存计算结果
+3. 虚拟化长列表
+"</code></pre>
+            </section>
+
+            <section id="context-pattern">
+                <h2>上下文模式</h2>
+                
+                <h3>模式描述</h3>
+                <p>为特定任务创建上下文记忆，提高 Claude 的理解能力。</p>
+                
+                <h3>实现方式</h3>
+                <pre><code class="language-bash"># 任务上下文
+> /memory save --type session --tags "context,task" "
+当前任务: 重构用户模块
+目标: 将 Class 组件改为函数组件
+进度: 已完成 50%
+下一步: 重构 UserProfile 组件
+"
+
+# 代码上下文
+> /memory save --type session --tags "context,code" "
+正在处理的文件: src/components/UserProfile.tsx
+相关文件: src/hooks/useUser.ts, src/types/user.ts
+注意事项: 保持 API 兼容性
+"</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/trending/claude-howto" target="_blank">Claude Code 教程项目</a> <span class="reliability reliability-B">B</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../usage/managing.html" class="prev"><i class="fas fa-arrow-left"></i> 管理记忆详解</a>
+                <a href="best-practices.html" class="next">最佳实践 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

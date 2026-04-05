@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作流技巧 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">技巧系列</a> &gt;
+        <span>工作流技巧</span>
+    </nav>
+
+    <article class="content">
+        <h1>工作流技巧</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 官方文档 + 社区经验</span>
+        </div>
+
+        <section>
+            <h2>优化工作流程</h2>
+            <p>通过合理配置和使用技巧，可以显著提升 Claude Code 的使用效率。</p>
+        </section>
+
+        <section>
+            <h2>快捷键和命令</h2>
+            
+            <table class="shortcuts-table">
+                <thead>
+                    <tr>
+                        <th>命令</th>
+                        <th>功能</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/help</code></td>
+                        <td>显示帮助信息</td>
+                    </tr>
+                    <tr>
+                        <td><code>/clear</code></td>
+                        <td>清除对话历史</td>
+                    </tr>
+                    <tr>
+                        <td><code>/compact</code></td>
+                        <td>压缩对话历史</td>
+                    </tr>
+                    <tr>
+                        <td><code>/config</code></td>
+                        <td>查看/修改配置</td>
+                    </tr>
+                    <tr>
+                        <td><code>/memory</code></td>
+                        <td>管理记忆</td>
+                    </tr>
+                    <tr>
+                        <td><code>Ctrl+C</code></td>
+                        <td>中断当前操作</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>效率提升技巧</h2>
+            
+            <h3>1. 使用 CLAUDE.md</h3>
+            <p>在项目根目录创建 CLAUDE.md 文件，提供项目上下文：</p>
+            <pre><code class="language-markdown"># 项目上下文
+
+## 技术栈
+- React + TypeScript
+- Tailwind CSS
+- Prisma + PostgreSQL
+
+## 编码规范
+- 使用函数式组件
+- 遵循 ESLint 配置
+- 组件命名 PascalCase</code></pre>
+
+            <h3>2. 配置 .claudeignore</h3>
+            <pre><code class="language-plaintext"># 排除不需要的文件
+node_modules/
+dist/
+*.min.js
+.env*</code></pre>
+
+            <h3>3. 利用记忆功能</h3>
+            <pre><code class="language-bash"># 保存重要信息到记忆
+"记住：项目使用 PostgreSQL 数据库，连接字符串在 .env 中"
+
+# 查看记忆
+/memory list</code></pre>
+
+            <h3>4. 创建常用 Skills</h3>
+            <pre><code class="language-yaml"># skills/code-review/skill.yaml
+id: code-review
+name: Code Review
+triggers:
+  - type: command
+    value: /review</code></pre>
+        </section>
+
+        <section>
+            <h2>常见工作流</h2>
+            
+            <h3>功能开发工作流</h3>
+            <pre><code class="language-plaintext">1. /compact          # 清理上下文
+2. 描述需求           # 详细说明功能
+3. "创建功能分支"     # Git 操作
+4. 编写代码           # AI 辅助
+5. "运行测试"         # 验证功能
+6. "创建 PR"          # 提交审查</code></pre>
+
+            <h3>问题排查工作流</h3>
+            <pre><code class="language-plaintext">1. 描述问题现象
+2. 提供错误信息
+3. "分析可能的原因"
+4. "提供解决方案"
+5. "实施修复"
+6. "验证修复结果"</code></pre>
+        </section>
+
+        <nav class="page-nav">
+            <a href="prompt.html" class="prev">← 上一页：提示词技巧</a>
+            <a href="../debugging/common.html" class="next">下一页：常见问题排查 →</a>
+        </nav>
+    </article>
+</body>
+</html>

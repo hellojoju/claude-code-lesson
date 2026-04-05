@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI 入口解析 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro/overview.html">源码解析</a> &gt;
+        <span>CLI 入口解析</span>
+    </nav>
+
+    <article class="content">
+        <h1>CLI 入口解析</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-b">可靠性: B</span>
+            <span class="source">来源: Claude Code 行为分析 + 社区研究</span>
+        </div>
+
+        <section>
+            <h2>CLI 架构概述</h2>
+            <p>CLI（命令行界面）是 Claude Code 的入口点，负责解析用户输入、路由命令、管理会话生命周期。本节深入分析 CLI 的设计模式和实现原理。</p>
+        </section>
+
+        <section>
+            <h2>入口点分析</h2>
+            
+            <h3>启动流程</h3>
+            <pre><code class="language-plaintext">claude 命令执行
+    │
+    ▼
+┌─────────────────┐
+│  bin/claude     │ Shell 脚本入口
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  cli/index.ts   │ TypeScript 入口
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  bootstrap()    │ 初始化配置
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  parseArgs()    │ 解析命令行参数
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  createCLI()    │ 创建 CLI 实例
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  runREPL()      │ 启动交互式界面
+└─────────────────┘</code></pre>
+
+            <h3>推测的入口代码结构</h3>
+            <pre><code class="language-typescript">// cli/index.ts (推测结构)
+
+import { createCLI } from './cli';
+import { loadConfig } from '../utils/config';
+import { setupLogger } from '../utils/logger';
+import { checkPermissions } from '../utils/permissions';
+
+async function main(): Promise&lt;void&gt; {
+    // 1. 全局错误处理
+    process.on('uncaughtException', handleError);
+    process.on('unhandledRejection', handleRejection);
+
+    // 2. 加载配置
+    const config = await loadConfig();
+    
+    // 3. 设置日志
+    const logger = setupLogger(config.logLevel);
+    
+    // 4. 检查权限
+    await checkPermissions(config.permissions);
+    
+    // 5. 创建 CLI 实例
+    const cli = await createCLI(config);
+    
+    // 6. 解析参数并执行
+    const args = parseArgs(process.argv.slice(2));
+    await cli.run(args);
+}
+
+main().catch(exitOnError);</code></pre>
+        </section>
+
+        <section>
+            <h2>命令解析系统</h2>
+            
+            <h3>命令类型</h3>
+            <pre><code class="language-typescript">// 推测的命令类型定义
+interface Command {
+    name: string;
+    aliases?: string[];
+    description: string;
+    usage?: string;
+    options?: Option[];
+    subCommands?: Command[];
+    handler: CommandHandler;
+    middleware?: Middleware[];
+}
+
+interface Option {
+    name: string;
+    alias?: string;
+    type: 'string' | 'boolean' | 'number' | 'array';
+    description: string;
+    default?: any;
+    required?: boolean;
+}
+
+type CommandHandler = (context: CommandContext) => Promise&lt;void&gt;;
+
+interface CommandContext {
+    args: ParsedArgs;
+    options: Record&lt;string, any&gt;;
+    config: Config;
+    logger: Logger;
+    session: Session;
+}</code></pre>
+
+            <h3>命令注册示例</h3>
+            <pre><code class="language-typescript">// 推测的命令注册实现
+class CommandRegistry {
+    private commands: Map&lt;string, Command&gt; = new Map();
+    private aliases: Map&lt;string, string&gt; = new Map();
+
+    register(command: Command): void {
+        this.commands.set(command.name, command);
+        
+        // 注册别名
+        if (command.aliases) {
+            for (const alias of command.aliases) {
+                this.aliases.set(alias, command.name);
+            }
+        }
+    }
+
+    resolve(name: string): Command | undefined {
+        // 先查找命令名
+        const command = this.commands.get(name);
+        if (command) return command;
+        
+        // 再查找别名
+        const realName = this.aliases.get(name);
+        return realName ? this.commands.get(realName) : undefined;
+    }
+
+    parse(input: string[]): ParsedCommand {
+        const [name, ...args] = input;
+        const command = this.resolve(name);
+        
+        if (!command) {
+            throw new UnknownCommandError(name);
+        }
+
+        return {
+            command,
+            args: this.parseArgs(args, command.options)
+        };
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>交互式界面 (REPL)</h2>
+            
+            <h3>REPL 架构</h3>
+            <pre><code class="language-typescript">// 推测的 REPL 实现
+import * as readline from 'readline';
+
+class REPL {
+    private rl: readline.Interface;
+    private history: string[] = [];
+    private completer: Completer;
+    private highlighter: Highlighter;
+
+    constructor(private cli: CLI) {
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: true,
+            historySize: 1000,
+            removeHistoryDuplicates: true
+        });
+
+        this.setupEventHandlers();
+    }
+
+    private setupEventHandlers(): void {
+        // 处理输入
+        this.rl.on('line', async (input) => {
+            await this.handleInput(input);
+        });
+
+        // 处理关闭
+        this.rl.on('close', () => {
+            this.cleanup();
+            process.exit(0);
+        });
+
+        // 处理中断 (Ctrl+C)
+        process.on('SIGINT', () => {
+            this.handleInterrupt();
+        });
+    }
+
+    async start(): Promise&lt;void&gt; {
+        this.showWelcome();
+        this.rl.prompt();
+    }
+
+    private async handleInput(input: string): Promise&lt;void&gt; {
+        const trimmed = input.trim();
+        
+        if (!trimmed) {
+            this.rl.prompt();
+            return;
+        }
+
+        // 添加到历史
+        this.history.push(trimmed);
+
+        try {
+            // 检查是否是斜杠命令
+            if (trimmed.startsWith('/')) {
+                await this.handleSlashCommand(trimmed);
+            } else {
+                // 作为自然语言处理
+                await this.handleNaturalLanguage(trimmed);
+            }
+        } catch (error) {
+            this.showError(error);
+        }
+
+        this.rl.prompt();
+    }
+
+    private async handleSlashCommand(input: string): Promise&lt;void&gt; {
+        const [command, ...args] = input.slice(1).split(/\s+/);
+        
+        switch (command) {
+            case 'help':
+                this.showHelp();
+                break;
+            case 'clear':
+                this.clearScreen();
+                break;
+            case 'exit':
+            case 'quit':
+                this.rl.close();
+                break;
+            case 'config':
+                await this.handleConfigCommand(args);
+                break;
+            case 'memory':
+                await this.handleMemoryCommand(args);
+                break;
+            default:
+                await this.cli.executeCommand(command, args);
+        }
+    }
+}</code></pre>
+
+            <h3>自动补全实现</h3>
+            <pre><code class="language-typescript">// 推测的自动补全实现
+class Completer {
+    constructor(
+        private commandRegistry: CommandRegistry,
+        private fileSystem: FileSystem
+    ) {}
+
+    async complete(input: string): Promise&lt;[string[], string]&gt; {
+        // 斜杠命令补全
+        if (input.startsWith('/')) {
+            return this.completeCommand(input);
+        }
+
+        // 文件路径补全
+        if (this.looksLikePath(input)) {
+            return this.completePath(input);
+        }
+
+        // 上下文相关补全
+        return this.completeContext(input);
+    }
+
+    private completeCommand(input: string): [string[], string] {
+        const partial = input.slice(1);
+        const commands = this.commandRegistry.getAll();
+        
+        const matches = commands
+            .filter(cmd => cmd.name.startsWith(partial))
+            .map(cmd => `/${cmd.name}`);
+
+        return [matches, partial];
+    }
+
+    private async completePath(input: string): Promise&lt;[string[], string]&gt; {
+        const lastSlash = input.lastIndexOf('/');
+        const dir = lastSlash &gt;= 0 ? input.slice(0, lastSlash) : '.';
+        const prefix = lastSlash &gt;= 0 ? input.slice(lastSlash + 1) : input;
+
+        const files = await this.fileSystem.readdir(dir);
+        const matches = files
+            .filter(f => f.startsWith(prefix))
+            .map(f => {
+                const fullPath = dir === '.' ? f : `${dir}/${f}`;
+                return fullPath;
+            });
+
+        return [matches, prefix];
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>输出格式化</h2>
+            
+            <h3>输出类型</h3>
+            <pre><code class="language-typescript">// 推测的输出格式化实现
+interface OutputFormatter {
+    formatText(text: string): string;
+    formatCode(code: string, language: string): string;
+    formatTable(data: any[], columns: string[]): string;
+    formatError(error: Error): string;
+    formatProgress(current: number, total: number): string;
+}
+
+class TerminalFormatter implements OutputFormatter {
+    private colors = {
+        reset: '\x1b[0m',
+        bold: '\x1b[1m',
+        dim: '\x1b[2m',
+        green: '\x1b[32m',
+        yellow: '\x1b[33m',
+        blue: '\x1b[34m',
+        red: '\x1b[31m',
+        cyan: '\x1b[36m'
+    };
+
+    formatText(text: string): string {
+        // 处理 Markdown 格式
+        return text
+            .replace(/\*\*(.+?)\*\*/g, `${this.colors.bold}$1${this.colors.reset}`)
+            .replace(/\*(.+?)\*/g, `${this.colors.cyan}$1${this.colors.reset}`)
+            .replace(/`(.+?)`/g, `${this.colors.yellow}$1${this.colors.reset}`);
+    }
+
+    formatCode(code: string, language: string): string {
+        const lines = code.split('\n');
+        const maxLineNum = lines.length.toString().length;
+        
+        return lines.map((line, i) => {
+            const lineNum = (i + 1).toString().padStart(maxLineNum);
+            return `${this.colors.dim}${lineNum}│${this.colors.reset} ${line}`;
+        }).join('\n');
+    }
+
+    formatTable(data: any[], columns: string[]): string {
+        const widths = columns.map(col => 
+            Math.max(col.length, ...data.map(row => String(row[col]).length))
+        );
+
+        const header = columns.map((col, i) => 
+            this.colors.bold + col.padEnd(widths[i]) + this.colors.reset
+        ).join(' │ ');
+
+        const separator = widths.map(w => '─'.repeat(w)).join('─┼─');
+
+        const rows = data.map(row => 
+            columns.map((col, i) => String(row[col]).padEnd(widths[i])).join(' │ ')
+        );
+
+        return [header, separator, ...rows].join('\n');
+    }
+
+    formatProgress(current: number, total: number): string {
+        const percent = Math.round((current / total) * 100);
+        const filled = Math.round(percent / 2);
+        const empty = 50 - filled;
+        
+        const bar = `${'█'.repeat(filled)}${'░'.repeat(empty)}`;
+        return `${this.colors.cyan}${bar}${this.colors.reset} ${percent}%`;
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>会话管理</h2>
+            
+            <h3>会话生命周期</h3>
+            <pre><code class="language-typescript">// 推测的会话管理实现
+class SessionManager {
+    private currentSession: Session | null = null;
+    private sessions: Map&lt;string, Session&gt; = new Map();
+
+    async createSession(options: SessionOptions): Promise&lt;Session&gt; {
+        const session: Session = {
+            id: generateId(),
+            createdAt: Date.now(),
+            messages: [],
+            context: {
+                files: new Map(),
+                variables: new Map()
+            },
+            config: options.config
+        };
+
+        this.sessions.set(session.id, session);
+        this.currentSession = session;
+
+        // 持久化会话
+        await this.persistSession(session);
+
+        return session;
+    }
+
+    async loadSession(sessionId: string): Promise&lt;Session&gt; {
+        const session = await this.readSessionFromDisk(sessionId);
+        if (!session) {
+            throw new SessionNotFoundError(sessionId);
+        }
+
+        this.sessions.set(session.id, session);
+        this.currentSession = session;
+
+        return session;
+    }
+
+    async saveSession(): Promise&lt;void&gt; {
+        if (!this.currentSession) return;
+        await this.persistSession(this.currentSession);
+    }
+
+    async listSessions(): Promise&lt;SessionInfo[]&gt; {
+        const files = await fs.readdir(SESSIONS_DIR);
+        
+        return Promise.all(files.map(async file => {
+            const content = await fs.readFile(path.join(SESSIONS_DIR, file), 'utf-8');
+            const session = JSON.parse(content);
+            return {
+                id: session.id,
+                createdAt: session.createdAt,
+                messageCount: session.messages.length,
+                preview: this.getSessionPreview(session)
+            };
+        }));
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>信号处理</h2>
+            
+            <pre><code class="language-typescript">// 推测的信号处理实现
+class SignalHandler {
+    private isShuttingDown = false;
+
+    constructor(private sessionManager: SessionManager) {
+        this.setupHandlers();
+    }
+
+    private setupHandlers(): void {
+        // Ctrl+C
+        process.on('SIGINT', () => this.handleInterrupt());
+
+        // 终端关闭
+        process.on('SIGHUP', () => this.handleHangup());
+
+        // 正常退出
+        process.on('SIGTERM', () => this.handleTerminate());
+
+        // 进程退出前
+        process.on('beforeExit', () => this.cleanup());
+    }
+
+    private async handleInterrupt(): Promise&lt;void&gt; {
+        if (this.isShuttingDown) {
+            // 第二次 Ctrl+C，强制退出
+            process.exit(1);
+        }
+
+        this.isShuttingDown = true;
+        console.log('\n正在保存会话...');
+
+        try {
+            await this.sessionManager.saveSession();
+            console.log('会话已保存。再见！');
+            process.exit(0);
+        } catch (error) {
+            console.error('保存会话失败:', error);
+            process.exit(1);
+        }
+    }
+
+    private async cleanup(): Promise&lt;void&gt; {
+        // 清理临时文件
+        // 关闭连接
+        // 释放资源
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>设计模式总结</h2>
+            
+            <div class="patterns-grid">
+                <div class="pattern-card">
+                    <h3>命令模式</h3>
+                    <p>将每个命令封装为独立对象，支持撤销、重做和历史记录。</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <h3>责任链模式</h3>
+                    <p>中间件链处理请求，支持日志、认证、错误处理等横切关注点。</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <h3>观察者模式</h3>
+                    <p>事件系统允许各模块订阅和响应 CLI 事件。</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <h3>工厂模式</h3>
+                    <p>根据配置创建不同类型的输出格式化器和处理器。</p>
+                </div>
+            </div>
+        </section>
+
+        <nav class="page-nav">
+            <a href="../intro/setup.html" class="prev">← 上一页：开发环境搭建</a>
+            <a href="agent.html" class="next">下一页：Agent 核心逻辑 →</a>
+        </nav>
+    </article>
+</body>
+</html>

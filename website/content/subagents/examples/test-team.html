@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试团队代理 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../04-subagents.html"><i class="fas fa-users"></i> 子代理</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../04-subagents.html">子代理</a> &gt;
+                <span>测试团队代理</span>
+            </nav>
+            
+            <h1><i class="fas fa-vial"></i> 测试团队代理案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的测试团队代理系统实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>团队概述</h2>
+                <p>测试团队代理是一个专门负责测试的多代理系统，包括测试规划、测试编写、测试执行等角色。</p>
+                
+                <h3>团队成员</h3>
+                <pre><code class="language-text">测试团队
+├── 测试规划代理 (Test Planner)
+│   └── 制定测试策略和计划
+├── 测试编写代理 (Test Writer)
+│   └── 编写测试用例和代码
+├── 测试执行代理 (Test Runner)
+│   └── 执行测试并收集结果
+└── 测试报告代理 (Test Reporter)
+    └── 生成测试报告和分析</code></pre>
+            </section>
+
+            <section id="planner">
+                <h2>测试规划代理</h2>
+                
+                <h3>配置</h3>
+                <pre><code class="language-json">{
+  "name": "test-planner",
+  "description": "测试规划代理",
+  "role": "制定测试策略和计划",
+  
+  "capabilities": [
+    "test-strategy",
+    "test-planning",
+    "coverage-analysis"
+  ],
+  
+  "prompt": "prompts/test-planner.md"
+}</code></pre>
+
+                <h3>提示词</h3>
+                <pre><code class="language-markdown"># prompts/test-planner.md
+
+你是一位测试规划专家。你的职责是：
+
+1. 分析功能需求，确定测试范围
+2. 设计测试策略和方法
+3. 规划测试用例结构
+4. 评估测试覆盖率
+
+## 功能需求
+{{task}}
+
+## 代码分析
+{{context.code}}
+
+## 输出要求
+
+### 测试策略
+- 测试类型（单元/集成/E2E）
+- 测试优先级
+- 测试方法
+
+### 测试计划
+| 测试项 | 类型 | 优先级 | 预计用例数 |
+|-------|------|-------|-----------|
+| ...   | ...  | ...   | ...       |
+
+### 覆盖目标
+- 语句覆盖率: XX%
+- 分支覆盖率: XX%
+- 函数覆盖率: XX%</code></pre>
+            </section>
+
+            <section id="writer">
+                <h2>测试编写代理</h2>
+                
+                <h3>配置</h3>
+                <pre><code class="language-json">{
+  "name": "test-writer",
+  "description": "测试编写代理",
+  "role": "编写测试用例",
+  
+  "capabilities": [
+    "unit-test",
+    "integration-test",
+    "mock-setup"
+  ],
+  
+  "tools": ["Read", "Write", "Edit"],
+  
+  "prompt": "prompts/test-writer.md"
+}</code></pre>
+
+                <h3>提示词</h3>
+                <pre><code class="language-markdown"># prompts/test-writer.md
+
+你是一位测试开发专家。你的职责是：
+
+1. 根据测试计划编写测试用例
+2. 设置测试数据和 Mock
+3. 编写断言和验证逻辑
+4. 确保测试可读性和可维护性
+
+## 测试计划
+{{context.testPlan}}
+
+## 待测试代码
+{{context.code}}
+
+## 测试框架
+{{context.framework}}
+
+## 输出要求
+
+### 测试文件
+```{{language}}
+// 完整的测试代码
+```
+
+### 测试说明
+- 测试覆盖的场景
+- Mock 设置说明
+- 特殊处理说明</code></pre>
+            </section>
+
+            <section id="runner">
+                <h2>测试执行代理</h2>
+                
+                <h3>配置</h3>
+                <pre><code class="language-json">{
+  "name": "test-runner",
+  "description": "测试执行代理",
+  "role": "执行测试并收集结果",
+  
+  "capabilities": [
+    "test-execution",
+    "result-collection",
+    "error-analysis"
+  ],
+  
+  "tools": ["RunCommand", "Read"],
+  
+  "prompt": "prompts/test-runner.md"
+}</code></pre>
+
+                <h3>提示词</h3>
+                <pre><code class="language-markdown"># prompts/test-runner.md
+
+你是一位测试执行专家。你的职责是：
+
+1. 执行测试用例
+2. 收集测试结果
+3. 分析失败原因
+4. 提供修复建议
+
+## 测试文件
+{{context.testFiles}}
+
+## 执行命令
+{{context.command}}
+
+## 输出要求
+
+### 执行结果
+- 总用例数
+- 通过数
+- 失败数
+- 跳过数
+
+### 失败分析
+| 用例名 | 失败原因 | 堆栈信息 | 修复建议 |
+|-------|---------|---------|---------|
+| ...   | ...     | ...     | ...     |
+
+### 覆盖率报告
+- 语句覆盖: XX%
+- 分支覆盖: XX%
+- 函数覆盖: XX%</code></pre>
+            </section>
+
+            <section id="workflow">
+                <h2>团队工作流</h2>
+                
+                <h3>工作流配置</h3>
+                <pre><code class="language-json">{
+  "name": "test-pipeline",
+  "type": "sequential",
+  "steps": [
+    {
+      "name": "plan",
+      "agent": "test-planner",
+      "inputs": {
+        "code": "${input.code}",
+        "requirements": "${input.requirements}"
+      },
+      "outputs": {
+        "testPlan": "testPlan"
+      }
+    },
+    {
+      "name": "write",
+      "agent": "test-writer",
+      "inputs": {
+        "testPlan": "${steps.plan.testPlan}",
+        "code": "${input.code}"
+      },
+      "outputs": {
+        "testFiles": "testFiles"
+      }
+    },
+    {
+      "name": "run",
+      "agent": "test-runner",
+      "inputs": {
+        "testFiles": "${steps.write.testFiles}"
+      },
+      "outputs": {
+        "results": "results"
+      }
+    },
+    {
+      "name": "report",
+      "agent": "test-reporter",
+      "inputs": {
+        "results": "${steps.run.results}"
+      },
+      "outputs": {
+        "report": "report"
+      }
+    }
+  ]
+}</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用示例</h2>
+                
+                <h3>启动测试流程</h3>
+                <pre><code class="language-bash"># 为代码生成测试
+> /team run test-pipeline --code src/utils.js
+
+# 查看测试计划
+> /team output plan
+
+# 查看测试结果
+> /team output results
+
+# 查看测试报告
+> /team output report</code></pre>
+
+                <h3>输出示例</h3>
+                <pre><code class="language-text"># 测试报告
+
+## 执行摘要
+- 总用例: 15
+- 通过: 14
+- 失败: 1
+- 跳过: 0
+- 执行时间: 2.5s
+
+## 覆盖率
+- 语句: 92%
+- 分支: 85%
+- 函数: 100%
+
+## 失败用例
+1. formatDate - 无效日期处理
+   - 原因: 未处理 null 输入
+   - 修复: 添加 null 检查
+
+## 建议
+1. 增加边界条件测试
+2. 添加更多异常场景
+3. 提高分支覆盖率</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="code-team.html" class="prev"><i class="fas fa-arrow-left"></i> 代码团队代理</a>
+                <a href="../../mcp/intro/concepts.html" class="next">MCP 概念详解 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档生成技能 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../03-skills.html"><i class="fas fa-magic"></i> 技能系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../03-skills.html">技能系统</a> &gt;
+                <span>文档生成技能</span>
+            </nav>
+            
+            <h1><i class="fas fa-file-alt"></i> 文档生成技能案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的文档生成技能实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>技能概述</h2>
+                <p>这个文档生成技能可以自动为代码生成文档，支持多种文档格式。</p>
+                
+                <h3>功能特性</h3>
+                <ul>
+                    <li>支持 JSDoc、TSDoc 注释生成</li>
+                    <li>支持 API 文档生成</li>
+                    <li>支持 README 文件生成</li>
+                    <li>支持多语言文档</li>
+                </ul>
+            </section>
+
+            <section id="skill-config">
+                <h2>技能配置</h2>
+                
+                <pre><code class="language-json">{
+  "name": "doc-gen",
+  "version": "2.0.0",
+  "description": "智能文档生成技能",
+  
+  "triggers": {
+    "manual": true,
+    "keywords": ["生成文档", "写文档", "document", "document this"]
+  },
+  
+  "inputs": {
+    "file": {
+      "type": "file",
+      "description": "源文件"
+    },
+    "type": {
+      "type": "string",
+      "options": ["jsdoc", "api", "readme", "changelog"],
+      "default": "jsdoc",
+      "description": "文档类型"
+    },
+    "format": {
+      "type": "string",
+      "options": ["markdown", "html", "json"],
+      "default": "markdown",
+      "description": "输出格式"
+    },
+    "language": {
+      "type": "string",
+      "options": ["zh-CN", "en-US"],
+      "default": "zh-CN",
+      "description": "文档语言"
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="prompt-file">
+                <h2>提示词文件</h2>
+                
+                <pre><code class="language-markdown"># prompt.md
+
+你是一位技术文档专家。请为以下代码生成专业的文档。
+
+## 源文件
+{{#if file}}
+- 文件：{{file.path}}
+- 语言：{{file.language}}
+
+## 代码内容
+```
+{{file.content}}
+```
+{{/if}}
+
+## 文档类型
+{{type}}
+
+## 文档语言
+{{language}}
+
+## 文档要求
+
+{{#if (eq type "jsdoc")}}
+### JSDoc 注释要求
+
+为每个函数/方法生成 JSDoc 注释：
+
+```javascript
+/**
+ * 函数描述
+ * 
+ * @param {类型} 参数名 - 参数描述
+ * @returns {类型} 返回值描述
+ * @throws {错误类型} 错误描述
+ * 
+ * @example
+ * ```js
+ * const result = functionName(arg1, arg2);
+ * // result: 期望结果
+ * ```
+ */
+```
+{{/if}}
+
+{{#if (eq type "api")}}
+### API 文档要求
+
+为每个 API 端点生成文档：
+
+```markdown
+## 端点名称
+
+**描述**: 功能描述
+
+**方法**: GET/POST/PUT/DELETE
+
+**路径**: /api/path
+
+### 请求参数
+
+| 参数名 | 类型 | 必填 | 描述 |
+|--------|------|------|------|
+| ... | ... | ... | ... |
+
+### 请求示例
+
+```json
+{
+  "示例请求体"
+}
+```
+
+### 响应参数
+
+| 参数名 | 类型 | 描述 |
+|--------|------|------|
+| ... | ... | ... |
+
+### 响应示例
+
+```json
+{
+  "示例响应体"
+}
+```
+
+### 错误码
+
+| 错误码 | 描述 |
+|--------|------|
+| ... | ... |
+```
+{{/if}}
+
+{{#if (eq type "readme")}}
+### README 文档要求
+
+```markdown
+# 项目名称
+
+简短的项目描述。
+
+## 功能特性
+
+- 特性 1
+- 特性 2
+
+## 快速开始
+
+### 安装
+
+### 使用
+
+## API 文档
+
+## 贡献指南
+
+## 许可证
+```
+{{/if}}
+
+## 输出要求
+
+1. 文档要清晰易懂
+2. 示例要完整可运行
+3. 参数描述要准确
+4. 包含必要的注意事项</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用方法</h2>
+                
+                <h3>生成 JSDoc</h3>
+                <pre><code class="language-bash"># 为文件生成 JSDoc 注释
+> /skill run doc-gen --file src/utils.js --type jsdoc
+
+# 输出示例
+/**
+ * 格式化日期
+ * 
+ * @param {Date|string} date - 要格式化的日期
+ * @param {string} [format='YYYY-MM-DD'] - 格式字符串
+ * @returns {string} 格式化后的日期字符串
+ * @throws {Error} 当日期为空或无效时抛出错误
+ * 
+ * @example
+ * ```js
+ * formatDate(new Date('2026-04-04'));
+ * // 返回: '2026-04-04'
+ * 
+ * formatDate('2026-04-04', 'YYYY/MM/DD');
+ * // 返回: '2026/04/04'
+ * ```
+ */
+export function formatDate(date, format = 'YYYY-MM-DD') {
+  // ...
+}</code></pre>
+
+                <h3>生成 API 文档</h3>
+                <pre><code class="language-bash"># 为 API 路由生成文档
+> /skill run doc-gen --file src/api/users.js --type api</code></pre>
+
+                <h3>生成 README</h3>
+                <pre><code class="language-bash"># 为项目生成 README
+> /skill run doc-gen --type readme</code></pre>
+            </section>
+
+            <section id="output-example">
+                <h2>输出示例</h2>
+                
+                <h3>API 文档示例</h3>
+                <pre><code class="language-markdown"># 用户 API 文档
+
+## 获取用户列表
+
+**描述**: 获取所有用户的列表
+
+**方法**: GET
+
+**路径**: /api/users
+
+### 请求参数
+
+| 参数名 | 类型 | 必填 | 描述 |
+|--------|------|------|------|
+| page | number | 否 | 页码，默认 1 |
+| limit | number | 否 | 每页数量，默认 10 |
+| search | string | 否 | 搜索关键词 |
+
+### 请求示例
+
+```http
+GET /api/users?page=1&limit=10
+Authorization: Bearer {token}
+```
+
+### 响应参数
+
+| 参数名 | 类型 | 描述 |
+|--------|------|------|
+| users | User[] | 用户列表 |
+| total | number | 总数量 |
+| page | number | 当前页码 |
+
+### 响应示例
+
+```json
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "张三",
+      "email": "zhangsan@example.com"
+    }
+  ],
+  "total": 100,
+  "page": 1
+}
+```
+
+### 错误码
+
+| 错误码 | 描述 |
+|--------|------|
+| 401 | 未授权 |
+| 403 | 无权限 |
+| 500 | 服务器错误 |
+
+---
+
+## 创建用户
+
+**描述**: 创建新用户
+
+**方法**: POST
+
+**路径**: /api/users
+
+### 请求参数
+
+| 参数名 | 类型 | 必填 | 描述 |
+|--------|------|------|------|
+| name | string | 是 | 用户名 |
+| email | string | 是 | 邮箱地址 |
+| password | string | 是 | 密码 |
+
+### 请求示例
+
+```json
+{
+  "name": "张三",
+  "email": "zhangsan@example.com",
+  "password": "password123"
+}
+```
+
+### 响应示例
+
+```json
+{
+  "id": "1",
+  "name": "张三",
+  "email": "zhangsan@example.com",
+  "createdAt": "2026-04-04T10:00:00Z"
+}
+```</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="test-gen.html" class="prev"><i class="fas fa-arrow-left"></i> 测试生成技能</a>
+                <a href="../../subagents/intro/concepts.html" class="next">子代理概念 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

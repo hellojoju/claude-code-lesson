@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP概念详解 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../../05-mcp.html" class="active"><i class="fas fa-server"></i> MCP服务器</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">首页</a> &gt; <a href="../../05-mcp.html">MCP服务器</a> &gt; <span>MCP概念详解</span>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#overview">什么是 MCP</a></li>
+                    <li><a href="#architecture">架构概述</a></li>
+                    <li><a href="#features">核心功能</a></li>
+                    <li><a href="#server-types">服务器类型</a></li>
+                    <li><a href="#installation">安装配置</a></li>
+                    <li><a href="#usage">基本使用</a></li>
+                    <li><a href="#security">安全机制</a></li>
+                    <li><a href="#best-practices">最佳实践</a></li>
+                </ul>
+            </aside>
+
+            <article class="content">
+                <h1><i class="fas fa-network-wired"></i> MCP概念详解</h1>
+                
+                <div class="source-info">
+                    <span class="reliability reliability-a">可靠性: A</span>
+                    <span class="source">来源: MCP 官方规范 + Claude Code 文档</span>
+                </div>
+
+                <p class="meta">
+                    <i class="fas fa-clock"></i> 更新时间: 2025-04-04
+                    <i class="fas fa-user"></i> 作者: Claude Code 教程团队
+                </p>
+
+                <section id="overview">
+                    <h2>什么是 MCP</h2>
+                    <p>MCP (Model Context Protocol) 是 Anthropic 主导的开放协议，用于在 AI 模型和外部数据源、工具之间建立标准化连接。它被形容为"AI 的 USB-C"，让 Claude Code 能够安全地访问数据库、API、文件系统等外部资源。</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> <strong>核心价值：</strong>MCP 让 Claude Code 从一个代码助手变成可以连接整个数字世界的智能代理。</p>
+                    </div>
+
+                    <h3>核心优势</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-plug"></i> 标准化</h3>
+                            <p>统一的接口规范，一次集成到处可用。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-shield-alt"></i> 安全性</h3>
+                            <p>内置权限控制和审计机制，保护敏感数据。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-expand-arrows-alt"></i> 可扩展</h3>
+                            <p>支持自定义服务器，满足特定需求。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-globe"></i> 互操作性</h3>
+                            <p>跨平台、跨语言支持，生态丰富。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="architecture">
+                    <h2>架构概述</h2>
+                    
+                    <h3>系统架构</h3>
+                    <pre><code class="language-text">┌─────────────────────────────────────────┐
+│           Claude Code (客户端)            │
+├─────────────────────────────────────────┤
+│              MCP 协议层                   │
+├─────────────────────────────────────────┤
+│              MCP 服务器                   │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │数据库   │ │API      │ │文件系统 │   │
+│  │服务器   │ │服务器   │ │服务器   │   │
+│  └─────────┘ └─────────┘ └─────────┘   │
+├─────────────────────────────────────────┤
+│              外部资源                     │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
+│  │PostgreSQL│ │REST API │ │文件系统 │   │
+│  └─────────┘ └─────────┘ └─────────┘   │
+└─────────────────────────────────────────┘</code></pre>
+
+                    <h3>核心组件</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>组件</th>
+                                <th>说明</th>
+                                <th>作用</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MCP 客户端</strong></td>
+                                <td>Claude Code 内置</td>
+                                <td>管理服务器连接、调用工具</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MCP 服务器</strong></td>
+                                <td>独立进程</td>
+                                <td>连接外部资源、提供工具</td>
+                            </tr>
+                            <tr>
+                                <td><strong>传输层</strong></td>
+                                <td>通信协议</td>
+                                <td>stdio、HTTP、WebSocket</td>
+                            </tr>
+                            <tr>
+                                <td><strong>资源层</strong></td>
+                                <td>外部系统</td>
+                                <td>数据库、API、文件系统</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>传输类型</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-terminal"></i> STDIO</h3>
+                            <p><strong>特点：</strong>本地进程通信，单客户端</p>
+                            <p><strong>适用：</strong>本地工具、命令行程序</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-broadcast-tower"></i> SSE</h3>
+                            <p><strong>特点：</strong>远程 HTTP，支持多客户端</p>
+                            <p><strong>适用：</strong>云服务、远程 API</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-exchange-alt"></i> Streamable HTTP</h3>
+                            <p><strong>特点：</strong>支持流式响应</p>
+                            <p><strong>适用：</strong>Serverless、自动扩展</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="features">
+                    <h2>核心功能</h2>
+                    
+                    <h3>资源访问</h3>
+                    <p>MCP 提供统一的资源访问接口：</p>
+                    <pre><code class="language-bash"># 通过 @ 语法访问 MCP 资源
+> 查看 @github:repos/owner/repo/issues
+> 读取 @notion:page-id 的内容
+> 搜索 @slack:channel-name 的消息</code></pre>
+
+                    <h3>工具调用</h3>
+                    <p>MCP 服务器可以提供各种工具：</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>工具类型</th>
+                                <th>功能</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>查询工具</td>
+                                <td>执行数据库查询</td>
+                                <td>postgres.query</td>
+                            </tr>
+                            <tr>
+                                <td>操作工具</td>
+                                <td>创建、更新、删除数据</td>
+                                <td>github.create_issue</td>
+                            </tr>
+                            <tr>
+                                <td>搜索工具</td>
+                                <td>搜索和检索信息</td>
+                                <td>brave.search</td>
+                            </tr>
+                            <tr>
+                                <td>分析工具</td>
+                                <td>分析数据结果</td>
+                                <td>puppeteer.screenshot</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>提示词模板</h3>
+                    <p>MCP 服务器可以提供预定义的提示词模板：</p>
+                    <pre><code class="language-bash"># 使用 MCP 提供的提示词模板
+> 使用 @github:templates/pr-review 审查这个 PR
+> 使用 @postgres:templates/schema-analysis 分析数据库结构</code></pre>
+                </section>
+
+                <section id="server-types">
+                    <h2>服务器类型</h2>
+                    
+                    <h3>官方服务器</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>服务器</th>
+                                <th>功能</th>
+                                <th>需要 API Key</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Filesystem</strong></td>
+                                <td>访问本地目录</td>
+                                <td>否</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PostgreSQL</strong></td>
+                                <td>数据库查询</td>
+                                <td>否（需要连接字符串）</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitHub</strong></td>
+                                <td>仓库管理、Issue、PR</td>
+                                <td>是</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Slack</strong></td>
+                                <td>团队通信</td>
+                                <td>是</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Brave Search</strong></td>
+                                <td>网络搜索</td>
+                                <td>是</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Puppeteer</strong></td>
+                                <td>浏览器自动化</td>
+                                <td>否</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sequential Thinking</strong></td>
+                                <td>链式推理</td>
+                                <td>否</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>社区服务器</h3>
+                    <p>社区提供了大量 MCP 服务器：</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>Notion</strong> - 笔记和知识库</li>
+                        <li><i class="fas fa-check"></i> <strong>Linear</strong> - 项目管理</li>
+                        <li><i class="fas fa-check"></i> <strong>Jira</strong> - 问题跟踪</li>
+                        <li><i class="fas fa-check"></i> <strong>Google Drive</strong> - 云存储</li>
+                        <li><i class="fas fa-check"></i> <strong>AWS</strong> - 云服务</li>
+                        <li><i class="fas fa-check"></i> <strong>Stripe</strong> - 支付处理</li>
+                    </ul>
+                </section>
+
+                <section id="installation">
+                    <h2>安装配置</h2>
+                    
+                    <h3>一键安装脚本（macOS/Linux）</h3>
+                    <pre><code class="language-bash">bash <<'EOF'
+echo "正在安装 Claude MCP 服务器..."
+
+# 顺序思考
+claude mcp add sequential-thinking -s user \
+  -- npx -y @modelcontextprotocol/server-sequential-thinking || true
+
+# 文件系统访问
+claude mcp add filesystem -s user \
+  -- npx -y @modelcontextprotocol/server-filesystem \
+     ~/Documents ~/Desktop ~/Downloads ~/Projects || true
+
+# Playwright（多浏览器自动化）
+claude mcp add playwright -s user \
+  -- npx -y @playwright/mcp || true
+
+# Web Fetching
+claude mcp add fetch -s user \
+  -- npx -y @kazuph/mcp-fetch || true
+
+echo "✅ MCP 注册完成。"
+claude mcp list
+EOF</code></pre>
+
+                    <h3>手动配置</h3>
+                    <pre><code class="language-json">// ~/.claude/settings.json 或 .claude/settings.json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/project"],
+      "env": {"ALLOWED_PATHS": "/project"}
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {"Authorization": "Bearer ${GITHUB_TOKEN}"}
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {"DATABASE_URL": "${POSTGRES_URL}"}
+    }
+  }
+}</code></pre>
+
+                    <h3>安装范围说明</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>含义</th>
+                                <th>配置文件位置</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>-s user</code></td>
+                                <td>全局安装</td>
+                                <td><code>~/.claude.json</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-s local</code></td>
+                                <td>项目内安装</td>
+                                <td><code>.claude.json</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="usage">
+                    <h2>基本使用</h2>
+                    
+                    <h3>管理 MCP 服务器</h3>
+                    <pre><code class="language-bash"># 列出所有服务器
+claude mcp list
+
+# 添加服务器
+claude mcp add server-name -s user -- npx -y package-name
+
+# 删除服务器
+claude mcp remove server-name
+
+# 启用/禁用服务器
+@server-name enable
+@server-name disable</code></pre>
+
+                    <h3>使用 MCP 资源</h3>
+                    <pre><code class="language-bash"># 在对话中引用 MCP 资源
+> 查看 @github:repos/owner/repo/issues
+> 读取 @filesystem:path/to/file.txt
+> 搜索 @brave-search:query</code></pre>
+
+                    <h3>监控 MCP 使用</h3>
+                    <pre><code class="language-bash"># 查看上下文使用情况
+> /context
+
+# 查看 MCP 工具占用的 token
+# 输出示例：
+# MCP 服务器 token 使用：
+# - github: 5,000 tokens
+# - filesystem: 2,000 tokens
+# - postgres: 1,500 tokens</code></pre>
+
+                    <h3>调试 MCP</h3>
+                    <pre><code class="language-bash"># 启用调试模式
+claude --mcp-debug
+
+# 查看服务器日志
+cat ~/.claude/logs/mcp.log</code></pre>
+                </section>
+
+                <section id="security">
+                    <h2>安全机制</h2>
+                    
+                    <h3>权限控制</h3>
+                    <pre><code class="language-json">{
+  "permissions": {
+    "mcpServers": {
+      "postgres": {
+        "allow": ["query", "insert", "update"],
+        "deny": ["delete", "drop"],
+        "tables": ["users", "orders"]
+      }
+    }
+  }
+}</code></pre>
+
+                    <h3>敏感信息保护</h3>
+                    <div class="warning-box">
+                        <p><i class="fas fa-exclamation-triangle"></i> <strong>安全提示：</strong></p>
+                        <ul>
+                            <li>不要在配置文件中硬编码 API Key</li>
+                            <li>使用环境变量存储敏感信息</li>
+                            <li>定期审查 MCP 服务器的权限</li>
+                            <li>只启用必要的服务器</li>
+                        </ul>
+                    </div>
+
+                    <h3>审计日志</h3>
+                    <pre><code class="language-json">{
+  "audit": {
+    "enabled": true,
+    "logFile": "~/.claude/mcp-audit.log",
+    "level": "verbose"
+  }
+}</code></pre>
+                </section>
+
+                <section id="best-practices">
+                    <h2>最佳实践</h2>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-filter"></i> 选择性启用</h3>
+                            <p>只启用项目需要的 MCP 服务器，减少 token 消耗。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-key"></i> 环境变量</h3>
+                            <p>使用环境变量存储 API Key，不要硬编码。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-eye"></i> 定期审查</h3>
+                            <p>定期检查 MCP 服务器的权限和日志。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-code-branch"></i> 版本锁定</h3>
+                            <p>锁定 MCP 服务器版本，避免意外更新。</p>
+                        </div>
+                    </div>
+
+                    <h3>常见问题</h3>
+                    <div class="problem">
+                        <h3><i class="fas fa-question-circle"></i> MCP 显示连接但无响应？</h3>
+                        <p>检查路径配置和通信状态：</p>
+                        <pre><code class="language-bash"># 检查服务器状态
+claude mcp list
+
+# 设置超时
+export MCP_TIMEOUT=10000</code></pre>
+                    </div>
+
+                    <div class="problem">
+                        <h3><i class="fas fa-question-circle"></i> Token 消耗过多？</h3>
+                        <p>禁用未使用的 MCP 服务器：</p>
+                        <pre><code class="language-bash"># 禁用服务器
+@server-name disable
+
+# 或删除不需要的服务器
+claude mcp remove server-name</code></pre>
+                    </div>
+                </section>
+
+                <section id="references">
+                    <h2>参考资料</h2>
+                    <ul>
+                        <li><a href="https://modelcontextprotocol.io/" target="_blank">MCP 官方文档</a> <span class="reliability reliability-a">A</span></li>
+                        <li><a href="https://github.com/modelcontextprotocol" target="_blank">MCP GitHub 组织</a> <span class="reliability reliability-a">A</span></li>
+                        <li><a href="https://github.com/modelcontextprotocol/servers" target="_blank">MCP 服务器仓库</a> <span class="reliability reliability-a">A</span></li>
+                    </ul>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../../subagents/examples/test-team.html" class="prev"><i class="fas fa-arrow-left"></i> 测试团队代理</a>
+                    <a href="protocol.html" class="next">协议规范 <i class="fas fa-arrow-right"></i></a>
+                </nav>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Claude Code 中文教程. 基于 MCP 官方规范编写.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>

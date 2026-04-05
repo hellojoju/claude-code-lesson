@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钩子概念详解 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../../06-hooks.html" class="active"><i class="fas fa-anchor"></i> 钩子系统</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">首页</a> &gt; <a href="../../06-hooks.html">钩子系统</a> &gt; <span>钩子概念详解</span>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#overview">什么是钩子</a></li>
+                    <li><a href="#why-hooks">为什么需要钩子</a></li>
+                    <li><a href="#hook-types">钩子类型</a></li>
+                    <li><a href="#input-output">输入与输出</a></li>
+                    <li><a href="#configuration">配置方式</a></li>
+                    <li><a href="#best-practices">最佳实践</a></li>
+                </ul>
+            </aside>
+
+            <article class="content">
+                <h1><i class="fas fa-anchor"></i> 钩子概念详解</h1>
+                
+                <div class="source-info">
+                    <span class="reliability reliability-a">可靠性: A</span>
+                    <span class="source">来源: Claude Code 官方文档</span>
+                </div>
+
+                <p class="meta">
+                    <i class="fas fa-clock"></i> 更新时间: 2025-04-04
+                    <i class="fas fa-user"></i> 作者: Claude Code 教程团队
+                </p>
+
+                <section id="overview">
+                    <h2>什么是钩子</h2>
+                    <p>钩子（Hook）是 Claude Code 的事件监听机制，允许在特定事件发生时执行自定义 Shell 命令。通过钩子，可以扩展 Claude Code 的功能，实现自动化工作流。</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> <strong>核心概念：</strong>如果将 Claude Code 的工作流程比作一条繁忙的高速公路，那么钩子就是沿途设置的智能交通信号灯，能够在预设的关键路口进行流量控制、安全检查和信息收集等操作。</p>
+                    </div>
+
+                    <h3>核心组件</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>组件</th>
+                                <th>说明</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>事件</strong></td>
+                                <td>触发钩子的时机点</td>
+                                <td>PreToolUse、PostToolUse</td>
+                            </tr>
+                            <tr>
+                                <td><strong>匹配器</strong></td>
+                                <td>决定是否执行钩子的条件</td>
+                                <td>Bash、Edit、Write</td>
+                            </tr>
+                            <tr>
+                                <td><strong>处理器</strong></td>
+                                <td>事件触发时执行的 Shell 命令</td>
+                                <td>Python 脚本、Shell 命令</td>
+                            </tr>
+                            <tr>
+                                <td><strong>上下文</strong></td>
+                                <td>传递给处理器的 JSON 数据</td>
+                                <td>tool_name、tool_input</td>
+                            </tr>
+                            <tr>
+                                <td><strong>结果</strong></td>
+                                <td>处理器返回的操作指令</td>
+                                <td>allow、deny、block</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="why-hooks">
+                    <h2>为什么需要钩子</h2>
+                    <p>钩子提供了确定性的控制机制，通过将规则和流程编码为应用程序级代码而非提示指令，能够保证命令按预期执行。</p>
+                    
+                    <h3>核心优势</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-robot"></i> 自动化</h3>
+                            <p>自动执行重复性任务，无需每次提醒 Claude。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-shield-alt"></i> 验证</h3>
+                            <p>在操作前进行验证检查，防止错误操作。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-bell"></i> 通知</h3>
+                            <p>发送通知和提醒，保持团队同步。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-link"></i> 集成</h3>
+                            <p>与外部系统集成，扩展 Claude 能力。</p>
+                        </div>
+                    </div>
+
+                    <h3>典型应用场景</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>场景</th>
+                                <th>具体功能</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>智能通知</td>
+                                <td>自动发送桌面通知</td>
+                                <td>Claude 需要输入时发送通知</td>
+                            </tr>
+                            <tr>
+                                <td>代码格式化</td>
+                                <td>自动格式化代码</td>
+                                <td>编辑 .ts 文件后运行 prettier</td>
+                            </tr>
+                            <tr>
+                                <td>日志审计</td>
+                                <td>记录所有操作</td>
+                                <td>记录执行的 Bash 命令</td>
+                            </tr>
+                            <tr>
+                                <td>质量反馈</td>
+                                <td>代码质量检查</td>
+                                <td>编辑后运行 linter 检查</td>
+                            </tr>
+                            <tr>
+                                <td>安全控制</td>
+                                <td>阻止敏感操作</td>
+                                <td>禁止修改生产环境文件</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="hook-types">
+                    <h2>钩子类型</h2>
+                    <p>Claude Code 支持多种钩子类型，每种类型代表不同的触发时机。</p>
+                    
+                    <h3>调用工具类钩子</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-play"></i> PreToolUse</h3>
+                            <p><strong>触发时机：</strong>在 Claude 执行任何工具之前</p>
+                            <p><strong>常见用途：</strong>权限检查、日志记录、预处理</p>
+                            <pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{ "type": "command", "command": "python3 check.py" }]
+    }]
+  }
+}</code></pre>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-stop"></i> PostToolUse</h3>
+                            <p><strong>触发时机：</strong>在 Claude 执行工具之后</p>
+                            <p><strong>常见用途：</strong>清理、验证、自动格式化</p>
+                            <pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit",
+      "hooks": [{ "type": "command", "command": "prettier --write $FILE" }]
+    }]
+  }
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <h3>用户交互类钩子</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-paper-plane"></i> UserPromptSubmit</h3>
+                            <p><strong>触发时机：</strong>用户提交提示时（大模型处理前）</p>
+                            <p><strong>常见用途：</strong>输入验证、内容过滤、上下文注入</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-bell"></i> Notification</h3>
+                            <p><strong>触发时机：</strong>Claude 发送通知时</p>
+                            <p><strong>常见用途：</strong>桌面通知、邮件提醒、Slack 集成</p>
+                        </div>
+                    </div>
+
+                    <h3>会话生命周期类钩子</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-play-circle"></i> SessionStart</h3>
+                            <p><strong>触发时机：</strong>会话开始或恢复时</p>
+                            <p><strong>匹配器：</strong>startup、resume、clear、compact</p>
+                            <p><strong>常见用途：</strong>加载上下文、初始化环境</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-stop-circle"></i> SessionEnd</h3>
+                            <p><strong>触发时机：</strong>会话结束时</p>
+                            <p><strong>匹配器：</strong>clear、logout、prompt_input_exit、other</p>
+                            <p><strong>常见用途：</strong>清理临时文件、保存日志</p>
+                        </div>
+                    </div>
+
+                    <h3>任务完成类钩子</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-check-circle"></i> Stop</h3>
+                            <p><strong>触发时机：</strong>主代理任务停止时</p>
+                            <p><strong>常见用途：</strong>完整性检查、自动提交</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-tasks"></i> SubagentStop</h3>
+                            <p><strong>触发时机：</strong>子代理任务停止时</p>
+                            <p><strong>常见用途：</strong>子任务验证、结果汇总</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="input-output">
+                    <h2>输入与输出</h2>
+                    
+                    <h3>钩子输入（stdin）</h3>
+                    <p>钩子通过标准输入接收 JSON 数据：</p>
+                    <pre><code class="language-json">{
+  "session_id": "abc123",
+  "transcript_path": "/Users/.../.claude/projects/.../session.jsonl",
+  "cwd": "/Users/project",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": {
+    "command": "npm install",
+    "description": "安装依赖"
+  }
+}</code></pre>
+
+                    <h3>钩子输出</h3>
+                    <p>钩子可以通过两种方式输出：</p>
+                    
+                    <h4>方式一：退出状态码</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>退出码</th>
+                                <th>含义</th>
+                                <th>行为</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>0</code></td>
+                                <td>成功</td>
+                                <td>stdout 在 transcript 模式下展示</td>
+                            </tr>
+                            <tr>
+                                <td><code>2</code></td>
+                                <td>阻塞错误</td>
+                                <td>stderr 反馈给 Claude 处理</td>
+                            </tr>
+                            <tr>
+                                <td>其他</td>
+                                <td>非阻塞错误</td>
+                                <td>stderr 展示给用户，继续执行</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>方式二：结构化 JSON</h4>
+                    <pre><code class="language-json">{
+  "continue": true,
+  "stopReason": "string",
+  "suppressOutput": false,
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "allow" | "deny" | "ask",
+    "permissionDecisionReason": "原因说明"
+  }
+}</code></pre>
+
+                    <h3>权限决策</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>决策</th>
+                                <th>功能</th>
+                                <th>reason 展示对象</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>allow</code></td>
+                                <td>绕过权限系统</td>
+                                <td>仅向用户展示</td>
+                            </tr>
+                            <tr>
+                                <td><code>deny</code></td>
+                                <td>阻止工具调用</td>
+                                <td>向 Claude 展示</td>
+                            </tr>
+                            <tr>
+                                <td><code>ask</code></td>
+                                <td>要求用户确认</td>
+                                <td>仅向用户展示</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="configuration">
+                    <h2>配置方式</h2>
+                    
+                    <h3>配置文件位置</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>配置类型</th>
+                                <th>文件位置</th>
+                                <th>适用范围</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>用户级</td>
+                                <td><code>~/.claude/settings.json</code></td>
+                                <td>所有项目</td>
+                            </tr>
+                            <tr>
+                                <td>项目级</td>
+                                <td><code>.claude/settings.json</code></td>
+                                <td>当前项目</td>
+                            </tr>
+                            <tr>
+                                <td>本地配置</td>
+                                <td><code>.claude/settings.local.json</code></td>
+                                <td>个人本地（不提交）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>配置示例</h3>
+                    <pre><code class="language-json">{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/validate_bash.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "prettier --write $FILE"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+                    <h3>使用 /hooks 命令</h3>
+                    <pre><code class="language-bash"># 在 Claude Code 中运行
+> /hooks
+
+# 选择创建新钩子
+# 选择钩子类型
+# 添加匹配器
+# 输入命令
+# 选择存储位置</code></pre>
+                </section>
+
+                <section id="best-practices">
+                    <h2>最佳实践</h2>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-clock"></i> 设置超时</h3>
+                            <p>为钩子命令设置合理的超时时间，避免长时间阻塞。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-bug"></i> 错误处理</h3>
+                            <p>在脚本中妥善处理错误，返回有意义的错误信息。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-code-branch"></i> 版本控制</h3>
+                            <p>将项目级钩子脚本纳入版本控制，方便团队共享。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-flask"></i> 测试验证</h3>
+                            <p>在生产环境使用前充分测试钩子行为。</p>
+                        </div>
+                    </div>
+
+                    <h3>调试技巧</h3>
+                    <pre><code class="language-bash"># 启用 MCP 调试模式
+claude --mcp-debug
+
+# 查看钩子执行日志
+cat ~/.claude/logs/hooks.log
+
+# 测试钩子脚本
+echo '{"tool_name": "Bash", "tool_input": {"command": "ls"}}' | python3 hook.py</code></pre>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="../../06-hooks.html" class="prev"><i class="fas fa-arrow-left"></i> 上一页：钩子系统</a>
+                    <a href="lifecycle.html" class="next">下一页：钩子生命周期 <i class="fas fa-arrow-right"></i></a>
+                </nav>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Claude Code 中文教程. 基于 Claude Code 官方文档编写.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>

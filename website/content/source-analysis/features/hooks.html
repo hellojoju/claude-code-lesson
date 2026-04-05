@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hooks 实现 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro/overview.html">源码解析</a> &gt;
+        <span>Hooks 实现</span>
+    </nav>
+
+    <article class="content">
+        <h1>Hooks 实现</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-b">可靠性: B</span>
+            <span class="source">来源: Claude Code 行为分析 + 社区研究</span>
+        </div>
+
+        <section>
+            <h2>Hooks 系统概述</h2>
+            <p>Hooks 是 Claude Code 的事件监听机制，允许在特定事件发生时执行自定义代码。本节深入分析 Hooks 的设计原理和实现机制。</p>
+        </section>
+
+        <section>
+            <h2>事件生命周期</h2>
+            
+            <pre><code class="language-plaintext">用户输入
+    │
+    ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Hook Execution Points                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐                                           │
+│  │ PrePrompt   │ ← 用户输入处理前                          │
+│  └──────┬──────┘                                           │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌─────────────┐                                           │
+│  │ PreToolUse  │ ← 工具调用前                              │
+│  └──────┬──────┘                                           │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌─────────────┐                                           │
+│  │ Tool        │ ← 工具执行中                              │
+│  │ Execution   │                                           │
+│  └──────┬──────┘                                           │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌─────────────┐                                           │
+│  │ PostToolUse │ ← 工具调用后                              │
+│  └──────┬──────┘                                           │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌─────────────┐                                           │
+│  │ PreResponse │ ← 生成响应前                              │
+│  └──────┬──────┘                                           │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌─────────────┐                                           │
+│  │ PostResponse│ ← 响应完成后                              │
+│  └─────────────┘                                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+        </section>
+
+        <section>
+            <h2>Hook 注册系统</h2>
+            
+            <h3>Hook 定义</h3>
+            <pre><code class="language-typescript">// 推测的 Hook 类型定义
+interface Hook {
+    id: string;
+    event: HookEvent;
+    handler: HookHandler;
+    priority: number;
+    enabled: boolean;
+    conditions?: HookCondition[];
+}
+
+type HookEvent = 
+    | 'PrePrompt'
+    | 'PreToolUse'
+    | 'PostToolUse'
+    | 'PreResponse'
+    | 'PostResponse'
+    | 'OnError'
+    | 'OnFileChange';
+
+interface HookContext {
+    event: HookEvent;
+    timestamp: number;
+    sessionId: string;
+    data: any;
+    metadata: Record&lt;string, any&gt;;
+}
+
+type HookHandler = (
+    context: HookContext
+) => Promise&lt;HookResult | void&gt;;
+
+interface HookResult {
+    // 修改数据
+    modify?: any;
+    // 阻止继续执行
+    block?: boolean;
+    // 阻止原因
+    reason?: string;
+    // 添加额外操作
+    actions?: HookAction[];
+}
+
+interface HookCondition {
+    type: 'tool' | 'file' | 'pattern' | 'expression';
+    value: string | RegExp | ((ctx: HookContext) =&gt; boolean);
+}</code></pre>
+
+            <h3>注册中心实现</h3>
+            <pre><code class="language-typescript">// 推测的 Hook 注册中心
+class HookRegistry {
+    private hooks: Map&lt;HookEvent, Hook[]&gt; = new Map();
+    private config: HooksConfig;
+
+    constructor(config: HooksConfig) {
+        this.config = config;
+        this.loadFromConfig();
+    }
+
+    register(hook: Hook): void {
+        if (!this.hooks.has(hook.event)) {
+            this.hooks.set(hook.event, []);
+        }
+
+        const hooks = this.hooks.get(hook.event)!;
+        hooks.push(hook);
+
+        // 按优先级排序
+        hooks.sort((a, b) => b.priority - a.priority);
+    }
+
+    unregister(hookId: string): void {
+        for (const [event, hooks] of this.hooks) {
+            const index = hooks.findIndex(h => h.id === hookId);
+            if (index !== -1) {
+                hooks.splice(index, 1);
+            }
+        }
+    }
+
+    getHooks(event: HookEvent): Hook[] {
+        return this.hooks.get(event) || [];
+    }
+
+    private loadFromConfig(): void {
+        for (const hookConfig of this.config.hooks) {
+            this.register({
+                id: hookConfig.id || generateId(),
+                event: hookConfig.event,
+                handler: this.createHandler(hookConfig),
+                priority: hookConfig.priority || 0,
+                enabled: hookConfig.enabled !== false,
+                conditions: hookConfig.conditions
+            });
+        }
+    }
+
+    private createHandler(config: HookConfig): HookHandler {
+        return async (context: HookContext) => {
+            // Shell 命令类型
+            if (config.type === 'command') {
+                return this.executeCommand(config.command, context);
+            }
+
+            // JavaScript 函数类型
+            if (config.type === 'function') {
+                const fn = new Function('context', config.function);
+                return fn(context);
+            }
+
+            // HTTP 请求类型
+            if (config.type === 'http') {
+                return this.executeHttp(config.http, context);
+            }
+        };
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>Hook 执行器</h2>
+            
+            <h3>执行流程</h3>
+            <pre><code class="language-typescript">// 推测的 Hook 执行器实现
+class HookExecutor {
+    constructor(
+        private registry: HookRegistry,
+        private logger: Logger
+    ) {}
+
+    async execute(
+        event: HookEvent, 
+        data: any
+    ): Promise&lt;HookExecutionResult&gt; {
+        const hooks = this.registry.getHooks(event);
+        const context: HookContext = {
+            event,
+            timestamp: Date.now(),
+            sessionId: getCurrentSessionId(),
+            data,
+            metadata: {}
+        };
+
+        const result: HookExecutionResult = {
+            modified: data,
+            blocked: false,
+            actions: [],
+            errors: []
+        };
+
+        for (const hook of hooks) {
+            if (!hook.enabled) continue;
+
+            // 检查条件
+            if (!this.matchesConditions(hook, context)) {
+                continue;
+            }
+
+            try {
+                const hookResult = await this.executeWithTimeout(
+                    hook.handler,
+                    context,
+                    hook.timeout || 30000
+                );
+
+                if (hookResult) {
+                    // 处理修改
+                    if (hookResult.modify) {
+                        result.modified = hookResult.modify;
+                        context.data = hookResult.modify;
+                    }
+
+                    // 处理阻止
+                    if (hookResult.block) {
+                        result.blocked = true;
+                        result.blockReason = hookResult.reason;
+                        break;
+                    }
+
+                    // 收集额外操作
+                    if (hookResult.actions) {
+                        result.actions.push(...hookResult.actions);
+                    }
+                }
+
+            } catch (error) {
+                this.logger.error(`Hook ${hook.id} failed:`, error);
+                result.errors.push({
+                    hookId: hook.id,
+                    error: error.message
+                });
+
+                // 根据配置决定是否继续
+                if (hook.failStrategy === 'stop') {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private matchesConditions(hook: Hook, context: HookContext): boolean {
+        if (!hook.conditions || hook.conditions.length === 0) {
+            return true;
+        }
+
+        return hook.conditions.every(condition => {
+            switch (condition.type) {
+                case 'tool':
+                    return context.data.tool === condition.value;
+                case 'file':
+                    return this.matchFilePattern(
+                        context.data.path, 
+                        condition.value
+                    );
+                case 'pattern':
+                    return this.matchPattern(
+                        JSON.stringify(context.data),
+                        condition.value
+                    );
+                case 'expression':
+                    return (condition.value as Function)(context);
+                default:
+                    return true;
+            }
+        });
+    }
+
+    private async executeWithTimeout(
+        handler: HookHandler,
+        context: HookContext,
+        timeout: number
+    ): Promise&lt;HookResult | void&gt; {
+        return Promise.race([
+            handler(context),
+            new Promise&lt;never&gt;((_, reject) => 
+                setTimeout(() => reject(new TimeoutError()), timeout)
+            )
+        ]);
+    }
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>内置 Hooks 分析</h2>
+            
+            <h3>PreToolUse Hook 示例</h3>
+            <pre><code class="language-typescript">// 推测的 PreToolUse Hook 实现
+const preToolUseHooks: Hook[] = [
+    {
+        id: 'validate-file-path',
+        event: 'PreToolUse',
+        priority: 100,
+        handler: async (context) => {
+            const { tool, params } = context.data;
+
+            // 验证文件路径
+            if (tool === 'read_file' || tool === 'write_file') {
+                const path = params.path;
+                
+                // 检查是否在允许的目录内
+                if (!isPathAllowed(path)) {
+                    return {
+                        block: true,
+                        reason: `Path not allowed: ${path}`
+                    };
+                }
+
+                // 检查敏感文件
+                if (isSensitiveFile(path)) {
+                    return {
+                        block: true,
+                        reason: `Sensitive file access denied: ${path}`
+                    };
+                }
+            }
+        }
+    },
+
+    {
+        id: 'log-tool-call',
+        event: 'PreToolUse',
+        priority: 0,
+        handler: async (context) => {
+            const { tool, params } = context.data;
+            logToolCall(tool, params);
+        }
+    }
+];</code></pre>
+
+            <h3>PostToolUse Hook 示例</h3>
+            <pre><code class="language-typescript">// 推测的 PostToolUse Hook 实现
+const postToolUseHooks: Hook[] = [
+    {
+        id: 'track-file-changes',
+        event: 'PostToolUse',
+        conditions: [
+            { type: 'tool', value: 'write_file' }
+        ],
+        handler: async (context) => {
+            const { params, result } = context.data;
+            
+            // 记录文件变更
+            await recordFileChange({
+                path: params.path,
+                timestamp: Date.now(),
+                size: result.size
+            });
+        }
+    },
+
+    {
+        id: 'auto-format',
+        event: 'PostToolUse',
+        conditions: [
+            { type: 'tool', value: 'write_file' }
+        ],
+        handler: async (context) => {
+            const { params } = context.data;
+            
+            // 自动格式化代码文件
+            if (isCodeFile(params.path)) {
+                await formatFile(params.path);
+            }
+        }
+    }
+];</code></pre>
+        </section>
+
+        <section>
+            <h2>配置文件格式</h2>
+            
+            <h3>Hooks 配置示例</h3>
+            <pre><code class="language-json">{
+  "hooks": [
+    {
+      "id": "pre-commit-check",
+      "event": "PreToolUse",
+      "type": "command",
+      "command": "npm run lint",
+      "conditions": [
+        {
+          "type": "tool",
+          "value": "write_file"
+        },
+        {
+          "type": "file",
+          "value": "*.ts"
+        }
+      ],
+      "priority": 50,
+      "timeout": 60000
+    },
+    {
+      "id": "notify-on-error",
+      "event": "OnError",
+      "type": "http",
+      "http": {
+        "url": "https://hooks.example.com/error",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer ${ERROR_WEBHOOK_TOKEN}"
+        }
+      }
+    },
+    {
+      "id": "auto-test",
+      "event": "PostToolUse",
+      "type": "function",
+      "function": "async (ctx) => { if (ctx.data.tool === 'write_file') { await runTests(ctx.data.params.path); } }",
+      "conditions": [
+        { "type": "file", "value": "src/**/*.ts" }
+      ]
+    }
+  ]
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>错误处理</h2>
+            
+            <pre><code class="language-typescript">// 推测的错误处理 Hook
+const errorHooks: Hook[] = [
+    {
+        id: 'global-error-handler',
+        event: 'OnError',
+        priority: 100,
+        handler: async (context) => {
+            const { error, tool, params } = context.data;
+
+            // 记录错误
+            await logError({
+                error: error.message,
+                stack: error.stack,
+                tool,
+                params,
+                timestamp: Date.now()
+            });
+
+            // 发送通知
+            if (error.severity === 'high') {
+                await sendAlert({
+                    type: 'error',
+                    message: error.message,
+                    context: { tool, params }
+                });
+            }
+
+            // 尝试恢复
+            if (isRecoverable(error)) {
+                return {
+                    actions: [{
+                        type: 'retry',
+                        params: { maxAttempts: 3 }
+                    }]
+                };
+            }
+        }
+    }
+];</code></pre>
+        </section>
+
+        <section>
+            <h2>性能考虑</h2>
+            
+            <div class="warning-box">
+                <h3>性能影响</h3>
+                <ul>
+                    <li>每个 Hook 都会增加执行延迟</li>
+                    <li>避免在 Hook 中执行耗时操作</li>
+                    <li>使用条件过滤减少不必要的执行</li>
+                    <li>设置合理的超时时间</li>
+                </ul>
+            </div>
+
+            <pre><code class="language-typescript">// 性能优化示例
+const optimizedHook: Hook = {
+    id: 'fast-validation',
+    event: 'PreToolUse',
+    
+    // 快速条件检查
+    conditions: [
+        { type: 'tool', value: 'write_file' },
+        { type: 'file', value: '*.ts' }
+    ],
+    
+    handler: async (context) => {
+        // 使用缓存
+        const cached = validationCache.get(context.data.params.path);
+        if (cached) return cached;
+        
+        // 快速验证
+        const result = await quickValidate(context.data.params.content);
+        validationCache.set(context.data.params.path, result);
+        
+        return result;
+    },
+    
+    // 设置超时
+    timeout: 5000
+};</code></pre>
+        </section>
+
+        <nav class="page-nav">
+            <a href="mcp.html" class="prev">← 上一页：MCP 实现</a>
+            <a href="skills.html" class="next">下一页：Skills 实现 →</a>
+        </nav>
+    </article>
+</body>
+</html>

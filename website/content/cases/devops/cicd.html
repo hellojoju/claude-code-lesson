@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD 流程搭建案例 - Claude Code 教程</title>
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+</head>
+<body>
+    <nav class="breadcrumb">
+        <a href="../../../index.html">首页</a> &gt;
+        <a href="../intro.html">案例研究</a> &gt;
+        <span>CI/CD 流程搭建</span>
+    </nav>
+
+    <article class="content">
+        <h1>CI/CD 流程搭建案例</h1>
+        
+        <div class="source-info">
+            <span class="reliability reliability-a">可靠性: A</span>
+            <span class="source">来源: Claude Code 实战经验</span>
+        </div>
+
+        <section>
+            <h2>场景描述</h2>
+            <p>为项目搭建完整的 CI/CD 流程，实现自动化测试、构建和部署。</p>
+        </section>
+
+        <section>
+            <h2>GitHub Actions 配置</h2>
+            
+            <pre><code class="language-yaml"># .github/workflows/ci.yml
+name: CI/CD Pipeline
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+            
+            - name: Install dependencies
+              run: npm ci
+            
+            - name: Run lint
+              run: npm run lint
+            
+            - name: Run tests
+              run: npm test -- --coverage
+            
+            - name: Upload coverage
+              uses: codecov/codecov-action@v3
+
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            
+            - name: Build
+              run: |
+                  npm ci
+                  npm run build
+            
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build
+                  path: dist/
+
+    deploy:
+        needs: build
+        if: github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy to production
+              run: |
+                  echo "Deploying to production..."</code></pre>
+        </section>
+
+        <section>
+            <h2>Docker 配置</h2>
+            
+            <pre><code class="language-dockerfile"># Dockerfile
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+EXPOSE 3000
+CMD ["node", "dist/server.js"]</code></pre>
+        </section>
+
+        <nav class="page-nav">
+            <a href="../fullstack/ecommerce.html" class="prev">← 上一页：电商功能实现</a>
+            <a href="monitoring.html" class="next">下一页：监控告警系统 →</a>
+        </nav>
+    </article>
+</body>
+</html>

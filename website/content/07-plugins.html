@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugins - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Plugins 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 目录 */
+    .toc {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .toc h3 { font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .toc ul { list-style: none; padding-left: 1rem; }
+    .toc a { color: var(--primary); }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/content/basics/installation.html">入门指南</a></li>
+        <li><a href="/content/modules/">核心模块</a></li>
+        <li><a href="/content/cases/intro.html">实战案例</a></li>
+        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <article>
+        <nav class="breadcrumb">
+          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Plugins
+        </nav>
+
+        <div class="meta">
+          <span class="badge badge-intermediate">
+            🟡 中级
+          </span>
+          <span class="badge">✅ Claude Code v2.1.92</span>
+        </div>
+
+        <div class="toc"><h3>目录</h3><ul><li ><a href="#overview">Overview</a></li><li ><a href="#plugin-architecture">Plugin Architecture</a></li><li ><a href="#plugin-loading-process">Plugin Loading Process</a></li><li ><a href="#plugin-types-distribution">Plugin Types & Distribution</a></li><li ><a href="#plugin-definition-structure">Plugin Definition Structure</a></li><li ><a href="#plugin-structure-example">Plugin Structure Example</a></li><li ><a href="#lsp-server-configuration">LSP server configuration</a></li><li ><a href="#plugin-options-v2-1-83">Plugin Options (v2.1.83+)</a></li><li ><a href="#persistent-plugin-data-claude_plugin_data-v2-1-78">Persistent Plugin Data (`${CLAUDE_PLUGIN_DATA}`) (v2.1.78+)</a></li><li ><a href="#inline-plugin-via-settings-source-settings-v2-1-80">Inline Plugin via Settings (`source: 'settings'`) (v2.1.80+)</a></li><li ><a href="#plugin-settings">Plugin Settings</a></li><li ><a href="#standalone-vs-plugin-approach">Standalone vs Plugin Approach</a></li><li ><a href="#practical-examples">Practical Examples</a></li><li ><a href="#example-1-pr-review-plugin">Example 1: PR Review Plugin</a></li><li ><a href="#example-2-devops-plugin">Example 2: DevOps Plugin</a></li><li ><a href="#example-3-documentation-plugin">Example 3: Documentation Plugin</a></li><li ><a href="#plugin-marketplace">Plugin Marketplace</a></li><li ><a href="#marketplace-configuration">Marketplace Configuration</a></li><li ><a href="#additional-marketplace-features">Additional Marketplace Features</a></li><li ><a href="#marketplace-definition-schema">Marketplace definition schema</a></li><li ><a href="#plugin-source-types">Plugin source types</a></li><li ><a href="#distribution-methods">Distribution methods</a></li><li ><a href="#strict-mode">Strict mode</a></li><li ><a href="#plugin-installation-lifecycle">Plugin Installation & Lifecycle</a></li><li ><a href="#plugin-features-comparison">Plugin Features Comparison</a></li><li ><a href="#plugin-cli-commands">Plugin CLI Commands</a></li><li ><a href="#installation-methods">Installation Methods</a></li><li ><a href="#from-marketplace">From Marketplace</a></li><li ><a href="#enable-disable-with-auto-detected-scope">Enable / Disable (with auto-detected scope)</a></li><li ><a href="#local-plugin-for-development">Local Plugin (for development)</a></li><li ><a href="#from-git-repository">From Git Repository</a></li><li ><a href="#when-to-create-a-plugin">When to Create a Plugin</a></li><li ><a href="#plugin-use-cases">Plugin Use Cases</a></li><li ><a href="#testing-a-plugin">Testing a Plugin</a></li><li ><a href="#hot-reload">Hot-Reload</a></li><li ><a href="#managed-settings-for-plugins">Managed Settings for Plugins</a></li><li ><a href="#plugin-security">Plugin Security</a></li><li ><a href="#publishing-a-plugin">Publishing a Plugin</a></li><li ><a href="#description">Description</a></li><li ><a href="#what-s-included">What's Included</a></li><li ><a href="#installation">Installation</a></li><li ><a href="#features">Features</a></li><li ><a href="#usage">Usage</a></li><li ><a href="#requirements">Requirements</a></li><li ><a href="#plugin-vs-manual-configuration">Plugin vs Manual Configuration</a></li><li ><a href="#try-it-now">Try It Now</a></li><li ><a href="#exercise-1-install-a-plugin">🎯 Exercise 1: Install a Plugin</a></li><li ><a href="#exercise-2-create-a-simple-plugin">🎯 Exercise 2: Create a Simple Plugin</a></li><li ><a href="#exercise-3-plugin-with-multiple-components">🎯 Exercise 3: Plugin with Multiple Components</a></li><li ><a href="#exercise-4-share-plugin-with-team">🎯 Exercise 4: Share Plugin with Team</a></li><li ><a href="#exercise-5-plugin-development-workflow">🎯 Exercise 5: Plugin Development Workflow</a></li><li ><a href="#best-practices">Best Practices</a></li><li ><a href="#do-s">Do's ✅</a></li><li ><a href="#don-ts">Don'ts ❌</a></li><li ><a href="#installation-instructions">Installation Instructions</a></li><li ><a href="#installing-from-marketplace">Installing from Marketplace</a></li><li ><a href="#installing-from-local-path">Installing from Local Path</a></li><li ><a href="#installing-from-github">Installing from GitHub</a></li><li ><a href="#listing-installed-plugins">Listing Installed Plugins</a></li><li ><a href="#updating-a-plugin">Updating a Plugin</a></li><li ><a href="#disabling-enabling-a-plugin">Disabling/Enabling a Plugin</a></li><li ><a href="#uninstalling-a-plugin">Uninstalling a Plugin</a></li><li ><a href="#related-concepts">Related Concepts</a></li><li ><a href="#complete-example-workflow">Complete Example Workflow</a></li><li ><a href="#pr-review-plugin-full-workflow">PR Review Plugin Full Workflow</a></li><li ><a href="#troubleshooting">Troubleshooting</a></li><li ><a href="#plugin-won-t-install">Plugin Won't Install</a></li><li ><a href="#components-not-loading">Components Not Loading</a></li><li ><a href="#mcp-connection-failed">MCP Connection Failed</a></li><li ><a href="#commands-not-available-after-install">Commands Not Available After Install</a></li><li ><a href="#hook-execution-issues">Hook Execution Issues</a></li><li ><a href="#additional-resources">Additional Resources</a></li></ul></div>
+
+        <div class="content">
+          <p><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
+  <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
+</picture></p><blockquote>🟡 <strong>Intermediate</strong> | ⏱ 90 minutes</blockquote>
+>
+<blockquote>✅ Verified against Claude Code <strong>v2.1.92</strong> · Last verified: 2026-04-05</blockquote><p><strong>What you'll build:</strong> Bundle and share Claude Code extensions.</p><h1>Claude Code Plugins</h1><p>This folder contains complete plugin examples that bundle multiple Claude Code features into cohesive, installable packages.</p><h2 id="Overview">Overview</h2><p>Claude Code Plugins are bundled collections of customizations (slash commands, subagents, MCP servers, and hooks) that install with a single command. They represent the highest-level extension mechanism—combining multiple features into cohesive, shareable packages.</p><h2 id="Plugin Architecture">Plugin Architecture</h2><div class="mermaid">graph TB
+    A["Plugin"]
+    B["Slash Commands"]
+    C["Subagents"]
+    D["MCP Servers"]
+    E["Hooks"]
+    F["Configuration"]</p><p>    A -->|bundles| B
+    A -->|bundles| C
+    A -->|bundles| D
+    A -->|bundles| E
+    A -->|bundles| F
+</div><h2 id="Plugin Loading Process">Plugin Loading Process</h2><div class="mermaid">sequenceDiagram
+    participant User
+    participant Claude as Claude Code
+    participant Plugin as Plugin Marketplace
+    participant Install as Installation
+    participant SlashCmds as Slash Commands
+    participant Subagents
+    participant MCPServers as MCP Servers
+    participant Hooks
+    participant Tools as Configured Tools</p><p>    User->>Claude: /plugin install pr-review
+    Claude->>Plugin: Download plugin manifest
+    Plugin-->>Claude: Return plugin definition
+    Claude->>Install: Extract components
+    Install->>SlashCmds: Configure
+    Install->>Subagents: Configure
+    Install->>MCPServers: Configure
+    Install->>Hooks: Configure
+    SlashCmds-->>Tools: Ready to use
+    Subagents-->>Tools: Ready to use
+    MCPServers-->>Tools: Ready to use
+    Hooks-->>Tools: Ready to use
+    Tools-->>Claude: Plugin installed ✅
+</div><h2 id="Plugin Types & Distribution">Plugin Types & Distribution</h2><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Scope</th>
+<th>Shared</th>
+<th>Authority</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Official</td>
+<td>Global</td>
+<td>All users</td>
+<td>Anthropic</td>
+<td>PR Review, Security Guidance</td>
+</tr>
+<tr>
+<td>Community</td>
+<td>Public</td>
+<td>All users</td>
+<td>Community</td>
+<td>DevOps, Data Science</td>
+</tr>
+<tr>
+<td>Organization</td>
+<td>Internal</td>
+<td>Team members</td>
+<td>Company</td>
+<td>Internal standards, tools</td>
+</tr>
+<tr>
+<td>Personal</td>
+<td>Individual</td>
+<td>Single user</td>
+<td>Developer</td>
+<td>Custom workflows</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Plugin Definition Structure">Plugin Definition Structure</h2><p>Plugin manifest uses JSON format in <code>.claude-plugin/plugin.json</code>:</p><pre><code class="language-json">{
+  "name": "my-first-plugin",
+  "description": "A greeting plugin",
+  "version": "1.0.0",
+  "author": {
+    "name": "Your Name"
+  },
+  "homepage": "https://example.com",
+  "repository": "https://github.com/user/repo",
+  "license": "MIT"
+}
+</code></pre><h2 id="Plugin Structure Example">Plugin Structure Example</h2><pre><code class="language-">my-plugin/
+├── .claude-plugin/
+│   └── plugin.json       # Manifest (name, description, version, author)
+├── commands/             # Skills as Markdown files
+│   ├── task-1.md
+│   ├── task-2.md
+│   └── workflows/
+├── agents/               # Custom agent definitions
+│   ├── specialist-1.md
+│   ├── specialist-2.md
+│   └── configs/
+├── skills/               # Agent Skills with SKILL.md files
+│   ├── skill-1.md
+│   └── skill-2.md
+├── hooks/                # Event handlers in hooks.json
+│   └── hooks.json
+├── .mcp.json             # MCP server configurations
+├── .lsp.json             # LSP server configurations
+├── settings.json         # Default settings
+├── templates/
+│   └── issue-template.md
+├── scripts/
+│   ├── helper-1.sh
+│   └── helper-2.py
+├── docs/
+│   ├── README.md
+│   └── USAGE.md
+└── tests/
+    └── plugin.test.js
+</code></pre><h3>LSP server configuration</h3><p>Plugins can include Language Server Protocol (LSP) support for real-time code intelligence. LSP servers provide diagnostics, code navigation, and symbol information as you work.</p><p><strong>Configuration locations</strong>:
+<ul><li><code>.lsp.json</code> file in the plugin root directory</li>
+<li>Inline <code>lsp</code> key in <code>plugin.json</code></li><p>#### Field reference</p><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>command</code></td>
+<td>Yes</td>
+<td>LSP server binary (must be in PATH)</td>
+</tr>
+<tr>
+<td><code>extensionToLanguage</code></td>
+<td>Yes</td>
+<td>Maps file extensions to language IDs</td>
+</tr>
+<tr>
+<td><code>args</code></td>
+<td>No</td>
+<td>Command-line arguments for the server</td>
+</tr>
+<tr>
+<td><code>transport</code></td>
+<td>No</td>
+<td>Communication method: <code>stdio</code> (default) or <code>socket</code></td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>No</td>
+<td>Environment variables for the server process</td>
+</tr>
+<tr>
+<td><code>initializationOptions</code></td>
+<td>No</td>
+<td>Options sent during LSP initialization</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>No</td>
+<td>Workspace configuration passed to the server</td>
+</tr>
+<tr>
+<td><code>workspaceFolder</code></td>
+<td>No</td>
+<td>Override the workspace folder path</td>
+</tr>
+<tr>
+<td><code>startupTimeout</code></td>
+<td>No</td>
+<td>Maximum time (ms) to wait for server startup</td>
+</tr>
+<tr>
+<td><code>shutdownTimeout</code></td>
+<td>No</td>
+<td>Maximum time (ms) for graceful shutdown</td>
+</tr>
+<tr>
+<td><code>restartOnCrash</code></td>
+<td>No</td>
+<td>Automatically restart if the server crashes</td>
+</tr>
+<tr>
+<td><code>maxRestarts</code></td>
+<td>No</td>
+<td>Maximum restart attempts before giving up</td>
+</tr>
+</tbody>
+</table>
+#### Example configurations</p><p><strong>Go (gopls)</strong>:</p><pre><code class="language-json">{
+  "go": {
+    "command": "gopls",
+    "args": ["serve"],
+    "extensionToLanguage": {
+      ".go": "go"
+    }
+  }
+}
+</code></pre><p><strong>Python (pyright)</strong>:</p><pre><code class="language-json">{
+  "python": {
+    "command": "pyright-langserver",
+    "args": ["--stdio"],
+    "extensionToLanguage": {
+      ".py": "python",
+      ".pyi": "python"
+    }
+  }
+}
+</code></pre><p><strong>TypeScript</strong>:</p><pre><code class="language-json">{
+  "typescript": {
+    "command": "typescript-language-server",
+    "args": ["--stdio"],
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact",
+      ".js": "javascript",
+      ".jsx": "javascriptreact"
+    }
+  }
+}
+</code></pre><p>#### Available LSP plugins</p><p>The official marketplace includes pre-configured LSP plugins:</p><table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Language</th>
+<th>Server Binary</th>
+<th>Install Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pyright-lsp</code></td>
+<td>Python</td>
+<td><code>pyright-langserver</code></td>
+<td><code>pip install pyright</code></td>
+</tr>
+<tr>
+<td><code>typescript-lsp</code></td>
+<td>TypeScript/JavaScript</td>
+<td><code>typescript-language-server</code></td>
+<td><code>npm install -g typescript-language-server typescript</code></td>
+</tr>
+<tr>
+<td><code>rust-lsp</code></td>
+<td>Rust</td>
+<td><code>rust-analyzer</code></td>
+<td>Install via <code>rustup component add rust-analyzer</code></td>
+</tr>
+</tbody>
+</table>
+#### LSP capabilities</p><p>Once configured, LSP servers provide:</p><li><strong>Instant diagnostics</strong> — errors and warnings appear immediately after edits</li>
+<li><strong>Code navigation</strong> — go to definition, find references, implementations</li>
+<li><strong>Hover information</strong> — type signatures and documentation on hover</li>
+<li><strong>Symbol listing</strong> — browse symbols in the current file or workspace</li><h2 id="Plugin Options (v2.1.83+)">Plugin Options (v2.1.83+)</h2><p>Plugins can declare user-configurable options in the manifest via <code>userConfig</code>. Values marked <code>sensitive: true</code> are stored in the system keychain rather than plain-text settings files:</p><pre><code class="language-json">{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "userConfig": {
+    "apiKey": {
+      "description": "API key for the service",
+      "sensitive": true
+    },
+    "region": {
+      "description": "Deployment region",
+      "default": "us-east-1"
+    }
+  }
+}
+</code></pre><h2 id="Persistent Plugin Data (<code>${CLAUDE_PLUGIN_DATA}</code>) (v2.1.78+)">Persistent Plugin Data (<code>${CLAUDE_PLUGIN_DATA}</code>) (v2.1.78+)</h2><p>Plugins have access to a persistent state directory via the <code>${CLAUDE_PLUGIN_DATA}</code> environment variable. This directory is unique per plugin and survives across sessions, making it suitable for caches, databases, and other persistent state:</p><pre><code class="language-json">{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "command": "node ${CLAUDE_PLUGIN_DATA}/track-usage.js"
+      }
+    ]
+  }
+}
+</code></pre><p>The directory is created automatically when the plugin is installed. Files stored here persist until the plugin is uninstalled.</p><h2 id="Inline Plugin via Settings (<code>source: 'settings'</code>) (v2.1.80+)">Inline Plugin via Settings (<code>source: 'settings'</code>) (v2.1.80+)</h2><p>Plugins can be defined inline in settings files as marketplace entries using the <code>source: 'settings'</code> field. This allows embedding a plugin definition directly without requiring a separate repository or marketplace:</p><pre><code class="language-json">{
+  "pluginMarketplaces": [
+    {
+      "name": "inline-tools",
+      "source": "settings",
+      "plugins": [
+        {
+          "name": "quick-lint",
+          "source": "./local-plugins/quick-lint"
+        }
+      ]
+    }
+  ]
+}
+</code></pre><h2 id="Plugin Settings">Plugin Settings</h2><p>Plugins can ship a <code>settings.json</code> file to provide default configuration. This currently supports the <code>agent</code> key, which sets the main thread agent for the plugin:</p><pre><code class="language-json">{
+  "agent": "agents/specialist-1.md"
+}
+</code></pre><p>When a plugin includes <code>settings.json</code>, its defaults are applied on installation. Users can override these settings in their own project or user configuration.</p><h2 id="Standalone vs Plugin Approach">Standalone vs Plugin Approach</h2><table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Command Names</th>
+<th>Configuration</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standalone</strong></td>
+<td><code>/hello</code></td>
+<td>Manual setup in CLAUDE.md</td>
+<td>Personal, project-specific</td>
+</tr>
+<tr>
+<td><strong>Plugins</strong></td>
+<td><code>/plugin-name:hello</code></td>
+<td>Automated via plugin.json</td>
+<td>Sharing, distribution, team use</td>
+</tr>
+</tbody>
+</table>
+Use <strong>standalone slash commands</strong> for quick personal workflows. Use <strong>plugins</strong> when you want to bundle multiple features, share with a team, or publish for distribution.</p><h2 id="Practical Examples">Practical Examples</h2><h3>Example 1: PR Review Plugin</h3><p><strong>File:</strong> <code>.claude-plugin/plugin.json</code></p><pre><code class="language-json">{
+  "name": "pr-review",
+  "version": "1.0.0",
+  "description": "Complete PR review workflow with security, testing, and docs",
+  "author": {
+    "name": "Anthropic"
+  },
+  "repository": "https://github.com/your-org/pr-review",
+  "license": "MIT"
+}
+</code></pre><p><strong>File:</strong> <code>commands/review-pr.md</code></p><pre><code class="language-markdown">---
+name: Review PR
+description: Start comprehensive PR review with security and testing checks
+<hr></p><h1>PR Review</h1><p>This command initiates a complete pull request review including:</p><li>Security analysis</li>
+<li>Test coverage verification</li>
+<li>Documentation updates</li>
+<li>Code quality checks</li>
+<li>Performance impact assessment</li>
+</code></pre><p><strong>File:</strong> <code>agents/security-reviewer.md</code></p><pre><code class="language-yaml">---
+name: security-reviewer
+description: Security-focused code review
+tools: read, grep, diff
+<hr></p><h1>Security Reviewer</h1><p>Specializes in finding security vulnerabilities:
+<li>Authentication/authorization issues</li>
+<li>Data exposure</li>
+<li>Injection attacks</li>
+<li>Secure configuration</li>
+</code></pre><p><strong>Installation:</strong></p><pre><code class="language-bash">/plugin install pr-review</p><h1>Result:</h1>
+<h1>✅ 3 slash commands installed</h1>
+<h1>✅ 3 subagents configured</h1>
+<h1>✅ 2 MCP servers connected</h1>
+<h1>✅ 4 hooks registered</h1>
+<h1>✅ Ready to use!</h1>
+</code></pre><h3>Example 2: DevOps Plugin</h3><p><strong>Components:</strong></p><pre><code class="language-">devops-automation/
+├── commands/
+│   ├── deploy.md
+│   ├── rollback.md
+│   ├── status.md
+│   └── incident.md
+├── agents/
+│   ├── deployment-specialist.md
+│   ├── incident-commander.md
+│   └── alert-analyzer.md
+├── mcp/
+│   ├── github-config.json
+│   ├── kubernetes-config.json
+│   └── prometheus-config.json
+├── hooks/
+│   ├── pre-deploy.js
+│   ├── post-deploy.js
+│   └── on-error.js
+└── scripts/
+    ├── deploy.sh
+    ├── rollback.sh
+    └── health-check.sh
+</code></pre><h3>Example 3: Documentation Plugin</h3><p><strong>Bundled Components:</strong></p><pre><code class="language-">documentation/
+├── commands/
+│   ├── generate-api-docs.md
+│   ├── generate-readme.md
+│   ├── sync-docs.md
+│   └── validate-docs.md
+├── agents/
+│   ├── api-documenter.md
+│   ├── code-commentator.md
+│   └── example-generator.md
+├── mcp/
+│   ├── github-docs-config.json
+│   └── slack-announce-config.json
+└── templates/
+    ├── api-endpoint.md
+    ├── function-docs.md
+    └── adr-template.md
+</code></pre><h2 id="Plugin Marketplace">Plugin Marketplace</h2><p>The official Anthropic-managed plugin directory is <code>anthropics/claude-plugins-official</code>. Enterprise admins can also create private plugin marketplaces for internal distribution.</p><div class="mermaid">graph TB
+    A["Plugin Marketplace"]
+    B["Official<br/>anthropics/claude-plugins-official"]
+    C["Community<br/>Marketplace"]
+    D["Enterprise<br/>Private Registry"]</p><p>    A --> B
+    A --> C
+    A --> D</p><p>    B -->|Categories| B1["Development"]
+    B -->|Categories| B2["DevOps"]
+    B -->|Categories| B3["Documentation"]</p><p>    C -->|Search| C1["DevOps Automation"]
+    C -->|Search| C2["Mobile Dev"]
+    C -->|Search| C3["Data Science"]</p><p>    D -->|Internal| D1["Company Standards"]
+    D -->|Internal| D2["Legacy Systems"]
+    D -->|Internal| D3["Compliance"]</p><p>    style A fill:#e1f5fe,stroke:#333,color:#333
+    style B fill:#e8f5e9,stroke:#333,color:#333
+    style C fill:#f3e5f5,stroke:#333,color:#333
+    style D fill:#fff3e0,stroke:#333,color:#333
+</div><h3>Marketplace Configuration</h3><p>Enterprise and advanced users can control marketplace behavior through settings:</p><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>extraKnownMarketplaces</code></td>
+<td>Add additional marketplace sources beyond the defaults</td>
+</tr>
+<tr>
+<td><code>strictKnownMarketplaces</code></td>
+<td>Control which marketplaces users are allowed to add</td>
+</tr>
+<tr>
+<td><code>deniedPlugins</code></td>
+<td>Admin-managed blocklist to prevent specific plugins from being installed</td>
+</tr>
+</tbody>
+</table>
+<h3>Additional Marketplace Features</h3><li><strong>Default git timeout</strong>: Increased from 30s to 120s for large plugin repositories</li>
+<li><strong>Custom npm registries</strong>: Plugins can specify custom npm registry URLs for dependency resolution</li>
+<li><strong>Version pinning</strong>: Lock plugins to specific versions for reproducible environments</li><h3>Marketplace definition schema</h3><p>Plugin marketplaces are defined in <code>.claude-plugin/marketplace.json</code>:</p><pre><code class="language-json">{
+  "name": "my-team-plugins",
+  "owner": "my-org",
+  "plugins": [
+    {
+      "name": "code-standards",
+      "source": "./plugins/code-standards",
+      "description": "Enforce team coding standards",
+      "version": "1.2.0",
+      "author": "platform-team"
+    },
+    {
+      "name": "deploy-helper",
+      "source": {
+        "source": "github",
+        "repo": "my-org/deploy-helper",
+        "ref": "v2.0.0"
+      },
+      "description": "Deployment automation workflows"
+    }
+  ]
+}
+</code></pre><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Yes</td>
+<td>Marketplace name in kebab-case</td>
+</tr>
+<tr>
+<td><code>owner</code></td>
+<td>Yes</td>
+<td>Organization or user who maintains the marketplace</td>
+</tr>
+<tr>
+<td><code>plugins</code></td>
+<td>Yes</td>
+<td>Array of plugin entries</td>
+</tr>
+<tr>
+<td><code>plugins[].name</code></td>
+<td>Yes</td>
+<td>Plugin name (kebab-case)</td>
+</tr>
+<tr>
+<td><code>plugins[].source</code></td>
+<td>Yes</td>
+<td>Plugin source (path string or source object)</td>
+</tr>
+<tr>
+<td><code>plugins[].description</code></td>
+<td>No</td>
+<td>Brief plugin description</td>
+</tr>
+<tr>
+<td><code>plugins[].version</code></td>
+<td>No</td>
+<td>Semantic version string</td>
+</tr>
+<tr>
+<td><code>plugins[].author</code></td>
+<td>No</td>
+<td>Plugin author name</td>
+</tr>
+</tbody>
+</table>
+<h3>Plugin source types</h3><p>Plugins can be sourced from multiple locations:</p><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Syntax</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Relative path</strong></td>
+<td>String path</td>
+<td><code>"./plugins/my-plugin"</code></td>
+</tr>
+<tr>
+<td><strong>GitHub</strong></td>
+<td><code>{ "source": "github", "repo": "owner/repo" }</code></td>
+<td><code>{ "source": "github", "repo": "acme/lint-plugin", "ref": "v1.0" }</code></td>
+</tr>
+<tr>
+<td><strong>Git URL</strong></td>
+<td><code>{ "source": "url", "url": "..." }</code></td>
+<td><code>{ "source": "url", "url": "https://git.internal/plugin.git" }</code></td>
+</tr>
+<tr>
+<td><strong>Git subdirectory</strong></td>
+<td><code>{ "source": "git-subdir", "url": "...", "path": "..." }</code></td>
+<td><code>{ "source": "git-subdir", "url": "https://github.com/org/monorepo.git", "path": "packages/plugin" }</code></td>
+</tr>
+<tr>
+<td><strong>npm</strong></td>
+<td><code>{ "source": "npm", "package": "..." }</code></td>
+<td><code>{ "source": "npm", "package": "@acme/claude-plugin", "version": "^2.0" }</code></td>
+</tr>
+<tr>
+<td><strong>pip</strong></td>
+<td><code>{ "source": "pip", "package": "..." }</code></td>
+<td><code>{ "source": "pip", "package": "claude-data-plugin", "version": ">=1.0" }</code></td>
+</tr>
+</tbody>
+</table>
+GitHub and git sources support optional <code>ref</code> (branch/tag) and <code>sha</code> (commit hash) fields for version pinning.</p><h3>Distribution methods</h3><p><strong>GitHub (recommended)</strong>:
+<pre><code class="language-bash"><h1>Users add your marketplace</h1>
+/plugin marketplace add owner/repo-name
+</code></pre><p><strong>Other git services</strong> (full URL required):
+<pre><code class="language-bash">/plugin marketplace add https://gitlab.com/org/marketplace-repo.git
+</code></pre><p><strong>Private repositories</strong>: Supported via git credential helpers or environment tokens. Users must have read access to the repository.</p><p><strong>Official marketplace submission</strong>: Submit plugins to the Anthropic-curated marketplace for broader distribution.</p><h3>Strict mode</h3><p>Control how marketplace definitions interact with local <code>plugin.json</code> files:</p><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strict: true</code> (default)</td>
+<td>Local <code>plugin.json</code> is authoritative; marketplace entry supplements it</td>
+</tr>
+<tr>
+<td><code>strict: false</code></td>
+<td>Marketplace entry is the entire plugin definition</td>
+</tr>
+</tbody>
+</table>
+<strong>Organization restrictions</strong> with <code>strictKnownMarketplaces</code>:</p><table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Not set</td>
+<td>No restrictions — users can add any marketplace</td>
+</tr>
+<tr>
+<td>Empty array <code>[]</code></td>
+<td>Lockdown — no marketplaces allowed</td>
+</tr>
+<tr>
+<td>Array of patterns</td>
+<td>Allowlist — only matching marketplaces can be added</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-json">{
+  "strictKnownMarketplaces": [
+    "my-org/*",
+    "github.com/trusted-vendor/*"
+  ]
+}
+</code></pre><blockquote><strong>Warning</strong>: In strict mode with <code>strictKnownMarketplaces</code>, users can only install plugins from allowlisted marketplaces. This is useful for enterprise environments requiring controlled plugin distribution.</blockquote><h2 id="Plugin Installation & Lifecycle">Plugin Installation & Lifecycle</h2><div class="mermaid">graph LR
+    A["Discover"] -->|Browse| B["Marketplace"]
+    B -->|Select| C["Plugin Page"]
+    C -->|View| D["Components"]
+    D -->|Install| E["/plugin install"]
+    E -->|Extract| F["Configure"]
+    F -->|Activate| G["Use"]
+    G -->|Check| H["Update"]
+    H -->|Available| G
+    G -->|Done| I["Disable"]
+    I -->|Later| J["Enable"]
+    J -->|Back| G
+</div><h2 id="Plugin Features Comparison">Plugin Features Comparison</h2><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Slash Command</th>
+<th>Skill</th>
+<th>Subagent</th>
+<th>Plugin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Installation</strong></td>
+<td>Manual copy</td>
+<td>Manual copy</td>
+<td>Manual config</td>
+<td>One command</td>
+</tr>
+<tr>
+<td><strong>Setup Time</strong></td>
+<td>5 minutes</td>
+<td>10 minutes</td>
+<td>15 minutes</td>
+<td>2 minutes</td>
+</tr>
+<tr>
+<td><strong>Bundling</strong></td>
+<td>Single file</td>
+<td>Single file</td>
+<td>Single file</td>
+<td>Multiple</td>
+</tr>
+<tr>
+<td><strong>Versioning</strong></td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Automatic</td>
+</tr>
+<tr>
+<td><strong>Team Sharing</strong></td>
+<td>Copy file</td>
+<td>Copy file</td>
+<td>Copy file</td>
+<td>Install ID</td>
+</tr>
+<tr>
+<td><strong>Updates</strong></td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Manual</td>
+<td>Auto-available</td>
+</tr>
+<tr>
+<td><strong>Dependencies</strong></td>
+<td>None</td>
+<td>None</td>
+<td>None</td>
+<td>May include</td>
+</tr>
+<tr>
+<td><strong>Marketplace</strong></td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><strong>Distribution</strong></td>
+<td>Repository</td>
+<td>Repository</td>
+<td>Repository</td>
+<td>Marketplace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Plugin CLI Commands">Plugin CLI Commands</h2><p>All plugin operations are available as CLI commands:</p><pre><code class="language-bash">claude plugin install <name>@<marketplace>   # Install from a marketplace
+claude plugin uninstall <name>               # Remove a plugin
+claude plugin list                           # List installed plugins
+claude plugin enable <name>                  # Enable a disabled plugin
+claude plugin disable <name>                 # Disable a plugin
+claude plugin validate                       # Validate plugin structure
+</code></pre><h2 id="Installation Methods">Installation Methods</h2><h3>From Marketplace</h3>
+<pre><code class="language-bash">/plugin install plugin-name
+<h1>or from CLI:</h1>
+claude plugin install plugin-name@marketplace-name
+</code></pre><h3>Enable / Disable (with auto-detected scope)</h3>
+<pre><code class="language-bash">/plugin enable plugin-name
+/plugin disable plugin-name
+</code></pre><h3>Local Plugin (for development)</h3>
+<pre><code class="language-bash"><h1>CLI flag for local testing (repeatable for multiple plugins)</h1>
+claude --plugin-dir ./path/to/plugin
+claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b
+</code></pre><h3>From Git Repository</h3>
+<pre><code class="language-bash">/plugin install github:username/repo
+</code></pre><h2 id="When to Create a Plugin">When to Create a Plugin</h2><div class="mermaid">graph TD
+    A["Should I create a plugin?"]
+    A -->|Need multiple components| B{"Multiple commands<br/>or subagents<br/>or MCPs?"}
+    B -->|Yes| C["✅ Create Plugin"]
+    B -->|No| D["Use Individual Feature"]
+    A -->|Team workflow| E{"Share with<br/>team?"}
+    E -->|Yes| C
+    E -->|No| F["Keep as Local Setup"]
+    A -->|Complex setup| G{"Needs auto<br/>configuration?"}
+    G -->|Yes| C
+    G -->|No| D
+</div><h3>Plugin Use Cases</h3><table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommendation</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Team Onboarding</strong></td>
+<td>✅ Use Plugin</td>
+<td>Instant setup, all configurations</td>
+</tr>
+<tr>
+<td><strong>Framework Setup</strong></td>
+<td>✅ Use Plugin</td>
+<td>Bundles framework-specific commands</td>
+</tr>
+<tr>
+<td><strong>Enterprise Standards</strong></td>
+<td>✅ Use Plugin</td>
+<td>Central distribution, version control</td>
+</tr>
+<tr>
+<td><strong>Quick Task Automation</strong></td>
+<td>❌ Use Command</td>
+<td>Overkill complexity</td>
+</tr>
+<tr>
+<td><strong>Single Domain Expertise</strong></td>
+<td>❌ Use Skill</td>
+<td>Too heavy, use skill instead</td>
+</tr>
+<tr>
+<td><strong>Specialized Analysis</strong></td>
+<td>❌ Use Subagent</td>
+<td>Create manually or use skill</td>
+</tr>
+<tr>
+<td><strong>Live Data Access</strong></td>
+<td>❌ Use MCP</td>
+<td>Standalone, don't bundle</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Testing a Plugin">Testing a Plugin</h2><p>Before publishing, test your plugin locally using the <code>--plugin-dir</code> CLI flag (repeatable for multiple plugins):</p><pre><code class="language-bash">claude --plugin-dir ./my-plugin
+claude --plugin-dir ./my-plugin --plugin-dir ./another-plugin
+</code></pre><p>This launches Claude Code with your plugin loaded, allowing you to:
+<li>Verify all slash commands are available</li>
+<li>Test subagents and agents function correctly</li>
+<li>Confirm MCP servers connect properly</li>
+<li>Validate hook execution</li>
+<li>Check LSP server configurations</li>
+<li>Check for any configuration errors</li><h2 id="Hot-Reload">Hot-Reload</h2><p>Plugins support hot-reload during development. When you modify plugin files, Claude Code can detect changes automatically. You can also force a reload with:</p><pre><code class="language-bash">/reload-plugins
+</code></pre><p>This re-reads all plugin manifests, commands, agents, skills, hooks, and MCP/LSP configurations without restarting the session.</p><h2 id="Managed Settings for Plugins">Managed Settings for Plugins</h2><p>Administrators can control plugin behavior across an organization using managed settings:</p><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabledPlugins</code></td>
+<td>Allowlist of plugins that are enabled by default</td>
+</tr>
+<tr>
+<td><code>deniedPlugins</code></td>
+<td>Blocklist of plugins that cannot be installed</td>
+</tr>
+<tr>
+<td><code>extraKnownMarketplaces</code></td>
+<td>Add additional marketplace sources beyond the defaults</td>
+</tr>
+<tr>
+<td><code>strictKnownMarketplaces</code></td>
+<td>Restrict which marketplaces users are allowed to add</td>
+</tr>
+<tr>
+<td><code>allowedChannelPlugins</code></td>
+<td>Control which plugins are permitted per release channel</td>
+</tr>
+</tbody>
+</table>
+These settings can be applied at the organization level via managed configuration files and take precedence over user-level settings.</p><h2 id="Plugin Security">Plugin Security</h2><p>Plugin subagents run in a restricted sandbox. The following frontmatter keys are <strong>not allowed</strong> in plugin subagent definitions:</p><li><code>hooks</code> -- Subagents cannot register event handlers</li>
+<li><code>mcpServers</code> -- Subagents cannot configure MCP servers</li>
+<li><code>permissionMode</code> -- Subagents cannot override the permission model</li><p>This ensures that plugins cannot escalate privileges or modify the host environment beyond their declared scope.</p><h2 id="Publishing a Plugin">Publishing a Plugin</h2><p><strong>Steps to publish:</strong></p><li>Create plugin structure with all components</li>
+<li>Write <code>.claude-plugin/plugin.json</code> manifest</li>
+<li>Create <code>README.md</code> with documentation</li>
+<li>Test locally with <code>claude --plugin-dir ./my-plugin</code></li>
+<li>Submit to plugin marketplace</li>
+<li>Get reviewed and approved</li>
+<li>Published on marketplace</li>
+<li>Users can install with one command</li><p><strong>Example submission:</strong></p><pre><code class="language-markdown"><h1>PR Review Plugin</h1><h2 id="Description">Description</h2>
+Complete PR review workflow with security, testing, and documentation checks.</p><h2 id="What's Included">What's Included</h2>
+<li>3 slash commands for different review types</li>
+<li>3 specialized subagents</li>
+<li>GitHub and CodeQL MCP integration</li>
+<li>Automated security scanning hooks</li><h2 id="Installation">Installation</h2>
+</code></pre>bash
+/plugin install pr-review
+<pre><code class="language-">
+<h2 id="Features">Features</h2>
+✅ Security analysis
+✅ Test coverage checking
+✅ Documentation verification
+✅ Code quality assessment
+✅ Performance impact analysis</p><h2 id="Usage">Usage</h2>
+</code></pre>bash
+/review-pr
+/check-security
+/check-tests
+<pre><code class="language-">
+<h2 id="Requirements">Requirements</h2>
+<li>Claude Code 1.0+</li>
+<li>GitHub access</li>
+<li>CodeQL (optional)</li>
+</code></pre><h2 id="Plugin vs Manual Configuration">Plugin vs Manual Configuration</h2><p><strong>Manual Setup (2+ hours):</strong>
+<li>Install slash commands one by one</li>
+<li>Create subagents individually</li>
+<li>Configure MCPs separately</li>
+<li>Set up hooks manually</li>
+<li>Document everything</li>
+<li>Share with team (hope they configure correctly)</li><p><strong>With Plugin (2 minutes):</strong>
+<pre><code class="language-bash">/plugin install pr-review
+<h1>✅ Everything installed and configured</h1>
+<h1>✅ Ready to use immediately</h1>
+<h1>✅ Team can reproduce exact setup</h1>
+</code></pre><h2 id="Try It Now">Try It Now</h2><h3>🎯 Exercise 1: Install a Plugin</h3><p>Install and test a plugin:</p><pre><code class="language-bash"><h1>Step 1: Browse available plugins</h1>
+/plugin search code-review</p><h1>Step 2: Install the plugin</h1>
+/plugin install code-review</p><h1>Step 3: Verify installation</h1>
+/plugin list
+<h1>Should show: code-review (installed)</h1><h1>Step 4: Test the plugin</h1>
+/code-review:review
+<h1>Or just /review if no naming conflict</h1>
+</code></pre><h3>🎯 Exercise 2: Create a Simple Plugin</h3><p>Build a plugin with one skill:</p><p><strong>Step 1: Create plugin directory</strong>
+<pre><code class="language-bash">mkdir -p my-first-plugin
+</code></pre><p><strong>Step 2: Create plugin.json</strong>
+<pre><code class="language-json">{
+  "name": "my-first-plugin",
+  "version": "1.0.0",
+  "description": "A simple example plugin",
+  "skills": ["hello"]
+}
+</code></pre><p><strong>Step 3: Create the skill</strong>
+<pre><code class="language-bash">mkdir -p my-first-plugin/skills/hello
+</code></pre><p>Create <code>my-first-plugin/skills/hello/SKILL.md</code>:
+<pre><code class="language-markdown">---
+name: hello
+description: Greet the user
+<hr></p><h1>Hello!</h1><p>Welcome to Claude Code!</p><p>Current time: !<code>date</code>
+Project: !<code>basename $(git rev-parse --show-toplevel 2>/dev/null || pwd)</code></p><p>What would you like to work on today?
+</code></pre><p><strong>Step 4: Test locally</strong>
+<pre><code class="language-bash"><h1>Load plugin temporarily</h1>
+/plugin load ./my-first-plugin</p><h1>Test it</h1>
+/my-first-plugin:hello
+</code></pre><h3>🎯 Exercise 3: Plugin with Multiple Components</h3><p>Create a comprehensive plugin:</p><p><strong>Structure:</strong>
+<pre><code class="language-bash">my-dev-plugin/
+├── plugin.json
+├── README.md
+├── skills/
+│   ├── review/
+│   │   └── SKILL.md
+│   ├── commit/
+│   │   └── SKILL.md
+│   └── test/
+│   │   └── SKILL.md
+├── commands/
+│   ├── deploy.md
+│   └── release.md
+└── hooks/
+    └── PostToolUse/
+        └── lint.sh
+</code></pre><p><strong>plugin.json:</strong>
+<pre><code class="language-json">{
+  "name": "dev-workflow",
+  "version": "1.0.0",
+  "description": "Development workflow helpers",
+  "skills": ["review", "commit", "test"],
+  "commands": ["deploy", "release"],
+  "hooks": {
+    "PostToolUse": ["lint"]
+  }
+}
+</code></pre><h3>🎯 Exercise 4: Share Plugin with Team</h3><p>Publish your plugin:</p><p><strong>Step 1: Create GitHub repository</strong>
+<pre><code class="language-bash">git init
+git add .
+git commit -m "Initial plugin release"
+git push origin main
+</code></pre><p><strong>Step 2: Team members install</strong>
+<pre><code class="language-bash"><h1>From repository URL</h1>
+/plugin install https://github.com/yourname/dev-workflow-plugin</p><h1>Or from npm (if published)</h1>
+/plugin install dev-workflow-plugin
+</code></pre><p><strong>Step 3: Verify team adoption</strong>
+<pre><code class="language-bash"><h1>In Claude Code:</h1>
+/plugin list
+<h1>Should show: dev-workflow (installed, v1.0.0)</h1><p>/dev-workflow:review
+</code></pre><h3>🎯 Exercise 5: Plugin Development Workflow</h3><p>Test and iterate on plugins:</p><pre><code class="language-bash"><h1>Development cycle:</h1>
+/plugin load ./my-plugin        # Load local version
+/my-plugin:test                 # Test functionality
+/plugin reload ./my-plugin      # Reload after changes
+/my-plugin:test                 # Test again</p><h1>When satisfied:</h1>
+/plugin unload my-plugin        # Remove temporary load
+/plugin install ./my-plugin     # Install permanently
+</code></pre><h2 id="Best Practices">Best Practices</h2><h3>Do's ✅</h3>
+<li>Use clear, descriptive plugin names</li>
+<li>Include comprehensive README</li>
+<li>Version your plugin properly (semver)</li>
+<li>Test all components together</li>
+<li>Document requirements clearly</li>
+<li>Provide usage examples</li>
+<li>Include error handling</li>
+<li>Tag appropriately for discovery</li>
+<li>Maintain backward compatibility</li>
+<li>Keep plugins focused and cohesive</li>
+<li>Include comprehensive tests</li>
+<li>Document all dependencies</li><h3>Don'ts ❌</h3>
+<li>Don't bundle unrelated features</li>
+<li>Don't hardcode credentials</li>
+<li>Don't skip testing</li>
+<li>Don't forget documentation</li>
+<li>Don't create redundant plugins</li>
+<li>Don't ignore versioning</li>
+<li>Don't overcomplicate component dependencies</li>
+<li>Don't forget to handle errors gracefully</li><h2 id="Installation Instructions">Installation Instructions</h2><h3>Installing from Marketplace</h3><li><strong>Browse available plugins:</strong></li>
+   <pre><code class="language-bash">   /plugin list
+   </code></pre><li><strong>View plugin details:</strong></li>
+   <pre><code class="language-bash">   /plugin info plugin-name
+   </code></pre><li><strong>Install a plugin:</strong></li>
+   <pre><code class="language-bash">   /plugin install plugin-name
+   </code></pre><h3>Installing from Local Path</h3><pre><code class="language-bash">/plugin install ./path/to/plugin-directory
+</code></pre><h3>Installing from GitHub</h3><pre><code class="language-bash">/plugin install github:username/repo
+</code></pre><h3>Listing Installed Plugins</h3><pre><code class="language-bash">/plugin list --installed
+</code></pre><h3>Updating a Plugin</h3><pre><code class="language-bash">/plugin update plugin-name
+</code></pre><h3>Disabling/Enabling a Plugin</h3><pre><code class="language-bash"><h1>Temporarily disable</h1>
+/plugin disable plugin-name</p><h1>Re-enable</h1>
+/plugin enable plugin-name
+</code></pre><h3>Uninstalling a Plugin</h3><pre><code class="language-bash">/plugin uninstall plugin-name
+</code></pre><h2 id="Related Concepts">Related Concepts</h2><p>The following Claude Code features work together with plugins:</p><li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - Individual commands bundled in plugins</li>
+<li><strong><a href="../02-memory/">Memory</a></strong> - Persistent context for plugins</li>
+<li><strong><a href="../03-skills/">Skills</a></strong> - Domain expertise that can be wrapped into plugins</li>
+<li><strong><a href="../04-subagents/">Subagents</a></strong> - Specialized agents included as plugin components</li>
+<li><strong><a href="../05-mcp/">MCP Servers</a></strong> - Model Context Protocol integrations bundled in plugins</li>
+<li><strong><a href="../06-hooks/">Hooks</a></strong> - Event handlers that trigger plugin workflows</li><h2 id="Complete Example Workflow">Complete Example Workflow</h2><h3>PR Review Plugin Full Workflow</h3><pre><code class="language-">1. User: /review-pr</p><li>Plugin executes:</li>
+   ├── pre-review.js hook validates git repo
+   ├── GitHub MCP fetches PR data
+   ├── security-reviewer subagent analyzes security
+   ├── test-checker subagent verifies coverage
+   └── performance-analyzer subagent checks performance</p><li>Results synthesized and presented:</li>
+   ✅ Security: No critical issues
+   ⚠️  Testing: Coverage 65% (recommend 80%+)
+   ✅ Performance: No significant impact
+   📝 12 recommendations provided
+</code></pre><h2 id="Troubleshooting">Troubleshooting</h2><h3>Plugin Won't Install</h3>
+<li>Check Claude Code version compatibility: <code>/version</code></li>
+<li>Verify <code>plugin.json</code> syntax with a JSON validator</li>
+<li>Check internet connection (for remote plugins)</li>
+<li>Review permissions: <code>ls -la plugin/</code></li><h3>Components Not Loading</h3>
+<li>Verify paths in <code>plugin.json</code> match actual directory structure</li>
+<li>Check file permissions: <code>chmod +x scripts/</code></li>
+<li>Review component file syntax</li>
+<li>Check logs: <code>/plugin debug plugin-name</code></li><h3>MCP Connection Failed</h3>
+<li>Verify environment variables are set correctly</li>
+<li>Check MCP server installation and health</li>
+<li>Test MCP connection independently with <code>/mcp test</code></li>
+<li>Review MCP configuration in <code>mcp/</code> directory</li><h3>Commands Not Available After Install</h3>
+<li>Ensure plugin was installed successfully: <code>/plugin list --installed</code></li>
+<li>Check if plugin is enabled: <code>/plugin status plugin-name</code></li>
+<li>Restart Claude Code: <code>exit</code> and reopen</li>
+<li>Check for naming conflicts with existing commands</li><h3>Hook Execution Issues</h3>
+<li>Verify hook files have correct permissions</li>
+<li>Check hook syntax and event names</li>
+<li>Review hook logs for error details</li>
+<li>Test hooks manually if possible</li><h2 id="Additional Resources">Additional Resources</h2><li><a href="https://code.claude.com/docs/en/plugins">Official Plugins Documentation</a></li>
+<li><a href="https://code.claude.com/docs/en/discover-plugins">Discover Plugins</a></li>
+<li><a href="https://code.claude.com/docs/en/plugin-marketplaces">Plugin Marketplaces</a></li>
+<li><a href="https://code.claude.com/docs/en/plugins-reference">Plugins Reference</a></li>
+<li><a href="https://modelcontextprotocol.io/">MCP Server Reference</a></li>
+<li><a href="../04-subagents/README.md">Subagent Configuration Guide</a></li>
+<li><a href="../06-hooks/README.md">Hook System Reference</a></li></ul>
+</p>
+        </div>
+
+        
+    <div class="nav-buttons">
+      <a href="/content/06-hooks.html">← Hooks</a>
+      <a href="/content/08-checkpoints.html">Checkpoints →</a>
+    </div>
+  
+      </article>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+  </script>
+</body>
+</html>

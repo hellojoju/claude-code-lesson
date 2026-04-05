@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础插件开发 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../07-plugins.html"><i class="fas fa-puzzle-piece"></i> 插件开发</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../07-plugins.html">插件开发</a> &gt;
+                <span>基础插件开发</span>
+            </nav>
+            
+            <h1><i class="fas fa-code"></i> 基础插件开发</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 官方文档和社区最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-A">A</span> 官方文档 + 社区验证</p>
+            </div>
+
+            <section id="quick-start">
+                <h2>快速开始</h2>
+                
+                <h3>创建插件项目</h3>
+                <pre><code class="language-bash"># 创建项目目录
+mkdir my-first-plugin && cd my-first-plugin
+
+# 初始化 npm
+npm init -y
+
+# 安装开发依赖
+npm install --save-dev typescript @anthropic/claude-code-api
+
+# 创建源码目录
+mkdir -p src</code></pre>
+
+                <h3>创建入口文件</h3>
+                <pre><code class="language-typescript">// src/index.ts
+import { Plugin, PluginContext } from '@anthropic/claude-code-api';
+
+export const plugin: Plugin = {
+  async activate(context: PluginContext) {
+    console.log('我的第一个插件已激活！');
+  },
+  
+  async deactivate() {
+    console.log('插件已停用');
+  }
+};
+
+export default plugin;</code></pre>
+            </section>
+
+            <section id="package-json">
+                <h2>配置 package.json</h2>
+                
+                <pre><code class="language-json">{
+  "name": "claude-code-plugin-my-first",
+  "version": "1.0.0",
+  "description": "我的第一个 Claude Code 插件",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "claudeCode": {
+    "name": "my-first-plugin",
+    "displayName": "我的第一个插件",
+    "description": "学习插件开发的示例",
+    "version": "1.0.0",
+    "engines": {
+      "claudeCode": ">=1.0.0"
+    },
+    "categories": ["examples"],
+    "activationEvents": ["*"],
+    "contributes": {
+      "commands": [
+        {
+          "command": "myFirstPlugin.hello",
+          "title": "说你好"
+        }
+      ]
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="register-command">
+                <h2>注册命令</h2>
+                
+                <h3>命令处理器</h3>
+                <pre><code class="language-typescript">// src/index.ts
+import { Plugin, PluginContext } from '@anthropic/claude-code-api';
+
+export const plugin: Plugin = {
+  async activate(context: PluginContext) {
+    // 注册命令
+    context.registerCommand('myFirstPlugin.hello', async () => {
+      const name = await context.showInputBox({
+        prompt: '请输入你的名字',
+        placeHolder: '张三'
+      });
+      
+      context.showInformationMessage(`你好，${name}！欢迎使用我的插件。`);
+    });
+  },
+  
+  async deactivate() {
+    // 清理资源
+  }
+};</code></pre>
+
+                <h3>使用命令</h3>
+                <pre><code class="language-bash"># 在 Claude Code 中使用
+> /myFirstPlugin.hello</code></pre>
+            </section>
+
+            <section id="register-skill">
+                <h2>注册技能</h2>
+                
+                <h3>技能配置</h3>
+                <pre><code class="language-json">// package.json
+{
+  "contributes": {
+    "skills": [
+      {
+        "id": "myFirstPlugin.greet",
+        "name": "问候",
+        "description": "生成问候语",
+        "triggers": ["问候", "greet", "hello"]
+      }
+    ]
+  }
+}</code></pre>
+
+                <h3>技能实现</h3>
+                <pre><code class="language-typescript">// src/skills/greet.ts
+export async function execute(context: SkillContext) {
+  const { name } = context.params;
+  
+  return {
+    message: `你好，${name}！很高兴认识你。`
+  };
+}</code></pre>
+            </section>
+
+            <section id="state">
+                <h2>状态管理</h2>
+                
+                <h3>使用状态存储</h3>
+                <pre><code class="language-typescript">// src/index.ts
+export const plugin: Plugin = {
+  async activate(context: PluginContext) {
+    // 读取状态
+    const count = context.globalState.get('count', 0);
+    
+    // 更新状态
+    context.globalState.set('count', count + 1);
+    
+    // 工作区状态（仅当前项目）
+    const projectConfig = context.workspaceState.get('config', {});
+    
+    // 注册命令使用状态
+    context.registerCommand('myFirstPlugin.stats', () => {
+      context.showInformationMessage(`插件已激活 ${count} 次`);
+    });
+  }
+};</code></pre>
+            </section>
+
+            <section id="build">
+                <h2>编译和测试</h2>
+                
+                <h3>TypeScript 配置</h3>
+                <pre><code class="language-json">// tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"]
+}</code></pre>
+
+                <h3>编译和安装</h3>
+                <pre><code class="language-bash"># 编译
+npm run build
+
+# 本地安装测试
+> /plugin install /path/to/my-first-plugin
+
+# 测试命令
+> /myFirstPlugin.hello</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../intro/architecture.html" class="prev"><i class="fas fa-arrow-left"></i> 插件架构</a>
+                <a href="advanced.html" class="next">高级插件开发 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提交前钩子 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../../06-hooks.html"><i class="fas fa-anchor"></i> 钩子系统</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../06-hooks.html">钩子系统</a> &gt;
+                <span>提交前钩子</span>
+            </nav>
+            
+            <h1><i class="fas fa-code-branch"></i> 提交前钩子案例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文展示一个完整的提交前钩子实现。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区实践</p>
+            </div>
+
+            <section id="overview">
+                <h2>钩子概述</h2>
+                <p>提交前钩子在代码提交前自动执行检查，确保代码质量。</p>
+                
+                <h3>功能特性</h3>
+                <ul>
+                    <li>运行代码检查（Lint）</li>
+                    <li>运行单元测试</li>
+                    <li>检查代码格式</li>
+                    <li>验证提交信息格式</li>
+                </ul>
+            </section>
+
+            <section id="implementation">
+                <h2>实现代码</h2>
+                
+                <pre><code class="language-javascript">// hooks/pre-commit.js
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+module.exports = async (context) => {
+  const { data } = context;
+  const { files, message } = data;
+  
+  console.log('🔍 执行提交前检查...\n');
+  
+  // 1. 检查提交信息格式
+  const messageCheck = checkCommitMessage(message);
+  if (!messageCheck.valid) {
+    return {
+      action: 'abort',
+      reason: `提交信息格式错误: ${messageCheck.error}`
+    };
+  }
+  
+  // 2. 获取暂存的文件
+  const stagedFiles = getStagedFiles();
+  
+  // 3. 运行 Lint 检查
+  const lintResult = await runLint(stagedFiles);
+  if (!lintResult.success) {
+    return {
+      action: 'abort',
+      reason: `Lint 检查失败:\n${lintResult.errors}`
+    };
+  }
+  
+  // 4. 运行测试
+  const testResult = await runTests();
+  if (!testResult.success) {
+    return {
+      action: 'abort',
+      reason: `测试失败:\n${testResult.errors}`
+    };
+  }
+  
+  // 5. 检查敏感信息
+  const sensitiveCheck = checkSensitiveInfo(stagedFiles);
+  if (!sensitiveCheck.safe) {
+    return {
+      action: 'abort',
+      reason: `发现敏感信息:\n${sensitiveCheck.warnings}`
+    };
+  }
+  
+  console.log('✅ 所有检查通过！\n');
+  return { action: 'continue' };
+};
+
+// 检查提交信息格式
+function checkCommitMessage(message) {
+  const pattern = /^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}/;
+  
+  if (!pattern.test(message)) {
+    return {
+      valid: false,
+      error: '提交信息必须符合 Conventional Commits 格式，例如: feat: 添加新功能'
+    };
+  }
+  
+  return { valid: true };
+}
+
+// 获取暂存的文件
+function getStagedFiles() {
+  try {
+    const output = execSync('git diff --cached --name-only', { encoding: 'utf8' });
+    return output.trim().split('\n').filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+// 运行 Lint
+async function runLint(files) {
+  const jsFiles = files.filter(f => /\.(js|jsx|ts|tsx)$/.test(f));
+  
+  if (jsFiles.length === 0) {
+    return { success: true };
+  }
+  
+  try {
+    execSync(`npx eslint ${jsFiles.join(' ')}`, { encoding: 'utf8' });
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      errors: error.stdout || error.message
+    };
+  }
+}
+
+// 运行测试
+async function runTests() {
+  try {
+    execSync('npm test -- --passWithNoTests', { encoding: 'utf8' });
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      errors: error.stdout || error.message
+    };
+  }
+}
+
+// 检查敏感信息
+function checkSensitiveInfo(files) {
+  const warnings = [];
+  const sensitivePatterns = [
+    /password\s*=\s*['"][^'"]+['"]/gi,
+    /api[_-]?key\s*=\s*['"][^'"]+['"]/gi,
+    /secret\s*=\s*['"][^'"]+['"]/gi,
+    /token\s*=\s*['"][^'"]+['"]/gi
+  ];
+  
+  for (const file of files) {
+    if (!fs.existsSync(file)) continue;
+    
+    const content = fs.readFileSync(file, 'utf8');
+    
+    for (const pattern of sensitivePatterns) {
+      const matches = content.match(pattern);
+      if (matches) {
+        warnings.push(`${file}: 发现可能的敏感信息`);
+      }
+    }
+  }
+  
+  return {
+    safe: warnings.length === 0,
+    warnings: warnings.join('\n')
+  };
+}</code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>配置</h2>
+                
+                <pre><code class="language-json">// hooks/hooks.json
+{
+  "hooks": {
+    "pre-commit": {
+      "enabled": true,
+      "priority": 100,
+      "timeout": 120000,
+      "handlers": [
+        {
+          "name": "pre-commit-checks",
+          "script": "pre-commit.js"
+        }
+      ],
+      "config": {
+        "skipTests": false,
+        "skipLint": false,
+        "checkSensitiveInfo": true
+      }
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="usage">
+                <h2>使用示例</h2>
+                
+                <h3>正常提交</h3>
+                <pre><code class="language-bash"># 提交代码
+git commit -m "feat: 添加用户登录功能"
+
+# 钩子自动执行
+🔍 执行提交前检查...
+
+Running ESLint...
+✓ Lint 检查通过
+
+Running tests...
+✓ 测试通过 (15 tests)
+
+Checking sensitive info...
+✓ 未发现敏感信息
+
+✅ 所有检查通过！
+
+[main abc1234] feat: 添加用户登录功能</code></pre>
+
+                <h3>检查失败</h3>
+                <pre><code class="language-bash"># 提交代码
+git commit -m "添加功能"  # 格式不正确
+
+# 钩子拦截
+🔍 执行提交前检查...
+
+❌ 提交信息格式错误
+提交信息必须符合 Conventional Commits 格式
+
+# 修正后重试
+git commit -m "feat: 添加用户登录功能"</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="../creating/advanced.html" class="prev"><i class="fas fa-arrow-left"></i> 创建高级钩子</a>
+                <a href="auto-test.html" class="next">自动测试钩子 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用模式详解 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1>
+            <p class="subtitle">从入门到精通 - Claude Code 使用指南</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="../installation/overview.html" class="active"><i class="fas fa-book"></i> 基础教程</a></li>
+                <li><a href="../../01-slash-commands.html"><i class="fas fa-cogs"></i> 高级技巧</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../../index.html">首页</a> &gt; <a href="../installation/overview.html">基础教程</a> &gt; <a href="getting-started.html">基本使用</a> &gt; <span>使用模式</span>
+        </div>
+
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <h3><i class="fas fa-list"></i> 目录</h3>
+                <ul>
+                    <li><a href="#intro">概述</a></li>
+                    <li><a href="#default">默认模式</a></li>
+                    <li><a href="#auto-accept">自动接受模式</a></li>
+                    <li><a href="#plan">Plan Mode</a></li>
+                    <li><a href="#yolo">YOLO 模式</a></li>
+                    <li><a href="#comparison">模式对比</a></li>
+                    <li><a href="#best-practices">最佳实践</a></li>
+                </ul>
+            </aside>
+
+            <article class="content">
+                <h1><i class="fas fa-exchange-alt"></i> 使用模式详解</h1>
+                
+                <div class="source-info">
+                    <span class="reliability reliability-a">可靠性: A</span>
+                    <span class="source">来源: Claude Code 官方文档</span>
+                </div>
+
+                <p class="meta">
+                    <i class="fas fa-clock"></i> 更新时间: 2025-04-04
+                    <i class="fas fa-user"></i> 作者: Claude Code 教程团队
+                </p>
+
+                <section id="intro">
+                    <h2>概述</h2>
+                    <p>Claude Code 提供多种使用模式，适应不同的工作场景和安全需求。理解这些模式可以帮助你更高效地使用 Claude Code。</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> <strong>核心概念：</strong>不同模式在安全性和效率之间提供不同的平衡，选择合适的模式可以提升工作效率。</p>
+                    </div>
+                </section>
+
+                <section id="default">
+                    <h2>默认模式</h2>
+                    <p>默认模式下，Claude 在执行每个操作前都会请求你的确认。</p>
+                    
+                    <h3>特点</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-shield-alt"></i> <strong>最安全</strong> - 每个操作都需要确认</li>
+                        <li><i class="fas fa-eye"></i> <strong>可审查</strong> - 可以查看每个操作的详情</li>
+                        <li><i class="fas fa-edit"></i> <strong>可修改</strong> - 可以在执行前修改操作</li>
+                    </ul>
+
+                    <h3>适用场景</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-flask"></i> 新项目</h3>
+                            <p>首次接触的项目，需要了解 Claude 的操作。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-gem"></i> 重要更改</h3>
+                            <p>关键代码或生产环境的修改。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-graduation-cap"></i> 学习阶段</h3>
+                            <p>学习 Claude Code 的工作方式。</p>
+                        </div>
+                    </div>
+
+                    <h3>确认选项</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>选项</th>
+                                <th>快捷键</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>允许</td>
+                                <td><code>Enter</code></td>
+                                <td>执行该操作</td>
+                            </tr>
+                            <tr>
+                                <td>拒绝</td>
+                                <td><code>Esc</code></td>
+                                <td>取消该操作</td>
+                            </tr>
+                            <tr>
+                                <td>修改</td>
+                                <td><code>e</code></td>
+                                <td>编辑操作内容后再执行</td>
+                            </tr>
+                            <tr>
+                                <td>查看详情</td>
+                                <td><code>v</code></td>
+                                <td>查看完整的操作详情</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="auto-accept">
+                    <h2>自动接受模式</h2>
+                    <p>自动接受模式下，Claude 会自动执行操作，但仍会显示操作内容。</p>
+                    
+                    <h3>切换方式</h3>
+                    <pre><code class="language-bash"># 按 Shift+Tab 切换自动接受模式
+# 状态栏会显示 "⚡ auto-accept on"</code></pre>
+
+                    <h3>特点</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-bolt"></i> <strong>高效率</strong> - 无需手动确认每个操作</li>
+                        <li><i class="fas fa-eye"></i> <strong>可见性</strong> - 仍然显示所有操作</li>
+                        <li><i class="fas fa-undo"></i> <strong>可回滚</strong> - 可以撤销不需要的更改</li>
+                    </ul>
+
+                    <h3>适用场景</h3>
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-code"></i> 日常开发</h3>
+                            <p>熟悉的代码库，常规开发任务。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-tasks"></i> 批量操作</h3>
+                            <p>需要执行大量相似操作的任务。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-clock"></i> 时间紧迫</h3>
+                            <p>需要快速完成任务的场景。</p>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <p><i class="fas fa-exclamation-triangle"></i> <strong>注意：</strong>使用自动接受模式时，建议定期检查 Claude 的操作，确保符合预期。</p>
+                    </div>
+                </section>
+
+                <section id="plan">
+                    <h2>Plan Mode（规划模式）</h2>
+                    <p>Plan Mode 是 Claude Code 2.0 的杀手功能，将研究规划与代码执行分离。</p>
+                    
+                    <h3>激活方式</h3>
+                    <pre><code class="language-bash"># 按两次 Shift+Tab 进入 Plan Mode
+# 状态栏显示 "⏸ plan mode on"</code></pre>
+
+                    <h3>工作原理</h3>
+                    <div class="highlight-box">
+                        <h4><i class="fas fa-cogs"></i> Plan Mode 限制</h4>
+                        <p>在 Plan Mode 下，Claude 只能使用<strong>只读工具</strong>：</p>
+                        <ul>
+                            <li>Read - 读取文件</li>
+                            <li>LS - 列出目录</li>
+                            <li>Glob - 文件模式匹配</li>
+                            <li>Grep - 内容搜索</li>
+                            <li>Web 搜索 - 查找资料</li>
+                        </ul>
+                        <p>所有修改操作（Edit、Write、Bash）都被阻止。</p>
+                    </div>
+
+                    <h3>工作流程</h3>
+                    <pre><code class="language-bash"># 传统工作流
+提示 → 编码 → 发现 Bug → 修复 → 发布
+
+# Plan Mode 工作流
+提示 → 研究 → 规划 → 审查 → 执行 → 发布</code></pre>
+
+                    <h3>使用示例</h3>
+                    <pre><code class="language-bash"># 进入 Plan Mode（按两次 Shift+Tab）
+> 构建带用户账户和分享功能的 TODO 应用。深度思考架构设计
+
+# Claude 会花 5-10 分钟：
+# - 研究最佳实践
+# - 分析技术选型
+# - 规划数据库模式
+# - 设计 API 端点
+# - 确定实现顺序
+
+# 审查计划后，退出 Plan Mode 执行</code></pre>
+
+                    <h3>核心价值</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>价值</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>防止范围蔓延</td>
+                                <td>提前发现需求问题</td>
+                            </tr>
+                            <tr>
+                                <td>提早发现问题</td>
+                                <td>在编码前发现集成问题</td>
+                            </tr>
+                            <tr>
+                                <td>准确估算</td>
+                                <td>更准确的时间估算</td>
+                            </tr>
+                            <tr>
+                                <td>减少调试</td>
+                                <td>减少后续调试时间</td>
+                            </tr>
+                            <tr>
+                                <td>安全探索</td>
+                                <td>不会意外破坏代码</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="yolo">
+                    <h2>YOLO 模式</h2>
+                    <p>YOLO（You Only Live Once）模式完全跳过权限检查，适合自动化场景。</p>
+                    
+                    <h3>启用方式</h3>
+                    <pre><code class="language-bash"># 使用命令行参数
+claude --dangerously-skip-permissions
+
+# 或在会话中设置
+> /permissions skip-all</code></pre>
+
+                    <h3>特点</h3>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-rocket"></i> <strong>最高效率</strong> - 无任何确认步骤</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> <strong>高风险</strong> - 可能执行意外操作</li>
+                        <li><i class="fas fa-terminal"></i> <strong>自动化</strong> - 适合 CI/CD 场景</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <p><i class="fas fa-skull-crossbones"></i> <strong>危险警告：</strong>YOLO 模式可能导致数据丢失或系统损坏。仅在完全信任 Claude 的环境中使用。</p>
+                    </div>
+
+                    <h3>安全使用 YOLO 模式</h3>
+                    <pre><code class="language-bash"># 推荐：结合 Docker 使用
+docker run -it --rm \
+  -v $(pwd):/workspace \
+  claude-code \
+  --dangerously-skip-permissions \
+  "实现功能 X 并运行测试"
+
+# 推荐：TDD 工作流
+# 1. 先编写失败测试
+claude "为功能 X 编写失败测试"
+git commit -m "添加测试"
+
+# 2. YOLO 模式实现
+claude --dangerously-skip-permissions "让所有测试通过"</code></pre>
+                </section>
+
+                <section id="comparison">
+                    <h2>模式对比</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>模式</th>
+                                <th>安全性</th>
+                                <th>效率</th>
+                                <th>适用场景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>默认模式</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td>⭐⭐</td>
+                                <td>新项目、重要更改</td>
+                            </tr>
+                            <tr>
+                                <td>自动接受</td>
+                                <td>⭐⭐⭐⭐</td>
+                                <td>⭐⭐⭐⭐</td>
+                                <td>日常开发、批量操作</td>
+                            </tr>
+                            <tr>
+                                <td>Plan Mode</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td>⭐⭐⭐</td>
+                                <td>复杂功能、架构设计</td>
+                            </tr>
+                            <tr>
+                                <td>YOLO 模式</td>
+                                <td>⭐</td>
+                                <td>⭐⭐⭐⭐⭐</td>
+                                <td>CI/CD、容器环境</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="best-practices">
+                    <h2>最佳实践</h2>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <h3><i class="fas fa-random"></i> 灵活切换</h3>
+                            <p>根据任务性质灵活切换模式，不必一直使用同一种模式。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-code-branch"></i> Git 保护</h3>
+                            <p>使用自动接受或 YOLO 模式前，先提交当前更改。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-search"></i> Plan Mode 优先</h3>
+                            <p>复杂任务先用 Plan Mode 规划，再执行。</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-box"></i> 容器隔离</h3>
+                            <p>YOLO 模式在 Docker 容器中使用更安全。</p>
+                        </div>
+                    </div>
+
+                    <h3>推荐工作流</h3>
+                    <pre><code class="language-bash"># 1. 新项目：默认模式
+claude
+> 了解这个项目的结构
+
+# 2. 复杂功能：Plan Mode
+# 按 Shift+Tab 两次
+> 设计用户认证系统
+
+# 3. 日常开发：自动接受模式
+# 按 Shift+Tab 一次
+> 实现登录功能
+
+# 4. CI/CD：YOLO 模式
+claude --dangerously-skip-permissions "运行测试并修复失败"</code></pre>
+                </section>
+
+                <nav class="page-nav">
+                    <a href="natural-language.html" class="prev"><i class="fas fa-arrow-left"></i> 上一页：自然语言指令</a>
+                    <a href="../installation/overview.html" class="next">返回安装概览 <i class="fas fa-arrow-right"></i></a>
+                </nav>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Claude Code 中文教程. 基于 Claude Code 官方文档编写.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+</body>
+</html>

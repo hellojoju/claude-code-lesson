@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义命令示例 - Claude Code 中文教程</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header><div class="container"><h1><i class="fas fa-robot"></i> Claude Code 中文教程</h1><p class="subtitle">从入门到精通 - Claude Code 使用指南</p></div></header>
+    <nav><div class="container"><ul class="nav-menu"><li><a href="../../../index.html"><i class="fas fa-home"></i> 首页</a></li><li><a href="../../basics/installation/overview.html"><i class="fas fa-book"></i> 基础教程</a></li><li class="active"><a href="../basic/intro.html"><i class="fas fa-terminal"></i> 斜杠命令</a></li></ul></div></nav>
+    <main class="container">
+        <article class="content">
+            <nav class="breadcrumb">
+                <a href="../../../index.html">首页</a> &gt;
+                <a href="../../01-slash-commands.html">斜杠命令</a> &gt;
+                <span>自定义命令示例</span>
+            </nav>
+            
+            <h1><i class="fas fa-code"></i> 自定义命令示例</h1>
+            
+            <div class="info-box">
+                <p><strong>来源说明：</strong>本文内容基于 Claude Code 社区贡献和最佳实践整理。</p>
+                <p><strong>可靠性评级：</strong><span class="reliability reliability-B">B</span> 社区验证</p>
+            </div>
+
+            <section id="code-quality">
+                <h2>代码质量类命令</h2>
+                
+                <h3>代码复杂度分析</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/complexity.md
+
+---
+name: complexity
+description: 分析代码复杂度
+---
+
+分析以下代码的复杂度：
+
+{{selection}}
+
+## 分析维度
+
+1. **圈复杂度**
+   - 计算条件分支数量
+   - 识别嵌套层级
+   - 评估可读性
+
+2. **认知复杂度**
+   - 评估理解难度
+   - 识别心理负担点
+   - 建议简化方案
+
+3. **代码行数**
+   - 函数长度
+   - 文件长度
+   - 注释比例
+
+## 输出格式
+
+```
+复杂度报告
+==========
+
+圈复杂度: X (建议 < 10)
+认知复杂度: X (建议 < 15)
+函数行数: X (建议 < 50)
+
+建议:
+- [具体建议列表]
+```</code></pre>
+
+                <h3>代码规范检查</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/lint-check.md
+
+---
+name: lint-check
+description: 自定义代码规范检查
+---
+
+检查以下代码是否符合规范：
+
+{{selection}}
+
+## 检查规则
+
+### 命名规范
+- 变量使用 camelCase
+- 常量使用 UPPER_SNAKE_CASE
+- 类名使用 PascalCase
+- 文件名使用 kebab-case
+
+### 格式规范
+- 缩进使用 2 空格
+- 字符串使用单引号
+- 语句末尾不加分号
+- 最大行宽 100 字符
+
+### 最佳实践
+- 使用 const/let 替代 var
+- 箭头函数优先
+- 解构赋值优先
+- 模板字符串优先
+
+## 输出
+
+列出所有不符合规范的代码行，并提供修复建议。</code></pre>
+            </section>
+
+            <section id="documentation">
+                <h2>文档生成类命令</h2>
+                
+                <h3>API 文档生成</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/api-docs.md
+
+---
+name: api-docs
+description: 生成 API 文档
+---
+
+为以下 API 代码生成文档：
+
+{{selection}}
+
+## 文档模板
+
+```markdown
+## 接口名称
+
+**描述**: [功能描述]
+
+**请求方法**: [GET/POST/PUT/DELETE]
+
+**路径**: [API 路径]
+
+### 请求参数
+
+| 参数名 | 类型 | 必填 | 描述 |
+|--------|------|------|------|
+| ...    | ...  | ...  | ...  |
+
+### 请求示例
+
+```json
+{
+  "示例请求体"
+}
+```
+
+### 响应参数
+
+| 参数名 | 类型 | 描述 |
+|--------|------|------|
+| ...    | ...  | ...  |
+
+### 响应示例
+
+```json
+{
+  "示例响应体"
+}
+```
+
+### 错误码
+
+| 错误码 | 描述 |
+|--------|------|
+| ...    | ...  |
+```</code></pre>
+
+                <h3>README 生成</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/readme.md
+
+---
+name: readme
+description: 生成 README 文档
+---
+
+为当前项目生成 README 文档。
+
+项目信息：
+- 目录: {{directory}}
+- Git 分支: {{git_branch}}
+
+## README 结构
+
+```markdown
+# 项目名称
+
+简短的项目描述。
+
+## 功能特性
+
+- 特性 1
+- 特性 2
+- 特性 3
+
+## 快速开始
+
+### 安装
+
+\`\`\`bash
+npm install project-name
+\`\`\`
+
+### 使用
+
+\`\`\`javascript
+// 基本用法示例
+\`\`\`
+
+## 文档
+
+- [API 文档](./docs/api.md)
+- [使用指南](./docs/guide.md)
+
+## 开发
+
+\`\`\`bash
+# 克隆项目
+git clone https://github.com/user/project.git
+
+# 安装依赖
+npm install
+
+# 运行测试
+npm test
+\`\`\`
+
+## 贡献
+
+欢迎贡献！请查看 [贡献指南](./CONTRIBUTING.md)。
+
+## 许可证
+
+MIT License
+```</code></pre>
+            </section>
+
+            <section id="testing-commands">
+                <h2>测试相关命令</h2>
+                
+                <h3>单元测试生成</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/gen-test.md
+
+---
+name: gen-test
+description: 生成单元测试
+parameters:
+  - name: framework
+    default: jest
+---
+
+为以下代码生成单元测试：
+
+{{selection}}
+
+测试框架: {{framework}}
+
+## 测试要求
+
+1. **测试覆盖**
+   - 正常情况测试
+   - 边界情况测试
+   - 异常情况测试
+
+2. **测试结构**
+   ```javascript
+   describe('函数名', () => {
+     describe('场景描述', () => {
+       it('应该...', () => {
+         // arrange
+         // act
+         // assert
+       });
+     });
+   });
+   ```
+
+3. **测试原则**
+   - 每个测试只验证一个行为
+   - 使用描述性的测试名称
+   - 遵循 AAA 模式
+
+## 输出
+
+生成完整的测试文件，包含所有必要的导入和模拟。</code></pre>
+
+                <h3>测试覆盖率分析</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/coverage.md
+
+---
+name: coverage
+description: 分析测试覆盖率
+---
+
+分析以下代码的测试覆盖情况：
+
+{{file}}
+
+## 分析内容
+
+1. **已覆盖的代码**
+   - 列出有测试的函数
+   - 显示覆盖的行数
+
+2. **未覆盖的代码**
+   - 列出缺少测试的函数
+   - 显示未覆盖的分支
+
+3. **覆盖率报告**
+   ```
+   文件覆盖率: XX%
+   函数覆盖率: XX%
+   分支覆盖率: XX%
+   行覆盖率: XX%
+   ```
+
+4. **建议**
+   - 优先测试的代码
+   - 建议的测试用例</code></pre>
+            </section>
+
+            <section id="refactoring">
+                <h2>重构辅助命令</h2>
+                
+                <h3>提取函数</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/extract.md
+
+---
+name: extract
+description: 提取选中代码为独立函数
+parameters:
+  - name: functionName
+    required: true
+---
+
+将以下代码提取为独立函数：
+
+{{selection}}
+
+函数名: {{functionName}}
+
+## 重构步骤
+
+1. 创建新函数
+   - 确定参数列表
+   - 确定返回值类型
+   - 添加函数注释
+
+2. 替换原代码
+   - 用函数调用替换原代码
+   - 传递必要的参数
+   - 处理返回值
+
+3. 验证重构
+   - 确保功能不变
+   - 运行相关测试
+
+## 输出
+
+显示重构前后的代码对比。</code></pre>
+
+                <h3>代码现代化</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/modernize.md
+
+---
+name: modernize
+description: 将代码升级为现代语法
+---
+
+将以下代码升级为现代 JavaScript/TypeScript 语法：
+
+{{selection}}
+
+## 转换规则
+
+1. **变量声明**
+   - var → const/let
+   - 根据是否重新赋值选择
+
+2. **函数语法**
+   - function → 箭头函数（适当场景）
+   - 添加类型注解（TypeScript）
+
+3. **异步处理**
+   - callback → Promise
+   - .then() → async/await
+
+4. **模块系统**
+   - require → import
+   - module.exports → export
+
+5. **其他**
+   - 字符串拼接 → 模板字符串
+   - for 循环 → for...of/forEach
+   - arguments → 剩余参数
+
+## 输出
+
+显示转换后的代码，并说明每个改动。</code></pre>
+            </section>
+
+            <section id="git-commands">
+                <h2>Git 相关命令</h2>
+                
+                <h3>提交信息生成</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/commit-msg.md
+
+---
+name: commit-msg
+description: 生成规范的提交信息
+---
+
+根据当前更改生成提交信息。
+
+## 分析内容
+
+1. 查看 git diff
+2. 分析更改类型
+3. 生成提交信息
+
+## 提交信息格式
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### 类型
+- feat: 新功能
+- fix: 修复 bug
+- docs: 文档更改
+- style: 代码格式
+- refactor: 重构
+- test: 测试相关
+- chore: 构建/工具
+
+### 示例
+
+```
+feat(auth): 添加用户登录功能
+
+- 实现 JWT 认证
+- 添加登录表单验证
+- 集成第三方登录
+
+Closes #123
+```</code></pre>
+
+                <h3>分支管理</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/branch.md
+
+---
+name: branch
+description: 智能分支管理
+parameters:
+  - name: action
+    options: [create, switch, delete, list]
+  - name: branchName
+---
+
+执行分支操作: {{action}}
+
+## 操作说明
+
+### create
+创建新分支，命名规范：
+- feature/xxx: 新功能
+- fix/xxx: bug 修复
+- refactor/xxx: 重构
+- docs/xxx: 文档更新
+
+### switch
+切换分支，自动保存当前更改
+
+### delete
+删除已合并的分支
+
+### list
+列出所有分支及其状态</code></pre>
+            </section>
+
+            <section id="project-commands">
+                <h2>项目管理命令</h2>
+                
+                <h3>项目初始化</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/init-project.md
+
+---
+name: init-project
+description: 初始化新项目
+parameters:
+  - name: type
+    options: [node, react, vue, next, library]
+---
+
+初始化 {{type}} 类型项目。
+
+## 初始化步骤
+
+1. 创建项目结构
+2. 生成配置文件
+3. 设置代码规范
+4. 配置 Git
+5. 创建 README
+
+## 项目结构
+
+{{#if (eq type "react")}}
+src/
+  components/
+  hooks/
+  utils/
+  styles/
+public/
+tests/
+{{/if}}
+
+{{#if (eq type "node")}}
+src/
+  routes/
+  controllers/
+  services/
+  models/
+  middleware/
+tests/
+{{/if}}</code></pre>
+
+                <h3>依赖分析</h3>
+                <pre><code class="language-markdown"># ~/.claude/commands/deps.md
+
+---
+name: deps
+description: 分析项目依赖
+---
+
+分析 package.json 中的依赖。
+
+## 分析内容
+
+1. **依赖概览**
+   - 总数统计
+   - 类型分布
+
+2. **安全检查**
+   - 已知漏洞
+   - 风险等级
+
+3. **更新检查**
+   - 过时依赖
+   - 最新版本
+   - 破坏性变更
+
+4. **优化建议**
+   - 未使用的依赖
+   - 可替换的依赖
+   - 重复功能依赖
+
+## 输出格式
+
+```
+依赖分析报告
+============
+
+📦 总依赖: 50
+  生产依赖: 30
+  开发依赖: 20
+
+🔒 安全问题: 2
+  🔴 高危: 1
+  🟡 中危: 1
+
+📅 过时依赖: 5
+  lodash: 4.0.0 → 4.17.21
+  ...
+
+💡 优化建议:
+  - 移除未使用的依赖: unused-package
+  - 替换 moment.js 为 dayjs
+```</code></pre>
+            </section>
+
+            <section id="references">
+                <h2>参考资料</h2>
+                <ul>
+                    <li><a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code GitHub 仓库</a> <span class="reliability reliability-A">A</span></li>
+                    <li><a href="https://github.com/trending/claude-howto" target="_blank">Claude Code 教程项目</a> <span class="reliability reliability-B">B</span></li>
+                </ul>
+            </section>
+
+            <nav class="page-nav">
+                <a href="creating.html" class="prev"><i class="fas fa-arrow-left"></i> 创建自定义命令</a>
+                <a href="../../memory/intro/concepts.html" class="next">记忆系统概念 <i class="fas fa-arrow-right"></i></a>
+            </nav>
+        </article>
+    </main>
+    <footer><div class="container"><p>&copy; 2026 Claude Code 中文教程</p></div></footer>
+</body>
+</html>
