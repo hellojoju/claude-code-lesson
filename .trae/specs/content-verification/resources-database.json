@@ -1,0 +1,155 @@
+{
+  "official_resources": [
+    {
+      "id": "official-001",
+      "title": "Claude Code官方页面",
+      "url": "https://www.anthropic.com/claude-code",
+      "type": "official",
+      "category": "product",
+      "description": "Claude Code的官方产品页面，包含产品介绍、功能特性和安装指南",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "Claude Code是一个系统级AI Agent，可以从终端、IDE、Slack或Web进行编码、调试和部署。"
+    },
+    {
+      "id": "official-002",
+      "title": "Claude Code on the Web",
+      "url": "https://www.anthropic.com/news/claude-code-on-the-web",
+      "type": "official",
+      "category": "announcement",
+      "description": "Claude Code Web版本的官方公告",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "Claude Code现在可以在Web上使用，支持在Anthropic管理的云基础设施上运行多个编码任务。"
+    },
+    {
+      "id": "official-003",
+      "title": "Claude Documentation",
+      "url": "https://docs.anthropic.com/",
+      "type": "official",
+      "category": "documentation",
+      "description": "Claude开发者平台的官方文档",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "包含Claude Developer Platform和Claude Code的完整文档，涵盖API使用、最佳实践等。"
+    },
+    {
+      "id": "official-004",
+      "title": "Claude API Documentation",
+      "url": "https://www.anthropic.com/docs",
+      "type": "official",
+      "category": "api",
+      "description": "Claude API的官方技术文档",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "Claude API的完整技术文档，包括API参考、认证、使用限制等。"
+    },
+    {
+      "id": "official-005",
+      "title": "Claude Code安装脚本",
+      "url": "https://claude.ai/install.sh",
+      "type": "official",
+      "category": "installation",
+      "description": "Claude Code的官方安装脚本",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "官方提供的安装脚本，可以通过curl命令直接安装Claude Code。"
+    }
+  ],
+  "github_resources": [
+    {
+      "id": "github-001",
+      "title": "Claude Code官方仓库",
+      "url": "https://github.com/anthropics/claude-code",
+      "type": "github",
+      "category": "official",
+      "description": "Claude Code的官方GitHub仓库",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "Claude Code的官方源码仓库，包含安装指南、使用文档和问题追踪。",
+      "stars": "N/A",
+      "activity": "active"
+    },
+    {
+      "id": "github-002",
+      "title": "Claude Code Router",
+      "url": "https://github.com/musistudio/claude-code-router",
+      "type": "github",
+      "category": "tool",
+      "description": "Claude Code请求路由工具，支持多种LLM提供商",
+      "reliability": "A",
+      "last_checked": "2026-04-04",
+      "content_summary": "允许将Claude Code请求路由到不同的LLM提供商，支持OpenRouter、NVIDIA NIM等多种平台。",
+      "stars": "高",
+      "activity": "active"
+    },
+    {
+      "id": "github-003",
+      "title": "claude-howto教程项目",
+      "url": "https://github.com/trending/claude-howto",
+      "type": "github",
+      "category": "tutorial",
+      "description": "Claude Code学习教程项目",
+      "reliability": "B",
+      "last_checked": "2026-04-04",
+      "content_summary": "GitHub Trending第一名的Claude Code学习项目，包含8700+ Star。",
+      "stars": "8700+",
+      "activity": "active"
+    },
+    {
+      "id": "github-004",
+      "title": "learn-claude-code教程项目",
+      "url": "https://github.com/trending/learn-claude-code",
+      "type": "github",
+      "category": "tutorial",
+      "description": "Claude Code综合学习项目",
+      "reliability": "B",
+      "last_checked": "2026-04-04",
+      "content_summary": "包含43000+ Star的Claude Code综合学习项目。",
+      "stars": "43000+",
+      "activity": "active"
+    }
+  ],
+  "community_resources": [
+    {
+      "id": "community-001",
+      "title": "Claude Code Router终极集成指南",
+      "url": "https://blog.csdn.net/gitblog_01171/article/details/151084569",
+      "type": "blog",
+      "category": "tutorial",
+      "description": "Claude Code Router的5种实用系统集成方案",
+      "reliability": "B",
+      "last_checked": "2026-04-04",
+      "content_summary": "详细介绍Claude Code Router的集成方案，包括GitHub Actions集成等。"
+    },
+    {
+      "id": "community-002",
+      "title": "Claude Code开源安装指南",
+      "url": "http://m.toutiao.com/group/7624143619405922856/",
+      "type": "blog",
+      "category": "installation",
+      "description": "Claude Code的详细安装教程",
+      "reliability": "B",
+      "last_checked": "2026-04-04",
+      "content_summary": "手把手教你安装Claude Code，包括系统要求和安装步骤。"
+    },
+    {
+      "id": "community-003",
+      "title": "Claude Code入门指南",
+      "url": "http://m.toutiao.com/group/7592080934812353062/",
+      "type": "blog",
+      "category": "tutorial",
+      "description": "保姆级Claude Code入门教程",
+      "reliability": "B",
+      "last_checked": "2026-04-04",
+      "content_summary": "全面的Claude Code入门指南，涵盖基础功能和MCP协议。"
+    }
+  ],
+  "metadata": {
+    "total_official_resources": 5,
+    "total_github_resources": 4,
+    "total_community_resources": 3,
+    "last_updated": "2026-04-04",
+    "version": "1.0"
+  }
+}

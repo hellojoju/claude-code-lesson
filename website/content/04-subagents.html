@@ -179,10 +179,10 @@
     <div class="container">
       <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
-        <li><a href="/content/basics/installation.html">入门指南</a></li>
-        <li><a href="/content/modules/">核心模块</a></li>
-        <li><a href="/content/cases/intro.html">实战案例</a></li>
-        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
+        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -192,7 +192,7 @@
       
       <article>
         <nav class="breadcrumb">
-          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Subagents
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / Subagents
         </nav>
 
         <div class="meta">
@@ -302,7 +302,7 @@
 </tr>
 </tbody>
 </table>
-当存在重复名称时，优先级较高的来源优先。</p><hr><h2 id="配置">配置</h2><h3>文件格式</h3><p>Subagents 在 YAML frontmatter 中定义，随后是 markdown 格式的系统提示：</p><pre><code class="language-yaml">---
+当存在重复名称时，优先级较高的来源优先。</p><hr><h2 id="配置">配置</h2><h3 id="文件格式">文件格式</h3><p>Subagents 在 YAML frontmatter 中定义，随后是 markdown 格式的系统提示：</p><pre><code class="language-yaml">---
 name: your-sub-agent-name
 description: Description of when this subagent should be invoked
 tools: tool1, tool2, tool3  # Optional - inherits all tools if omitted
@@ -326,7 +326,7 @@ hooks:  # Optional - component-scoped hooks
 <hr></p><p>Your subagent's system prompt goes here. This can be multiple paragraphs
 and should clearly define the subagent's role, capabilities, and approach
 to solving problems.
-</code></pre><h3>配置字段</h3><table>
+</code></pre><h3 id="配置字段">配置字段</h3><table>
 <thead>
 <tr>
 <th>字段</th>
@@ -412,7 +412,7 @@ to solving problems.
 </tr>
 </tbody>
 </table>
-<h3>工具配置选项</h3><p><strong>选项 1：继承所有工具（省略该字段）</strong>
+<h3 id="工具配置选项">工具配置选项</h3><p><strong>选项 1：继承所有工具（省略该字段）</strong>
 <pre><code class="language-yaml">---
 name: full-access-agent
 description: Agent with all available tools
@@ -429,7 +429,7 @@ name: conditional-agent
 description: Agent with filtered tool access
 tools: Read, Bash(npm:<em>), Bash(test:</em>)
 <hr>
-</code></pre><h3>CLI 配置</h3><p>使用 <code>--agents</code> 标志和 JSON 格式为单个会话定义 subagents：</p><pre><code class="language-bash">claude --agents '{
+</code></pre><h3 id="cli-配置">CLI 配置</h3><p>使用 <code>--agents</code> 标志和 JSON 格式为单个会话定义 subagents：</p><pre><code class="language-bash">claude --agents '{
   "code-reviewer": {
     "description": "Expert code reviewer. Use proactively after code changes.",
     "prompt": "You are a senior code reviewer. Focus on code quality, security, and best practices.",
@@ -449,7 +449,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 <li><strong>CLI 定义</strong> - <code>--agents</code> 标志（仅当前会话，JSON）</li>
 <li><strong>项目级</strong> - <code>.claude/agents/</code>（当前项目）</li>
 <li><strong>用户级</strong> - <code>~/.claude/agents/</code>（所有项目）</li>
-<li><strong>插件级</strong> - 插件 <code>agents/</code> 目录</li><p>这允许 CLI 定义在单个会话中覆盖所有其他来源。</p><hr><h2 id="内置 Subagents">内置 Subagents</h2><p>Claude Code 包含几个始终可用的内置 subagents：</p><table>
+<li><strong>插件级</strong> - 插件 <code>agents/</code> 目录</li><p>这允许 CLI 定义在单个会话中覆盖所有其他来源。</p><hr><h2 id="内置-subagents">内置 Subagents</h2><p>Claude Code 包含几个始终可用的内置 subagents：</p><table>
 <thead>
 <tr>
 <th>Agent</th>
@@ -490,7 +490,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<h3>General-Purpose Subagent</h3><table>
+<h3 id="general-purpose-subagent">General-Purpose Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -512,7 +512,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<strong>何时使用</strong>：需要同时进行探索和修改以及复杂推理的任务。</p><h3>Plan Subagent</h3><table>
+<strong>何时使用</strong>：需要同时进行探索和修改以及复杂推理的任务。</p><h3 id="plan-subagent">Plan Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -534,7 +534,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<strong>何时使用</strong>：当 Claude 需要在提出计划前理解代码库时。</p><h3>Explore Subagent</h3><table>
+<strong>何时使用</strong>：当 Claude 需要在提出计划前理解代码库时。</p><h3 id="explore-subagent">Explore Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -563,7 +563,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 <strong>何时使用</strong>：搜索/理解代码而不进行修改时。</p><p><strong>详尽度级别</strong> - 指定探索深度：
 <li><strong>"quick"</strong> - 快速搜索，最小探索，适合查找特定模式</li>
 <li><strong>"medium"</strong> - 中等探索，平衡速度和详尽度，默认方式</li>
-<li><strong>"very thorough"</strong> - 跨多个位置和命名约定的全面分析，可能需要更长时间</li><h3>Bash Subagent</h3><table>
+<li><strong>"very thorough"</strong> - 跨多个位置和命名约定的全面分析，可能需要更长时间</li><h3 id="bash-subagent">Bash Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -585,7 +585,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<strong>何时使用</strong>：运行受益于隔离上下文的 shell 命令时。</p><h3>Statusline Setup Subagent</h3><table>
+<strong>何时使用</strong>：运行受益于隔离上下文的 shell 命令时。</p><h3 id="statusline-setup-subagent">Statusline Setup Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -607,7 +607,7 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<strong>何时使用</strong>：设置或自定义状态栏时。</p><h3>Claude Code Guide Subagent</h3><table>
+<strong>何时使用</strong>：设置或自定义状态栏时。</p><h3 id="claude-code-guide-subagent">Claude Code Guide Subagent</h3><table>
 <thead>
 <tr>
 <th>属性</th>
@@ -629,13 +629,13 @@ tools: Read, Bash(npm:<em>), Bash(test:</em>)
 </tr>
 </tbody>
 </table>
-<strong>何时使用</strong>：当用户询问 Claude Code 如何工作或如何使用特定功能时。</p><hr><h2 id="管理 Subagents">管理 Subagents</h2><h3>使用 <code>/agents</code> 命令（推荐）</h3><pre><code class="language-bash">/agents
+<strong>何时使用</strong>：当用户询问 Claude Code 如何工作或如何使用特定功能时。</p><hr><h2 id="管理-subagents">管理 Subagents</h2><h3 id="使用-agents-命令-推荐">使用 <code>/agents</code> 命令（推荐）</h3><pre><code class="language-bash">/agents
 </code></pre><p>这提供交互式菜单来：
 <li>查看所有可用的 subagents（内置、用户和项目）</li>
 <li>通过引导设置创建新 subagents</li>
 <li>编辑现有的自定义 subagents 和工具访问</li>
 <li>删除自定义 subagents</li>
-<li>查看当存在重复时哪些 subagents 处于活动状态</li><h3>直接文件管理</h3><pre><code class="language-bash"><h1>创建项目 subagent</h1>
+<li>查看当存在重复时哪些 subagents 处于活动状态</li><h3 id="直接文件管理">直接文件管理</h3><pre><code class="language-bash"><h1>创建项目 subagent</h1>
 mkdir -p .claude/agents
 cat > .claude/agents/test-runner.md << 'EOF'
 <hr>
@@ -646,33 +646,33 @@ run the appropriate tests. If tests fail, analyze the failures and fix
 them while preserving the original test intent.
 EOF</p><h1>创建用户 subagent（在所有项目中可用）</h1>
 mkdir -p ~/.claude/agents
-</code></pre><hr><h2 id="使用 Subagents">使用 Subagents</h2><h3>自动委托</h3><p>Claude 根据以下主动委托任务：
+</code></pre><hr><h2 id="使用-subagents">使用 Subagents</h2><h3 id="自动委托">自动委托</h3><p>Claude 根据以下主动委托任务：
 <li>你请求中的任务描述</li>
 <li>subagent 配置中的 <code>description</code> 字段</li>
 <li>当前上下文和可用工具</li><p>要鼓励主动使用，在 <code>description</code> 字段中包含 "use PROACTIVELY" 或 "MUST BE USED"：</p><pre><code class="language-yaml">---
 name: code-reviewer
 description: Expert code review specialist. Use PROACTIVELY after writing or modifying code.
 <hr>
-</code></pre><h3>显式调用</h3><p>你可以显式请求特定 subagent：</p><pre><code class="language-">> Use the test-runner subagent to fix failing tests
+</code></pre><h3 id="显式调用">显式调用</h3><p>你可以显式请求特定 subagent：</p><pre><code class="language-">> Use the test-runner subagent to fix failing tests
 <blockquote>Have the code-reviewer subagent look at my recent changes</blockquote>
 <blockquote>Ask the debugger subagent to investigate this error</blockquote>
-</code></pre><h3>@-提及调用</h3><p>使用 <code>@</code> 前缀保证调用特定 subagent（绕过自动委托启发式）：</p><pre><code class="language-">> @"code-reviewer (agent)" review the auth module
-</code></pre><h3>会话级 Agent</h3><p>使用特定 agent 作为主 agent 运行整个会话：</p><pre><code class="language-bash"><h1>通过 CLI 标志</h1>
+</code></pre><h3 id="提及调用">@-提及调用</h3><p>使用 <code>@</code> 前缀保证调用特定 subagent（绕过自动委托启发式）：</p><pre><code class="language-">> @"code-reviewer (agent)" review the auth module
+</code></pre><h3 id="会话级-agent">会话级 Agent</h3><p>使用特定 agent 作为主 agent 运行整个会话：</p><pre><code class="language-bash"><h1>通过 CLI 标志</h1>
 claude --agent code-reviewer</p><h1>通过 settings.json</h1>
 {
   "agent": "code-reviewer"
 }
-</code></pre><h3>列出可用 Agents</h3><p>使用 <code>claude agents</code> 命令列出所有来源的所有已配置 agents：</p><pre><code class="language-bash">claude agents
-</code></pre><hr><h2 id="可恢复 Agents">可恢复 Agents</h2><p>Subagents 可以继续之前的对话，完整保留上下文：</p><pre><code class="language-bash"><h1>初始调用</h1>
+</code></pre><h3 id="列出可用-agents">列出可用 Agents</h3><p>使用 <code>claude agents</code> 命令列出所有来源的所有已配置 agents：</p><pre><code class="language-bash">claude agents
+</code></pre><hr><h2 id="可恢复-agents">可恢复 Agents</h2><p>Subagents 可以继续之前的对话，完整保留上下文：</p><pre><code class="language-bash"><h1>初始调用</h1>
 <blockquote>Use the code-analyzer agent to start reviewing the authentication module</blockquote>
 <h1>Returns agentId: "abc123"</h1><p>#稍后恢复 agent
 <blockquote>Resume agent abc123 and now analyze the authorization logic as well</blockquote>
 </code></pre><p><strong>用例</strong>：
 <li>跨多个会话的长期研究</li>
 <li>不丢失上下文的迭代优化</li>
-<li>维持上下文的多步骤工作流</li><hr><h2 id="链式 Subagents">链式 Subagents</h2><p>按顺序执行多个 subagents：</p><pre><code class="language-bash">> First use the code-analyzer subagent to find performance issues,
+<li>维持上下文的多步骤工作流</li><hr><h2 id="链式-subagents">链式 Subagents</h2><p>按顺序执行多个 subagents：</p><pre><code class="language-bash">> First use the code-analyzer subagent to find performance issues,
   then use the optimizer subagent to fix them
-</code></pre><p>这实现了复杂工作流，其中一个 subagent 的输出传递给另一个。</p><hr><h2 id="Subagents 持久化内存">Subagents 持久化内存</h2><p><code>memory</code> 字段给 subagents 一个跨会话持久化的目录。这允许 subagents 随时间积累知识，存储笔记、发现和跨会话持久化的上下文。</p><h3>内存作用域</h3><table>
+</code></pre><p>这实现了复杂工作流，其中一个 subagent 的输出传递给另一个。</p><hr><h2 id="subagents-持久化内存">Subagents 持久化内存</h2><p><code>memory</code> 字段给 subagents 一个跨会话持久化的目录。这允许 subagents 随时间积累知识，存储笔记、发现和跨会话持久化的上下文。</p><h3 id="内存作用域">内存作用域</h3><table>
 <thead>
 <tr>
 <th>作用域</th>
@@ -698,9 +698,9 @@ claude --agent code-reviewer</p><h1>通过 settings.json</h1>
 </tr>
 </tbody>
 </table>
-<h3>工作原理</h3><li>内存目录中 <code>MEMORY.md</code> 的前 200 行自动加载到 subagent 的系统提示中</li>
+<h3 id="工作原理">工作原理</h3><li>内存目录中 <code>MEMORY.md</code> 的前 200 行自动加载到 subagent 的系统提示中</li>
 <li><code>Read</code>、<code>Write</code> 和 <code>Edit</code> 工具自动启用，供 subagent 管理其内存文件</li>
-<li>subagent 可以根据需要在其内存目录中创建额外文件</li><h3>示例配置</h3><pre><code class="language-yaml">---
+<li>subagent 可以根据需要在其内存目录中创建额外文件</li><h3 id="示例配置">示例配置</h3><pre><code class="language-yaml">---
 name: researcher
 memory: user
 <hr></p><p>You are a research assistant. Use your memory directory to store findings,
@@ -713,12 +713,12 @@ track progress across sessions, and build up knowledge over time.</p><p>Check yo
     style B fill:#e1f5fe,stroke:#333,color:#333
     style C fill:#e1f5fe,stroke:#333,color:#333
     style M fill:#f3e5f5,stroke:#333,color:#333
-</div><hr><h2 id="后台 Subagents">后台 Subagents</h2><p>Subagents 可以在后台运行，释放主对话用于其他任务。</p><h3>配置</h3><p>在 frontmatter 中设置 <code>background: true</code> 以始终将 subagent 作为后台任务运行：</p><pre><code class="language-yaml">---
+</div><hr><h2 id="后台-subagents">后台 Subagents</h2><p>Subagents 可以在后台运行，释放主对话用于其他任务。</p><h3 id="配置">配置</h3><p>在 frontmatter 中设置 <code>background: true</code> 以始终将 subagent 作为后台任务运行：</p><pre><code class="language-yaml">---
 name: long-runner
 background: true
 description: Performs long-running analysis tasks in the background
 <hr>
-</code></pre><h3>键盘快捷键</h3><table>
+</code></pre><h3 id="键盘快捷键">键盘快捷键</h3><table>
 <thead>
 <tr>
 <th>快捷键</th>
@@ -736,14 +736,14 @@ description: Performs long-running analysis tasks in the background
 </tr>
 </tbody>
 </table>
-<h3>禁用后台任务</h3><p>设置环境变量以完全禁用后台任务支持：</p><pre><code class="language-bash">export CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
-</code></pre><hr><h2 id="Worktree 隔离">Worktree 隔离</h2><p><code>isolation: worktree</code> 设置给 subagent 其自己的 git worktree，允许其独立进行更改而不影响主工作树。</p><h3>配置</h3><pre><code class="language-yaml">---
+<h3 id="禁用后台任务">禁用后台任务</h3><p>设置环境变量以完全禁用后台任务支持：</p><pre><code class="language-bash">export CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
+</code></pre><hr><h2 id="worktree-隔离">Worktree 隔离</h2><p><code>isolation: worktree</code> 设置给 subagent 其自己的 git worktree，允许其独立进行更改而不影响主工作树。</p><h3 id="配置">配置</h3><pre><code class="language-yaml">---
 name: feature-builder
 isolation: worktree
 description: Implements features in an isolated git worktree
 tools: Read, Write, Edit, Bash, Grep, Glob
 <hr>
-</code></pre><h3>工作原理</h3><div class="mermaid">graph TB
+</code></pre><h3 id="工作原理">工作原理</h3><div class="mermaid">graph TB
     Main["Main Working Tree"] -->|spawns| Sub["Subagent with<br/>Isolated Worktree"]
     Sub -->|makes changes in| WT["Separate Git<br/>Worktree + Branch"]
     WT -->|no changes| Clean["Auto-cleaned"]
@@ -754,17 +754,17 @@ tools: Read, Write, Edit, Bash, Grep, Glob
     style Return fill:#fff3e0,stroke:#333,color:#333
 </div><li>subagent 在独立分支的独立 git worktree 中操作</li>
 <li>如果 subagent 未进行更改，worktree 会自动清理</li>
-<li>如果存在更改，worktree 路径和分支名称会返回给主 agent 以供审查或合并</li><hr><h2 id="限制可生成的 Subagents">限制可生成的 Subagents</h2><p>你可以通过在 <code>tools</code> 字段中使用 <code>Agent(agent_type)</code> 语法来控制给定 subagent 允许生成哪些 subagents。这提供了一种白名单特定 subagents 进行委托的方式。</p><blockquote><strong>注意</strong>：在 v2.1.63 中，<code>Task</code> 工具更名为 <code>Agent</code>。现有的 <code>Task(...)</code> 引用仍作为别名工作。</blockquote><h3>示例</h3><pre><code class="language-yaml">---
+<li>如果存在更改，worktree 路径和分支名称会返回给主 agent 以供审查或合并</li><hr><h2 id="限制可生成的-subagents">限制可生成的 Subagents</h2><p>你可以通过在 <code>tools</code> 字段中使用 <code>Agent(agent_type)</code> 语法来控制给定 subagent 允许生成哪些 subagents。这提供了一种白名单特定 subagents 进行委托的方式。</p><blockquote><strong>注意</strong>：在 v2.1.63 中，<code>Task</code> 工具更名为 <code>Agent</code>。现有的 <code>Task(...)</code> 引用仍作为别名工作。</blockquote><h3 id="示例">示例</h3><pre><code class="language-yaml">---
 name: coordinator
 description: Coordinates work between specialized agents
 tools: Agent(worker, researcher), Read, Bash
 <hr></p><p>You are a coordinator agent. You can delegate work to the "worker" and
 "researcher" subagents only. Use Read and Bash for your own exploration.
-</code></pre><p>在此示例中，<code>coordinator</code> subagent 只能生成 <code>worker</code> 和 <code>researcher</code> subagents。它不能生成任何其他 subagents，即使它们在其他地方定义。</p><hr><h2 id="<code>claude agents</code> CLI 命令"><code>claude agents</code> CLI 命令</h2><p><code>claude agents</code> 命令按来源（内置、用户级、项目级）分组列出所有已配置的 agents：</p><pre><code class="language-bash">claude agents
+</code></pre><p>在此示例中，<code>coordinator</code> subagent 只能生成 <code>worker</code> 和 <code>researcher</code> subagents。它不能生成任何其他 subagents，即使它们在其他地方定义。</p><hr><h2 id="claude-agents-cli-命令"><code>claude agents</code> CLI 命令</h2><p><code>claude agents</code> 命令按来源（内置、用户级、项目级）分组列出所有已配置的 agents：</p><pre><code class="language-bash">claude agents
 </code></pre><p>此命令：
 <li>显示所有来源的所有可用 agents</li>
 <li>按 source 位置分组 agents</li>
-<li>指示<strong>覆盖</strong>，当较高优先级的 agent 覆盖较低优先级的同名 agent 时（例如，项目级 agent 与用户级 agent 同名）</li><hr><h2 id="Agent Teams（实验性）">Agent Teams（实验性）</h2><p>Agent Teams 协调多个 Claude Code 实例共同处理复杂任务。与 subagents（被委托子任务并返回结果）不同，队友独立工作，拥有自己的上下文，并通过共享邮箱系统直接通信。</p><blockquote><strong>注意</strong>：Agent Teams 是实验性的，需要 Claude Code v2.1.32+。使用前请启用。</blockquote><h3>Subagents vs Agent Teams</h3><table>
+<li>指示<strong>覆盖</strong>，当较高优先级的 agent 覆盖较低优先级的同名 agent 时（例如，项目级 agent 与用户级 agent 同名）</li><hr><h2 id="agent-teams-实验性">Agent Teams（实验性）</h2><p>Agent Teams 协调多个 Claude Code 实例共同处理复杂任务。与 subagents（被委托子任务并返回结果）不同，队友独立工作，拥有自己的上下文，并通过共享邮箱系统直接通信。</p><blockquote><strong>注意</strong>：Agent Teams 是实验性的，需要 Claude Code v2.1.32+。使用前请启用。</blockquote><h3 id="subagents-vs-agent-teams">Subagents vs Agent Teams</h3><table>
 <thead>
 <tr>
 <th>方面</th>
@@ -805,15 +805,15 @@ tools: Agent(worker, researcher), Read, Bash
 </tr>
 </tbody>
 </table>
-<h3>启用 Agent Teams</h3><p>设置环境变量或将其添加到 <code>settings.json</code>：</p><pre><code class="language-bash">export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+<h3 id="启用-agent-teams">启用 Agent Teams</h3><p>设置环境变量或将其添加到 <code>settings.json</code>：</p><pre><code class="language-bash">export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 </code></pre><p>或在 <code>settings.json</code> 中：</p><pre><code class="language-json">{
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   }
 }
-</code></pre><h3>启动团队</h3><p>启用后，在提示中要求 Claude 与队友一起工作：</p><pre><code class="language-">User: Build the authentication module. Use a team — one teammate for the API endpoints,
+</code></pre><h3 id="启动团队">启动团队</h3><p>启用后，在提示中要求 Claude 与队友一起工作：</p><pre><code class="language-">User: Build the authentication module. Use a team — one teammate for the API endpoints,
       one for the database schema, and one for the test suite.
-</code></pre><p>Claude 将创建团队、分配任务并自动协调工作。</p><h3>显示模式</h3><p>控制队友活动的显示方式：</p><table>
+</code></pre><p>Claude 将创建团队、分配任务并自动协调工作。</p><h3 id="显示模式">显示模式</h3><p>控制队友活动的显示方式：</p><table>
 <thead>
 <tr>
 <th>模式</th>
@@ -843,7 +843,7 @@ tools: Agent(worker, researcher), Read, Bash
 </code></pre><p>你也可以在 <code>settings.json</code> 中设置显示模式：</p><pre><code class="language-json">{
   "teammateMode": "tmux"
 }
-</code></pre><blockquote><strong>注意</strong>：分窗模式需要 tmux 或 iTerm2。它在 VS Code 终端、Windows Terminal 或 Ghostty 中不可用。</blockquote><h3>导航</h3><p>在分窗模式中使用 <code>Shift+Down</code> 在队友之间导航。</p><h3>团队配置</h3><p>团队配置存储在 <code>~/.claude/teams/{team-name}/config.json</code>。</p><h3>架构</h3><div class="mermaid">graph TB
+</code></pre><blockquote><strong>注意</strong>：分窗模式需要 tmux 或 iTerm2。它在 VS Code 终端、Windows Terminal 或 Ghostty 中不可用。</blockquote><h3 id="导航">导航</h3><p>在分窗模式中使用 <code>Shift+Down</code> 在队友之间导航。</p><h3 id="团队配置">团队配置</h3><p>团队配置存储在 <code>~/.claude/teams/{team-name}/config.json</code>。</p><h3 id="架构">架构</h3><div class="mermaid">graph TB
     Lead["Team Lead<br/>(Coordinator)"]
     TaskList["Shared Task List<br/>(Dependencies)"]
     Mailbox["Mailbox<br/>(Messages)"]
@@ -868,9 +868,9 @@ tools: Agent(worker, researcher), Read, Bash
 </div><p><strong>关键组件</strong>：</p><li><strong>Team Lead</strong>：创建团队、分配任务并协调的主 Claude Code 会话</li>
 <li><strong>Shared Task List</strong>：具有自动依赖跟踪的同步任务列表</li>
 <li><strong>Mailbox</strong>：队友通信状态和协调的 agent 间消息传递系统</li>
-<li><strong>Teammates</strong>：独立的 Claude Code 实例，各有自己的上下文窗口</li><h3>任务分配和消息传递</h3><p>团队负责人将工作分解为任务并分配给队友。共享任务列表处理：</p><li><strong>自动依赖管理</strong> — 任务等待其依赖项完成</li>
+<li><strong>Teammates</strong>：独立的 Claude Code 实例，各有自己的上下文窗口</li><h3 id="任务分配和消息传递">任务分配和消息传递</h3><p>团队负责人将工作分解为任务并分配给队友。共享任务列表处理：</p><li><strong>自动依赖管理</strong> — 任务等待其依赖项完成</li>
 <li><strong>状态跟踪</strong> — 队友工作时更新任务状态</li>
-<li><strong>Agent 间消息传递</strong> — 队友通过邮箱发送消息进行协调（例如，"数据库架构已准备好，你可以开始编写查询"）</li><h3>计划审批工作流</h3><p>对于复杂任务，团队负责人在队友开始工作前创建执行计划。用户审查并批准计划，确保团队的方法在代码更改前与期望一致。</p><h3>团队 hook 事件</h3><p>Agent Teams 引入两个额外的 <a href="../06-hooks/">hook 事件</a>：</p><table>
+<li><strong>Agent 间消息传递</strong> — 队友通过邮箱发送消息进行协调（例如，"数据库架构已准备好，你可以开始编写查询"）</li><h3 id="计划审批工作流">计划审批工作流</h3><p>对于复杂任务，团队负责人在队友开始工作前创建执行计划。用户审查并批准计划，确保团队的方法在代码更改前与期望一致。</p><h3 id="团队-hook-事件">团队 hook 事件</h3><p>Agent Teams 引入两个额外的 <a href="../06-hooks/">hook 事件</a>：</p><table>
 <thead>
 <tr>
 <th>事件</th>
@@ -891,18 +891,18 @@ tools: Agent(worker, researcher), Read, Bash
 </tr>
 </tbody>
 </table>
-<h3>最佳实践</h3><li><strong>团队规模</strong>：保持团队 3-5 名队友以获得最佳协调</li>
+<h3 id="最佳实践">最佳实践</h3><li><strong>团队规模</strong>：保持团队 3-5 名队友以获得最佳协调</li>
 <li><strong>任务大小</strong>：将工作分解为每个 5-15 分钟的任务 — 足够小以并行化，足够大以有意义</li>
 <li><strong>避免文件冲突</strong>：将不同文件或目录分配给不同队友以防止合并冲突</li>
 <li><strong>从简单开始</strong>：首次团队使用进程内模式；熟悉后切换到分窗</li>
-<li><strong>清晰任务描述</strong>：提供具体、可操作的任务描述以便队友独立工作</li><h3>限制</h3><li><strong>实验性</strong>：功能行为可能在未来版本中更改</li>
+<li><strong>清晰任务描述</strong>：提供具体、可操作的任务描述以便队友独立工作</li><h3 id="限制">限制</h3><li><strong>实验性</strong>：功能行为可能在未来版本中更改</li>
 <li><strong>无会话恢复</strong>：进程内队友在会话结束后无法恢复</li>
 <li><strong>每会话一个团队</strong>：无法在单个会话中创建嵌套团队或多个团队</li>
 <li><strong>固定领导</strong>：团队负责人角色无法转移给队友</li>
 <li><strong>分窗限制</strong>：需要 tmux/iTerm2；在 VS Code 终端、Windows Terminal 或 Ghostty 中不可用</li>
-<li><strong>无跨会话团队</strong>：队友仅在当前会话中存在</li><blockquote><strong>警告</strong>：Agent Teams 是实验性的。先用非关键工作测试，并监控队友协调的意外行为。</blockquote><hr><h2 id="插件 Subagent 安全">插件 Subagent 安全</h2><p>插件提供的 subagents 具有受限的 frontmatter 能力以确保安全。以下字段在插件 subagent 定义中<strong>不允许</strong>：</p><li><code>hooks</code> - 不能定义生命周期 hooks</li>
+<li><strong>无跨会话团队</strong>：队友仅在当前会话中存在</li><blockquote><strong>警告</strong>：Agent Teams 是实验性的。先用非关键工作测试，并监控队友协调的意外行为。</blockquote><hr><h2 id="插件-subagent-安全">插件 Subagent 安全</h2><p>插件提供的 subagents 具有受限的 frontmatter 能力以确保安全。以下字段在插件 subagent 定义中<strong>不允许</strong>：</p><li><code>hooks</code> - 不能定义生命周期 hooks</li>
 <li><code>mcpServers</code> - 不能配置 MCP 服务器</li>
-<li><code>permissionMode</code> - 不能覆盖权限设置</li><p>这防止插件通过 subagent hooks 提升权限或执行任意命令。</p><hr><h2 id="架构">架构</h2><h3>高层架构</h3><div class="mermaid">graph TB
+<li><code>permissionMode</code> - 不能覆盖权限设置</li><p>这防止插件通过 subagent hooks 提升权限或执行任意命令。</p><hr><h2 id="架构">架构</h2><h3 id="高层架构">高层架构</h3><div class="mermaid">graph TB
     User["User"]
     Main["Main Agent<br/>(Coordinator)"]
     Reviewer["Code Reviewer<br/>Subagent"]
@@ -915,7 +915,7 @@ tools: Agent(worker, researcher), Read, Bash
     Tester -->|returns result| Main
     Docs -->|returns result| Main
     Main -->|synthesizes| User
-</div><h3>Subagent 生命周期</h3><div class="mermaid">sequenceDiagram
+</div><h3 id="subagent-生命周期">Subagent 生命周期</h3><div class="mermaid">sequenceDiagram
     participant User
     participant MainAgent as Main Agent
     participant CodeReviewer as Code Reviewer<br/>Subagent
@@ -940,15 +940,15 @@ tools: Agent(worker, researcher), Read, Bash
     style B fill:#fff9c4
     style C fill:#fff9c4
     style D fill:#fff9c4
-</div><h3>关键要点</h3><li>每个 subagent 获得<strong>全新上下文窗口</strong>，没有主对话历史</li>
+</div><h3 id="关键要点">关键要点</h3><li>每个 subagent 获得<strong>全新上下文窗口</strong>，没有主对话历史</li>
 <li>仅将<strong>相关上下文</strong>传递给 subagent 用于其特定任务</li>
 <li>结果<strong>提炼</strong>返回给主 agent</li>
-<li>这防止长期项目中的<strong>上下文 token 耗尽</strong></li><h3>性能考虑</h3><li><strong>上下文效率</strong> - Agents 保护主上下文，启用更长会话</li>
-<li><strong>延迟</strong> - Subagents 从干净状态开始，收集初始上下文可能增加延迟</li><h3>关键行为</h3><li><strong>无嵌套生成</strong> - Subagents 不能生成其他 subagents</li>
+<li>这防止长期项目中的<strong>上下文 token 耗尽</strong></li><h3 id="性能考虑">性能考虑</h3><li><strong>上下文效率</strong> - Agents 保护主上下文，启用更长会话</li>
+<li><strong>延迟</strong> - Subagents 从干净状态开始，收集初始上下文可能增加延迟</li><h3 id="关键行为">关键行为</h3><li><strong>无嵌套生成</strong> - Subagents 不能生成其他 subagents</li>
 <li><strong>后台权限</strong> - 后台 subagents 自动拒绝任何未预先批准的权限</li>
 <li><strong>后台化</strong> - 按 <code>Ctrl+B</code> 将当前运行的任务放入后台</li>
 <li><strong> transcripts</strong> - Subagent transcripts 存储在 <code>~/.claude/projects/{project}/{sessionId}/subagents/agent-{agentId}.jsonl</code></li>
-<li><strong>自动压缩</strong> - Subagent 上下文在约 95% 容量时自动压缩（使用 <code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code> 环境变量覆盖）</li><hr><h2 id="何时使用 Subagents">何时使用 Subagents</h2><table>
+<li><strong>自动压缩</strong> - Subagent 上下文在约 95% 容量时自动压缩（使用 <code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code> 环境变量覆盖）</li><hr><h2 id="何时使用-subagents">何时使用 Subagents</h2><table>
 <thead>
 <tr>
 <th>场景</th>
@@ -989,12 +989,12 @@ tools: Agent(worker, researcher), Read, Bash
 </tr>
 </tbody>
 </table>
-<h2 id="立即尝试">立即尝试</h2><h3>🎯 练习 1：探索内置 Subagents</h3><p>测试 Claude Code 的内置专业 agents：</p><pre><code class="language-bash"><h1>在 Claude Code 会话中：</h1><h1>测试 Explore agent（代码库搜索）</h1>
+<h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-探索内置-subagents">🎯 练习 1：探索内置 Subagents</h3><p>测试 Claude Code 的内置专业 agents：</p><pre><code class="language-bash"><h1>在 Claude Code 会话中：</h1><h1>测试 Explore agent（代码库搜索）</h1>
 "I need to understand how authentication works in this codebase. Use the Explore agent."</p><h1>测试 Plan agent（实现规划）</h1>
 "Plan the implementation of a new user profile feature."</p><h1>测试 Code Reviewer</h1>
 "Review the code I just wrote for security issues."</p><h1>测试 Build Error Resolver</h1>
 "My build is failing with TypeScript errors. Help me fix them."
-</code></pre><h3>🎯 练习 2：创建自定义 Subagent</h3><p>为你的工作流创建专业 agent：</p><p><strong>步骤 1：定义 agent 目的</strong>
+</code></pre><h3 id="练习-2-创建自定义-subagent">🎯 练习 2：创建自定义 Subagent</h3><p>为你的工作流创建专业 agent：</p><p><strong>步骤 1：定义 agent 目的</strong>
 <pre><code class="language-markdown"><h1>需要：一个用于文档生成的 "Doc Writer" agent</h1>
 <li>分析代码结构</li>
 <li>生成全面文档</li>
@@ -1007,8 +1007,8 @@ name: doc-writer
 description: Documentation generation specialist. Use when generating or updating docs.
 model: sonnet
 tools: Read, Write, Glob, Grep
-<hr></p><h1>Documentation Writer Agent</h1><h2 id="Purpose">Purpose</h2>
-Generate comprehensive, clear documentation for code modules.</p><h2 id="Process">Process</h2><li><strong>Analyze Code Structure</strong></li>
+<hr></p><h1>Documentation Writer Agent</h1><h2 id="purpose">Purpose</h2>
+Generate comprehensive, clear documentation for code modules.</p><h2 id="process">Process</h2><li><strong>Analyze Code Structure</strong></li>
    - Read source files
    - Identify key functions, classes, exports
    - Understand module purpose</p><li><strong>Generate Documentation</strong></li>
@@ -1042,26 +1042,26 @@ Generate comprehensive, clear documentation for code modules.</p><h2 id="Process
 <pre><code class="language-bash"><h1>在 Claude Code 中调用</h1>
 "Use the doc-writer agent to document src/utils/helpers.ts"</p><h1>或直接使用 Agent 工具</h1>
 Agent(subagent_type: "doc-writer", prompt: "Document src/utils/helpers.ts")
-</code></pre><h3>🎯 练习 3：并行 Subagent 执行</h3><p>同时运行多个 agents：</p><pre><code class="language-bash"><h1>在 Claude Code 中：</h1><p>"I need a comprehensive code analysis. Run these agents in parallel:
+</code></pre><h3 id="练习-3-并行-subagent-执行">🎯 练习 3：并行 Subagent 执行</h3><p>同时运行多个 agents：</p><pre><code class="language-bash"><h1>在 Claude Code 中：</h1><p>"I need a comprehensive code analysis. Run these agents in parallel:
 <li>Security reviewer - check for vulnerabilities</li>
 <li>Performance optimizer - find bottlenecks</li>
 <li>Code reviewer - check quality and style</li><p>After all complete, summarize findings."
 </code></pre><p><strong>预期行为：</strong>
 <li>Claude 同时启动 3 个 subagents</li>
 <li>每个在隔离上下文中运行</li>
-<li>结果合并到最终摘要中</li><h3>🎯 练习 4：多视角分析</h3><p>使用分角色 subagents 进行复杂决策：</p><pre><code class="language-bash">"Analyze whether we should migrate from REST to GraphQL. Use split-role subagents:
+<li>结果合并到最终摘要中</li><h3 id="练习-4-多视角分析">🎯 练习 4：多视角分析</h3><p>使用分角色 subagents 进行复杂决策：</p><pre><code class="language-bash">"Analyze whether we should migrate from REST to GraphQL. Use split-role subagents:
 <li>Factual reviewer: Check technical facts</li>
 <li>Senior engineer: Evaluate architecture impact</li>
 <li>Security expert: Assess security implications</li>
 <li>Consistency reviewer: Check alignment with existing patterns</li><p>Provide a synthesized recommendation."
-</code></pre><h3>🎯 练习 5：上下文隔离测试</h3><p>测试 subagent 上下文隔离：</p><pre><code class="language-bash"><h1>步骤 1：在主会话中加载大量上下文</h1>
+</code></pre><h3 id="练习-5-上下文隔离测试">🎯 练习 5：上下文隔离测试</h3><p>测试 subagent 上下文隔离：</p><pre><code class="language-bash"><h1>步骤 1：在主会话中加载大量上下文</h1>
 "Read all files in src/ and summarize the architecture"</p><h1>步骤 2：运行 subagent 而不污染上下文</h1>
 "Now use the code-reviewer agent to review src/api/users.ts"
 <h1>subagent 不会有所有 src/* 文件加载</h1>
 <h1>它从干净状态开始，防止上下文偏差</h1><h1>步骤 3：比较</h1>
 <h1>主会话：广泛但可能遗漏细节</h1>
 <h1>Subagent：专注的深度审查</h1>
-</code></pre><hr><h2 id="最佳实践">最佳实践</h2><h3>设计原则</h3><p><strong>应该：</strong>
+</code></pre><hr><h2 id="最佳实践">最佳实践</h2><h3 id="设计原则">设计原则</h3><p><strong>应该：</strong>
 <li>从 Claude 生成的 agents 开始 - 用 Claude 生成初始 subagent，然后迭代定制</li>
 <li>设计专注的 subagents - 单一、明确的职责，而非一个做所有事情</li>
 <li>编写详细提示 - 包含具体说明、示例和约束</li>
@@ -1071,7 +1071,7 @@ Agent(subagent_type: "doc-writer", prompt: "Document src/utils/helpers.ts")
 <li>给 subagents 不必要的工具访问</li>
 <li>对简单、单步任务使用 subagents</li>
 <li>在一个 subagent 的提示中混合关注点</li>
-<li>忘记传递必要的上下文</li><h3>系统提示最佳实践</h3><li><strong>明确角色</strong></li>
+<li>忘记传递必要的上下文</li><h3 id="系统提示最佳实践">系统提示最佳实践</h3><li><strong>明确角色</strong></li>
    <pre><code class="language-">   You are an expert code reviewer specializing in [specific areas]
    </code></pre><li><strong>清晰定义优先级</strong></li>
    <pre><code class="language-">   Review priorities (in order):
@@ -1085,54 +1085,54 @@ Agent(subagent_type: "doc-writer", prompt: "Document src/utils/helpers.ts")
    1. Run git diff to see recent changes
    2. Focus on modified files
    3. Begin review immediately
-   </code></pre><h3>工具访问策略</h3><li><strong>从严格开始</strong>：仅从必要工具开始</li>
+   </code></pre><h3 id="工具访问策略">工具访问策略</h3><li><strong>从严格开始</strong>：仅从必要工具开始</li>
 <li><strong>仅在需要时扩展</strong>：根据需求添加工具</li>
 <li><strong>尽可能只读</strong>：对分析 agents 使用 Read/Grep</li>
-<li><strong>沙箱执行</strong>：将 Bash 命令限制为特定模式</li><hr><h2 id="本文件夹中的示例 Subagents">本文件夹中的示例 Subagents</h2><p>此文件夹包含即用型示例 subagents：</p><h3>1. Code Reviewer (<code>code-reviewer.md</code>)</h3><p><strong>用途</strong>：全面的代码质量和可维护性分析</p><p><strong>工具</strong>：Read, Grep, Glob, Bash</p><p><strong>专业领域</strong>：
+<li><strong>沙箱执行</strong>：将 Bash 命令限制为特定模式</li><hr><h2 id="本文件夹中的示例-subagents">本文件夹中的示例 Subagents</h2><p>此文件夹包含即用型示例 subagents：</p><h3 id="1-code-reviewer-code-reviewer-md">1. Code Reviewer (<code>code-reviewer.md</code>)</h3><p><strong>用途</strong>：全面的代码质量和可维护性分析</p><p><strong>工具</strong>：Read, Grep, Glob, Bash</p><p><strong>专业领域</strong>：
 <li>安全漏洞检测</li>
 <li>性能优化识别</li>
 <li>代码可维护性评估</li>
-<li>测试覆盖率分析</li><p><strong>何时使用</strong>：需要关注质量和安全的自动化代码审查</p><hr><h3>2. Test Engineer (<code>test-engineer.md</code>)</h3><p><strong>用途</strong>：测试策略、覆盖率分析和自动化测试</p><p><strong>工具</strong>：Read, Write, Bash, Grep</p><p><strong>专业领域</strong>：
+<li>测试覆盖率分析</li><p><strong>何时使用</strong>：需要关注质量和安全的自动化代码审查</p><hr><h3 id="2-test-engineer-test-engineer-md">2. Test Engineer (<code>test-engineer.md</code>)</h3><p><strong>用途</strong>：测试策略、覆盖率分析和自动化测试</p><p><strong>工具</strong>：Read, Write, Bash, Grep</p><p><strong>专业领域</strong>：
 <li>单元测试创建</li>
 <li>集成测试设计</li>
 <li>边缘情况识别</li>
-<li>覆盖率分析（>80% 目标）</li><p><strong>何时使用</strong>：需要全面测试套件创建或覆盖率分析</p><hr><h3>3. Documentation Writer (<code>documentation-writer.md</code>)</h3><p><strong>用途</strong>：技术文档、API 文档和用户指南</p><p><strong>工具</strong>：Read, Write, Grep</p><p><strong>专业领域</strong>：
+<li>覆盖率分析（>80% 目标）</li><p><strong>何时使用</strong>：需要全面测试套件创建或覆盖率分析</p><hr><h3 id="3-documentation-writer-documentation-writer-md">3. Documentation Writer (<code>documentation-writer.md</code>)</h3><p><strong>用途</strong>：技术文档、API 文档和用户指南</p><p><strong>工具</strong>：Read, Write, Grep</p><p><strong>专业领域</strong>：
 <li>API 端点文档</li>
 <li>用户指南创建</li>
 <li>架构文档</li>
-<li>代码注释改进</li><p><strong>何时使用</strong>：需要创建或更新项目文档</p><hr><h3>4. Secure Reviewer (<code>secure-reviewer.md</code>)</h3><p><strong>用途</strong>：具有最小权限的安全专注代码审查</p><p><strong>工具</strong>：Read, Grep</p><p><strong>专业领域</strong>：
+<li>代码注释改进</li><p><strong>何时使用</strong>：需要创建或更新项目文档</p><hr><h3 id="4-secure-reviewer-secure-reviewer-md">4. Secure Reviewer (<code>secure-reviewer.md</code>)</h3><p><strong>用途</strong>：具有最小权限的安全专注代码审查</p><p><strong>工具</strong>：Read, Grep</p><p><strong>专业领域</strong>：
 <li>安全漏洞检测</li>
 <li>认证/授权问题</li>
 <li>数据暴露风险</li>
-<li>注入攻击识别</li><p><strong>何时使用</strong>：需要没有修改能力的安全审计</p><hr><h3>5. Implementation Agent (<code>implementation-agent.md</code>)</h3><p><strong>用途</strong>：用于功能开发的完整实现能力</p><p><strong>工具</strong>：Read, Write, Edit, Bash, Grep, Glob</p><p><strong>专业领域</strong>：
+<li>注入攻击识别</li><p><strong>何时使用</strong>：需要没有修改能力的安全审计</p><hr><h3 id="5-implementation-agent-implementation-agent-md">5. Implementation Agent (<code>implementation-agent.md</code>)</h3><p><strong>用途</strong>：用于功能开发的完整实现能力</p><p><strong>工具</strong>：Read, Write, Edit, Bash, Grep, Glob</p><p><strong>专业领域</strong>：
 <li>功能实现</li>
 <li>代码生成</li>
 <li>构建和测试执行</li>
-<li>代码库修改</li><p><strong>何时使用</strong>：需要 subagent 端到端实现功能</p><hr><h3>6. Debugger (<code>debugger.md</code>)</h3><p><strong>用途</strong>：用于错误、测试失败和意外行为的调试专家</p><p><strong>工具</strong>：Read, Edit, Bash, Grep, Glob</p><p><strong>专业领域</strong>：
+<li>代码库修改</li><p><strong>何时使用</strong>：需要 subagent 端到端实现功能</p><hr><h3 id="6-debugger-debugger-md">6. Debugger (<code>debugger.md</code>)</h3><p><strong>用途</strong>：用于错误、测试失败和意外行为的调试专家</p><p><strong>工具</strong>：Read, Edit, Bash, Grep, Glob</p><p><strong>专业领域</strong>：
 <li>根因分析</li>
 <li>错误调查</li>
 <li>测试失败解决</li>
-<li>最小修复实现</li><p><strong>何时使用</strong>：遇到 bug、错误或意外行为</p><hr><h3>7. Data Scientist (<code>data-scientist.md</code>)</h3><p><strong>用途</strong>：用于 SQL 查询和数据洞察的数据分析专家</p><p><strong>工具</strong>：Bash, Read, Write</p><p><strong>专业领域</strong>：
+<li>最小修复实现</li><p><strong>何时使用</strong>：遇到 bug、错误或意外行为</p><hr><h3 id="7-data-scientist-data-scientist-md">7. Data Scientist (<code>data-scientist.md</code>)</h3><p><strong>用途</strong>：用于 SQL 查询和数据洞察的数据分析专家</p><p><strong>工具</strong>：Bash, Read, Write</p><p><strong>专业领域</strong>：
 <li>SQL 查询优化</li>
 <li>BigQuery 操作</li>
 <li>数据分析和可视化</li>
-<li>统计洞察</li><p><strong>何时使用</strong>：需要数据分析、SQL 查询或 BigQuery 操作</p><hr><h2 id="安装说明">安装说明</h2><h3>方法 1：使用 /agents 命令（推荐）</h3><pre><code class="language-bash">/agents
+<li>统计洞察</li><p><strong>何时使用</strong>：需要数据分析、SQL 查询或 BigQuery 操作</p><hr><h2 id="安装说明">安装说明</h2><h3 id="方法-1-使用-agents-命令-推荐">方法 1：使用 /agents 命令（推荐）</h3><pre><code class="language-bash">/agents
 </code></pre><p>然后：
 <li>选择 'Create New Agent'</li>
 <li>选择项目级或用户级</li>
 <li>详细描述你的 subagent</li>
 <li>选择要授予访问权限的工具（或留空以继承所有）</li>
-<li>保存并使用</li><h3>方法 2：复制到项目</h3><p>将 agent 文件复制到项目的 <code>.claude/agents/</code> 目录：</p><pre><code class="language-bash"><h1>导航到你的项目</h1>
+<li>保存并使用</li><h3 id="方法-2-复制到项目">方法 2：复制到项目</h3><p>将 agent 文件复制到项目的 <code>.claude/agents/</code> 目录：</p><pre><code class="language-bash"><h1>导航到你的项目</h1>
 cd /path/to/your/project</p><h1>如果不存在则创建 agents 目录</h1>
 mkdir -p .claude/agents</p><h1>从此文件夹复制所有 agent 文件</h1>
 cp /path/to/04-subagents/*.md .claude/agents/</p><h1>移除 README（不需要在 .claude/agents 中）</h1>
 rm .claude/agents/README.md
-</code></pre><h3>方法 3：复制到用户目录</h3><p>对于在所有项目中可用的 agents：</p><pre><code class="language-bash"><h1>创建用户 agents 目录</h1>
+</code></pre><h3 id="方法-3-复制到用户目录">方法 3：复制到用户目录</h3><p>对于在所有项目中可用的 agents：</p><pre><code class="language-bash"><h1>创建用户 agents 目录</h1>
 mkdir -p ~/.claude/agents</p><h1>复制 agents</h1>
 cp /path/to/04-subagents/code-reviewer.md ~/.claude/agents/
 cp /path/to/04-subagents/debugger.md ~/.claude/agents/
 <h1>... 根据需要复制其他</h1>
-</code></pre><h3>验证</h3><p>安装后，验证 agents 是否被识别：</p><pre><code class="language-bash">/agents
+</code></pre><h3 id="验证">验证</h3><p>安装后，验证 agents 是否被识别：</p><pre><code class="language-bash">/agents
 </code></pre><p>你应该看到已安装的 agents 与内置 agents 一起列出。</p><hr><h2 id="文件结构">文件结构</h2><pre><code class="language-">project/
 ├── .claude/
 │   └── agents/
@@ -1144,12 +1144,12 @@ cp /path/to/04-subagents/debugger.md ~/.claude/agents/
 │       ├── debugger.md
 │       └── data-scientist.md
 └── ...
-</code></pre><hr><h2 id="相关概念">相关概念</h2><h3>相关功能</h3><li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 快速用户调用快捷方式</li>
+</code></pre><hr><h2 id="相关概念">相关概念</h2><h3 id="相关功能">相关功能</h3><li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 快速用户调用快捷方式</li>
 <li><strong><a href="../02-memory/">Memory</a></strong> - 持久化跨会话上下文</li>
 <li><strong><a href="../03-skills/">Skills</a></strong> - 可复用自主能力</li>
 <li><strong><a href="../05-mcp/">MCP Protocol</a></strong> - 实时外部数据访问</li>
 <li><strong><a href="../06-hooks/">Hooks</a></strong> - 事件驱动的 shell 命令自动化</li>
-<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包的扩展包</li><h3>与其他功能比较</h3><table>
+<li><strong><a href="../07-plugins/">Plugins</a></strong> - 打包的扩展包</li><h3 id="与其他功能比较">与其他功能比较</h3><table>
 <thead>
 <tr>
 <th>功能</th>
@@ -1203,7 +1203,7 @@ cp /path/to/04-subagents/debugger.md ~/.claude/agents/
 </tr>
 </tbody>
 </table>
-<h3>集成模式</h3><div class="mermaid">graph TD
+<h3 id="集成模式">集成模式</h3><div class="mermaid">graph TD
     User["User Request"] --> Main["Main Agent"]
     Main -->|Uses| Memory["Memory<br/>(Context)"]
     Main -->|Queries| MCP["MCP<br/>(Live Data)"]

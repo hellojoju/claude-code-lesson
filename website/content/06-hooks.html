@@ -179,10 +179,10 @@
     <div class="container">
       <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
-        <li><a href="/content/basics/installation.html">入门指南</a></li>
-        <li><a href="/content/modules/">核心模块</a></li>
-        <li><a href="/content/cases/intro.html">实战案例</a></li>
-        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
+        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -192,7 +192,7 @@
       
       <article>
         <nav class="breadcrumb">
-          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Hooks
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / Hooks
         </nav>
 
         <div class="meta">
@@ -214,11 +214,11 @@
 <ul><li>事件驱动自动化</li>
 <li>基于 JSON 的输入/输出</li>
 <li>支持命令、提示、HTTP 和智能体 hook 类型</li>
-<li>工具特定 hooks 的模式匹配</li><hr><h2 id="Hook 的关键时刻">Hook 的关键时刻</h2><p>你的 CI 在 20 分钟构建后发现了 lint 错误。Hooks 能在 2 秒内捕获它。</p><p><strong>没有 hooks 的痛苦循环：</strong>
+<li>工具特定 hooks 的模式匹配</li><hr><h2 id="hook-的关键时刻">Hook 的关键时刻</h2><p>你的 CI 在 20 分钟构建后发现了 lint 错误。Hooks 能在 2 秒内捕获它。</p><p><strong>没有 hooks 的痛苦循环：</strong>
 <pre><code class="language-">编写代码 → 提交 → 推送 → CI 启动 → 5 分钟安装 → 10 分钟构建 → 5 分钟测试 → 失败 → 修复 → 重复
 </code></pre><p><strong>有了 hooks：</strong>
 <pre><code class="language-">编写代码 → Hook 运行 → 2 秒 → 立即修复 → 提交干净代码 → CI 通过
-</code></pre><p>Hooks 将验证从"事后"转变为"你还在思考时"。它们在提交前捕获密钥，在切换文件前格式化代码，在执行危险命令前拦截。</p><hr><h2 id="选择正确的 Hook 事件">选择正确的 Hook 事件</h2><div class="mermaid">flowchart TD
+</code></pre><p>Hooks 将验证从"事后"转变为"你还在思考时"。它们在提交前捕获密钥，在切换文件前格式化代码，在执行危险命令前拦截。</p><hr><h2 id="选择正确的-hook-事件">选择正确的 Hook 事件</h2><div class="mermaid">flowchart TD
     A["我想在 Y 时触发 X"] --> B{什么事件？}</p><p>    B -->|工具执行| C{何时？}
     C -->|之前| D["PreToolUse<br/>验证输入，拦截危险操作"]
     C -->|成功后| E["PostToolUse<br/>格式化，日志，添加上下文"]
@@ -241,7 +241,7 @@
     style Y fill:#c8e6c9
     style AA fill:#fff9c4
     style AB fill:#c8e6c9
-</div><hr><h2 id="立即尝试：你的第一个 Hook">立即尝试：你的第一个 Hook</h2><p>让我们创建一个 hook，在 Claude 写入 TypeScript 文件后自动格式化它们。</p><p><strong>步骤 1：创建 hooks 目录</strong></p><pre><code class="language-bash">mkdir -p .claude/hooks
+</div><hr><h2 id="立即尝试-你的第一个-hook">立即尝试：你的第一个 Hook</h2><p>让我们创建一个 hook，在 Claude 写入 TypeScript 文件后自动格式化它们。</p><p><strong>步骤 1：创建 hooks 目录</strong></p><pre><code class="language-bash">mkdir -p .claude/hooks
 </code></pre><p><strong>步骤 2：创建格式化 hook</strong></p><p>创建 <code>.claude/hooks/auto-format.sh</code>：</p><pre><code class="language-bash">#!/bin/bash
 <h1>Auto-format code after Write/Edit</h1>
 <h1>Receives JSON via stdin from Claude Code</h1><p>INPUT=$(cat)
@@ -284,7 +284,7 @@ esac</p><p>exit 0
 <li><code>.claude/settings.local.json</code> - 本地项目设置（不提交）</li>
 <li>管理策略 - 组织范围设置</li>
 <li>Plugin <code>hooks/hooks.json</code> - 插件范围 hooks</li>
-<li>Skill/Agent frontmatter - 组件生命周期 hooks</li><h3>基本配置结构</h3><pre><code class="language-json">{
+<li>Skill/Agent frontmatter - 组件生命周期 hooks</li><h3 id="基本配置结构">基本配置结构</h3><pre><code class="language-json">{
   "hooks": {
     "EventName": [
       {
@@ -342,7 +342,7 @@ esac</p><p>exit 0
 </tr>
 </tbody>
 </table>
-<h3>匹配器模式</h3><table>
+<h3 id="匹配器模式">匹配器模式</h3><table>
 <thead>
 <tr>
 <th>模式</th>
@@ -374,12 +374,12 @@ esac</p><p>exit 0
 </tr>
 </tbody>
 </table>
-<h2 id="Hook 类型">Hook 类型</h2><p>Claude Code 支持四种 hook 类型：</p><h3>命令 Hooks</h3><p>默认 hook 类型。执行 shell 命令，通过 JSON stdin/stdout 和退出码通信。</p><pre><code class="language-json">{
+<h2 id="hook-类型">Hook 类型</h2><p>Claude Code 支持四种 hook 类型：</p><h3 id="命令-hooks">命令 Hooks</h3><p>默认 hook 类型。执行 shell 命令，通过 JSON stdin/stdout 和退出码通信。</p><pre><code class="language-json">{
   "type": "command",
   "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate.py\"",
   "timeout": 60
 }
-</code></pre><h3>HTTP Hooks</h3><blockquote>在 v2.1.63 中添加。</blockquote><p>远程 webhook 端点，接收与命令 hooks 相同的 JSON 输入。HTTP hooks 将 JSON POST 到 URL 并接收 JSON 响应。启用沙箱时，HTTP hooks 通过沙箱路由。出于安全考虑，URL 中的环境变量插值需要显式 <code>allowedEnvVars</code> 列表。</p><pre><code class="language-json">{
+</code></pre><h3 id="http-hooks">HTTP Hooks</h3><blockquote>在 v2.1.63 中添加。</blockquote><p>远程 webhook 端点，接收与命令 hooks 相同的 JSON 输入。HTTP hooks 将 JSON POST 到 URL 并接收 JSON 响应。启用沙箱时，HTTP hooks 通过沙箱路由。出于安全考虑，URL 中的环境变量插值需要显式 <code>allowedEnvVars</code> 列表。</p><pre><code class="language-json">{
   "hooks": {
     "PostToolUse": [{
       "type": "http",
@@ -392,12 +392,12 @@ esac</p><p>exit 0
 <li><code>"type": "http"</code> -- 标识为 HTTP hook</li>
 <li><code>"url"</code> -- webhook 端点 URL</li>
 <li>启用沙箱时通过沙箱路由</li>
-<li>URL 中任何环境变量插值需要显式 <code>allowedEnvVars</code> 列表</li><h3>提示 Hooks</h3><p>LLM 评估的提示，hook 内容是 Claude 评估的提示。主要用于 <code>Stop</code> 和 <code>SubagentStop</code> 事件进行智能任务完成检查。</p><pre><code class="language-json">{
+<li>URL 中任何环境变量插值需要显式 <code>allowedEnvVars</code> 列表</li><h3 id="提示-hooks">提示 Hooks</h3><p>LLM 评估的提示，hook 内容是 Claude 评估的提示。主要用于 <code>Stop</code> 和 <code>SubagentStop</code> 事件进行智能任务完成检查。</p><pre><code class="language-json">{
   "type": "prompt",
   "prompt": "评估 Claude 是否完成了所有请求的任务。",
   "timeout": 30
 }
-</code></pre><p>LLM 评估提示并返回结构化决策（详见<a href="#基于提示的-hooks">基于提示的 Hooks</a>）。</p><h3>智能体 Hooks</h3><p>基于子智能体的验证 hooks，启动专用智能体评估条件或执行复杂检查。与提示 hooks（单次 LLM 评估）不同，智能体 hooks 可以使用工具并执行多步推理。</p><pre><code class="language-json">{
+</code></pre><p>LLM 评估提示并返回结构化决策（详见<a href="#基于提示的-hooks">基于提示的 Hooks</a>）。</p><h3 id="智能体-hooks">智能体 Hooks</h3><p>基于子智能体的验证 hooks，启动专用智能体评估条件或执行复杂检查。与提示 hooks（单次 LLM 评估）不同，智能体 hooks 可以使用工具并执行多步推理。</p><pre><code class="language-json">{
   "type": "agent",
   "prompt": "验证代码变更遵循我们的架构指南。检查相关设计文档并进行比较。",
   "timeout": 120
@@ -406,7 +406,7 @@ esac</p><p>exit 0
 <li><code>"type": "agent"</code> -- 标识为智能体 hook</li>
 <li><code>"prompt"</code> -- 子智能体的任务描述</li>
 <li>智能体可以使用工具（Read、Grep、Bash 等）执行评估</li>
-<li>返回类似提示 hooks 的结构化决策</li><h2 id="Hook 事件">Hook 事件</h2><p>Claude Code 支持 <strong>25 个 hook 事件</strong>：</p><table>
+<li>返回类似提示 hooks 的结构化决策</li><h2 id="hook-事件">Hook 事件</h2><p>Claude Code 支持 <strong>25 个 hook 事件</strong>：</p><table>
 <thead>
 <tr>
 <th>事件</th>
@@ -594,7 +594,7 @@ esac</p><p>exit 0
 </tr>
 </tbody>
 </table>
-<h3>PreToolUse</h3><p>在 Claude 创建工具参数后、处理前运行。用于验证或修改工具输入。</p><p><strong>配置：</strong>
+<h3 id="pretooluse">PreToolUse</h3><p>在 Claude 创建工具参数后、处理前运行。用于验证或修改工具输入。</p><p><strong>配置：</strong>
 <pre><code class="language-json">{
   "hooks": {
     "PreToolUse": [
@@ -613,7 +613,7 @@ esac</p><p>exit 0
 </code></pre><p><strong>常见匹配器：</strong> <code>Task</code>、<code>Bash</code>、<code>Glob</code>、<code>Grep</code>、<code>Read</code>、<code>Edit</code>、<code>Write</code>、<code>WebFetch</code>、<code>WebSearch</code></p><p><strong>输出控制：</strong>
 <li><code>permissionDecision</code>：<code>"allow"</code>、<code>"deny"</code> 或 <code>"ask"</code></li>
 <li><code>permissionDecisionReason</code>：决策解释</li>
-<li><code>updatedInput</code>：修改后的工具输入参数</li><h3>PostToolUse</h3><p>工具完成后立即运行。用于验证、日志或向 Claude 提供上下文。</p><p><strong>配置：</strong>
+<li><code>updatedInput</code>：修改后的工具输入参数</li><h3 id="posttooluse">PostToolUse</h3><p>工具完成后立即运行。用于验证、日志或向 Claude 提供上下文。</p><p><strong>配置：</strong>
 <pre><code class="language-json">{
   "hooks": {
     "PostToolUse": [
@@ -631,7 +631,7 @@ esac</p><p>exit 0
 }
 </code></pre><p><strong>输出控制：</strong>
 <li><code>"block"</code> 决策向 Claude 提示反馈</li>
-<li><code>additionalContext</code>：为 Claude 添加的上下文</li><h3>UserPromptSubmit</h3><p>用户提交提示后、Claude 处理前运行。</p><p><strong>配置：</strong>
+<li><code>additionalContext</code>：为 Claude 添加的上下文</li><h3 id="userpromptsubmit">UserPromptSubmit</h3><p>用户提交提示后、Claude 处理前运行。</p><p><strong>配置：</strong>
 <pre><code class="language-json">{
   "hooks": {
     "UserPromptSubmit": [
@@ -649,7 +649,7 @@ esac</p><p>exit 0
 </code></pre><p><strong>输出控制：</strong>
 <li><code>decision</code>：<code>"block"</code> 阻止处理</li>
 <li><code>reason</code>：拦截时的解释</li>
-<li><code>additionalContext</code>：添加到提示的上下文</li><h3>Stop 和 SubagentStop</h3><p>Claude 完成响应（Stop）或子智能体完成（SubagentStop）时运行。支持基于提示的评估进行智能任务完成检查。</p><p><strong>额外输入字段：</strong> <code>Stop</code> 和 <code>SubagentStop</code> hooks 在 JSON 输入中接收 <code>last_assistant_message</code> 字段，包含停止前 Claude 或子智能体的最终消息。这对评估任务完成很有用。</p><p><strong>配置：</strong>
+<li><code>additionalContext</code>：添加到提示的上下文</li><h3 id="stop-和-subagentstop">Stop 和 SubagentStop</h3><p>Claude 完成响应（Stop）或子智能体完成（SubagentStop）时运行。支持基于提示的评估进行智能任务完成检查。</p><p><strong>额外输入字段：</strong> <code>Stop</code> 和 <code>SubagentStop</code> hooks 在 JSON 输入中接收 <code>last_assistant_message</code> 字段，包含停止前 Claude 或子智能体的最终消息。这对评估任务完成很有用。</p><p><strong>配置：</strong>
 <pre><code class="language-json">{
   "hooks": {
     "Stop": [
@@ -665,7 +665,7 @@ esac</p><p>exit 0
     ]
   }
 }
-</code></pre><h3>SubagentStart</h3><p>子智能体开始执行时运行。匹配器输入是智能体类型名称，允许 hooks 针特定子智能体类型。</p><p><strong>配置：</strong>
+</code></pre><h3 id="subagentstart">SubagentStart</h3><p>子智能体开始执行时运行。匹配器输入是智能体类型名称，允许 hooks 针特定子智能体类型。</p><p><strong>配置：</strong>
 <pre><code class="language-json">{
   "hooks": {
     "SubagentStart": [
@@ -681,12 +681,12 @@ esac</p><p>exit 0
     ]
   }
 }
-</code></pre><h3>SessionStart</h3><p>会话启动或恢复时运行。可以持久化环境变量。</p><p><strong>匹配器：</strong> <code>startup</code>、<code>resume</code>、<code>clear</code>、<code>compact</code></p><p><strong>特殊功能：</strong> 使用 <code>CLAUDE_ENV_FILE</code> 持久化环境变量（在 <code>CwdChanged</code> 和 <code>FileChanged</code> hooks 中也可用）：</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><h3 id="sessionstart">SessionStart</h3><p>会话启动或恢复时运行。可以持久化环境变量。</p><p><strong>匹配器：</strong> <code>startup</code>、<code>resume</code>、<code>clear</code>、<code>compact</code></p><p><strong>特殊功能：</strong> 使用 <code>CLAUDE_ENV_FILE</code> 持久化环境变量（在 <code>CwdChanged</code> 和 <code>FileChanged</code> hooks 中也可用）：</p><pre><code class="language-bash">#!/bin/bash
 if [ -n "$CLAUDE_ENV_FILE" ]; then
   echo 'export NODE_ENV=development' >> "$CLAUDE_ENV_FILE"
 fi
 exit 0
-</code></pre><h3>SessionEnd</h3><p>会话结束时运行以执行清理或最终日志。无法拦截终止。</p><p><strong>原因字段值：</strong>
+</code></pre><h3 id="sessionend">SessionEnd</h3><p>会话结束时运行以执行清理或最终日志。无法拦截终止。</p><p><strong>原因字段值：</strong>
 <li><code>clear</code> - 用户清除了会话</li>
 <li><code>logout</code> - 用户登出</li>
 <li><code>prompt_input_exit</code> - 用户通过提示输入退出</li>
@@ -705,11 +705,11 @@ exit 0
     ]
   }
 }
-</code></pre><h3>通知事件</h3><p>通知事件更新的匹配器：
+</code></pre><h3 id="通知事件">通知事件</h3><p>通知事件更新的匹配器：
 <li><code>permission_prompt</code> - 权限请求通知</li>
 <li><code>idle_prompt</code> - 空闲状态通知</li>
 <li><code>auth_success</code> - 认证成功</li>
-<li><code>elicitation_dialog</code> - 向用户显示对话框</li><h2 id="组件范围 Hooks">组件范围 Hooks</h2><p>Hooks 可以附加到特定组件（skills、agents、commands）的 frontmatter 中：</p><p><strong>在 SKILL.md、agent.md 或 command.md 中：</strong></p><pre><code class="language-yaml">---
+<li><code>elicitation_dialog</code> - 向用户显示对话框</li><h2 id="组件范围-hooks">组件范围 Hooks</h2><p>Hooks 可以附加到特定组件（skills、agents、commands）的 frontmatter 中：</p><p><strong>在 SKILL.md、agent.md 或 command.md 中：</strong></p><pre><code class="language-yaml">---
 name: secure-operations
 description: 执行带有安全检查的操作
 hooks:
@@ -720,7 +720,7 @@ hooks:
           command: "./scripts/check.sh"
           once: true  # 每个会话只运行一次
 <hr>
-</code></pre><p><strong>组件 hooks 支持的事件：</strong> <code>PreToolUse</code>、<code>PostToolUse</code>、<code>Stop</code></p><p>这允许在使用它们的组件中直接定义 hooks，保持相关代码在一起。</p><h3>子智能体 Frontmatter 中的 Hooks</h3><p>在子智能体的 frontmatter 中定义 <code>Stop</code> hook 时，它会自动转换为该子智能体范围的 <code>SubagentStop</code> hook。这确保 stop hook 只在该特定子智能体完成时触发，而不是主会话停止时。</p><pre><code class="language-yaml">---
+</code></pre><p><strong>组件 hooks 支持的事件：</strong> <code>PreToolUse</code>、<code>PostToolUse</code>、<code>Stop</code></p><p>这允许在使用它们的组件中直接定义 hooks，保持相关代码在一起。</p><h3 id="子智能体-frontmatter-中的-hooks">子智能体 Frontmatter 中的 Hooks</h3><p>在子智能体的 frontmatter 中定义 <code>Stop</code> hook 时，它会自动转换为该子智能体范围的 <code>SubagentStop</code> hook。这确保 stop hook 只在该特定子智能体完成时触发，而不是主会话停止时。</p><pre><code class="language-yaml">---
 name: code-review-agent
 description: 自动化代码审查子智能体
 hooks:
@@ -730,7 +730,7 @@ hooks:
           prompt: "验证代码审查是否彻底且完整。"
   # 上面的 Stop hook 自动转换为该子智能体的 SubagentStop
 <hr>
-</code></pre><h2 id="PermissionRequest 事件">PermissionRequest 事件</h2><p>使用自定义输出格式处理权限请求：</p><pre><code class="language-json">{
+</code></pre><h2 id="permissionrequest-事件">PermissionRequest 事件</h2><p>使用自定义输出格式处理权限请求：</p><pre><code class="language-json">{
   "hookSpecificOutput": {
     "hookEventName": "PermissionRequest",
     "decision": {
@@ -741,7 +741,7 @@ hooks:
     }
   }
 }
-</code></pre><h2 id="Hook 输入和输出">Hook 输入和输出</h2><h3>JSON 输入（通过 stdin）</h3><p>所有 hooks 通过 stdin 接收 JSON 输入：</p><pre><code class="language-json">{
+</code></pre><h2 id="hook-输入和输出">Hook 输入和输出</h2><h3 id="json-输入-通过-stdin">JSON 输入（通过 stdin）</h3><p>所有 hooks 通过 stdin 接收 JSON 输入：</p><pre><code class="language-json">{
   "session_id": "abc123",
   "transcript_path": "/path/to/transcript.jsonl",
   "cwd": "/current/working/directory",
@@ -795,7 +795,7 @@ hooks:
 </tr>
 </tbody>
 </table>
-<h3>退出码</h3><table>
+<h3 id="退出码">退出码</h3><table>
 <thead>
 <tr>
 <th>退出码</th>
@@ -821,7 +821,7 @@ hooks:
 </tr>
 </tbody>
 </table>
-<h3>JSON 输出（stdout，退出码 0）</h3><pre><code class="language-json">{
+<h3 id="json-输出-stdout-退出码-0">JSON 输出（stdout，退出码 0）</h3><pre><code class="language-json">{
   "continue": true,
   "stopReason": "停止时的可选消息",
   "suppressOutput": false,
@@ -876,7 +876,7 @@ hooks:
 </tr>
 </tbody>
 </table>
-<h2 id="基于提示的 Hooks">基于提示的 Hooks</h2><p>对于 <code>Stop</code> 和 <code>SubagentStop</code> 事件，可以使用基于 LLM 的评估：</p><pre><code class="language-json">{
+<h2 id="基于提示的-hooks">基于提示的 Hooks</h2><p>对于 <code>Stop</code> 和 <code>SubagentStop</code> 事件，可以使用基于 LLM 的评估：</p><pre><code class="language-json">{
   "hooks": {
     "Stop": [
       {
@@ -898,7 +898,7 @@ hooks:
   "continue": false,
   "stopReason": "任务完成"
 }
-</code></pre><h2 id="示例">示例</h2><h3>示例 1：Bash 命令验证器（PreToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-bash.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+</code></pre><h2 id="示例">示例</h2><h3 id="示例-1-bash-命令验证器-pretooluse">示例 1：Bash 命令验证器（PreToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-bash.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
 import json
 import sys
 import re</p><p>BLOCKED_PATTERNS = [
@@ -928,7 +928,7 @@ import re</p><p>BLOCKED_PATTERNS = [
     ]
   }
 }
-</code></pre><h3>示例 2：安全扫描器（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/security-scan.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+</code></pre><h3 id="示例-2-安全扫描器-posttooluse">示例 2：安全扫描器（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/security-scan.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
 import json
 import sys
 import re</p><p>SECRET_PATTERNS = [
@@ -951,7 +951,7 @@ import re</p><p>SECRET_PATTERNS = [
         }
         print(json.dumps(output))</p><p>    sys.exit(0)</p><p>if __name__ == "__main__":
     main()
-</code></pre><h3>示例 3：自动格式化代码（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/format-code.sh</code></p><pre><code class="language-bash">#!/bin/bash</p><h1>Read JSON from stdin</h1>
+</code></pre><h3 id="示例-3-自动格式化代码-posttooluse">示例 3：自动格式化代码（PostToolUse）</h3><p><strong>文件：</strong> <code>.claude/hooks/format-code.sh</code></p><pre><code class="language-bash">#!/bin/bash</p><h1>Read JSON from stdin</h1>
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('tool_name', ''))")
 FILE_PATH=$(echo "$INPUT" | python3 -c "import sys, json; print(json.load(sys.stdin).get('tool_input', {}).get('file_path', ''))")</p><p>if [ "$TOOL_NAME" != "Write" ] && [ "$TOOL_NAME" != "Edit" ]; then
@@ -968,7 +968,7 @@ case "$FILE_PATH" in
         command -v gofmt &>/dev/null && gofmt -w "$FILE_PATH" 2>/dev/null
         ;;
 esac</p><p>exit 0
-</code></pre><h3>示例 4：提示验证器（UserPromptSubmit）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-prompt.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+</code></pre><h3 id="示例-4-提示验证器-userpromptsubmit">示例 4：提示验证器（UserPromptSubmit）</h3><p><strong>文件：</strong> <code>.claude/hooks/validate-prompt.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
 import json
 import sys
 import re</p><p>BLOCKED_PATTERNS = [
@@ -985,7 +985,7 @@ import re</p><p>BLOCKED_PATTERNS = [
             print(json.dumps(output))
             sys.exit(0)</p><p>    sys.exit(0)</p><p>if __name__ == "__main__":
     main()
-</code></pre><h3>示例 5：智能 Stop Hook（基于提示）</h3><pre><code class="language-json">{
+</code></pre><h3 id="示例-5-智能-stop-hook-基于提示">示例 5：智能 Stop Hook（基于提示）</h3><pre><code class="language-json">{
   "hooks": {
     "Stop": [
       {
@@ -1000,7 +1000,7 @@ import re</p><p>BLOCKED_PATTERNS = [
     ]
   }
 }
-</code></pre><h3>示例 6：上下文使用跟踪器（Hook 配对）</h3><p>使用 <code>UserPromptSubmit</code>（消息前）和 <code>Stop</code>（响应后）hooks 配合跟踪每个请求的 token 消耗。</p><p><strong>文件：</strong> <code>.claude/hooks/context-tracker.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
+</code></pre><h3 id="示例-6-上下文使用跟踪器-hook-配对">示例 6：上下文使用跟踪器（Hook 配对）</h3><p>使用 <code>UserPromptSubmit</code>（消息前）和 <code>Stop</code>（响应后）hooks 配合跟踪每个请求的 token 消耗。</p><p><strong>文件：</strong> <code>.claude/hooks/context-tracker.py</code></p><pre><code class="language-python">#!/usr/bin/env python3
 """
 Context Usage Tracker - Tracks token consumption per request.</p><p>Uses UserPromptSubmit as "pre-message" hook and Stop as "post-response" hook
 to calculate the delta in token usage for each request.</p><p>Token Counting Methods:
@@ -1137,7 +1137,7 @@ if __name__ == "__main__":
 </tr>
 </tbody>
 </table>
-<blockquote><strong>注意：</strong> Anthropic 未发布官方离线 tokenizer。两种方法都是近似值。记录包括用户提示、Claude 响应和工具输出，但不包括系统提示或内部上下文。</blockquote><h3>示例 7：种子自动模式权限（一次性设置脚本）</h3><p>一次性设置脚本，向 <code>~/.claude/settings.json</code> 添加约 67 个安全权限规则，相当于 Claude Code 自动模式基线 — 无需任何 hook，无需记住未来选择。运行一次；可安全重复运行（跳过已存在的规则）。</p><p><strong>文件：</strong> <code>09-advanced-features/setup-auto-mode-permissions.py</code></p><pre><code class="language-bash"><h1>预览将添加的内容</h1>
+<blockquote><strong>注意：</strong> Anthropic 未发布官方离线 tokenizer。两种方法都是近似值。记录包括用户提示、Claude 响应和工具输出，但不包括系统提示或内部上下文。</blockquote><h3 id="示例-7-种子自动模式权限-一次性设置脚本">示例 7：种子自动模式权限（一次性设置脚本）</h3><p>一次性设置脚本，向 <code>~/.claude/settings.json</code> 添加约 67 个安全权限规则，相当于 Claude Code 自动模式基线 — 无需任何 hook，无需记住未来选择。运行一次；可安全重复运行（跳过已存在的规则）。</p><p><strong>文件：</strong> <code>09-advanced-features/setup-auto-mode-permissions.py</code></p><pre><code class="language-bash"><h1>预览将添加的内容</h1>
 python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run</p><h1>应用</h1>
 python3 09-advanced-features/setup-auto-mode-permissions.py
 </code></pre><p><strong>添加内容：</strong></p><table>
@@ -1181,7 +1181,7 @@ python3 09-advanced-features/setup-auto-mode-permissions.py
 <strong>有意排除的内容</strong>（此脚本从不添加）：
 <li><code>rm -rf</code>、<code>sudo</code>、强制推送、<code>git reset --hard</code></li>
 <li><code>DROP TABLE</code>、<code>kubectl delete</code>、<code>terraform destroy</code></li>
-<li><code>npm publish</code>、<code>curl | bash</code>、生产部署</li><h2 id="插件 Hooks">插件 Hooks</h2><p>插件可以在其 <code>hooks/hooks.json</code> 文件中包含 hooks：</p><p><strong>文件：</strong> <code>plugins/hooks/hooks.json</code></p><pre><code class="language-json">{
+<li><code>npm publish</code>、<code>curl | bash</code>、生产部署</li><h2 id="插件-hooks">插件 Hooks</h2><p>插件可以在其 <code>hooks/hooks.json</code> 文件中包含 hooks：</p><p><strong>文件：</strong> <code>plugins/hooks/hooks.json</code></p><pre><code class="language-json">{
   "hooks": {
     "PreToolUse": [
       {
@@ -1198,7 +1198,7 @@ python3 09-advanced-features/setup-auto-mode-permissions.py
 }
 </code></pre><p><strong>插件 Hooks 中的环境变量：</strong>
 <li><code>${CLAUDE_PLUGIN_ROOT}</code> - 插件目录路径</li>
-<li><code>${CLAUDE_PLUGIN_DATA}</code> - 插件数据目录路径</li><p>这允许插件包含自定义验证和自动化 hooks。</p><h2 id="MCP 工具 Hooks">MCP 工具 Hooks</h2><p>MCP 工具遵循模式 <code>mcp__<server>__<tool></code>：</p><pre><code class="language-json">{
+<li><code>${CLAUDE_PLUGIN_DATA}</code> - 插件数据目录路径</li><p>这允许插件包含自定义验证和自动化 hooks。</p><h2 id="mcp-工具-hooks">MCP 工具 Hooks</h2><p>MCP 工具遵循模式 <code>mcp__<server>__<tool></code>：</p><pre><code class="language-json">{
   "hooks": {
     "PreToolUse": [
       {
@@ -1213,13 +1213,13 @@ python3 09-advanced-features/setup-auto-mode-permissions.py
     ]
   }
 }
-</code></pre><h2 id="安全考虑">安全考虑</h2><h3>免责声明</h3><p><strong>使用风险自负</strong>：Hooks 执行任意 shell 命令。你独自负责：
+</code></pre><h2 id="安全考虑">安全考虑</h2><h3 id="免责声明">免责声明</h3><p><strong>使用风险自负</strong>：Hooks 执行任意 shell 命令。你独自负责：
 <li>你配置的命令</li>
 <li>文件访问/修改权限</li>
 <li>潜在数据丢失或系统损坏</li>
-<li>在生产环境使用前在安全环境中测试 hooks</li><h3>安全说明</h3><li><strong>需要工作区信任：</strong> <code>statusLine</code> 和 <code>fileSuggestion</code> hook 输出命令现在需要工作区信任接受才能生效。</li>
+<li>在生产环境使用前在安全环境中测试 hooks</li><h3 id="安全说明">安全说明</h3><li><strong>需要工作区信任：</strong> <code>statusLine</code> 和 <code>fileSuggestion</code> hook 输出命令现在需要工作区信任接受才能生效。</li>
 <li><strong>HTTP hooks 和环境变量：</strong> HTTP hooks 需要显式 <code>allowedEnvVars</code> 列表才能在 URL 中使用环境变量插值。这防止敏感环境变量意外泄露到远程端点。</li>
-<li><strong>管理设置层级：</strong> <code>disableAllHooks</code> 设置现在遵循管理设置层级，意味着组织级设置可以强制禁用 hooks，个人用户无法覆盖。</li><h3>最佳实践</h3><table>
+<li><strong>管理设置层级：</strong> <code>disableAllHooks</code> 设置现在遵循管理设置层级，意味着组织级设置可以强制禁用 hooks，个人用户无法覆盖。</li><h3 id="最佳实践">最佳实践</h3><table>
 <thead>
 <tr>
 <th>应该</th>
@@ -1257,8 +1257,8 @@ python3 09-advanced-features/setup-auto-mode-permissions.py
 </tr>
 </tbody>
 </table>
-<h2 id="调试">调试</h2><h3>启用调试模式</h3><p>使用调试标志运行 Claude 以获取详细 hook 日志：</p><pre><code class="language-bash">claude --debug
-</code></pre><h3>详细模式</h3><p>在 Claude Code 中使用 <code>Ctrl+O</code> 启用详细模式并查看 hook 执行进度。</p><h3>独立测试 Hooks</h3><pre><code class="language-bash"><h1>使用示例 JSON 输入测试</h1>
+<h2 id="调试">调试</h2><h3 id="启用调试模式">启用调试模式</h3><p>使用调试标志运行 Claude 以获取详细 hook 日志：</p><pre><code class="language-bash">claude --debug
+</code></pre><h3 id="详细模式">详细模式</h3><p>在 Claude Code 中使用 <code>Ctrl+O</code> 启用详细模式并查看 hook 执行进度。</p><h3 id="独立测试-hooks">独立测试 Hooks</h3><pre><code class="language-bash"><h1>使用示例 JSON 输入测试</h1>
 echo '{"tool_name": "Bash", "tool_input": {"command": "ls -la"}}' | python3 .claude/hooks/validate-bash.py</p><h1>检查退出码</h1>
 echo $?
 </code></pre><h2 id="完整配置示例">完整配置示例</h2><pre><code class="language-json">{
@@ -1326,7 +1326,7 @@ echo $?
     ]
   }
 }
-</code></pre><h2 id="Hook 执行详情">Hook 执行详情</h2><table>
+</code></pre><h2 id="hook-执行详情">Hook 执行详情</h2><table>
 <thead>
 <tr>
 <th>方面</th>
@@ -1352,7 +1352,7 @@ echo $?
 </tr>
 </tbody>
 </table>
-<hr></p><h2 id="模式与配方">模式与配方</h2><p>久经考验的 hook 组合，解决实际问题。</p><h3>模式 1：保存时格式化管道</h3><p>最常见的 hook 模式：每次写入文件后自动格式化。</p><p><strong>问题：</strong> 代码未格式化就提交。CI 失败。浪费开发者时间。</p><p><strong>解决方案：</strong> 将格式化工具链为 PostToolUse hooks。</p><pre><code class="language-json">{
+<hr></p><h2 id="模式与配方">模式与配方</h2><p>久经考验的 hook 组合，解决实际问题。</p><h3 id="模式-1-保存时格式化管道">模式 1：保存时格式化管道</h3><p>最常见的 hook 模式：每次写入文件后自动格式化。</p><p><strong>问题：</strong> 代码未格式化就提交。CI 失败。浪费开发者时间。</p><p><strong>解决方案：</strong> 将格式化工具链为 PostToolUse hooks。</p><pre><code class="language-json">{
   "hooks": {
     "PostToolUse": [
       {
@@ -1368,7 +1368,7 @@ echo $?
 </code></pre><p><strong>好处：</strong>
 <li>每个文件在你看到之前就已格式化</li>
 <li>Lint 错误立即捕获，而不是 20 分钟后在 CI 中</li>
-<li>零心智负担 - 它自动发生</li><h3>模式 2：安全门</h3><p>在执行前拦截危险操作。</p><p><strong>问题：</strong> Claude 有时建议危险命令。一个错误的 <code>rm -rf</code> 可能浪费数小时。</p><p><strong>解决方案：</strong> PreToolUse 验证器拦截危险模式。</p><pre><code class="language-json">{
+<li>零心智负担 - 它自动发生</li><h3 id="模式-2-安全门">模式 2：安全门</h3><p>在执行前拦截危险操作。</p><p><strong>问题：</strong> Claude 有时建议危险命令。一个错误的 <code>rm -rf</code> 可能浪费数小时。</p><p><strong>解决方案：</strong> PreToolUse 验证器拦截危险模式。</p><pre><code class="language-json">{
   "hooks": {
     "PreToolUse": [
       {
@@ -1388,7 +1388,7 @@ echo $?
 <li><code>sudo rm</code> - 提权删除</li>
 <li><code>git push --force main</code> - 强制推送到 main</li>
 <li><code>DROP DATABASE</code> - SQL 破坏</li>
-<li><code>kubectl delete namespace</code> - 集群破坏</li><h3>模式 3：测试守卫</h3><p>代码变更时运行相关测试。</p><p><strong>问题：</strong> 变更破坏测试。你直到 CI 运行才知道。</p><p><strong>解决方案：</strong> PostToolUse 测试运行器用于修改的文件。</p><pre><code class="language-json">{
+<li><code>kubectl delete namespace</code> - 集群破坏</li><h3 id="模式-3-测试守卫">模式 3：测试守卫</h3><p>代码变更时运行相关测试。</p><p><strong>问题：</strong> 变更破坏测试。你直到 CI 运行才知道。</p><p><strong>解决方案：</strong> PostToolUse 测试运行器用于修改的文件。</p><pre><code class="language-json">{
   "hooks": {
     "PostToolUse": [
       {
@@ -1408,7 +1408,7 @@ echo $?
 <li>检测哪个文件被修改</li>
 <li>查找相关测试文件</li>
 <li>只运行那些测试（快速反馈）</li>
-<li>向 Claude 报告结果</li><h3>模式 4：会话卫生</h3><p>跟踪每个会话发生的事情。</p><p><strong>问题：</strong> 长会话丢失上下文。你忘记做了什么。</p><p><strong>解决方案：</strong> Hook 配对跟踪会话活动。</p><pre><code class="language-json">{
+<li>向 Claude 报告结果</li><h3 id="模式-4-会话卫生">模式 4：会话卫生</h3><p>跟踪每个会话发生的事情。</p><p><strong>问题：</strong> 长会话丢失上下文。你忘记做了什么。</p><p><strong>解决方案：</strong> Hook 配对跟踪会话活动。</p><pre><code class="language-json">{
   "hooks": {
     "SessionStart": [
       {
@@ -1431,7 +1431,7 @@ echo $?
 <li>创建/修改的文件</li>
 <li>运行的命令</li>
 <li>通过/失败的测试</li>
-<li>Token 使用</li><h3>模式 5：密钥扫描器</h3><p>防止密钥进入 git。</p><p><strong>问题：</strong> API 密钥、密码、令牌被提交。公开仓库泄露密钥。</p><p><strong>解决方案：</strong> PostToolUse 安全扫描器。</p><pre><code class="language-json">{
+<li>Token 使用</li><h3 id="模式-5-密钥扫描器">模式 5：密钥扫描器</h3><p>防止密钥进入 git。</p><p><strong>问题：</strong> API 密钥、密码、令牌被提交。公开仓库泄露密钥。</p><p><strong>解决方案：</strong> PostToolUse 安全扫描器。</p><pre><code class="language-json">{
   "hooks": {
     "PostToolUse": [
       {
@@ -1451,7 +1451,7 @@ echo $?
 <li>API 密钥和令牌</li>
 <li>AWS 凭证</li>
 <li>私钥</li>
-<li>如果可用则使用 trufflehog/semgrep</li><hr><h2 id="立即尝试：安全守卫">立即尝试：安全守卫</h2><p>创建一个拦截危险 bash 命令的 hook。</p><p><strong>步骤 1：创建验证器</strong></p><p><code>.claude/hooks/prompt-validator.sh</code>：</p><pre><code class="language-bash">#!/bin/bash
+<li>如果可用则使用 trufflehog/semgrep</li><hr><h2 id="立即尝试-安全守卫">立即尝试：安全守卫</h2><p>创建一个拦截危险 bash 命令的 hook。</p><p><strong>步骤 1：创建验证器</strong></p><p><code>.claude/hooks/prompt-validator.sh</code>：</p><pre><code class="language-bash">#!/bin/bash
 <h1>Block dangerous bash commands</h1>
 <h1>Hook: PreToolUse:Bash</h1><p>INPUT=$(cat)
 CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty')</p><h1>Dangerous patterns - exit 2 to block</h1>
@@ -1498,7 +1498,7 @@ done</p><p>exit 0
 }
 </code></pre><p><strong>步骤 3：测试</strong></p><p>尝试让 Claude 运行危险命令：</p><pre><code class="language-">> 运行 rm -rf /tmp/test</p><p>[Hook] BLOCKED: Dangerous command detected: rm -rf /
 [Hook] Command: rm -rf /tmp/test
-</code></pre><p>Claude 会看到拦截消息并且不会执行命令。</p><hr><h2 id="完整 Hook 脚本参考">完整 Hook 脚本参考</h2><p>常见用例的生产就绪 hook 脚本。每个脚本包含错误处理、日志和配置检测。</p><h3>auto-format.sh</h3><p>智能检测的多语言格式化器。</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><p>Claude 会看到拦截消息并且不会执行命令。</p><hr><h2 id="完整-hook-脚本参考">完整 Hook 脚本参考</h2><p>常见用例的生产就绪 hook 脚本。每个脚本包含错误处理、日志和配置检测。</p><h3 id="auto-format-sh">auto-format.sh</h3><p>智能检测的多语言格式化器。</p><pre><code class="language-bash">#!/bin/bash
 <h1>auto-format.sh - Multi-language code formatter</h1>
 <h1>Hook: PostToolUse (Write|Edit)</h1>
 <h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><h1>Parse JSON input</h1>
@@ -1550,7 +1550,7 @@ format_file() {
   esac
 }</p><p>format_file
 exit 0
-</code></pre><h3>security-scan.sh</h3><p>密钥和漏洞扫描器。</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><h3 id="security-scan-sh">security-scan.sh</h3><p>密钥和漏洞扫描器。</p><pre><code class="language-bash">#!/bin/bash
 <h1>security-scan.sh - Security scanner for secrets and vulnerabilities</h1>
 <h1>Hook: PostToolUse (Write|Edit)</h1>
 <h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
@@ -1605,7 +1605,7 @@ if [[ ${#WARNINGS[@]} -gt 0 ]]; then
   jq -n --arg file "$FILE_PATH" --arg warnings "$(printf '%s; ' "${WARNINGS[@]}")" \
     '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: "Security scan found issues in \($file): \($warnings)"}}'
 fi</p><p>exit 0
-</code></pre><h3>test-runner.sh</h3><p>修改文件的智能测试运行器。</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><h3 id="test-runner-sh">test-runner.sh</h3><p>修改文件的智能测试运行器。</p><pre><code class="language-bash">#!/bin/bash
 <h1>test-runner.sh - Run tests related to modified files</h1>
 <h1>Hook: PostToolUse (Write|Edit)</h1>
 <h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
@@ -1663,7 +1663,7 @@ TEST_FILE=$(find_test_file "$FILE_PATH")</p><p>if [[ -n "$TEST_FILE" ]]; then
 else
   log "No test file found for $FILE_PATH"
 fi</p><p>exit 0
-</code></pre><h3>prompt-validator.sh</h3><p>命令和提示安全验证器。</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><h3 id="prompt-validator-sh">prompt-validator.sh</h3><p>命令和提示安全验证器。</p><pre><code class="language-bash">#!/bin/bash
 <h1>prompt-validator.sh - Validate bash commands and user prompts</h1>
 <h1>Hook: PreToolUse (Bash) or UserPromptSubmit</h1>
 <h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
@@ -1723,7 +1723,7 @@ for pattern in "${WARN_PATTERNS[@]}"; do
   fi
 done</p><p>log "Validation passed"
 exit 0
-</code></pre><h3>notify-session-end.sh</h3><p>会话完成通知。</p><pre><code class="language-bash">#!/bin/bash
+</code></pre><h3 id="notify-session-end-sh">notify-session-end.sh</h3><p>会话完成通知。</p><pre><code class="language-bash">#!/bin/bash
 <h1>notify-session-end.sh - Send notifications when session ends</h1>
 <h1>Hook: SessionEnd or Stop</h1>
 <h1>Receives JSON input via stdin</h1><p>set -euo pipefail</p><p>INPUT=$(cat)
@@ -1762,23 +1762,23 @@ generate_summary
 desktop_notify
 slack_notify
 email_notify</p><p>exit 0
-</code></pre><hr><h2 id="故障排除">故障排除</h2><h3>Hook 未执行</h3>
+</code></pre><hr><h2 id="故障排除">故障排除</h2><h3 id="hook-未执行">Hook 未执行</h3>
 <li>验证 JSON 配置语法正确</li>
 <li>检查匹配器模式是否匹配工具名称</li>
 <li>确保脚本存在且可执行：<code>chmod +x script.sh</code></li>
 <li>运行 <code>claude --debug</code> 查看 hook 执行日志</li>
-<li>验证 hook 从 stdin 读取 JSON（而非命令参数）</li><h3>Hook 意外拦截</h3>
+<li>验证 hook 从 stdin 读取 JSON（而非命令参数）</li><h3 id="hook-意外拦截">Hook 意外拦截</h3>
 <li>使用示例 JSON 测试 hook：<code>echo '{"tool_name": "Write", ...}' | ./hook.py</code></li>
 <li>检查退出码：应为 0 表示允许，2 表示拦截</li>
-<li>检查 stderr 输出（退出码 2 时显示）</li><h3>JSON 解析错误</h3>
+<li>检查 stderr 输出（退出码 2 时显示）</li><h3 id="json-解析错误">JSON 解析错误</h3>
 <li>始终从 stdin 读取，而非命令参数</li>
 <li>使用正确的 JSON 解析（而非字符串操作）</li>
-<li>优雅处理缺失字段</li><h2 id="安装">安装</h2><h3>步骤 1：创建 Hooks 目录</h3>
+<li>优雅处理缺失字段</li><h2 id="安装">安装</h2><h3 id="步骤-1-创建-hooks-目录">步骤 1：创建 Hooks 目录</h3>
 <pre><code class="language-bash">mkdir -p ~/.claude/hooks
-</code></pre><h3>步骤 2：复制示例 Hooks</h3>
+</code></pre><h3 id="步骤-2-复制示例-hooks">步骤 2：复制示例 Hooks</h3>
 <pre><code class="language-bash">cp 06-hooks/*.sh ~/.claude/hooks/
 chmod +x ~/.claude/hooks/*.sh
-</code></pre><h3>步骤 3：在设置中配置</h3>
+</code></pre><h3 id="步骤-3-在设置中配置">步骤 3：在设置中配置</h3>
 使用上述 hook 配置编辑 <code>~/.claude/settings.json</code> 或 <code>.claude/settings.json</code>。</p><h2 id="相关概念">相关概念</h2><li><strong><a href="../08-checkpoints/">Checkpoints 和 Rewind</a></strong> - 保存和恢复对话状态</li>
 <li><strong><a href="../01-slash-commands/">Slash Commands</a></strong> - 创建自定义 slash 命令</li>
 <li><strong><a href="../03-skills/">Skills</a></strong> - 可复用自主能力</li>

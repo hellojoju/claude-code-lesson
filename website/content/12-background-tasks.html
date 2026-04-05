@@ -179,10 +179,10 @@
     <div class="container">
       <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
-        <li><a href="/content/basics/installation.html">入门指南</a></li>
-        <li><a href="/content/modules/">核心模块</a></li>
-        <li><a href="/content/cases/intro.html">实战案例</a></li>
-        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
+        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -192,7 +192,7 @@
       
       <article>
         <nav class="breadcrumb">
-          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / 后台任务
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / 后台任务
         </nav>
 
         <div class="meta">
@@ -205,10 +205,10 @@
         <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#后台任务机制">后台任务机制</a></li><li ><a href="#核心概念">核心概念</a></li><li ><a href="#任务类型">任务类型</a></li><li ><a href="#使用方式">使用方式</a></li><li ><a href="#bash-后台任务">Bash 后台任务</a></li><li ><a href="#agent-后台任务">Agent 后台任务</a></li><li ><a href="#任务管理">任务管理</a></li><li ><a href="#查看任务列表">查看任务列表</a></li><li ><a href="#获取任务输出">获取任务输出</a></li><li ><a href="#停止任务">停止任务</a></li><li ><a href="#实战案例">实战案例</a></li><li ><a href="#案例-长时间构建">案例：长时间构建</a></li><li ><a href="#案例-并行探索">案例：并行探索</a></li><li ><a href="#案例-测试执行">案例：测试执行</a></li><li ><a href="#任务状态">任务状态</a></li><li ><a href="#状态流转">状态流转</a></li><li ><a href="#状态查询">状态查询</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#避免的模式">避免的模式</a></li><li ><a href="#推荐模式">推荐模式</a></li><li ><a href="#通知机制">通知机制</a></li><li ><a href="#任务完成通知">任务完成通知</a></li><li ><a href="#处理通知">处理通知</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-后台构建">🎯 练习 1：后台构建</a></li><li ><a href="#练习-2-并行探索">🎯 练习 2：并行探索</a></li><li ><a href="#练习-3-任务监控">🎯 练习 3：任务监控</a></li><li ><a href="#相关资源">相关资源</a></li></ul></div>
 
         <div class="content">
-          <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟</blockquote><h1>后台任务</h1><h2 id="概述">概述</h2><p>Claude Code 支持后台任务执行，让你可以在等待长时间运行任务的同时继续其他工作。</p><h2 id="后台任务机制">后台任务机制</h2><h3>核心概念</h3><p>后台任务允许：
+          <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟</blockquote><h1>后台任务</h1><h2 id="概述">概述</h2><p>Claude Code 支持后台任务执行，让你可以在等待长时间运行任务的同时继续其他工作。</p><h2 id="后台任务机制">后台任务机制</h2><h3 id="核心概念">核心概念</h3><p>后台任务允许：
 <ul><li><strong>非阻塞执行</strong>：任务在后台运行，你可以继续对话</li>
 <li><strong>自动通知</strong>：任务完成后自动通知你</li>
-<li><strong>结果获取</strong>：随时查看任务输出和状态</li><h3>任务类型</h3><table>
+<li><strong>结果获取</strong>：随时查看任务输出和状态</li><h3 id="任务类型">任务类型</h3><table>
 <thead>
 <tr>
 <th>类型</th>
@@ -229,7 +229,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="使用方式">使用方式</h2><h3>Bash 后台任务</h3><pre><code class="language-bash"><h1>在 Bash 工具中设置 run_in_background: true</h1>
+<h2 id="使用方式">使用方式</h2><h3 id="bash-后台任务">Bash 后台任务</h3><pre><code class="language-bash"><h1>在 Bash 工具中设置 run_in_background: true</h1>
 {
   "command": "npm test",
   "run_in_background": true
@@ -237,7 +237,7 @@
 </code></pre><p><strong>特点：</strong>
 <li>命令在后台执行</li>
 <li>会话可以继续其他对话</li>
-<li>完成后收到 <code><task-notification></code> 通知</li><h3>Agent 后台任务</h3><pre><code class="language-markdown"><h1>使用 Agent 工具的后台模式</h1>
+<li>完成后收到 <code><task-notification></code> 通知</li><h3 id="agent-后台任务">Agent 后台任务</h3><pre><code class="language-markdown"><h1>使用 Agent 工具的后台模式</h1>
 {
   "subagent_type": "Explore",
   "prompt": "搜索所有 API 端点",
@@ -247,13 +247,13 @@
 </code></pre><p><strong>特点：</strong>
 <li>子代理独立运行</li>
 <li>不阻塞主会话</li>
-<li>完成后自动通知</li><h2 id="任务管理">任务管理</h2><h3>查看任务列表</h3><p>使用 <code>/tasks</code> 命令查看所有后台任务：</p><pre><code class="language-bash">/tasks
+<li>完成后自动通知</li><h2 id="任务管理">任务管理</h2><h3 id="查看任务列表">查看任务列表</h3><p>使用 <code>/tasks</code> 命令查看所有后台任务：</p><pre><code class="language-bash">/tasks
 </code></pre><p>输出示例：
 <pre><code class="language-">Running Tasks:
 <li>a024a90: 探索 API 结构 (running)</li>
 <li>a195852d: 运行测试 (completed)</li><p>Background Shells:
 <li>shell_001: npm build (running)</li>
-</code></pre><h3>获取任务输出</h3><p>使用 TaskOutput 工具：</p><pre><code class="language-markdown"><h1>获取任务结果</h1>
+</code></pre><h3 id="获取任务输出">获取任务输出</h3><p>使用 TaskOutput 工具：</p><pre><code class="language-markdown"><h1>获取任务结果</h1>
 {
   "task_id": "a024a90f936a08281",
   "block": false  // 不阻塞，只检查状态
@@ -263,10 +263,10 @@
   "block": true,
   "timeout": 60000  // 等待最多 60 秒
 }
-</code></pre><h3>停止任务</h3><p>使用 TaskStop 工具：</p><pre><code class="language-markdown">{
+</code></pre><h3 id="停止任务">停止任务</h3><p>使用 TaskStop 工具：</p><pre><code class="language-markdown">{
   "task_id": "a024a90f936a08281"
 }
-</code></pre><h2 id="实战案例">实战案例</h2><h3>案例：长时间构建</h3><pre><code class="language-bash"><h1>启动构建，继续其他工作</h1>
+</code></pre><h2 id="实战案例">实战案例</h2><h3 id="案例-长时间构建">案例：长时间构建</h3><pre><code class="language-bash"><h1>启动构建，继续其他工作</h1>
 "运行 npm build 在后台，我继续写文档"</p><h1>Claude 执行：</h1>
 {
   "command": "npm run build",
@@ -274,23 +274,23 @@
 }</p><h1>你可以继续：</h1>
 "现在帮我写 README"</p><h1>构建完成后收到通知</h1>
 <task-notification task_id="...">构建完成</task-notification>
-</code></pre><h3>案例：并行探索</h3><pre><code class="language-markdown"><h1>同时启动多个探索任务</h1>
+</code></pre><h3 id="案例-并行探索">案例：并行探索</h3><pre><code class="language-markdown"><h1>同时启动多个探索任务</h1>
 "并行探索：
 <li>搜索认证相关代码</li>
 <li>搜索数据库相关代码</li>
 <li>搜索 API 相关代码</li><p>都完成后汇总。"</p><h1>Claude 并行启动 3 个后台 Agent</h1>
-</code></pre><h3>案例：测试执行</h3><pre><code class="language-bash"><h1>后台运行测试套件</h1>
+</code></pre><h3 id="案例-测试执行">案例：测试执行</h3><pre><code class="language-bash"><h1>后台运行测试套件</h1>
 "在后台运行完整测试套件，我继续开发"</p><p>{
   "command": "pytest tests/ -v",
   "run_in_background": true,
   "timeout": 300000  // 5 分钟超时
 }
-</code></pre><h2 id="任务状态">任务状态</h2><h3>状态流转</h3><div class="mermaid">graph LR
+</code></pre><h2 id="任务状态">任务状态</h2><h3 id="状态流转">状态流转</h3><div class="mermaid">graph LR
     A[pending] --> B[running]
     B --> C[completed]
     B --> D[failed]
     B --> E[stopped]
-</div><h3>状态查询</h3><pre><code class="language-markdown"><h1>使用 TaskOutput 查询状态</h1>
+</div><h3 id="状态查询">状态查询</h3><pre><code class="language-markdown"><h1>使用 TaskOutput 查询状态</h1>
 {
   "task_id": "...",
   "block": false  // 只查询，不等待
@@ -329,34 +329,34 @@
 </tr>
 </tbody>
 </table>
-<h3>避免的模式</h3><pre><code class="language-markdown"><h1>不要做</h1>
+<h3 id="避免的模式">避免的模式</h3><pre><code class="language-markdown"><h1>不要做</h1>
 <li>不要 poll（轮询）后台任务 —— 会自动通知</li>
 <li>不要 sleep 等待任务</li>
 <li>不要在后台运行交互命令</li>
 <li>不要忘记检查任务结果</li>
-</code></pre><h3>推荐模式</h3><pre><code class="language-markdown"><h1>好习惯</h1>
+</code></pre><h3 id="推荐模式">推荐模式</h3><pre><code class="language-markdown"><h1>好习惯</h1>
 <li>启动后台任务后立即继续其他工作</li>
 <li>收到通知后再处理结果</li>
 <li>用 block=false 检查状态</li>
 <li>设置合理的 timeout</li>
-</code></pre><h2 id="通知机制">通知机制</h2><h3>任务完成通知</h3><pre><code class="language-xml"><task-notification>
+</code></pre><h2 id="通知机制">通知机制</h2><h3 id="任务完成通知">任务完成通知</h3><pre><code class="language-xml"><task-notification>
   <task-id>a024a90...</task-id>
   <output-file>/tmp/output.txt</output-file>
 </task-notification>
-</code></pre><h3>处理通知</h3><p>收到通知后：
+</code></pre><h3 id="处理通知">处理通知</h3><p>收到通知后：
 <li>使用 Read 工具读取输出文件</li>
 <li>或使用 TaskOutput 获取完整结果</li><pre><code class="language-markdown"><h1>读取输出文件</h1>
 {
   "file_path": "/tmp/output.txt"
 }
-</code></pre><h2 id="立即尝试">立即尝试</h2><h3>🎯 练习 1：后台构建</h3><pre><code class="language-bash"><h1>在 Claude Code 中：</h1>
+</code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-后台构建">🎯 练习 1：后台构建</h3><pre><code class="language-bash"><h1>在 Claude Code 中：</h1>
 "在后台运行 npm run build，完成后告诉我结果"</p><h1>焦点放在这，让我继续其他工作</h1>
 "同时帮我写一个简单的测试用例"
-</code></pre><h3>🎯 练习 2：并行探索</h3><pre><code class="language-bash">"启动 3 个后台 Explore Agent：
+</code></pre><h3 id="练习-2-并行探索">🎯 练习 2：并行探索</h3><pre><code class="language-bash">"启动 3 个后台 Explore Agent：
 <li>探索 src/ 目录结构</li>
 <li>搜索所有 async 函数</li>
 <li>搜索所有 TODO 注释</li><p>完成后汇总报告。"
-</code></pre><h3>🎯 练习 3：任务监控</h3><pre><code class="language-bash">"启动一个长时间测试，然后：
+</code></pre><h3 id="练习-3-任务监控">🎯 练习 3：任务监控</h3><pre><code class="language-bash">"启动一个长时间测试，然后：
 <li>用 /tasks 查看状态</li>
 <li>继续其他对话</li>
 <li>收到通知后检查结果"</li>

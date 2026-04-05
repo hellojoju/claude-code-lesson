@@ -73,82 +73,112 @@ function loadDirectoryStructure() {
 }
 
 function getMockDirectoryData() {
-    // 模拟目录数据 - 实际应从服务器获取
+    // 模块数据 - 对应实际存在的模块页面
     return {
         title: 'Claude Code 教程目录',
         items: [
             {
-                id: 'basics',
-                title: '00 - 基础教程',
-                description: 'Claude Code 安装与基本使用',
-                files: [
-                    { name: 'installation.md', title: '安装与配置', status: '已翻译' },
-                    { name: 'basic-usage.md', title: '基本使用', status: '已翻译' }
-                ]
-            },
-            {
                 id: '01-slash-commands',
-                title: '01 - 斜杠命令',
+                title: '01 - Slash Commands',
                 description: '学习使用 Claude Code 的斜杠命令',
                 files: [
-                    { name: 'intro.md', title: '斜杠命令介绍', status: '已翻译' },
-                    { name: 'basic-commands.md', title: '基础命令', status: '已翻译' },
-                    { name: 'advanced-commands.md', title: '高级命令', status: '已翻译' },
-                    { name: 'examples.md', title: '使用示例', status: '已翻译' }
+                    { name: 'README.md', title: '斜杠命令完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '02-memory',
-                title: '02 - 记忆系统',
+                title: '02 - Memory',
                 description: '掌握 Claude Code 的记忆功能',
                 files: [
-                    { name: 'intro.md', title: '记忆系统介绍', status: '已翻译' },
-                    { name: 'usage.md', title: '使用指南', status: '已翻译' },
-                    { name: 'best-practices.md', title: '最佳实践', status: '已翻译' }
+                    { name: 'README.md', title: 'Memory 系统完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '03-skills',
-                title: '03 - 技能系统',
+                title: '03 - Skills',
                 description: '学习创建和使用技能',
                 files: [
-                    { name: 'intro.md', title: '技能系统介绍', status: '已翻译' },
-                    { name: 'creating-skills.md', title: '创建技能', status: '已翻译' },
-                    { name: 'builtin-skills.md', title: '内置技能', status: '已翻译' }
+                    { name: 'README.md', title: 'Skills 系统完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '04-subagents',
-                title: '04 - 子代理',
-                description: '使用多智能体协作',
+                title: '04 - Subagents',
+                description: '使用专业子代理',
                 files: [
-                    { name: 'intro.md', title: '子代理介绍', status: '已翻译' },
-                    { name: 'usage.md', title: '使用指南', status: '已翻译' }
+                    { name: 'README.md', title: 'Subagents 完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '05-mcp',
-                title: '05 - MCP 服务器',
+                title: '05 - MCP',
                 description: '集成 Model Context Protocol',
                 files: [
-                    { name: 'intro.md', title: 'MCP 介绍', status: '已翻译' }
+                    { name: 'README.md', title: 'MCP 完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '06-hooks',
-                title: '06 - 钩子',
+                title: '06 - Hooks',
                 description: '使用钩子扩展功能',
                 files: [
-                    { name: 'intro.md', title: '钩子介绍', status: '已翻译' }
+                    { name: 'README.md', title: 'Hooks 完整指南', status: '已翻译' }
                 ]
             },
             {
                 id: '07-plugins',
-                title: '07 - 插件',
+                title: '07 - Plugins',
                 description: '开发和使用插件',
                 files: [
-                    { name: 'intro.md', title: '插件介绍', status: '已翻译' },
-                    { name: 'development.md', title: '插件开发', status: '已翻译' }
+                    { name: 'README.md', title: 'Plugins 完整指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '08-checkpoints',
+                title: '08 - Checkpoints',
+                description: '会话快照与回滚',
+                files: [
+                    { name: 'README.md', title: 'Checkpoints 完整指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '09-advanced-features',
+                title: '09 - Advanced Features',
+                description: '高级功能详解',
+                files: [
+                    { name: 'README.md', title: '高级功能完整指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '10-cli',
+                title: '10 - CLI',
+                description: '命令行界面',
+                files: [
+                    { name: 'README.md', title: 'CLI 完整指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '11-multi-agent',
+                title: '11 - 多 Agent 协作',
+                description: '多 Agent 协作模式',
+                files: [
+                    { name: 'README.md', title: '多 Agent 协作指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '12-background-tasks',
+                title: '12 - 后台任务',
+                description: '后台任务执行机制',
+                files: [
+                    { name: 'README.md', title: '后台任务指南', status: '已翻译' }
+                ]
+            },
+            {
+                id: '13-channels',
+                title: '13 - Channels',
+                description: 'MCP 消息推送',
+                files: [
+                    { name: 'README.md', title: 'Channels 指南', status: '已翻译' }
                 ]
             }
         ]
@@ -160,9 +190,7 @@ function generateDirectoryHTML(data) {
         <div class="directory-header">
             <h3><i class="fas fa-folder-open"></i> ${data.title}</h3>
             <p class="directory-stats">
-                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 已翻译: 20</span>
-                <span class="stat-item"><i class="fas fa-sync-alt" style="color: #d69e2e;"></i> 翻译中: 0</span>
-                <span class="stat-item"><i class="fas fa-clock" style="color: #a0aec0;"></i> 未开始: 0</span>
+                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 已翻译: 13 个模块</span>
             </p>
             <p class="directory-hint"><i class="fas fa-info-circle"></i> 点击章节标题展开/折叠，点击文件名查看教程</p>
         </div>
@@ -252,55 +280,17 @@ function setupDirectoryClickEvents() {
     // 文件点击事件 - 跳转到实际教程页面
     const fileItems = document.querySelectorAll('.file-item');
     console.log('找到文件项数量:', fileItems.length);
-    
+
     fileItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.stopPropagation();
-            
+
             const section = this.closest('.directory-section');
             const sectionId = section.getAttribute('data-section');
-            const fileName = this.getAttribute('data-file');
-            const fileTitle = this.querySelector('.file-title').textContent;
-            
-            console.log('点击文件:', sectionId, fileName, fileTitle);
-            
-            // 根据章节ID和文件名跳转到对应的教程页面
-            let targetUrl = '';
-            
-            // 特殊处理：基础教程
-            if (sectionId === 'basics') {
-                if (fileName === 'installation.md') {
-                    targetUrl = 'content/basics/installation.html';
-                } else if (fileName === 'basic-usage.md') {
-                    targetUrl = 'content/basics/basic-usage.html';
-                }
-            }
-            // 斜杠命令
-            else if (sectionId === '01-slash-commands') {
-                targetUrl = 'content/01-slash-commands.html';
-            }
-            // 记忆系统
-            else if (sectionId === '02-memory') {
-                targetUrl = 'content/02-memory.html';
-            }
-            // 技能系统
-            else if (sectionId === '03-skills') {
-                targetUrl = 'content/03-skills.html';
-            }
-            // 其他章节
-            else {
-                // 默认跳转到对应的HTML页面
-                targetUrl = `content/${sectionId}.html`;
-            }
-            
-            console.log('目标URL:', targetUrl);
-            
-            // 跳转到目标页面
-            if (targetUrl) {
-                window.location.href = targetUrl;
-            } else {
-                alert(`教程页面开发中...\n章节: ${sectionId}\n文件: ${fileName}`);
-            }
+
+            // 直接跳转到对应的模块页面
+            const targetUrl = `content/${sectionId}.html`;
+            window.location.href = targetUrl;
         });
     });
 }

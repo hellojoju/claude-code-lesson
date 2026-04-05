@@ -179,10 +179,10 @@
     <div class="container">
       <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
-        <li><a href="/content/basics/installation.html">入门指南</a></li>
-        <li><a href="/content/modules/">核心模块</a></li>
-        <li><a href="/content/cases/intro.html">实战案例</a></li>
-        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
+        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -192,7 +192,7 @@
       
       <article>
         <nav class="breadcrumb">
-          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Skills
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / Skills
         </nav>
 
         <div class="meta">
@@ -210,11 +210,11 @@
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture></p><blockquote>🟢 <strong>Beginner</strong> | ⏱ 40 minutes</blockquote>
 >
-<blockquote>✅ Verified against Claude Code <strong>v2.1.92</strong> · Last verified: 2026-04-05</blockquote><p><strong>What you'll build:</strong> Create reusable, auto-invoked capabilities for Claude.</p><h1>Agent Skills Guide</h1><p>Agent Skills are reusable, filesystem-based capabilities that extend Claude's functionality. They package domain-specific expertise, workflows, and best practices into discoverable components that Claude automatically uses when relevant.</p><h2 id="Overview">Overview</h2><p><strong>Agent Skills</strong> are modular capabilities that transform general-purpose agents into specialists. Unlike prompts (conversation-level instructions for one-off tasks), Skills load on-demand and eliminate the need to repeatedly provide the same guidance across multiple conversations.</p><h3>Key Benefits</h3><ul><li><strong>Specialize Claude</strong>: Tailor capabilities for domain-specific tasks</li>
+<blockquote>✅ Verified against Claude Code <strong>v2.1.92</strong> · Last verified: 2026-04-05</blockquote><p><strong>What you'll build:</strong> Create reusable, auto-invoked capabilities for Claude.</p><h1>Agent Skills Guide</h1><p>Agent Skills are reusable, filesystem-based capabilities that extend Claude's functionality. They package domain-specific expertise, workflows, and best practices into discoverable components that Claude automatically uses when relevant.</p><h2 id="overview">Overview</h2><p><strong>Agent Skills</strong> are modular capabilities that transform general-purpose agents into specialists. Unlike prompts (conversation-level instructions for one-off tasks), Skills load on-demand and eliminate the need to repeatedly provide the same guidance across multiple conversations.</p><h3 id="key-benefits">Key Benefits</h3><ul><li><strong>Specialize Claude</strong>: Tailor capabilities for domain-specific tasks</li>
 <li><strong>Reduce repetition</strong>: Create once, use automatically across conversations</li>
 <li><strong>Compose capabilities</strong>: Combine Skills to build complex workflows</li>
 <li><strong>Scale workflows</strong>: Reuse skills across multiple projects and teams</li>
-<li><strong>Maintain quality</strong>: Embed best practices directly into your workflow</li><p>Skills follow the <a href="https://agentskills.io">Agent Skills</a> open standard, which works across multiple AI tools. Claude Code extends the standard with additional features like invocation control, subagent execution, and dynamic context injection.</p><blockquote><strong>Note</strong>: Custom slash commands have been merged into skills. <code>.claude/commands/</code> files still work and support the same frontmatter fields. Skills are recommended for new development. When both exist at the same path (e.g., <code>.claude/commands/review.md</code> and <code>.claude/skills/review/SKILL.md</code>), the skill takes precedence.</blockquote><h2 id="How Skills Work: Progressive Disclosure">How Skills Work: Progressive Disclosure</h2><p>Skills leverage a <strong>progressive disclosure</strong> architecture—Claude loads information in stages as needed, rather than consuming context upfront. This enables efficient context management while maintaining unlimited scalability.</p><h3>Three Levels of Loading</h3><div class="mermaid">graph TB
+<li><strong>Maintain quality</strong>: Embed best practices directly into your workflow</li><p>Skills follow the <a href="https://agentskills.io">Agent Skills</a> open standard, which works across multiple AI tools. Claude Code extends the standard with additional features like invocation control, subagent execution, and dynamic context injection.</p><blockquote><strong>Note</strong>: Custom slash commands have been merged into skills. <code>.claude/commands/</code> files still work and support the same frontmatter fields. Skills are recommended for new development. When both exist at the same path (e.g., <code>.claude/commands/review.md</code> and <code>.claude/skills/review/SKILL.md</code>), the skill takes precedence.</blockquote><h2 id="how-skills-work-progressive-disclosure">How Skills Work: Progressive Disclosure</h2><p>Skills leverage a <strong>progressive disclosure</strong> architecture—Claude loads information in stages as needed, rather than consuming context upfront. This enables efficient context management while maintaining unlimited scalability.</p><h3 id="three-levels-of-loading">Three Levels of Loading</h3><div class="mermaid">graph TB
     subgraph "Level 1: Metadata (Always Loaded)"
         A["YAML Frontmatter"]
         A1["~100 tokens per skill"]
@@ -259,7 +259,7 @@
 </tr>
 </tbody>
 </table>
-This means you can install many Skills without context penalty—Claude only knows each Skill exists and when to use it until actually triggered.</p><h2 id="Skill Loading Process">Skill Loading Process</h2><div class="mermaid">sequenceDiagram
+This means you can install many Skills without context penalty—Claude only knows each Skill exists and when to use it until actually triggered.</p><h2 id="skill-loading-process">Skill Loading Process</h2><div class="mermaid">sequenceDiagram
     participant User
     participant Claude as Claude
     participant System as System
@@ -274,7 +274,7 @@ This means you can install many Skills without context penalty—Claude only kno
     Skill-->>Claude: Template loaded
     Claude->>Claude: Execute skill instructions
     Claude->>User: Comprehensive code review
-</div><h2 id="Skill Types & Locations">Skill Types & Locations</h2><table>
+</div><h2 id="skill-types-locations">Skill Types & Locations</h2><table>
 <thead>
 <tr>
 <th>Type</th>
@@ -315,21 +315,21 @@ This means you can install many Skills without context penalty—Claude only kno
 </tr>
 </tbody>
 </table>
-When skills share the same name across levels, higher-priority locations win: <strong>enterprise > personal > project</strong>. Plugin skills use a <code>plugin-name:skill-name</code> namespace, so they cannot conflict.</p><h3>Automatic Discovery</h3><p><strong>Nested directories</strong>: When you work with files in subdirectories, Claude Code automatically discovers skills from nested <code>.claude/skills/</code> directories. For example, if you're editing a file in <code>packages/frontend/</code>, Claude Code also looks for skills in <code>packages/frontend/.claude/skills/</code>. This supports monorepo setups where packages have their own skills.</p><p><strong><code>--add-dir</code> directories</strong>: Skills from directories added via <code>--add-dir</code> are loaded automatically with live change detection. Any edits to skill files in those directories take effect immediately without restarting Claude Code.</p><p><strong>Description budget</strong>: Skill descriptions (Level 1 metadata) are capped at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). If you have many skills installed, some may be excluded. Run <code>/context</code> to check for warnings. Override the budget with the <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code> environment variable.</p><h2 id="Creating Custom Skills">Creating Custom Skills</h2><h3>Basic Directory Structure</h3><pre><code class="language-">my-skill/
+When skills share the same name across levels, higher-priority locations win: <strong>enterprise > personal > project</strong>. Plugin skills use a <code>plugin-name:skill-name</code> namespace, so they cannot conflict.</p><h3 id="automatic-discovery">Automatic Discovery</h3><p><strong>Nested directories</strong>: When you work with files in subdirectories, Claude Code automatically discovers skills from nested <code>.claude/skills/</code> directories. For example, if you're editing a file in <code>packages/frontend/</code>, Claude Code also looks for skills in <code>packages/frontend/.claude/skills/</code>. This supports monorepo setups where packages have their own skills.</p><p><strong><code>--add-dir</code> directories</strong>: Skills from directories added via <code>--add-dir</code> are loaded automatically with live change detection. Any edits to skill files in those directories take effect immediately without restarting Claude Code.</p><p><strong>Description budget</strong>: Skill descriptions (Level 1 metadata) are capped at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). If you have many skills installed, some may be excluded. Run <code>/context</code> to check for warnings. Override the budget with the <code>SLASH_COMMAND_TOOL_CHAR_BUDGET</code> environment variable.</p><h2 id="creating-custom-skills">Creating Custom Skills</h2><h3 id="basic-directory-structure">Basic Directory Structure</h3><pre><code class="language-">my-skill/
 ├── SKILL.md           # Main instructions (required)
 ├── template.md        # Template for Claude to fill in
 ├── examples/
 │   └── sample.md      # Example output showing expected format
 └── scripts/
     └── validate.sh    # Script Claude can execute
-</code></pre><h3>SKILL.md Format</h3><pre><code class="language-yaml">---
+</code></pre><h3 id="skill-md-format">SKILL.md Format</h3><pre><code class="language-yaml">---
 name: your-skill-name
 description: Brief description of what this Skill does and when to use it
-<hr></p><h1>Your Skill Name</h1><h2 id="Instructions">Instructions</h2>
-Provide clear, step-by-step guidance for Claude.</p><h2 id="Examples">Examples</h2>
+<hr></p><h1>Your Skill Name</h1><h2 id="instructions">Instructions</h2>
+Provide clear, step-by-step guidance for Claude.</p><h2 id="examples">Examples</h2>
 Show concrete examples of using this Skill.
-</code></pre><h3>Required Fields</h3><li><strong>name</strong>: lowercase letters, numbers, hyphens only (max 64 characters). Cannot contain "anthropic" or "claude".</li>
-<li><strong>description</strong>: what the Skill does AND when to use it (max 1024 characters). This is critical for Claude to know when to activate the skill.</li><h3>Optional Frontmatter Fields</h3><pre><code class="language-yaml">---
+</code></pre><h3 id="required-fields">Required Fields</h3><li><strong>name</strong>: lowercase letters, numbers, hyphens only (max 64 characters). Cannot contain "anthropic" or "claude".</li>
+<li><strong>description</strong>: what the Skill does AND when to use it (max 1024 characters). This is critical for Claude to know when to activate the skill.</li><h3 id="optional-frontmatter-fields">Optional Frontmatter Fields</h3><pre><code class="language-yaml">---
 name: my-skill
 description: What this skill does and when to use it
 argument-hint: "[filename] [format]"        # Hint for autocomplete
@@ -406,14 +406,14 @@ hooks:                                      # Skill-scoped hooks
 </tr>
 </tbody>
 </table>
-<h2 id="Skill Content Types">Skill Content Types</h2><p>Skills can contain two types of content, each suited for different purposes:</p><h3>Reference Content</h3><p>Adds knowledge Claude applies to your current work—conventions, patterns, style guides, domain knowledge. Runs inline with your conversation context.</p><pre><code class="language-yaml">---
+<h2 id="skill-content-types">Skill Content Types</h2><p>Skills can contain two types of content, each suited for different purposes:</p><h3 id="reference-content">Reference Content</h3><p>Adds knowledge Claude applies to your current work—conventions, patterns, style guides, domain knowledge. Runs inline with your conversation context.</p><pre><code class="language-yaml">---
 name: api-conventions
 description: API design patterns for this codebase
 <hr></p><p>When writing API endpoints:
 <li>Use RESTful naming conventions</li>
 <li>Return consistent error formats</li>
 <li>Include request validation</li>
-</code></pre><h3>Task Content</h3><p>Step-by-step instructions for specific actions. Often invoked directly with </code>/skill-name<code>.</p><pre><code class="language-yaml">---
+</code></pre><h3 id="task-content">Task Content</h3><p>Step-by-step instructions for specific actions. Often invoked directly with </code>/skill-name<code>.</p><pre><code class="language-yaml">---
 name: deploy
 description: Deploy the application to production
 context: fork
@@ -422,7 +422,7 @@ disable-model-invocation: true
 <li>Run the test suite</li>
 <li>Build the application</li>
 <li>Push to the deployment target</li>
-</code></pre><h2 id="Controlling Skill Invocation">Controlling Skill Invocation</h2><p>By default, both you and Claude can invoke any skill. Two frontmatter fields control the three invocation modes:</p><table>
+</code></pre><h2 id="controlling-skill-invocation">Controlling Skill Invocation</h2><p>By default, both you and Claude can invoke any skill. Two frontmatter fields control the three invocation modes:</p><table>
 <thead>
 <tr>
 <th>Frontmatter</th>
@@ -448,7 +448,7 @@ disable-model-invocation: true
 </tr>
 </tbody>
 </table>
-<strong>Use </code>disable-model-invocation: true<code></strong> for workflows with side effects: </code>/commit<code>, </code>/deploy<code>, </code>/send-slack-message<code>. You don't want Claude deciding to deploy because your code looks ready.</p><p><strong>Use </code>user-invocable: false<code></strong> for background knowledge that isn't actionable as a command. A </code>legacy-system-context<code> skill explains how an old system works—useful for Claude, but not a meaningful action for users.</p><h2 id="String Substitutions">String Substitutions</h2><p>Skills support dynamic values that are resolved before the skill content reaches Claude:</p><table>
+<strong>Use </code>disable-model-invocation: true<code></strong> for workflows with side effects: </code>/commit<code>, </code>/deploy<code>, </code>/send-slack-message<code>. You don't want Claude deciding to deploy because your code looks ready.</p><p><strong>Use </code>user-invocable: false<code></strong> for background knowledge that isn't actionable as a command. A </code>legacy-system-context<code> skill explains how an old system works—useful for Claude, but not a meaningful action for users.</p><h2 id="string-substitutions">String Substitutions</h2><p>Skills support dynamic values that are resolved before the skill content reaches Claude:</p><table>
 <thead>
 <tr>
 <th>Variable</th>
@@ -486,17 +486,17 @@ description: Fix a GitHub issue
 <li>Implement the fix</li>
 <li>Write tests</li>
 <li>Create a commit</li>
-</code></pre><p>Running </code>/fix-issue 123<code> replaces </code>$ARGUMENTS<code> with </code>123<code>.</p><h2 id="Injecting Dynamic Context">Injecting Dynamic Context</h2><p>The </code>!<code>command</code><code> syntax runs shell commands before the skill content is sent to Claude:</p><pre><code class="language-yaml">---
+</code></pre><p>Running </code>/fix-issue 123<code> replaces </code>$ARGUMENTS<code> with </code>123<code>.</p><h2 id="injecting-dynamic-context">Injecting Dynamic Context</h2><p>The </code>!<code>command</code><code> syntax runs shell commands before the skill content is sent to Claude:</p><pre><code class="language-yaml">---
 name: pr-summary
 description: Summarize changes in a pull request
 context: fork
 agent: Explore
-<hr></p><h2 id="Pull request context">Pull request context</h2>
+<hr></p><h2 id="pull-request-context">Pull request context</h2>
 <li>PR diff: !</code>gh pr diff<code></li>
 <li>PR comments: !</code>gh pr view --comments<code></li>
-<li>Changed files: !</code>gh pr diff --name-only<code></li><h2 id="Your task">Your task</h2>
+<li>Changed files: !</code>gh pr diff --name-only<code></li><h2 id="your-task">Your task</h2>
 Summarize this pull request...
-</code></pre><p>Commands execute immediately; Claude only sees the final output. By default, commands run in </code>bash<code>. Set </code>shell: powershell<code> in frontmatter to use PowerShell instead.</p><h2 id="Running Skills in Subagents">Running Skills in Subagents</h2><p>Add </code>context: fork<code> to run a skill in an isolated subagent context. The skill content becomes the task for a dedicated subagent with its own context window, keeping the main conversation uncluttered.</p><p>The </code>agent<code> field specifies which agent type to use:</p><table>
+</code></pre><p>Commands execute immediately; Claude only sees the final output. By default, commands run in </code>bash<code>. Set </code>shell: powershell<code> in frontmatter to use PowerShell instead.</p><h2 id="running-skills-in-subagents">Running Skills in Subagents</h2><p>Add </code>context: fork<code> to run a skill in an isolated subagent context. The skill content becomes the task for a dedicated subagent with its own context window, keeping the main conversation uncluttered.</p><p>The </code>agent<code> field specifies which agent type to use:</p><table>
 <thead>
 <tr>
 <th>Agent Type</th>
@@ -535,7 +535,7 @@ agent: Explore
 <li>Find relevant files using Glob and Grep</li>
 <li>Read and analyze the code</li>
 <li>Summarize findings with specific file references</li>
-</code></pre><h2 id="Practical Examples">Practical Examples</h2><h3>Example 1: Code Review Skill</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/code-review/
+</code></pre><h2 id="practical-examples">Practical Examples</h2><h3 id="example-1-code-review-skill">Example 1: Code Review Skill</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/code-review/
 ├── SKILL.md
 ├── templates/
 │   ├── review-checklist.md
@@ -562,16 +562,16 @@ description: Comprehensive code review with security, performance, and quality a
    - Code readability
    - Function size (should be < 50 lines)
    - Cyclomatic complexity
-   - Type safety</p><h2 id="Review Template">Review Template</h2><p>For each piece of code reviewed, provide:</p><h3>Summary</h3>
+   - Type safety</p><h2 id="review-template">Review Template</h2><p>For each piece of code reviewed, provide:</p><h3 id="summary">Summary</h3>
 <li>Overall quality assessment (1-5)</li>
 <li>Key findings count</li>
-<li>Recommended priority areas</li><h3>Critical Issues (if any)</h3>
+<li>Recommended priority areas</li><h3 id="critical-issues-if-any">Critical Issues (if any)</h3>
 <li><strong>Issue</strong>: Clear description</li>
 <li><strong>Location</strong>: File and line number</li>
 <li><strong>Impact</strong>: Why this matters</li>
 <li><strong>Severity</strong>: Critical/High/Medium</li>
 <li><strong>Fix</strong>: Code example</li><p>For detailed checklists, see <a href="templates/review-checklist.md">templates/review-checklist.md</a>.
-</code></pre><h3>Example 2: Codebase Visualizer Skill</h3><p>A skill that generates interactive HTML visualizations:</p><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/codebase-visualizer/
+</code></pre><h3 id="example-2-codebase-visualizer-skill">Example 2: Codebase Visualizer Skill</h3><p>A skill that generates interactive HTML visualizations:</p><p><strong>Directory Structure:</strong></p><pre><code class="language-">~/.claude/skills/codebase-visualizer/
 ├── SKILL.md
 └── scripts/
     └── visualize.py
@@ -579,14 +579,14 @@ description: Comprehensive code review with security, performance, and quality a
 name: codebase-visualizer
 description: Generate an interactive collapsible tree visualization of your codebase. Use when exploring a new repo, understanding project structure, or identifying large files.
 allowed-tools: Bash(python *)
-<hr></p><h1>Codebase Visualizer</h1><p>Generate an interactive HTML tree view showing your project's file structure.</p><h2 id="Usage">Usage</h2><p>Run the visualization script from your project root:</p><p></code></pre>bash
+<hr></p><h1>Codebase Visualizer</h1><p>Generate an interactive HTML tree view showing your project's file structure.</p><h2 id="usage">Usage</h2><p>Run the visualization script from your project root:</p><p></code></pre>bash
 python ~/.claude/skills/codebase-visualizer/scripts/visualize.py .
 <pre><code class="language-">
-This creates </code>codebase-map.html<code> and opens it in your default browser.</p><h2 id="What the visualization shows">What the visualization shows</h2><li><strong>Collapsible directories</strong>: Click folders to expand/collapse</li>
+This creates </code>codebase-map.html<code> and opens it in your default browser.</p><h2 id="what-the-visualization-shows">What the visualization shows</h2><li><strong>Collapsible directories</strong>: Click folders to expand/collapse</li>
 <li><strong>File sizes</strong>: Displayed next to each file</li>
 <li><strong>Colors</strong>: Different colors for different file types</li>
 <li><strong>Directory totals</strong>: Shows aggregate size of each folder</li>
-</code></pre><p>The bundled Python script does the heavy lifting while Claude handles orchestration.</p><h3>Example 3: Deploy Skill (User-Invoked Only)</h3><pre><code class="language-yaml">---
+</code></pre><p>The bundled Python script does the heavy lifting while Claude handles orchestration.</p><h3 id="example-3-deploy-skill-user-invoked-only">Example 3: Deploy Skill (User-Invoked Only)</h3><pre><code class="language-yaml">---
 name: deploy
 description: Deploy the application to production
 disable-model-invocation: true
@@ -596,31 +596,31 @@ allowed-tools: Bash(npm <em>), Bash(git </em>)
 <li>Push to the deployment target</li>
 <li>Verify the deployment succeeded</li>
 <li>Report deployment status</li>
-</code></pre><h3>Example 4: Brand Voice Skill (Background Knowledge)</h3><pre><code class="language-yaml">---
+</code></pre><h3 id="example-4-brand-voice-skill-background-knowledge">Example 4: Brand Voice Skill (Background Knowledge)</h3><pre><code class="language-yaml">---
 name: brand-voice
 description: Ensure all communication matches brand voice and tone guidelines. Use when creating marketing copy, customer communications, or public-facing content.
 user-invocable: false
-<hr></p><h2 id="Tone of Voice">Tone of Voice</h2>
+<hr></p><h2 id="tone-of-voice">Tone of Voice</h2>
 <li><strong>Friendly but professional</strong> - approachable without being casual</li>
 <li><strong>Clear and concise</strong> - avoid jargon</li>
 <li><strong>Confident</strong> - we know what we're doing</li>
-<li><strong>Empathetic</strong> - understand user needs</li><h2 id="Writing Guidelines">Writing Guidelines</h2>
+<li><strong>Empathetic</strong> - understand user needs</li><h2 id="writing-guidelines">Writing Guidelines</h2>
 <li>Use "you" when addressing readers</li>
 <li>Use active voice</li>
 <li>Keep sentences under 20 words</li>
 <li>Start with value proposition</li><p>For templates, see <a href="templates/">templates/</a>.
-</code></pre><h3>Example 5: CLAUDE.md Generator Skill</h3><pre><code class="language-yaml">---
+</code></pre><h3 id="example-5-claude-md-generator-skill">Example 5: CLAUDE.md Generator Skill</h3><pre><code class="language-yaml">---
 name: claude-md
 description: Create or update CLAUDE.md files following best practices for optimal AI agent onboarding. Use when users mention CLAUDE.md, project documentation, or AI onboarding.
-<hr></p><h2 id="Core Principles">Core Principles</h2><p><strong>LLMs are stateless</strong>: CLAUDE.md is the only file automatically included in every conversation.</p><h3>The Golden Rules</h3><li><strong>Less is More</strong>: Keep under 300 lines (ideally under 100)</li>
+<hr></p><h2 id="core-principles">Core Principles</h2><p><strong>LLMs are stateless</strong>: CLAUDE.md is the only file automatically included in every conversation.</p><h3 id="the-golden-rules">The Golden Rules</h3><li><strong>Less is More</strong>: Keep under 300 lines (ideally under 100)</li>
 <li><strong>Universal Applicability</strong>: Only include information relevant to EVERY session</li>
 <li><strong>Don't Use Claude as a Linter</strong>: Use deterministic tools instead</li>
-<li><strong>Never Auto-Generate</strong>: Craft it manually with careful consideration</li><h2 id="Essential Sections">Essential Sections</h2><li><strong>Project Name</strong>: Brief one-line description</li>
+<li><strong>Never Auto-Generate</strong>: Craft it manually with careful consideration</li><h2 id="essential-sections">Essential Sections</h2><li><strong>Project Name</strong>: Brief one-line description</li>
 <li><strong>Tech Stack</strong>: Primary language, frameworks, database</li>
 <li><strong>Development Commands</strong>: Install, test, build commands</li>
 <li><strong>Critical Conventions</strong>: Only non-obvious, high-impact conventions</li>
 <li><strong>Known Issues / Gotchas</strong>: Things that trip up developers</li>
-</code></pre><h3>Example 6: Refactoring Skill with Scripts</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">refactor/
+</code></pre><h3 id="example-6-refactoring-skill-with-scripts">Example 6: Refactoring Skill with Scripts</h3><p><strong>Directory Structure:</strong></p><pre><code class="language-">refactor/
 ├── SKILL.md
 ├── references/
 │   ├── code-smells.md
@@ -633,14 +633,14 @@ description: Create or update CLAUDE.md files following best practices for optim
 </code></pre><p><strong>File:</strong> </code>refactor/SKILL.md<code></p><pre><code class="language-yaml">---
 name: code-refactor
 description: Systematic code refactoring based on Martin Fowler's methodology. Use when users ask to refactor code, improve code structure, reduce technical debt, or eliminate code smells.
-<hr></p><h1>Code Refactoring Skill</h1><p>A phased approach emphasizing safe, incremental changes backed by tests.</p><h2 id="Workflow">Workflow</h2><p>Phase 1: Research & Analysis → Phase 2: Test Coverage Assessment →
+<hr></p><h1>Code Refactoring Skill</h1><p>A phased approach emphasizing safe, incremental changes backed by tests.</p><h2 id="workflow">Workflow</h2><p>Phase 1: Research & Analysis → Phase 2: Test Coverage Assessment →
 Phase 3: Code Smell Identification → Phase 4: Refactoring Plan Creation →
-Phase 5: Incremental Implementation → Phase 6: Review & Iteration</p><h2 id="Core Principles">Core Principles</h2><li><strong>Behavior Preservation</strong>: External behavior must remain unchanged</li>
+Phase 5: Incremental Implementation → Phase 6: Review & Iteration</p><h2 id="core-principles">Core Principles</h2><li><strong>Behavior Preservation</strong>: External behavior must remain unchanged</li>
 <li><strong>Small Steps</strong>: Make tiny, testable changes</li>
 <li><strong>Test-Driven</strong>: Tests are the safety net</li>
 <li><strong>Continuous</strong>: Refactoring is ongoing, not a one-time event</li><p>For code smell catalog, see <a href="references/code-smells.md">references/code-smells.md</a>.
 For refactoring techniques, see <a href="references/refactoring-catalog.md">references/refactoring-catalog.md</a>.
-</code></pre><h2 id="Supporting Files">Supporting Files</h2><p>Skills can include multiple files in their directory beyond </code>SKILL.md<code>. These supporting files (templates, examples, scripts, reference documents) let you keep the main skill file focused while providing Claude with additional resources it can load as needed.</p><pre><code class="language-">my-skill/
+</code></pre><h2 id="supporting-files">Supporting Files</h2><p>Skills can include multiple files in their directory beyond </code>SKILL.md<code>. These supporting files (templates, examples, scripts, reference documents) let you keep the main skill file focused while providing Claude with additional resources it can load as needed.</p><pre><code class="language-">my-skill/
 ├── SKILL.md              # Main instructions (required, keep under 500 lines)
 ├── templates/            # Templates for Claude to fill in
 │   └── output-format.md
@@ -652,20 +652,20 @@ For refactoring techniques, see <a href="references/refactoring-catalog.md">refe
     └── validate.sh
 </code></pre><p>Guidelines for supporting files:</p><li>Keep </code>SKILL.md<code> under <strong>500 lines</strong>. Move detailed reference material, large examples, and specifications to separate files.</li>
 <li>Reference additional files from </code>SKILL.md<code> using <strong>relative paths</strong> (e.g., </code><a href="references/api-spec.md">API reference</a><code>).</li>
-<li>Supporting files are loaded at Level 3 (as needed), so they do not consume context until Claude actually reads them.</li><h2 id="Managing Skills">Managing Skills</h2><h3>Viewing Available Skills</h3><p>Ask Claude directly:
+<li>Supporting files are loaded at Level 3 (as needed), so they do not consume context until Claude actually reads them.</li><h2 id="managing-skills">Managing Skills</h2><h3 id="viewing-available-skills">Viewing Available Skills</h3><p>Ask Claude directly:
 <pre><code class="language-">What Skills are available?
 </code></pre><p>Or check the filesystem:
 <pre><code class="language-bash"><h1>List personal Skills</h1>
 ls ~/.claude/skills/</p><h1>List project Skills</h1>
 ls .claude/skills/
-</code></pre><h3>Testing a Skill</h3><p>Two ways to test:</p><p><strong>Let Claude invoke it automatically</strong> by asking something that matches the description:
+</code></pre><h3 id="testing-a-skill">Testing a Skill</h3><p>Two ways to test:</p><p><strong>Let Claude invoke it automatically</strong> by asking something that matches the description:
 <pre><code class="language-">Can you help me review this code for security issues?
 </code></pre><p><strong>Or invoke it directly</strong> with the skill name:
 <pre><code class="language-">/code-review src/auth/login.ts
-</code></pre><h3>Updating a Skill</h3><p>Edit the </code>SKILL.md<code> file directly. Changes take effect on next Claude Code startup.</p><pre><code class="language-bash"><h1>Personal Skill</h1>
+</code></pre><h3 id="updating-a-skill">Updating a Skill</h3><p>Edit the </code>SKILL.md<code> file directly. Changes take effect on next Claude Code startup.</p><pre><code class="language-bash"><h1>Personal Skill</h1>
 code ~/.claude/skills/my-skill/SKILL.md</p><h1>Project Skill</h1>
 code .claude/skills/my-skill/SKILL.md
-</code></pre><h3>Restricting Claude's Skill Access</h3><p>Three ways to control which skills Claude can invoke:</p><p><strong>Disable all skills</strong> in </code>/permissions<code>:
+</code></pre><h3 id="restricting-claude-s-skill-access">Restricting Claude's Skill Access</h3><p>Three ways to control which skills Claude can invoke:</p><p><strong>Disable all skills</strong> in </code>/permissions<code>:
 <pre><code class="language-"><h1>Add to deny rules:</h1>
 Skill
 </code></pre><p><strong>Allow or deny specific skills</strong>:
@@ -673,7 +673,7 @@ Skill
 Skill(commit)
 Skill(review-pr *)</p><h1>Deny specific skills</h1>
 Skill(deploy *)
-</code></pre><p><strong>Hide individual skills</strong> by adding </code>disable-model-invocation: true<code> to their frontmatter.</p><h2 id="Try It Now">Try It Now</h2><h3>🎯 Exercise 1: Create Your First Skill</h3><p>Build a </code>/hello<code> skill that greets team members:</p><p><strong>Step 1: Create skill directory</strong>
+</code></pre><p><strong>Hide individual skills</strong> by adding </code>disable-model-invocation: true<code> to their frontmatter.</p><h2 id="try-it-now">Try It Now</h2><h3 id="exercise-1-create-your-first-skill">🎯 Exercise 1: Create Your First Skill</h3><p>Build a </code>/hello<code> skill that greets team members:</p><p><strong>Step 1: Create skill directory</strong>
 <pre><code class="language-bash">mkdir -p .claude/skills/hello
 </code></pre><p><strong>Step 2: Create SKILL.md</strong>
 <pre><code class="language-markdown">---
@@ -686,25 +686,25 @@ description: Greet team members. Use when user says hello or starts a session.
 </code></pre><p><strong>Step 3: Test it</strong>
 <pre><code class="language-bash"><h1>In Claude Code:</h1>
 /hello</p><h1>Or just type "hello" and Claude should auto-invoke</h1>
-</code></pre><h3>🎯 Exercise 2: Skill with Dynamic Context</h3><p>Create a </code>/status<code> skill using shell commands:</p><pre><code class="language-markdown">---
+</code></pre><h3 id="exercise-2-skill-with-dynamic-context">🎯 Exercise 2: Skill with Dynamic Context</h3><p>Create a </code>/status<code> skill using shell commands:</p><pre><code class="language-markdown">---
 name: status
 description: Show comprehensive project status. Use when user asks about project health or status.
 allowed-tools: Bash(git <em>), Bash(npm </em>), Read
-<hr></p><h1>Project Status</h1><h2 id="Git Context">Git Context</h2>
+<hr></p><h1>Project Status</h1><h2 id="git-context">Git Context</h2>
 <li>Branch: !</code>git branch --show-current<code></li>
 <li>Changes: !</code>git status --short | head -10<code></li>
-<li>Recent: !</code>git log --oneline -5<code></li><h2 id="Package Info">Package Info</h2>
+<li>Recent: !</code>git log --oneline -5<code></li><h2 id="package-info">Package Info</h2>
 <li>Version: !</code>node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A"<code></li>
-<li>Dependencies: !</code>npm ls --depth=0 2>/dev/null | head -15 || echo "Run npm install first"<code></li><h2 id="Summary">Summary</h2>
+<li>Dependencies: !</code>npm ls --depth=0 2>/dev/null | head -15 || echo "Run npm install first"<code></li><h2 id="summary">Summary</h2>
 Provide a brief health report with recommendations.
 </code></pre><p><strong>Test:</strong>
 <pre><code class="language-bash">/status
-</code></pre><h3>🎯 Exercise 3: Skill with Arguments</h3><p>Create a </code>/fix-issue<code> skill that takes an issue number:</p><pre><code class="language-markdown">---
+</code></pre><h3 id="exercise-3-skill-with-arguments">🎯 Exercise 3: Skill with Arguments</h3><p>Create a </code>/fix-issue<code> skill that takes an issue number:</p><pre><code class="language-markdown">---
 name: fix-issue
 description: Fix a GitHub issue by number. Use when user mentions fixing an issue.
 argument-hint: issue-number
 allowed-tools: Bash(git <em>), Bash(gh </em>), Read, Edit, Write
-<hr></p><h1>Fix Issue #$ARGUMENTS</h1><h2 id="Steps">Steps</h2><li><strong>Fetch Issue Details</strong></li>
+<hr></p><h1>Fix Issue #$ARGUMENTS</h1><h2 id="steps">Steps</h2><li><strong>Fetch Issue Details</strong></li>
    - Title and description from GitHub
    - Labels and priority
    - Related files based on issue context</p><li><strong>Analyze Codebase</strong></li>
@@ -718,11 +718,11 @@ allowed-tools: Bash(git <em>), Bash(gh </em>), Read, Edit, Write
    - Fix addresses the issue
    - No side effects</p><li><strong>Commit</strong></li>
    - Reference issue in commit message
-   - Include co-authorship if collaborative</p><h2 id="Output Format">Output Format</h2>
+   - Include co-authorship if collaborative</p><h2 id="output-format">Output Format</h2>
 Report: issue title, changes made, tests added, verification results
 </code></pre><p><strong>Test:</strong>
 <pre><code class="language-bash">/fix-issue 123
-</code></pre><h3>🎯 Exercise 4: Multi-File Skill Directory</h3><p>Create a complete </code>/review<code> skill with supporting files:</p><p><strong>Directory structure:</strong>
+</code></pre><h3 id="exercise-4-multi-file-skill-directory">🎯 Exercise 4: Multi-File Skill Directory</h3><p>Create a complete </code>/review<code> skill with supporting files:</p><p><strong>Directory structure:</strong>
 <pre><code class="language-bash">mkdir -p .claude/skills/review
 touch .claude/skills/review/SKILL.md
 touch .claude/skills/review/checklist.md
@@ -732,54 +732,54 @@ touch .claude/skills/review/template.md
 name: review
 description: Comprehensive code review. Use before commits or PRs.
 allowed-tools: Read, Grep, Glob, Bash(git *)
-<hr></p><h1>Code Review</h1><p>Load checklist: @checklist.md</p><h2 id="Current Changes">Current Changes</h2>
-!</code>git diff HEAD<code></p><h2 id="Review Process">Review Process</h2>
+<hr></p><h1>Code Review</h1><p>Load checklist: @checklist.md</p><h2 id="current-changes">Current Changes</h2>
+!</code>git diff HEAD<code></p><h2 id="review-process">Review Process</h2>
 <li>Load each changed file</li>
 <li>Check against checklist items</li>
 <li>Note issues by severity (CRITICAL, HIGH, MEDIUM, LOW)</li>
-<li>Provide actionable recommendations</li><h2 id="Output Template">Output Template</h2>
+<li>Provide actionable recommendations</li><h2 id="output-template">Output Template</h2>
 Use: @template.md
 </code></pre><p><strong>checklist.md:</strong>
-<pre><code class="language-markdown"><h1>Review Checklist</h1><h2 id="Security">Security</h2>
+<pre><code class="language-markdown"><h1>Review Checklist</h1><h2 id="security">Security</h2>
 <li>[ ] No hardcoded secrets</li>
 <li>[ ] Input validation present</li>
 <li>[ ] Proper error handling</li>
-<li>[ ] No SQL injection risks</li><h2 id="Quality">Quality</h2>
+<li>[ ] No SQL injection risks</li><h2 id="quality">Quality</h2>
 <li>[ ] Functions < 50 lines</li>
 <li>[ ] Files < 800 lines</li>
 <li>[ ] No deep nesting (>4 levels)</li>
-<li>[ ] Clear naming</li><h2 id="Performance">Performance</h2>
+<li>[ ] Clear naming</li><h2 id="performance">Performance</h2>
 <li>[ ] No N+1 queries</li>
 <li>[ ] Efficient algorithms</li>
-<li>[ ] No memory leaks</li><h2 id="Testing">Testing</h2>
+<li>[ ] No memory leaks</li><h2 id="testing">Testing</h2>
 <li>[ ] Tests for new code</li>
 <li>[ ] Edge cases covered</li>
 <li>[ ] Mocks properly configured</li>
 </code></pre><p><strong>template.md:</strong>
-<pre><code class="language-markdown"><h1>Review Report</h1><h2 id="Files Reviewed">Files Reviewed</h2>
-<li>List each file with severity summary</li><h2 id="Issues Found">Issues Found</h2><p>| Severity | File | Line | Issue | Fix |
-|----------|------|------|-------|-----|</p><h2 id="Summary">Summary</h2>
+<pre><code class="language-markdown"><h1>Review Report</h1><h2 id="files-reviewed">Files Reviewed</h2>
+<li>List each file with severity summary</li><h2 id="issues-found">Issues Found</h2><p>| Severity | File | Line | Issue | Fix |
+|----------|------|------|-------|-----|</p><h2 id="summary">Summary</h2>
 <li>Critical issues: X (must fix)</li>
 <li>High issues: Y (should fix)  </li>
 <li>Medium issues: Z (consider)</li>
-<li>Low issues: W (optional)</li><h2 id="Recommendation">Recommendation</h2>
+<li>Low issues: W (optional)</li><h2 id="recommendation">Recommendation</h2>
 [Approve / Block / Warn]
 </code></pre><p><strong>Test:</strong>
 <pre><code class="language-bash">/review
-</code></pre><h3>🎯 Exercise 5: User-Only Skill (No Auto-Invocation)</h3><p>Create a </code>/deploy<code> skill that Claude shouldn't trigger automatically:</p><pre><code class="language-markdown">---
+</code></pre><h3 id="exercise-5-user-only-skill-no-auto-invocation">🎯 Exercise 5: User-Only Skill (No Auto-Invocation)</h3><p>Create a </code>/deploy<code> skill that Claude shouldn't trigger automatically:</p><pre><code class="language-markdown">---
 name: deploy
 description: Deploy to production. Only invoke when user explicitly requests deploy.
 disable-model-invocation: true
 allowed-tools: Bash(npm <em>), Bash(git </em>)
-<hr></p><h1>Deploy to Production</h1><h2 id="Pre-flight Checks">Pre-flight Checks</h2>
+<hr></p><h1>Deploy to Production</h1><h2 id="pre-flight-checks">Pre-flight Checks</h2>
 <li>Tests passing: !</code>npm test 2>&1 | tail -5<code></li>
 <li>Build succeeds: !</code>npm run build 2>&1 | tail -5<code></li>
-<li>No uncommitted changes: !</code>git status --short<code></li><h2 id="Deploy Steps">Deploy Steps</h2>
+<li>No uncommitted changes: !</code>git status --short<code></li><h2 id="deploy-steps">Deploy Steps</h2>
 <li>Tag release: !</code>git tag -a v!<code>node -e "console.log(require('./package.json').version)"</code> -m "Release"<code></li>
 <li>Push tag: git push origin --tags</li>
-<li>Trigger CI: npm run deploy:trigger</li><h2 id="Post-deploy">Post-deploy</h2>
+<li>Trigger CI: npm run deploy:trigger</li><h2 id="post-deploy">Post-deploy</h2>
 <li>Verify health: curl health endpoint</li>
-<li>Notify team: post to Slack</li><h2 id="Rollback Plan">Rollback Plan</h2>
+<li>Notify team: post to Slack</li><h2 id="rollback-plan">Rollback Plan</h2>
 If deployment fails:
 <li>Revert to previous tag</li>
 <li>Run rollback script</li>
@@ -787,23 +787,23 @@ If deployment fails:
 </code></pre><p><strong>Test (only works when explicitly invoked):</strong>
 <pre><code class="language-bash">/deploy</p><h1>Claude will NOT auto-invoke this even if you say "let's deploy"</h1>
 <h1>It requires explicit /deploy command</h1>
-</code></pre><h2 id="Best Practices">Best Practices</h2><h3>1. Make Descriptions Specific</h3><li><strong>Bad (Vague)</strong>: "Helps with documents"</li>
-<li><strong>Good (Specific)</strong>: "Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."</li><h3>2. Keep Skills Focused</h3><li>One Skill = one capability</li>
+</code></pre><h2 id="best-practices">Best Practices</h2><h3 id="1-make-descriptions-specific">1. Make Descriptions Specific</h3><li><strong>Bad (Vague)</strong>: "Helps with documents"</li>
+<li><strong>Good (Specific)</strong>: "Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."</li><h3 id="2-keep-skills-focused">2. Keep Skills Focused</h3><li>One Skill = one capability</li>
 <li>✅ "PDF form filling"</li>
-<li>❌ "Document processing" (too broad)</li><h3>3. Include Trigger Terms</h3><p>Add keywords in descriptions that match user requests:
+<li>❌ "Document processing" (too broad)</li><h3 id="3-include-trigger-terms">3. Include Trigger Terms</h3><p>Add keywords in descriptions that match user requests:
 <pre><code class="language-yaml">description: Analyze Excel spreadsheets, generate pivot tables, create charts. Use when working with Excel files, spreadsheets, or .xlsx files.
-</code></pre><h3>4. Keep SKILL.md Under 500 Lines</h3><p>Move detailed reference material to separate files that Claude loads as needed.</p><h3>5. Reference Supporting Files</h3><pre><code class="language-markdown"><h2 id="Additional resources">Additional resources</h2><li>For complete API details, see <a href="reference.md">reference.md</a></li>
+</code></pre><h3 id="4-keep-skill-md-under-500-lines">4. Keep SKILL.md Under 500 Lines</h3><p>Move detailed reference material to separate files that Claude loads as needed.</p><h3 id="5-reference-supporting-files">5. Reference Supporting Files</h3><pre><code class="language-markdown"><h2 id="additional-resources">Additional resources</h2><li>For complete API details, see <a href="reference.md">reference.md</a></li>
 <li>For usage examples, see <a href="examples.md">examples.md</a></li>
-</code></pre><h3>Do's</h3><li>Use clear, descriptive names</li>
+</code></pre><h3 id="do-s">Do's</h3><li>Use clear, descriptive names</li>
 <li>Include comprehensive instructions</li>
 <li>Add concrete examples</li>
 <li>Package related scripts and templates</li>
 <li>Test with real scenarios</li>
-<li>Document dependencies</li><h3>Don'ts</h3><li>Don't create skills for one-time tasks</li>
+<li>Document dependencies</li><h3 id="don-ts">Don'ts</h3><li>Don't create skills for one-time tasks</li>
 <li>Don't duplicate existing functionality</li>
 <li>Don't make skills too broad</li>
 <li>Don't skip the description field</li>
-<li>Don't install skills from untrusted sources without auditing</li><h2 id="Troubleshooting">Troubleshooting</h2><h3>Quick Reference</h3><table>
+<li>Don't install skills from untrusted sources without auditing</li><h2 id="troubleshooting">Troubleshooting</h2><h3 id="quick-reference">Quick Reference</h3><table>
 <thead>
 <tr>
 <th>Issue</th>
@@ -837,14 +837,14 @@ If deployment fails:
 </tr>
 </tbody>
 </table>
-<h3>Skill Not Triggering</h3><p>If Claude doesn't use your skill when expected:</p><li>Check the description includes keywords users would naturally say</li>
+<h3 id="skill-not-triggering">Skill Not Triggering</h3><p>If Claude doesn't use your skill when expected:</p><li>Check the description includes keywords users would naturally say</li>
 <li>Verify the skill appears when asking "What skills are available?"</li>
 <li>Try rephrasing your request to match the description</li>
-<li>Invoke directly with </code>/skill-name<code> to test</li><h3>Skill Triggers Too Often</h3><p>If Claude uses your skill when you don't want it:</p><li>Make the description more specific</li>
-<li>Add </code>disable-model-invocation: true<code> for manual-only invocation</li><h3>Claude Doesn't See All Skills</h3><p>Skill descriptions are loaded at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). Run </code>/context<code> to check for warnings about excluded skills. Override the budget with the </code>SLASH_COMMAND_TOOL_CHAR_BUDGET<code> environment variable.</p><h2 id="Security Considerations">Security Considerations</h2><p><strong>Only use Skills from trusted sources.</strong> Skills provide Claude with capabilities through instructions and code—a malicious Skill can direct Claude to invoke tools or execute code in harmful ways.</p><p><strong>Key security considerations:</strong></p><li><strong>Audit thoroughly</strong>: Review all files in the Skill directory</li>
+<li>Invoke directly with </code>/skill-name<code> to test</li><h3 id="skill-triggers-too-often">Skill Triggers Too Often</h3><p>If Claude uses your skill when you don't want it:</p><li>Make the description more specific</li>
+<li>Add </code>disable-model-invocation: true<code> for manual-only invocation</li><h3 id="claude-doesn-t-see-all-skills">Claude Doesn't See All Skills</h3><p>Skill descriptions are loaded at <strong>2% of the context window</strong> (fallback: <strong>16,000 characters</strong>). Run </code>/context<code> to check for warnings about excluded skills. Override the budget with the </code>SLASH_COMMAND_TOOL_CHAR_BUDGET<code> environment variable.</p><h2 id="security-considerations">Security Considerations</h2><p><strong>Only use Skills from trusted sources.</strong> Skills provide Claude with capabilities through instructions and code—a malicious Skill can direct Claude to invoke tools or execute code in harmful ways.</p><p><strong>Key security considerations:</strong></p><li><strong>Audit thoroughly</strong>: Review all files in the Skill directory</li>
 <li><strong>External sources are risky</strong>: Skills that fetch from external URLs can be compromised</li>
 <li><strong>Tool misuse</strong>: Malicious Skills can invoke tools in harmful ways</li>
-<li><strong>Treat like installing software</strong>: Only use Skills from trusted sources</li><h2 id="Skills vs Other Features">Skills vs Other Features</h2><table>
+<li><strong>Treat like installing software</strong>: Only use Skills from trusted sources</li><h2 id="skills-vs-other-features">Skills vs Other Features</h2><table>
 <thead>
 <tr>
 <th>Feature</th>
@@ -885,7 +885,7 @@ If deployment fails:
 </tr>
 </tbody>
 </table>
-<h2 id="Bundled Skills">Bundled Skills</h2><p>Claude Code ships with several built-in skills that are always available without installation:</p><table>
+<h2 id="bundled-skills">Bundled Skills</h2><p>Claude Code ships with several built-in skills that are always available without installation:</p><table>
 <thead>
 <tr>
 <th>Skill</th>
@@ -915,12 +915,12 @@ If deployment fails:
 </tr>
 </tbody>
 </table>
-These skills are available out-of-the-box and do not need to be installed or configured. They follow the same SKILL.md format as custom skills.</p><h2 id="Sharing Skills">Sharing Skills</h2><h3>Project Skills (Team Sharing)</h3><li>Create Skill in </code>.claude/skills/<code></li>
+These skills are available out-of-the-box and do not need to be installed or configured. They follow the same SKILL.md format as custom skills.</p><h2 id="sharing-skills">Sharing Skills</h2><h3 id="project-skills-team-sharing">Project Skills (Team Sharing)</h3><li>Create Skill in </code>.claude/skills/<code></li>
 <li>Commit to git</li>
-<li>Team members pull changes — Skills available immediately</li><h3>Personal Skills</h3><pre><code class="language-bash"><h1>Copy to personal directory</h1>
+<li>Team members pull changes — Skills available immediately</li><h3 id="personal-skills">Personal Skills</h3><pre><code class="language-bash"><h1>Copy to personal directory</h1>
 cp -r my-skill ~/.claude/skills/</p><h1>Make scripts executable</h1>
 chmod +x ~/.claude/skills/my-skill/scripts/*.py
-</code></pre><h3>Plugin Distribution</h3><p>Package skills in a plugin's </code>skills/<code> directory for broader distribution.</p><h2 id="Going Further: A Skill Collection and a Skill Manager">Going Further: A Skill Collection and a Skill Manager</h2><p>Once you start building skills seriously, two things become essential: a library of proven skills and a tool to manage them.</p><p><strong><a href="https://github.com/luongnv89/skills">luongnv89/skills</a></strong> — A collection of skills I use daily across almost all my projects. Highlights include </code>logo-designer<code> (generates project logos on the fly) and </code>ollama-optimizer<code> (tunes local LLM performance for your hardware). Great starting point if you want ready-to-use skills.</p><p><strong><a href="https://github.com/luongnv89/asm">luongnv89/asm</a></strong> — Agent Skill Manager. Handles skill development, duplicate detection, and testing. The </code>asm link` command lets you test a skill in any project without copying files around — essential once you have more than a handful of skills.</p><h2 id="Additional Resources">Additional Resources</h2><li><a href="https://code.claude.com/docs/en/skills">Official Skills Documentation</a></li>
+</code></pre><h3 id="plugin-distribution">Plugin Distribution</h3><p>Package skills in a plugin's </code>skills/<code> directory for broader distribution.</p><h2 id="going-further-a-skill-collection-and-a-skill-manager">Going Further: A Skill Collection and a Skill Manager</h2><p>Once you start building skills seriously, two things become essential: a library of proven skills and a tool to manage them.</p><p><strong><a href="https://github.com/luongnv89/skills">luongnv89/skills</a></strong> — A collection of skills I use daily across almost all my projects. Highlights include </code>logo-designer<code> (generates project logos on the fly) and </code>ollama-optimizer<code> (tunes local LLM performance for your hardware). Great starting point if you want ready-to-use skills.</p><p><strong><a href="https://github.com/luongnv89/asm">luongnv89/asm</a></strong> — Agent Skill Manager. Handles skill development, duplicate detection, and testing. The </code>asm link` command lets you test a skill in any project without copying files around — essential once you have more than a handful of skills.</p><h2 id="additional-resources">Additional Resources</h2><li><a href="https://code.claude.com/docs/en/skills">Official Skills Documentation</a></li>
 <li><a href="https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills Architecture Blog</a></li>
 <li><a href="https://github.com/luongnv89/skills">Skills Repository</a> - Collection of ready-to-use skills</li>
 <li><a href="../01-slash-commands/">Slash Commands Guide</a> - User-initiated shortcuts</li>

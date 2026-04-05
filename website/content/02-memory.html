@@ -179,10 +179,10 @@
     <div class="container">
       <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
-        <li><a href="/content/basics/installation.html">入门指南</a></li>
-        <li><a href="/content/modules/">核心模块</a></li>
-        <li><a href="/content/cases/intro.html">实战案例</a></li>
-        <li><a href="/content/enterprise/README.html">企业应用</a></li>
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
+        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -192,7 +192,7 @@
       
       <article>
         <nav class="breadcrumb">
-          <a href="/">首页</a> / <a href="/content/modules/">模块</a> / Memory
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / Memory
         </nav>
 
         <div class="meta">
@@ -214,7 +214,7 @@
 <li>存储个人开发偏好</li>
 <li>维护目录特定的规则和配置</li>
 <li>导入外部文档</li>
-<li>将 memory 作为项目的一部分进行版本控制</li><p>Memory 系统在多个层级上运行，从全局个人偏好到特定子目录，允许精细控制 Claude 记住什么以及如何应用这些知识。</p><h2 id="Memory 命令快速参考">Memory 命令快速参考</h2><table>
+<li>将 memory 作为项目的一部分进行版本控制</li><p>Memory 系统在多个层级上运行，从全局个人偏好到特定子目录，允许精细控制 Claude 记住什么以及如何应用这些知识。</p><h2 id="memory-命令快速参考">Memory 命令快速参考</h2><table>
 <thead>
 <tr>
 <th>命令</th>
@@ -262,7 +262,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="快速开始：初始化 Memory">快速开始：初始化 Memory</h2><h3><code>/init</code> 命令</h3><p><code>/init</code> 命令是在 Claude Code 中设置项目 memory 的最快方式。它会创建一个包含基础项目文档的 CLAUDE.md 文件。</p><p><strong>使用方式：</strong></p><pre><code class="language-bash">/init
+<h2 id="快速开始-初始化-memory">快速开始：初始化 Memory</h2><h3 id="init-命令"><code>/init</code> 命令</h3><p><code>/init</code> 命令是在 Claude Code 中设置项目 memory 的最快方式。它会创建一个包含基础项目文档的 CLAUDE.md 文件。</p><p><strong>使用方式：</strong></p><pre><code class="language-bash">/init
 </code></pre><p><strong>功能：</strong></p><li>在项目中创建新的 CLAUDE.md 文件（通常位于 <code>./CLAUDE.md</code> 或 <code>./.claude/CLAUDE.md</code>）</li>
 <li>建立项目约定和指南</li>
 <li>设置跨会话上下文持久化的基础</li>
@@ -281,7 +281,7 @@
 <li>代码风格偏好</li>
 <li>测试要求</li>
 <li>Git 工作流约定</li>
-</code></pre><h3>使用 <code>#</code> 快速更新 Memory</h3><p>你可以在任何对话中通过以 <code>#</code> 开头的消息快速添加信息到 memory：</p><p><strong>语法：</strong></p><pre><code class="language-markdown"><h1>你的 memory 规则或指令</h1>
+</code></pre><h3 id="使用-快速更新-memory">使用 <code>#</code> 快速更新 Memory</h3><p>你可以在任何对话中通过以 <code>#</code> 开头的消息快速添加信息到 memory：</p><p><strong>语法：</strong></p><pre><code class="language-markdown"><h1>你的 memory 规则或指令</h1>
 </code></pre><p><strong>示例：</strong></p><pre><code class="language-markdown"><h1>在此项目中始终使用 TypeScript 严格模式</h1><h1>优先使用 async/await 而非 promise 链</h1><h1>每次提交前运行 npm test</h1><h1>文件名使用 kebab-case</h1>
 </code></pre><p><strong>工作原理：</strong></p><li>以 <code>#</code> 开头后跟你的规则开始消息</li>
 <li>Claude 将其识别为 memory 更新请求</li>
@@ -291,7 +291,7 @@
 始终使用 Zod schema 验证用户输入</p><h1>remember this</h1>
 所有发布使用语义化版本号</p><h1>add to memory</h1>
 数据库迁移必须是可逆的
-</code></pre><h3><code>/memory</code> 命令</h3><p><code>/memory</code> 命令提供在 Claude Code 会话中直接编辑 CLAUDE.md memory 文件的功能。它会在你的系统编辑器中打开 memory 文件，便于全面编辑。</p><p><strong>使用方式：</strong></p><pre><code class="language-bash">/memory
+</code></pre><h3 id="memory-命令"><code>/memory</code> 命令</h3><p><code>/memory</code> 命令提供在 Claude Code 会话中直接编辑 CLAUDE.md memory 文件的功能。它会在你的系统编辑器中打开 memory 文件，便于全面编辑。</p><p><strong>使用方式：</strong></p><pre><code class="language-bash">/memory
 </code></pre><p><strong>功能：</strong></p><li>在系统默认编辑器中打开 memory 文件</li>
 <li>允许进行大量添加、修改和重组</li>
 <li>提供对层级中所有 memory 文件的直接访问</li>
@@ -348,7 +348,7 @@
 <li>首次从外部位置导入会触发安全审批对话框</li>
 <li>导入指令在 markdown 代码跨度或代码块中不会被评估（因此在示例中文档化它们是安全的）</li>
 <li>通过引用现有文档避免重复</li>
-<li>自动在 Claude 的上下文中包含引用的内容</li><h2 id="Memory 架构">Memory 架构</h2><p>Claude Code 中的 Memory 遵循层级系统，不同作用域服务于不同目的：</p><div class="mermaid">graph TB
+<li>自动在 Claude 的上下文中包含引用的内容</li><h2 id="memory-架构">Memory 架构</h2><p>Claude Code 中的 Memory 遵循层级系统，不同作用域服务于不同目的：</p><div class="mermaid">graph TB
     A["Claude 会话"]
     B["用户输入"]
     C["Memory 系统"]
@@ -356,7 +356,7 @@
     C -->|每 24 小时合成| D
     D -->|自动加载| A
     A -->|使用上下文| C
-</div><h2 id="Claude Code 中的 Memory 层级">Claude Code 中的 Memory 层级</h2><p>Claude Code 使用多层级的 memory 系统。Memory 文件在 Claude Code 启动时自动加载，更高层级的文件优先。</p><p><strong>完整的 Memory 层级（按优先级排序）：</strong></p><li><strong>Managed Policy</strong> - 组织范围的指令</li>
+</div><h2 id="claude-code-中的-memory-层级">Claude Code 中的 Memory 层级</h2><p>Claude Code 使用多层级的 memory 系统。Memory 文件在 Claude Code 启动时自动加载，更高层级的文件优先。</p><p><strong>完整的 Memory 层级（按优先级排序）：</strong></p><li><strong>Managed Policy</strong> - 组织范围的指令</li>
    - macOS: <code>/Library/Application Support/ClaudeCode/CLAUDE.md</code>
    - Linux/WSL: <code>/etc/claude-code/CLAUDE.md</code>
    - Windows: <code>C:\Program Files\ClaudeCode\CLAUDE.md</code></p><li><strong>Managed Drop-ins</strong> - 按字母顺序合并的策略文件（v2.1.83+）</li>
@@ -385,7 +385,7 @@
     style G fill:#fff3e0,stroke:#333,color:#333
     style H fill:#e1f5fe,stroke:#333,color:#333
     style I fill:#e1f5fe,stroke:#333,color:#333
-</div><h2 id="使用 <code>claudeMdExcludes</code> 排除 CLAUDE.md 文件">使用 <code>claudeMdExcludes</code> 排除 CLAUDE.md 文件</h2><p>在大型 monorepo 中，某些 CLAUDE.md 文件可能与当前工作无关。<code>claudeMdExcludes</code> 设置允许你跳过特定 CLAUDE.md 文件，使其不会被加载到上下文中：</p><pre><code class="language-jsonc">// 在 ~/.claude/settings.json 或 .claude/settings.json 中
+</div><h2 id="使用-claudemdexcludes-排除-claude-md-文件">使用 <code>claudeMdExcludes</code> 排除 CLAUDE.md 文件</h2><p>在大型 monorepo 中，某些 CLAUDE.md 文件可能与当前工作无关。<code>claudeMdExcludes</code> 设置允许你跳过特定 CLAUDE.md 文件，使其不会被加载到上下文中：</p><pre><code class="language-jsonc">// 在 ~/.claude/settings.json 或 .claude/settings.json 中
 {
   "claudeMdExcludes": [
     "packages/legacy-app/CLAUDE.md",
@@ -432,7 +432,7 @@
 </table>
 <strong>平台特定配置（v2.1.51+）：</strong></p><p>设置也可以通过以下方式配置：
 <li><strong>macOS</strong>：属性列表（plist）文件</li>
-<li><strong>Windows</strong>：Windows 注册表</li><p>这些平台原生机制与 JSON 设置文件一起读取，并遵循相同的优先级规则。</p><h2 id="模块化 Rules 系统">模块化 Rules 系统</h2><p>使用 <code>.claude/rules/</code> 目录结构创建有组织的、路径特定的 rules。Rules 可以在项目级别和用户级别定义：</p><pre><code class="language-">your-project/
+<li><strong>Windows</strong>：Windows 注册表</li><p>这些平台原生机制与 JSON 设置文件一起读取，并遵循相同的优先级规则。</p><h2 id="模块化-rules-系统">模块化 Rules 系统</h2><p>使用 <code>.claude/rules/</code> 目录结构创建有组织的、路径特定的 rules。Rules 可以在项目级别和用户级别定义：</p><pre><code class="language-">your-project/
 ├── .claude/
 │   ├── CLAUDE.md
 │   └── rules/
@@ -446,7 +446,7 @@
 └── rules/                        # 用户级别 rules（所有项目）
     ├── personal-style.md
     └── preferred-patterns.md
-</code></pre><p>Rules 在 <code>rules/</code> 目录中递归发现，包括任何子目录。位于 <code>~/.claude/rules/</code> 的用户级别 rules 在项目级别 rules 之前加载，允许项目可以覆盖的个人默认值。</p><h3>使用 YAML Frontmatter 定义路径特定 Rules</h3><p>定义仅应用于特定文件路径的 rules：</p><pre><code class="language-markdown">---
+</code></pre><p>Rules 在 <code>rules/</code> 目录中递归发现，包括任何子目录。位于 <code>~/.claude/rules/</code> 的用户级别 rules 在项目级别 rules 之前加载，允许项目可以覆盖的个人默认值。</p><h3 id="使用-yaml-frontmatter-定义路径特定-rules">使用 YAML Frontmatter 定义路径特定 Rules</h3><p>定义仅应用于特定文件路径的 rules：</p><pre><code class="language-markdown">---
 paths: src/api/<em>*/</em>.ts
 <hr></p><h1>API 开发规则</h1><li>所有 API 端点必须包含输入验证</li>
 <li>使用 Zod 进行 schema 验证</li>
@@ -455,8 +455,8 @@ paths: src/api/<em>*/</em>.ts
 </code></pre><p><strong>Glob 模式示例：</strong></p><li><code><em>*/</em>.ts</code> - 所有 TypeScript 文件</li>
 <li><code>src/<em>*/</em></code> - src/ 下的所有文件</li>
 <li><code>src/<em>*/</em>.{ts,tsx}</code> - 多种扩展名</li>
-<li><code>{src,lib}/<strong>/<em>.ts, tests/</strong>/</em>.test.ts</code> - 多个模式</li><h3>子目录和符号链接</h3><p><code>.claude/rules/</code> 中的 rules 支持两个组织功能：</p><li><strong>子目录</strong>：Rules 递归发现，因此你可以将它们组织成基于主题的文件夹（如 <code>rules/api/</code>、<code>rules/testing/</code>、<code>rules/security/</code>）</li>
-<li><strong>符号链接</strong>：支持符号链接以跨多个项目共享 rules。例如，你可以将共享 rule 文件从中心位置符号链接到每个项目的 <code>.claude/rules/</code> 目录</li><h2 id="Memory 位置表">Memory 位置表</h2><table>
+<li><code>{src,lib}/<strong>/<em>.ts, tests/</strong>/</em>.test.ts</code> - 多个模式</li><h3 id="子目录和符号链接">子目录和符号链接</h3><p><code>.claude/rules/</code> 中的 rules 支持两个组织功能：</p><li><strong>子目录</strong>：Rules 递归发现，因此你可以将它们组织成基于主题的文件夹（如 <code>rules/api/</code>、<code>rules/testing/</code>、<code>rules/security/</code>）</li>
+<li><strong>符号链接</strong>：支持符号链接以跨多个项目共享 rules。例如，你可以将共享 rule 文件从中心位置符号链接到每个项目的 <code>.claude/rules/</code> 目录</li><h2 id="memory-位置表">Memory 位置表</h2><table>
 <thead>
 <tr>
 <th>位置</th>
@@ -550,7 +550,7 @@ paths: src/api/<em>*/</em>.ts
 </tr>
 </tbody>
 </table>
-<h2 id="Memory 更新生命周期">Memory 更新生命周期</h2><p>以下是 memory 更新如何在 Claude Code 会话中流转：</p><div class="mermaid">sequenceDiagram
+<h2 id="memory-更新生命周期">Memory 更新生命周期</h2><p>以下是 memory 更新如何在 Claude Code 会话中流转：</p><div class="mermaid">sequenceDiagram
     participant User
     participant Claude as Claude Code
     participant Editor as 文件系统
@@ -562,11 +562,11 @@ paths: src/api/<em>*/</em>.ts
     Memory-->>Claude: 文件已保存
     Claude->>Claude: 加载更新的 memory
     Claude-->>User: "Memory 已保存！"
-</div><h2 id="Auto Memory">Auto Memory</h2><p>Auto memory 是一个持久化目录，Claude 在与你的项目工作时自动记录学习内容、模式和见解。与手动编写和维护的 CLAUDE.md 文件不同，auto memory 由 Claude 在会话期间自动写入。</p><h3>Auto Memory 工作原理</h3><li><strong>位置</strong>：<code>~/.claude/projects/<project>/memory/</code></li>
+</div><h2 id="auto-memory">Auto Memory</h2><p>Auto memory 是一个持久化目录，Claude 在与你的项目工作时自动记录学习内容、模式和见解。与手动编写和维护的 CLAUDE.md 文件不同，auto memory 由 Claude 在会话期间自动写入。</p><h3 id="auto-memory-工作原理">Auto Memory 工作原理</h3><li><strong>位置</strong>：<code>~/.claude/projects/<project>/memory/</code></li>
 <li><strong>入口文件</strong>：<code>MEMORY.md</code> 作为 auto memory 目录的主文件</li>
 <li><strong>主题文件</strong>：特定主题的可选额外文件（如 <code>debugging.md</code>、<code>api-conventions.md</code>）</li>
 <li><strong>加载行为</strong>：<code>MEMORY.md</code> 的前 200 行在会话开始时加载到系统提示中。主题文件按需加载，不在启动时加载。</li>
-<li><strong>读写</strong>：Claude 在会话期间读写 memory 文件，发现模式和项目特定知识</li><h3>Auto Memory 架构</h3><div class="mermaid">graph TD
+<li><strong>读写</strong>：Claude 在会话期间读写 memory 文件，发现模式和项目特定知识</li><h3 id="auto-memory-架构">Auto Memory 架构</h3><div class="mermaid">graph TD
     A["Claude 会话启动"] --> B["加载 MEMORY.md<br/>（前 200 行）"]
     B --> C["会话活跃"]
     C --> D["Claude 发现<br/>模式和见解"]
@@ -584,22 +584,22 @@ paths: src/api/<em>*/</em>.ts
     style G fill:#fce4ec,stroke:#333,color:#333
     style H fill:#fce4ec,stroke:#333,color:#333
     style I fill:#f3e5f5,stroke:#333,color:#333
-</div><h3>Auto Memory 目录结构</h3><pre><code class="language-">~/.claude/projects/<project>/memory/
+</div><h3 id="auto-memory-目录结构">Auto Memory 目录结构</h3><pre><code class="language-">~/.claude/projects/<project>/memory/
 ├── MEMORY.md              # 入口文件（启动时加载前 200 行）
 ├── debugging.md           # 主题文件（按需加载）
 ├── api-conventions.md     # 主题文件（按需加载）
 └── testing-patterns.md    # 主题文件（按需加载）
-</code></pre><h3>版本要求</h3><p>Auto memory 需要 <strong>Claude Code v2.1.59 或更高版本</strong>。如果你使用较旧版本，请先升级：</p><pre><code class="language-bash">npm install -g @anthropic-ai/claude-code@latest
-</code></pre><h3>自定义 Auto Memory 目录</h3><p>默认情况下，auto memory 存储在 <code>~/.claude/projects/<project>/memory/</code>。你可以使用 <code>autoMemoryDirectory</code> 设置更改此位置（自 <strong>v2.1.74</strong> 起可用）：</p><pre><code class="language-jsonc">// 在 ~/.claude/settings.json 或 .claude/settings.local.json（仅用户/本地设置）
+</code></pre><h3 id="版本要求">版本要求</h3><p>Auto memory 需要 <strong>Claude Code v2.1.59 或更高版本</strong>。如果你使用较旧版本，请先升级：</p><pre><code class="language-bash">npm install -g @anthropic-ai/claude-code@latest
+</code></pre><h3 id="自定义-auto-memory-目录">自定义 Auto Memory 目录</h3><p>默认情况下，auto memory 存储在 <code>~/.claude/projects/<project>/memory/</code>。你可以使用 <code>autoMemoryDirectory</code> 设置更改此位置（自 <strong>v2.1.74</strong> 起可用）：</p><pre><code class="language-jsonc">// 在 ~/.claude/settings.json 或 .claude/settings.local.json（仅用户/本地设置）
 {
   "autoMemoryDirectory": "/path/to/custom/memory/directory"
 }
 </code></pre><blockquote><strong>注意</strong>：<code>autoMemoryDirectory</code> 只能在用户级别（<code>~/.claude/settings.json</code>）或本地设置（<code>.claude/settings.local.json</code>）中设置，不能在项目或 managed policy 设置中设置。</blockquote><p>这适用于以下情况：</p><li>将 auto memory 存储在共享或同步位置</li>
 <li>将 auto memory 与默认 Claude 配置目录分离</li>
-<li>在默认层级之外使用项目特定路径</li><h3>Worktree 和仓库共享</h3><p>同一 git 仓库中的所有 worktree 和子目录共享一个 auto memory 目录。这意味着在同一仓库的不同 worktree 或子目录之间切换时，将读写相同的 memory 文件。</p><h3>Subagent Memory</h3><p>Subagents（通过 Task 或并行执行等工具启动）可以有自己的 memory 上下文。在 subagent 定义中使用 <code>memory</code> frontmatter 字段指定要加载的 memory 作用域：</p><pre><code class="language-yaml">memory: user      # 仅加载用户级别 memory
+<li>在默认层级之外使用项目特定路径</li><h3 id="worktree-和仓库共享">Worktree 和仓库共享</h3><p>同一 git 仓库中的所有 worktree 和子目录共享一个 auto memory 目录。这意味着在同一仓库的不同 worktree 或子目录之间切换时，将读写相同的 memory 文件。</p><h3 id="subagent-memory">Subagent Memory</h3><p>Subagents（通过 Task 或并行执行等工具启动）可以有自己的 memory 上下文。在 subagent 定义中使用 <code>memory</code> frontmatter 字段指定要加载的 memory 作用域：</p><pre><code class="language-yaml">memory: user      # 仅加载用户级别 memory
 memory: project   # 仅加载项目级别 memory
 memory: local     # 仅加载本地 memory
-</code></pre><p>这允许 subagents 以聚焦的上下文运行，而不是继承完整的 memory 层级。</p><h3>控制 Auto Memory</h3><p>Auto memory 可以通过 <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY</code> 环境变量控制：</p><table>
+</code></pre><p>这允许 subagents 以聚焦的上下文运行，而不是继承完整的 memory 层级。</p><h3 id="控制-auto-memory">控制 Auto Memory</h3><p>Auto memory 可以通过 <code>CLAUDE_CODE_DISABLE_AUTO_MEMORY</code> 环境变量控制：</p><table>
 <thead>
 <tr>
 <th>值</th>
@@ -624,45 +624,45 @@ memory: local     # 仅加载本地 memory
 <pre><code class="language-bash"><h1>为会话禁用 auto memory</h1>
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 claude</p><h1>显式强制 auto memory 开启</h1>
 CLAUDE_CODE_DISABLE_AUTO_MEMORY=0 claude
-</code></pre><h2 id="使用 <code>--add-dir</code> 添加额外目录">使用 <code>--add-dir</code> 添加额外目录</h2><p><code>--add-dir</code> 标志允许 Claude Code 从当前工作目录之外的其他目录加载 CLAUDE.md 文件。这对于 monorepo 或多项目设置很有用，其中来自其他目录的上下文是相关的。</p><p>要启用此功能，设置环境变量：</p><pre><code class="language-bash">CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
+</code></pre><h2 id="使用-add-dir-添加额外目录">使用 <code>--add-dir</code> 添加额外目录</h2><p><code>--add-dir</code> 标志允许 Claude Code 从当前工作目录之外的其他目录加载 CLAUDE.md 文件。这对于 monorepo 或多项目设置很有用，其中来自其他目录的上下文是相关的。</p><p>要启用此功能，设置环境变量：</p><pre><code class="language-bash">CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1
 </code></pre><p>然后使用该标志启动 Claude Code：</p><pre><code class="language-bash">claude --add-dir /path/to/other/project
-</code></pre><p>Claude 将从指定的额外目录加载 CLAUDE.md，同时加载当前工作目录的 memory 文件。</p><h2 id="实际示例">实际示例</h2><h3>示例 1：项目 Memory 结构</h3><p><strong>文件：</strong> <code>./CLAUDE.md</code></p><pre><code class="language-markdown"><h1>项目配置</h1><h2 id="项目概述">项目概述</h2>
+</code></pre><p>Claude 将从指定的额外目录加载 CLAUDE.md，同时加载当前工作目录的 memory 文件。</p><h2 id="实际示例">实际示例</h2><h3 id="示例-1-项目-memory-结构">示例 1：项目 Memory 结构</h3><p><strong>文件：</strong> <code>./CLAUDE.md</code></p><pre><code class="language-markdown"><h1>项目配置</h1><h2 id="项目概述">项目概述</h2>
 <li><strong>名称</strong>：电商平台</li>
 <li><strong>技术栈</strong>：Node.js、PostgreSQL、React 18、Docker</li>
 <li><strong>团队规模</strong>：5 名开发者</li>
 <li><strong>截止日期</strong>：2025 年第四季度</li><h2 id="架构">架构</h2>
 @docs/architecture.md
 @docs/api-standards.md
-@docs/database-schema.md</p><h2 id="开发标准">开发标准</h2><h3>代码风格</h3>
+@docs/database-schema.md</p><h2 id="开发标准">开发标准</h2><h3 id="代码风格">代码风格</h3>
 <li>使用 Prettier 进行格式化</li>
 <li>使用 ESLint 配合 airbnb 配置</li>
 <li>最大行长：100 字符</li>
-<li>使用 2 空格缩进</li><h3>命名约定</h3>
+<li>使用 2 空格缩进</li><h3 id="命名约定">命名约定</h3>
 <li><strong>文件</strong>：kebab-case（user-controller.js）</li>
 <li><strong>类</strong>：PascalCase（UserService）</li>
 <li><strong>函数/变量</strong>：camelCase（getUserById）</li>
 <li><strong>常量</strong>：UPPER_SNAKE_CASE（API_BASE_URL）</li>
-<li><strong>数据库表</strong>：snake_case（user_accounts）</li><h3>Git 工作流</h3>
+<li><strong>数据库表</strong>：snake_case（user_accounts）</li><h3 id="git-工作流">Git 工作流</h3>
 <li>分支名称：<code>feature/description</code> 或 <code>fix/description</code></li>
 <li>提交消息：遵循约定式提交</li>
 <li>合并前需要 PR</li>
 <li>所有 CI/CD 检查必须通过</li>
-<li>至少需要 1 个审批</li><h3>测试要求</h3>
+<li>至少需要 1 个审批</li><h3 id="测试要求">测试要求</h3>
 <li>最低 80% 代码覆盖率</li>
 <li>所有关键路径必须有测试</li>
 <li>单元测试使用 Jest</li>
 <li>E2E 测试使用 Cypress</li>
-<li>测试文件名：<code><em>.test.ts</code> 或 <code></em>.spec.ts</code></li><h3>API 标准</h3>
+<li>测试文件名：<code><em>.test.ts</code> 或 <code></em>.spec.ts</code></li><h3 id="api-标准">API 标准</h3>
 <li>仅 RESTful 端点</li>
 <li>JSON 请求/响应</li>
 <li>正确使用 HTTP 状态码</li>
 <li>版本化 API 端点：<code>/api/v1/</code></li>
-<li>文档化所有端点并附示例</li><h3>数据库</h3>
+<li>文档化所有端点并附示例</li><h3 id="数据库">数据库</h3>
 <li>使用迁移进行 schema 变更</li>
 <li>永远不要硬编码凭据</li>
 <li>使用连接池</li>
 <li>开发环境启用查询日志</li>
-<li>需要定期备份</li><h3>部署</h3>
+<li>需要定期备份</li><h3 id="部署">部署</h3>
 <li>Docker 基础部署</li>
 <li>Kubernetes 编排</li>
 <li>蓝绿部署策略</li>
@@ -708,15 +708,15 @@ CLAUDE_CODE_DISABLE_AUTO_MEMORY=0 claude
 <li>分析仪表板：<code>/projects/analytics</code></li>
 <li>移动应用：<code>/projects/mobile</code></li>
 <li>管理面板：<code>/projects/admin</code></li>
-</code></pre><h3>示例 2：目录特定 Memory</h3><p><strong>文件：</strong> <code>./src/api/CLAUDE.md</code></p><pre><code class="language-markdown"><h1>API 模块标准</h1><p>此文件覆盖 /src/api/ 中的根 CLAUDE.md</p><h2 id="API 特定标准">API 特定标准</h2><h3>请求验证</h3>
+</code></pre><h3 id="示例-2-目录特定-memory">示例 2：目录特定 Memory</h3><p><strong>文件：</strong> <code>./src/api/CLAUDE.md</code></p><pre><code class="language-markdown"><h1>API 模块标准</h1><p>此文件覆盖 /src/api/ 中的根 CLAUDE.md</p><h2 id="api-特定标准">API 特定标准</h2><h3 id="请求验证">请求验证</h3>
 <li>使用 Zod 进行 schema 验证</li>
 <li>始终验证输入</li>
 <li>返回 400 和验证错误</li>
-<li>包含字段级别的错误详情</li><h3>认证</h3>
+<li>包含字段级别的错误详情</li><h3 id="认证">认证</h3>
 <li>所有端点需要 JWT token</li>
 <li>Token 在 Authorization header 中</li>
 <li>Token 24 小时后过期</li>
-<li>实现 refresh token 机制</li><h3>响应格式</h3><p>所有响应必须遵循此结构：</p><p></code></pre>json
+<li>实现 refresh token 机制</li><h3 id="响应格式">响应格式</h3><p>所有响应必须遵循此结构：</p><p></code></pre>json
 {
   "success": true,
   "data": { /<em> 实际数据 </em>/ },
@@ -736,31 +736,31 @@ CLAUDE_CODE_DISABLE_AUTO_MEMORY=0 claude
   "timestamp": "2025-11-06T10:30:00Z"
 }
 <pre><code class="language-">
-<h3>分页</h3>
+<h3 id="分页">分页</h3>
 <li>使用基于 cursor 的分页（而非 offset）</li>
 <li>包含 <code>hasMore</code> boolean</li>
 <li>最大页面大小限制为 100</li>
-<li>默认页面大小：20</li><h3>速率限制</h3>
+<li>默认页面大小：20</li><h3 id="速率限制">速率限制</h3>
 <li>认证用户每小时 1000 次请求</li>
 <li>公共端点每小时 100 次请求</li>
 <li>超出时返回 429</li>
-<li>包含 retry-after header</li><h3>缓存</h3>
+<li>包含 retry-after header</li><h3 id="缓存">缓存</h3>
 <li>使用 Redis 进行会话缓存</li>
 <li>缓存时长：默认 5 分钟</li>
 <li>写操作时失效</li>
 <li>使用资源类型标记缓存键</li>
-</code></pre><h3>示例 3：个人 Memory</h3><p><strong>文件：</strong> <code>~/.claude/CLAUDE.md</code></p><pre><code class="language-markdown"><h1>我的开发偏好</h1><h2 id="关于我">关于我</h2>
+</code></pre><h3 id="示例-3-个人-memory">示例 3：个人 Memory</h3><p><strong>文件：</strong> <code>~/.claude/CLAUDE.md</code></p><pre><code class="language-markdown"><h1>我的开发偏好</h1><h2 id="关于我">关于我</h2>
 <li><strong>经验水平</strong>：8 年全栈开发经验</li>
 <li><strong>偏好语言</strong>：TypeScript、Python</li>
 <li><strong>沟通风格</strong>：直接，附示例</li>
-<li><strong>学习风格</strong>：视觉图表配代码</li><h2 id="代码偏好">代码偏好</h2><h3>错误处理</h3>
+<li><strong>学习风格</strong>：视觉图表配代码</li><h2 id="代码偏好">代码偏好</h2><h3 id="错误处理">错误处理</h3>
 我偏好使用 try-catch 块和有意义错误消息的显式错误处理。
-避免泛型错误。始终记录错误以便调试。</p><h3>注释</h3>
+避免泛型错误。始终记录错误以便调试。</p><h3 id="注释">注释</h3>
 注释用于 WHY，而非 WHAT。代码应自文档化。
-注释应解释业务逻辑或不明显的决策。</p><h3>测试</h3>
+注释应解释业务逻辑或不明显的决策。</p><h3 id="测试">测试</h3>
 我偏好 TDD（测试驱动开发）。
 先写测试，再实现。
-关注行为，而非实现细节。</p><h3>架构</h3>
+关注行为，而非实现细节。</p><h3 id="架构">架构</h3>
 我偏好模块化、松耦合设计。
 使用依赖注入以提高可测试性。
 分离关注点（Controllers、Services、Repositories）。</p><h2 id="调试偏好">调试偏好</h2>
@@ -788,10 +788,10 @@ CLAUDE_CODE_DISABLE_AUTO_MEMORY=0 claude
 <li><strong>测试框架</strong>：Jest 配合 React Testing Library</li>
 </code></pre><p>_My Test_
 请求 Claude 保存新规则</p><p>!<a href="memory-ask-claude.png">请求 Claude 保存新规则</a>
-Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</code> 文件。然后请求 Claude 确认位置。</p><p>!<a href="memory-saved.png">请求 Claude 保存新规则</a></p><h3>示例 4：会话期间的 Memory 更新</h3><p>你可以在活跃的 Claude Code 会话中添加新规则到 memory。有两种方式：</p><p>#### 方法 1：直接请求</p><pre><code class="language-markdown">用户：记住我为所有新组件优先使用 React hooks 而非类组件。</p><p>Claude：我将此添加到你的 memory。应放入哪个 memory 文件？
+Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</code> 文件。然后请求 Claude 确认位置。</p><p>!<a href="memory-saved.png">请求 Claude 保存新规则</a></p><h3 id="示例-4-会话期间的-memory-更新">示例 4：会话期间的 Memory 更新</h3><p>你可以在活跃的 Claude Code 会话中添加新规则到 memory。有两种方式：</p><p>#### 方法 1：直接请求</p><pre><code class="language-markdown">用户：记住我为所有新组件优先使用 React hooks 而非类组件。</p><p>Claude：我将此添加到你的 memory。应放入哪个 memory 文件？
         1. 项目 memory (./CLAUDE.md)
         2. 个人 memory (~/.claude/CLAUDE.md)</p><p>用户：项目 memory</p><p>Claude：✅ Memory 已保存！</p><p>已添加到 ./CLAUDE.md：
-<hr></p><h3>组件开发</h3>
+<hr></p><h3 id="组件开发">组件开发</h3>
 <li>使用带 React Hooks 的函数组件</li>
 <li>优先使用 hooks 而非类组件</li>
 <li>自定义 hooks 用于可复用逻辑</li>
@@ -801,14 +801,14 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
       处理前始终使用 Zod schema 验证用户输入。</p><p>Claude：我将此规则保存到 memory。应使用哪个 memory 文件？
         1. 项目 memory (./CLAUDE.md)
         2. 个人 memory (~/.claude/CLAUDE.md)</p><p>用户：项目 memory</p><p>Claude：✅ Memory 已保存！</p><p>已添加到 ./CLAUDE.md：
-<hr></p><h3>输入验证</h3>
+<hr></p><h3 id="输入验证">输入验证</h3>
 <li>处理前始终使用 Zod schema 验证用户输入</li>
 <li>在每个 API handler 文件顶部定义 schema</li>
 <li>返回 400 状态和验证错误</li>
 </code></pre><p>#### 添加 Memory 的技巧</p><li>规则要具体和可操作</li>
 <li>在章节标题下组织相关规则</li>
 <li>更新现有章节而非重复内容</li>
-<li>选择适当的 memory 作用域（项目 vs. 个人）</li><h2 id="Memory 功能对比">Memory 功能对比</h2><table>
+<li>选择适当的 memory 作用域（项目 vs. 个人）</li><h2 id="memory-功能对比">Memory 功能对比</h2><table>
 <thead>
 <tr>
 <th>功能</th>
@@ -854,30 +854,30 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 </tr>
 </tbody>
 </table>
-<h3>Claude Web/Desktop 中的 Memory</h3><p>#### Memory 合成时间线</p><div class="mermaid">graph LR
+<h3 id="claude-web-desktop-中的-memory">Claude Web/Desktop 中的 Memory</h3><p>#### Memory 合成时间线</p><div class="mermaid">graph LR
     A["第 1 天：用户<br/>对话"] -->|24 小时| B["第 2 天：Memory<br/>合成"]
     B -->|自动| C["Memory 已更新<br/>已汇总"]
     C -->|加载| D["第 2-N 天：<br/>新对话"]
     D -->|添加到| E["Memory"]
     E -->|24 小时后| F["Memory 已刷新"]
-</div><p><strong>示例 Memory 摘要：</strong></p><pre><code class="language-markdown"><h2 id="Claude 对用户的记忆">Claude 对用户的记忆</h2><h3>职业背景</h3>
+</div><p><strong>示例 Memory 摘要：</strong></p><pre><code class="language-markdown"><h2 id="claude-对用户的记忆">Claude 对用户的记忆</h2><h3 id="职业背景">职业背景</h3>
 <li>高级全栈开发者，8 年经验</li>
 <li>专注于 TypeScript/Node.js 后端和 React 前端</li>
 <li>活跃的开源贡献者</li>
-<li>对 AI 和机器学习感兴趣</li><h3>项目上下文</h3>
+<li>对 AI 和机器学习感兴趣</li><h3 id="项目上下文">项目上下文</h3>
 <li>当前构建电商平台</li>
 <li>技术栈：Node.js、PostgreSQL、React 18、Docker</li>
 <li>与 5 名开发者团队合作</li>
-<li>使用 CI/CD 和蓝绿部署</li><h3>沟通偏好</h3>
+<li>使用 CI/CD 和蓝绿部署</li><h3 id="沟通偏好">沟通偏好</h3>
 <li>喜欢直接、简洁的解释</li>
 <li>喜欢视觉图表和示例</li>
 <li>喜欢代码片段</li>
-<li>在注释中解释业务逻辑</li><h3>当前目标</h3>
+<li>在注释中解释业务逻辑</li><h3 id="当前目标">当前目标</h3>
 <li>提高 API 性能</li>
 <li>将测试覆盖率提高到 90%</li>
 <li>实现缓存策略</li>
 <li>文档化架构</li>
-</code></pre><h2 id="立即尝试">立即尝试</h2><h3>练习 1：创建你的第一个项目 Memory</h3><p>为你的项目创建 CLAUDE.md 文件：</p><p><strong>步骤 1：使用 <code>/init</code> 初始化</strong>
+</code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-创建你的第一个项目-memory">练习 1：创建你的第一个项目 Memory</h3><p>为你的项目创建 CLAUDE.md 文件：</p><p><strong>步骤 1：使用 <code>/init</code> 初始化</strong>
 <pre><code class="language-bash">/init
 </code></pre><p><strong>步骤 2：自定义模板</strong></p><p>添加你的项目特定信息：</p><pre><code class="language-markdown"><h1>项目名称</h1><h2 id="用途">用途</h2>
 简要描述此项目的功能。</p><h2 id="架构">架构</h2>
@@ -890,7 +890,7 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 <li><code>npm test</code> - 运行所有测试</li>
 <li><code>npm run build</code> - 生产构建</li>
 <li><code>npm run lint</code> - 检查代码风格</li>
-</code></pre><p><strong>步骤 3：测试</strong></p><p>询问 Claude："你对这个项目了解什么？"</p><p>Claude 应引用你的 CLAUDE.md 内容。</p><h3>练习 2：Memory 层级设置</h3><p>在不同级别设置 memory：</p><p><strong>全局 Memory（~/.claude/CLAUDE.md）：</strong>
+</code></pre><p><strong>步骤 3：测试</strong></p><p>询问 Claude："你对这个项目了解什么？"</p><p>Claude 应引用你的 CLAUDE.md 内容。</p><h3 id="练习-2-memory-层级设置">练习 2：Memory 层级设置</h3><p>在不同级别设置 memory：</p><p><strong>全局 Memory（~/.claude/CLAUDE.md）：</strong>
 <pre><code class="language-markdown"><h1>我的全局偏好</h1><h2 id="编码风格">编码风格</h2>
 <li>倾向于函数式编程模式</li>
 <li>使用 TypeScript 以获得类型安全</li>
@@ -902,12 +902,12 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 <pre><code class="language-markdown"><h2 id="项目特定规则">项目特定规则</h2><p>extends: @~/.claude/CLAUDE.md</p><h2 id="测试覆盖率">测试覆盖率</h2>
 <li>最低要求 80% 覆盖率</li>
 <li>所有新功能必须有测试</li>
-<li>单元测试使用 Jest，E2E 使用 Playwright</li><h2 id="Git 工作流">Git 工作流</h2>
+<li>单元测试使用 Jest，E2E 使用 Playwright</li><h2 id="git-工作流">Git 工作流</h2>
 <li>从 main 创建 feature 分支</li>
 <li>PR 需要 2 个审批</li>
 <li>Squash merge 到 main</li>
 </code></pre><p><strong>目录 Memory（src/api/.claude/CLAUDE.md）：</strong>
-<pre><code class="language-markdown"><h2 id="API 模块规则">API 模块规则</h2><h2 id="认证">认证</h2>
+<pre><code class="language-markdown"><h2 id="api-模块规则">API 模块规则</h2><h2 id="认证">认证</h2>
 <li>所有端点需要 auth token</li>
 <li>使用 JWT，24 小时过期</li>
 <li>速率限制：每分钟 100 次请求</li><h2 id="响应格式">响应格式</h2>
@@ -920,7 +920,7 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 <pre><code class="language-bash"><h1>在 Claude Code 中输入：</h1>
 /memory</p><h1>检查哪些文件处于活跃状态</h1>
 <h1>询问："此目录加载了哪些 memory 文件？"</h1>
-</code></pre><h3>练习 3：导入外部文档</h3><p>引用现有文档而非重复：</p><pre><code class="language-markdown"><h2 id="项目文档">项目文档</h2><li>架构：@docs/architecture.md</li>
+</code></pre><h3 id="练习-3-导入外部文档">练习 3：导入外部文档</h3><p>引用现有文档而非重复：</p><pre><code class="language-markdown"><h2 id="项目文档">项目文档</h2><li>架构：@docs/architecture.md</li>
 <li>API 参考：@docs/api-reference.md  </li>
 <li>贡献指南：@CONTRIBUTING.md</li>
 <li>代码风格：@docs/style-guide.md</li><h2 id="快速参考">快速参考</h2>
@@ -931,7 +931,7 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 </code></pre><p><strong>测试导入是否工作：</strong>
 <pre><code class="language-bash"><h1>询问 Claude 关于导入文档涵盖的主题</h1>
 "我们的 API 认证方式是什么？"</p><h1>Claude 应引用 @docs/api-reference.md</h1>
-</code></pre><h3>练习 4：快速 Memory 更新</h3><p>在对话中添加规则无需编辑文件：</p><p><strong>单行添加：</strong>
+</code></pre><h3 id="练习-4-快速-memory-更新">练习 4：快速 Memory 更新</h3><p>在对话中添加规则无需编辑文件：</p><p><strong>单行添加：</strong>
 <pre><code class="language-bash"><h1>始终使用提前返回而非深层嵌套</h1>
 </code></pre><p><strong>多行添加：</strong>
 <pre><code class="language-bash"><h1>new rule into memory</h1>
@@ -950,7 +950,7 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 <pre><code class="language-bash"><h1>检查 memory</h1>
 /memory</p><h1>要求 Claude 应用规则</h1>
 "审查此函数的错误处理"
-</code></pre><h3>练习 5：团队协作的 Memory</h3><p>设置团队范围的 memory：</p><p><strong>步骤 1：创建共享 memory 文件</strong>
+</code></pre><h3 id="练习-5-团队协作的-memory">练习 5：团队协作的 Memory</h3><p>设置团队范围的 memory：</p><p><strong>步骤 1：创建共享 memory 文件</strong>
 <pre><code class="language-markdown"><h1>团队开发标准</h1><h2 id="代码审查检查清单">代码审查检查清单</h2>
 <li>[ ] 测试在本地通过</li>
 <li>[ ] 无硬编码密钥</li>
@@ -959,7 +959,7 @@ Claude 没有保存规则，因为我在任何地方都没有 <code>Claude.md</c
 <li>[ ] TypeScript 类型完整</li><h2 id="分支命名">分支命名</h2>
 <li>feature/<ticket-id>-<description></li>
 <li>fix/<ticket-id>-<description></li>
-<li>refactor/<description></li><h2 id="PR 模板">PR 模板</h2>
+<li>refactor/<description></li><h2 id="pr-模板">PR 模板</h2>
 <li>变更描述</li>
 <li>包含步骤的测试计划</li>
 <li>如有 UI 变更附截图</li>
@@ -974,7 +974,7 @@ git push
 </code></pre><p><strong>步骤 4：验证团队采用</strong>
 <pre><code class="language-bash"><h1>询问 Claude 关于团队标准</h1>
 "我们的代码审查检查清单是什么？"</p><h1>应引用已提交的 CLAUDE.md</h1>
-</code></pre><h2 id="最佳实践">最佳实践</h2><h3>应做 - 应包含什么</h3><li><strong>具体和详细</strong>：使用清晰、详细的指令而非模糊指导</li>
+</code></pre><h2 id="最佳实践">最佳实践</h2><h3 id="应做-应包含什么">应做 - 应包含什么</h3><li><strong>具体和详细</strong>：使用清晰、详细的指令而非模糊指导</li>
   - ✅ 好的做法："所有 JavaScript 文件使用 2 空格缩进"
   - ❌ 避免："遵循最佳实践"</p><li><strong>保持组织</strong>：用清晰的 markdown 章节和标题组织 memory 文件</li><li><strong>使用适当的层级级别</strong>：</li>
   - <strong>Managed policy</strong>：公司范围策略、安全标准、合规要求
@@ -983,7 +983,7 @@ git push
   - <strong>目录 memory</strong>：模块特定规则和覆盖</p><li><strong>利用导入</strong>：使用 <code>@path/to/file</code> 语法引用现有文档</li>
   - 支持最多 5 级递归嵌套
   - 避免 memory 文件间的重复
-  - 示例：<code>参见 @README.md 了解项目概述</code></p><li><strong>文档常用命令</strong>：包含你反复使用的命令以节省时间</li><li><strong>版本控制项目 memory</strong>：将项目级别的 CLAUDE.md 文件提交到 git 供团队使用</li><li><strong>定期审查</strong>：随项目演进和需求变化定期更新 memory</li><li><strong>提供具体示例</strong>：包含代码片段和特定场景</li><h3>不应做 - 应避免什么</h3><li><strong>不要存储密钥</strong>：永远不要包含 API keys、密码、tokens 或凭据</li><li><strong>不要包含敏感数据</strong>：无 PII、私人信息或专有密钥</li><li><strong>不要重复内容</strong>：使用导入（<code>@path</code>）引用现有文档而非重复</li><li><strong>不要模糊</strong>：避免像"遵循最佳实践"或"写好代码"这样的泛泛陈述</li><li><strong>不要过长</strong>：保持单个 memory 文件聚焦且少于 500 行</li><li><strong>不要过度组织</strong>：策略性使用层级；不要创建过多的子目录覆盖</li><li><strong>不要忘记更新</strong>：过时的 memory 会导致困惑和过时的实践</li><li><strong>不要超出嵌套限制</strong>：Memory 导入支持最多 5 级嵌套</li><h3>Memory 管理技巧</h3><p><strong>选择正确的 memory 级别：</strong></p><table>
+  - 示例：<code>参见 @README.md 了解项目概述</code></p><li><strong>文档常用命令</strong>：包含你反复使用的命令以节省时间</li><li><strong>版本控制项目 memory</strong>：将项目级别的 CLAUDE.md 文件提交到 git 供团队使用</li><li><strong>定期审查</strong>：随项目演进和需求变化定期更新 memory</li><li><strong>提供具体示例</strong>：包含代码片段和特定场景</li><h3 id="不应做-应避免什么">不应做 - 应避免什么</h3><li><strong>不要存储密钥</strong>：永远不要包含 API keys、密码、tokens 或凭据</li><li><strong>不要包含敏感数据</strong>：无 PII、私人信息或专有密钥</li><li><strong>不要重复内容</strong>：使用导入（<code>@path</code>）引用现有文档而非重复</li><li><strong>不要模糊</strong>：避免像"遵循最佳实践"或"写好代码"这样的泛泛陈述</li><li><strong>不要过长</strong>：保持单个 memory 文件聚焦且少于 500 行</li><li><strong>不要过度组织</strong>：策略性使用层级；不要创建过多的子目录覆盖</li><li><strong>不要忘记更新</strong>：过时的 memory 会导致困惑和过时的实践</li><li><strong>不要超出嵌套限制</strong>：Memory 导入支持最多 5 级嵌套</li><h3 id="memory-管理技巧">Memory 管理技巧</h3><p><strong>选择正确的 memory 级别：</strong></p><table>
 <thead>
 <tr>
 <th>用例</th>
@@ -1021,7 +1021,7 @@ git push
 @docs/architecture.md
 @package.json</p><h1>避免：复制已存在于其他地方的内容</h1>
 <h1>不要将 README 内容复制到 CLAUDE.md，只需导入它</h1>
-</code></pre><h2 id="安装说明">安装说明</h2><h3>设置项目 Memory</h3><p>#### 方法 1：使用 <code>/init</code> 命令（推荐）</p><p>设置项目 memory 的最快方式：</p><li><strong>导航到你的项目目录：</strong></li>
+</code></pre><h2 id="安装说明">安装说明</h2><h3 id="设置项目-memory">设置项目 Memory</h3><p>#### 方法 1：使用 <code>/init</code> 命令（推荐）</p><p>设置项目 memory 的最快方式：</p><li><strong>导航到你的项目目录：</strong></li>
    <pre><code class="language-bash">   cd /path/to/your/project
    </code></pre><li><strong>在 Claude Code 中运行 init 命令：</strong></li>
    <pre><code class="language-bash">   /init
@@ -1045,7 +1045,7 @@ git push
    <pre><code class="language-bash">   git add CLAUDE.md
    git commit -m "添加项目 memory 配置"
    </code></pre><p>#### 方法 3：使用 <code>#</code> 快速更新</p><p>CLAUDE.md 存在后，在对话中快速添加规则：</p><pre><code class="language-markdown"><h1>所有发布使用语义化版本号</h1><h1>提交前始终运行测试</h1><h1>倾向于组合而非继承</h1>
-</code></pre><p>Claude 将提示你选择要更新的 memory 文件。</p><h3>设置个人 Memory</h3><li><strong>创建 ~/.claude 目录：</strong></li>
+</code></pre><p>Claude 将提示你选择要更新的 memory 文件。</p><h3 id="设置个人-memory">设置个人 Memory</h3><li><strong>创建 ~/.claude 目录：</strong></li>
    <pre><code class="language-bash">   mkdir -p ~/.claude
    </code></pre><li><strong>创建个人 CLAUDE.md：</strong></li>
    <pre><code class="language-bash">   touch ~/.claude/CLAUDE.md
@@ -1057,7 +1057,7 @@ git push
    - 沟通风格：[你的风格]</p><p>   ## 代码偏好
    - [你的偏好]
    EOF
-   </code></pre><h3>设置目录特定 Memory</h3><li><strong>为特定目录创建 memory：</strong></li>
+   </code></pre><h3 id="设置目录特定-memory">设置目录特定 Memory</h3><li><strong>为特定目录创建 memory：</strong></li>
    <pre><code class="language-bash">   mkdir -p /path/to/directory/.claude
    touch /path/to/directory/CLAUDE.md
    </code></pre><li><strong>添加目录特定规则：</strong></li>
@@ -1067,13 +1067,13 @@ git push
    </code></pre><li><strong>提交到版本控制：</strong></li>
    <pre><code class="language-bash">   git add /path/to/directory/CLAUDE.md
    git commit -m "添加 [目录] memory 配置"
-   </code></pre><h3>验证设置</h3><li><strong>检查 memory 位置：</strong></li>
+   </code></pre><h3 id="验证设置">验证设置</h3><li><strong>检查 memory 位置：</strong></li>
    <pre><code class="language-bash">   # 项目根 memory
    ls -la ./CLAUDE.md</p><p>   # 个人 memory
    ls -la ~/.claude/CLAUDE.md
    </code></pre><li><strong>Claude Code 将自动加载</strong> 启动会话时的这些文件</li><li><strong>在 Claude Code 中测试</strong> 在你的项目中启动新会话</li><h2 id="官方文档">官方文档</h2><p>有关最新信息，请参考官方 Claude Code 文档：</p><li><strong><a href="https://code.claude.com/docs/en/memory">Memory 文档</a></strong> - 完整 memory 系统参考</li>
 <li><strong><a href="https://code.claude.com/docs/en/interactive-mode">Slash 命令参考</a></strong> - 所有内置命令包括 <code>/init</code> 和 <code>/memory</code></li>
-<li><strong><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></strong> - 命令行界面文档</li><h3>官方文档中的关键技术细节</h3><p><strong>Memory 加载：</strong></p><li>所有 memory 文件在 Claude Code 启动时自动加载</li>
+<li><strong><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></strong> - 命令行界面文档</li><h3 id="官方文档中的关键技术细节">官方文档中的关键技术细节</h3><p><strong>Memory 加载：</strong></p><li>所有 memory 文件在 Claude Code 启动时自动加载</li>
 <li>Claude 从当前工作目录向上遍历以发现 CLAUDE.md 文件</li>
 <li>访问这些目录时，子树文件被上下文发现和加载</li><p><strong>导入语法：</strong></p><li>使用 <code>@path/to/file</code> 包含外部内容（如 <code>@~/.claude/my-project-instructions.md</code>）</li>
 <li>支持相对路径和绝对路径</li>
@@ -1087,10 +1087,10 @@ git push
 <li>User Memory</li>
 <li>User-Level Rules（<code>~/.claude/rules/</code>）</li>
 <li>Local Project Memory</li>
-<li>Auto Memory（最低优先级）</li><h2 id="相关概念链接">相关概念链接</h2><h3>集成点</h3>
+<li>Auto Memory（最低优先级）</li><h2 id="相关概念链接">相关概念链接</h2><h3 id="集成点">集成点</h3>
 <li><a href="../05-mcp/">MCP 协议</a> - 与 memory 并存的实时数据访问</li>
 <li><a href="../01-slash-commands/">Slash 命令</a> - 会话特定快捷方式</li>
-<li><a href="../03-skills/">Skills</a> - 带 memory 上下文的自动化工作流</li><h3>相关 Claude 功能</h3>
+<li><a href="../03-skills/">Skills</a> - 带 memory 上下文的自动化工作流</li><h3 id="相关-claude-功能">相关 Claude 功能</h3>
 <li><a href="https://claude.ai">Claude Web Memory</a> - 自动合成</li>
 <li><a href="https://code.claude.com/docs/en/memory">官方 Memory 文档</a> - Anthropic 文档</li></ul>
         </div>

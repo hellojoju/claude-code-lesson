@@ -88,8 +88,52 @@ class MarkdownProcessor {
     // 处理表格
     html = this.processTables(html);
 
-    // 应用转换规则
-    for (const rule of this.rules) {
+    // 先提取所有 h2/h3 标题并生成 id 映射
+    const headingIdMap = new Map();
+    const headingRegex = /^(#{2,3})\s+(.+)$/gm;
+    let match;
+    while ((match = headingRegex.exec(markdown)) !== null) {
+      const text = match[2].replace(/\*\*/g, '');
+      const id = this.slugify(text);
+      headingIdMap.set(text, id);
+    }
+
+    // 处理标题（带 id）
+    html = html.replace(/^### (.+)$/gm, (m, text) => {
+      const cleanText = text.replace(/\*\*/g, '');
+      const id = this.slugify(cleanText);
+      return `<h3 id="${id}">${text}</h3>`;
+    });
+    html = html.replace(/^## (.+)$/gm, (m, text) => {
+      const cleanText = text.replace(/\*\*/g, '');
+      const id = this.slugify(cleanText);
+      return `<h2 id="${id}">${text}</h2>`;
+    });
+    html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+    // 其余转换规则
+    const rules = [
+      // 粗体和斜体
+      { pattern: /\*\*(.+?)\*\*/g, replacement: '<strong>$1</strong>' },
+      { pattern: /\*(.+?)\*/g, replacement: '<em>$1</em>' },
+      // 代码块
+      { pattern: /```(\w+)?\n([\s\S]*?)```/g, replacement: '<pre><code class="language-$1">$2</code></pre>' },
+      // 内联代码
+      { pattern: /`([^`]+)`/g, replacement: '<code>$1</code>' },
+      // 链接
+      { pattern: /\[([^\]]+)\]\(([^)]+)\)/g, replacement: '<a href="$2">$1</a>' },
+      // 引用
+      { pattern: /^> (.+)$/gm, replacement: '<blockquote>$1</blockquote>' },
+      // 列表
+      { pattern: /^- (.+)$/gm, replacement: '<li>$1</li>' },
+      { pattern: /^\d+\. (.+)$/gm, replacement: '<li>$1</li>' },
+      // 水平线
+      { pattern: /^---$/gm, replacement: '<hr>' },
+      // 段落
+      { pattern: /\n\n/g, replacement: '</p><p>' },
+    ];
+
+    for (const rule of rules) {
       html = html.replace(rule.pattern, rule.replacement);
     }
 
