@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟡 **Intermediate** | ⏱ 90 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Bundle and share Claude Code extensions.
 
 # Claude Code Plugins
 
@@ -781,6 +791,162 @@ Complete PR review workflow with security, testing, and documentation checks.
 # ✅ Everything installed and configured
 # ✅ Ready to use immediately
 # ✅ Team can reproduce exact setup
+```
+
+## Try It Now
+
+### 🎯 Exercise 1: Install a Plugin
+
+Install and test a plugin:
+
+```bash
+# Step 1: Browse available plugins
+/plugin search code-review
+
+# Step 2: Install the plugin
+/plugin install code-review
+
+# Step 3: Verify installation
+/plugin list
+# Should show: code-review (installed)
+
+# Step 4: Test the plugin
+/code-review:review
+# Or just /review if no naming conflict
+```
+
+### 🎯 Exercise 2: Create a Simple Plugin
+
+Build a plugin with one skill:
+
+**Step 1: Create plugin directory**
+```bash
+mkdir -p my-first-plugin
+```
+
+**Step 2: Create plugin.json**
+```json
+{
+  "name": "my-first-plugin",
+  "version": "1.0.0",
+  "description": "A simple example plugin",
+  "skills": ["hello"]
+}
+```
+
+**Step 3: Create the skill**
+```bash
+mkdir -p my-first-plugin/skills/hello
+```
+
+Create `my-first-plugin/skills/hello/SKILL.md`:
+```markdown
+---
+name: hello
+description: Greet the user
+---
+
+# Hello!
+
+Welcome to Claude Code!
+
+Current time: !`date`
+Project: !`basename $(git rev-parse --show-toplevel 2>/dev/null || pwd)`
+
+What would you like to work on today?
+```
+
+**Step 4: Test locally**
+```bash
+# Load plugin temporarily
+/plugin load ./my-first-plugin
+
+# Test it
+/my-first-plugin:hello
+```
+
+### 🎯 Exercise 3: Plugin with Multiple Components
+
+Create a comprehensive plugin:
+
+**Structure:**
+```bash
+my-dev-plugin/
+├── plugin.json
+├── README.md
+├── skills/
+│   ├── review/
+│   │   └── SKILL.md
+│   ├── commit/
+│   │   └── SKILL.md
+│   └── test/
+│   │   └── SKILL.md
+├── commands/
+│   ├── deploy.md
+│   └── release.md
+└── hooks/
+    └── PostToolUse/
+        └── lint.sh
+```
+
+**plugin.json:**
+```json
+{
+  "name": "dev-workflow",
+  "version": "1.0.0",
+  "description": "Development workflow helpers",
+  "skills": ["review", "commit", "test"],
+  "commands": ["deploy", "release"],
+  "hooks": {
+    "PostToolUse": ["lint"]
+  }
+}
+```
+
+### 🎯 Exercise 4: Share Plugin with Team
+
+Publish your plugin:
+
+**Step 1: Create GitHub repository**
+```bash
+git init
+git add .
+git commit -m "Initial plugin release"
+git push origin main
+```
+
+**Step 2: Team members install**
+```bash
+# From repository URL
+/plugin install https://github.com/yourname/dev-workflow-plugin
+
+# Or from npm (if published)
+/plugin install dev-workflow-plugin
+```
+
+**Step 3: Verify team adoption**
+```bash
+# In Claude Code:
+/plugin list
+# Should show: dev-workflow (installed, v1.0.0)
+
+/dev-workflow:review
+```
+
+### 🎯 Exercise 5: Plugin Development Workflow
+
+Test and iterate on plugins:
+
+```bash
+# Development cycle:
+/plugin load ./my-plugin        # Load local version
+/my-plugin:test                 # Test functionality
+/plugin reload ./my-plugin      # Reload after changes
+/my-plugin:test                 # Test again
+
+# When satisfied:
+/plugin unload my-plugin        # Remove temporary load
+/plugin install ./my-plugin     # Install permanently
 ```
 
 ## Best Practices

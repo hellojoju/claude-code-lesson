@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟢 **Beginner** | ⏱ 40 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Create reusable, auto-invoked capabilities for Claude.
 
 # Agent Skills Guide
 
@@ -642,6 +652,256 @@ Skill(deploy *)
 ```
 
 **Hide individual skills** by adding `disable-model-invocation: true` to their frontmatter.
+
+## Try It Now
+
+### 🎯 Exercise 1: Create Your First Skill
+
+Build a `/hello` skill that greets team members:
+
+**Step 1: Create skill directory**
+```bash
+mkdir -p .claude/skills/hello
+```
+
+**Step 2: Create SKILL.md**
+```markdown
+---
+name: hello
+description: Greet team members. Use when user says hello or starts a session.
+---
+
+# Hello Skill
+
+Greet the user with:
+1. Current date and time
+2. Quick project status (branch, recent commits)
+3. Ask what they'd like to work on
+
+Be warm but concise.
+```
+
+**Step 3: Test it**
+```bash
+# In Claude Code:
+/hello
+
+# Or just type "hello" and Claude should auto-invoke
+```
+
+### 🎯 Exercise 2: Skill with Dynamic Context
+
+Create a `/status` skill using shell commands:
+
+```markdown
+---
+name: status
+description: Show comprehensive project status. Use when user asks about project health or status.
+allowed-tools: Bash(git *), Bash(npm *), Read
+---
+
+# Project Status
+
+## Git Context
+- Branch: !`git branch --show-current`
+- Changes: !`git status --short | head -10`
+- Recent: !`git log --oneline -5`
+
+## Package Info
+- Version: !`node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A"`
+- Dependencies: !`npm ls --depth=0 2>/dev/null | head -15 || echo "Run npm install first"`
+
+## Summary
+Provide a brief health report with recommendations.
+```
+
+**Test:**
+```bash
+/status
+```
+
+### 🎯 Exercise 3: Skill with Arguments
+
+Create a `/fix-issue` skill that takes an issue number:
+
+```markdown
+---
+name: fix-issue
+description: Fix a GitHub issue by number. Use when user mentions fixing an issue.
+argument-hint: issue-number
+allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
+---
+
+# Fix Issue #$ARGUMENTS
+
+## Steps
+
+1. **Fetch Issue Details**
+   - Title and description from GitHub
+   - Labels and priority
+   - Related files based on issue context
+
+2. **Analyze Codebase**
+   - Find relevant files
+   - Understand current implementation
+   - Identify root cause
+
+3. **Implement Fix**
+   - Make minimal, focused changes
+   - Add/update tests
+   - Follow project conventions from CLAUDE.md
+
+4. **Verify**
+   - Tests pass
+   - Fix addresses the issue
+   - No side effects
+
+5. **Commit**
+   - Reference issue in commit message
+   - Include co-authorship if collaborative
+
+## Output Format
+Report: issue title, changes made, tests added, verification results
+```
+
+**Test:**
+```bash
+/fix-issue 123
+```
+
+### 🎯 Exercise 4: Multi-File Skill Directory
+
+Create a complete `/review` skill with supporting files:
+
+**Directory structure:**
+```bash
+mkdir -p .claude/skills/review
+touch .claude/skills/review/SKILL.md
+touch .claude/skills/review/checklist.md
+touch .claude/skills/review/template.md
+```
+
+**SKILL.md:**
+```markdown
+---
+name: review
+description: Comprehensive code review. Use before commits or PRs.
+allowed-tools: Read, Grep, Glob, Bash(git *)
+---
+
+# Code Review
+
+Load checklist: @checklist.md
+
+## Current Changes
+!`git diff HEAD`
+
+## Review Process
+1. Load each changed file
+2. Check against checklist items
+3. Note issues by severity (CRITICAL, HIGH, MEDIUM, LOW)
+4. Provide actionable recommendations
+
+## Output Template
+Use: @template.md
+```
+
+**checklist.md:**
+```markdown
+# Review Checklist
+
+## Security
+- [ ] No hardcoded secrets
+- [ ] Input validation present
+- [ ] Proper error handling
+- [ ] No SQL injection risks
+
+## Quality
+- [ ] Functions < 50 lines
+- [ ] Files < 800 lines
+- [ ] No deep nesting (>4 levels)
+- [ ] Clear naming
+
+## Performance
+- [ ] No N+1 queries
+- [ ] Efficient algorithms
+- [ ] No memory leaks
+
+## Testing
+- [ ] Tests for new code
+- [ ] Edge cases covered
+- [ ] Mocks properly configured
+```
+
+**template.md:**
+```markdown
+# Review Report
+
+## Files Reviewed
+- List each file with severity summary
+
+## Issues Found
+
+| Severity | File | Line | Issue | Fix |
+|----------|------|------|-------|-----|
+
+## Summary
+- Critical issues: X (must fix)
+- High issues: Y (should fix)  
+- Medium issues: Z (consider)
+- Low issues: W (optional)
+
+## Recommendation
+[Approve / Block / Warn]
+```
+
+**Test:**
+```bash
+/review
+```
+
+### 🎯 Exercise 5: User-Only Skill (No Auto-Invocation)
+
+Create a `/deploy` skill that Claude shouldn't trigger automatically:
+
+```markdown
+---
+name: deploy
+description: Deploy to production. Only invoke when user explicitly requests deploy.
+disable-model-invocation: true
+allowed-tools: Bash(npm *), Bash(git *)
+---
+
+# Deploy to Production
+
+## Pre-flight Checks
+1. Tests passing: !`npm test 2>&1 | tail -5`
+2. Build succeeds: !`npm run build 2>&1 | tail -5`
+3. No uncommitted changes: !`git status --short`
+
+## Deploy Steps
+1. Tag release: !`git tag -a v!`node -e "console.log(require('./package.json').version)"` -m "Release"`
+2. Push tag: git push origin --tags
+3. Trigger CI: npm run deploy:trigger
+
+## Post-deploy
+1. Verify health: curl health endpoint
+2. Notify team: post to Slack
+
+## Rollback Plan
+If deployment fails:
+- Revert to previous tag
+- Run rollback script
+- Notify team immediately
+```
+
+**Test (only works when explicitly invoked):**
+```bash
+/deploy
+
+# Claude will NOT auto-invoke this even if you say "let's deploy"
+# It requires explicit /deploy command
+```
 
 ## Best Practices
 

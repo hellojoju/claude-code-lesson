@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🔴 **Advanced** | ⏱ 120 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Master planning mode, extended thinking, and automation.
 
 # Advanced Features
 
@@ -1810,6 +1820,163 @@ Create `.claude/config.json` in your project:
     }
   }
 }
+```
+
+## Try It Now
+
+### 🎯 Exercise 1: Plan Mode Practice
+
+Use plan mode for a complex feature:
+
+```bash
+# Enter plan mode
+/plan
+
+# Describe the task
+"I need to implement user authentication with:
+- JWT token generation
+- Refresh token rotation
+- Session management
+- Rate limiting
+
+Create a detailed implementation plan."
+
+# Claude creates a plan file
+# Review and modify the plan
+
+# Approve when ready
+# Claude executes step by step
+```
+
+### 🎯 Exercise 2: Extended Thinking for Complex Analysis
+
+Toggle extended thinking for deep reasoning:
+
+```bash
+# Enable extended thinking (default: on)
+# Option+T (macOS) or Alt+T (Windows/Linux)
+
+# Complex task requiring deep reasoning
+"Analyze whether we should adopt a microservices architecture. 
+Consider:
+- Current monolith complexity
+- Team size and expertise
+- Deployment frequency
+- Performance requirements
+- Long-term maintenance
+
+Provide a thorough analysis with trade-offs."
+
+# Extended thinking allocates up to 32K tokens for reasoning
+# Results show deeper analysis than standard responses
+```
+
+### 🎯 Exercise 3: Custom Permissions Baseline
+
+Set up permission profiles:
+
+**Step 1: Create permission profile**
+```json
+// ~/.claude/settings.json
+{
+  "allowedTools": {
+    "readOnly": [
+      "Read", "Glob", "Grep", "Bash(git status)", "Bash(git log)"
+    ],
+    "development": [
+      "Read", "Glob", "Grep", "Edit", "Write",
+      "Bash(npm *)", "Bash(git *)", "Bash(node *)"
+    ],
+    "fullAccess": [
+      "Read", "Glob", "Grep", "Edit", "Write", "Bash",
+      "Agent", "TaskCreate", "WebFetch"
+    ]
+  }
+}
+```
+
+**Step 2: Switch profiles**
+```bash
+# In Claude Code:
+/permissions
+# Select profile: readOnly, development, or fullAccess
+```
+
+### 🎯 Exercise 4: Auto-Compact for Long Sessions
+
+Manage context window in long sessions:
+
+```bash
+# Start long analysis session
+# After significant work:
+
+# Manual compact with focus
+/compact focus: authentication implementation
+
+# Claude summarizes:
+# - Preserves auth-related context
+# - Removes tangential discussions
+# - Keeps recent tool calls
+
+# Continue working with preserved context
+```
+
+### 🎯 Exercise 5: Combining Advanced Features
+
+Combine plan mode + extended thinking + permissions:
+
+```bash
+# Set strict permissions first
+/permissions
+# Select: readOnly (for analysis phase)
+
+# Enable extended thinking
+# Option+T
+
+# Enter plan mode
+/plan
+
+# Complex analysis task
+"Analyze our codebase architecture and propose improvements.
+I want:
+1. Current architecture assessment
+2. Identified bottlenecks
+3. Improvement recommendations with priorities
+4. Implementation roadmap
+
+Use extended thinking for thorough analysis."
+
+# Review the plan
+# Switch permissions when ready to implement
+/permissions
+# Select: development
+
+# Execute the plan
+```
+
+### 🎯 Exercise 6: Auto-Mode Configuration
+
+Set up automatic mode switching:
+
+**In CLAUDE.md:**
+```markdown
+## Auto-Mode Rules
+
+When I say "analyze" → use readOnly permissions
+When I say "implement" → use development permissions  
+When I say "experiment" → use fullAccess permissions
+
+Auto-switch based on task type.
+```
+
+**Test:**
+```bash
+# In Claude Code:
+"Analyze the authentication module"
+# → Automatically uses readOnly profile
+
+"Implement rate limiting"
+# → Automatically uses development profile
 ```
 
 ---

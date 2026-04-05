@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟡 **Intermediate** | ⏱ 70 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Automate workflows with event-driven scripts.
 
 # Hooks
 
@@ -16,6 +26,161 @@ Hooks are automated actions (shell commands, HTTP webhooks, LLM prompts, or suba
 - JSON-based input/output
 - Support for command, prompt, HTTP, and agent hook types
 - Pattern matching for tool-specific hooks
+
+---
+
+## The Hook Moment
+
+Your CI caught a lint error after 20 minutes of build. Hooks catch it in 2 seconds.
+
+**The pain cycle without hooks:**
+```
+Write code → Commit → Push → CI starts → 5 min install → 10 min build → 5 min test → FAIL → Fix → Repeat
+```
+
+**With hooks:**
+```
+Write code → Hook runs → 2 sec → Fix immediately → Commit clean code → CI passes
+```
+
+Hooks shift validation from "after the fact" to "while you're still thinking about it." They catch secrets before commit, format code before you switch files, and block dangerous commands before they execute.
+
+---
+
+## Choosing the Right Hook Event
+
+```mermaid
+flowchart TD
+    A["I want to trigger X when Y"] --> B{What event?}
+    
+    B -->|Tool execution| C{When?}
+    C -->|Before| D["PreToolUse<br/>Validate inputs, block dangerous ops"]
+    C -->|After success| E["PostToolUse<br/>Format, log, add context"]
+    C -->|After failure| F["PostToolUseFailure<br/>Error recovery, cleanup"]
+    
+    B -->|User input| G["UserPromptSubmit<br/>Validate/block prompts"]
+    
+    B -->|Session lifecycle| H{Which moment?}
+    H -->|Start| I["SessionStart<br/>Setup env, load config"]
+    H -->|End| J["Stop<br/>Verify completion, cleanup"]
+    H -->|Terminate| K["SessionEnd<br/>Final logging"]
+    
+    B -->|Permission dialog| L["PermissionRequest<br/>Auto-approve/deny"]
+    
+    B -->|Subagent| M{Which phase?}
+    M -->|Spawn| N["SubagentStart<br/>Subagent setup"]
+    M -->|Complete| O["SubagentStop<br/>Validate subagent results"]
+    
+    B -->|File/Dir change| P{What changed?}
+    P -->|Working dir| Q["CwdChanged<br/>Dir-specific setup"]
+    P -->|Watched file| R["FileChanged<br/>Rebuild, reload"]
+    P -->|Config file| S["ConfigChange<br/>React to settings"]
+    
+    B -->|Compaction| T{When?}
+    T -->|Before| U["PreCompact<br/>Save state"]
+    T -->|After| V["PostCompact<br/>Restore context"]
+    
+    D --> W{Need to block?}
+    W -->|Yes| X["Return exit code 2<br/>or permissionDecision: deny"]
+    W -->|No| Y["Return exit code 0<br/>or updatedInput"]
+    
+    E --> Z{Need feedback?}
+    Z -->|Yes| AA["Return additionalContext<br/>or block with reason"]
+    Z -->|No| AB["Silent pass (exit 0)"]
+    
+    style A fill:#e1f5fe
+    style X fill:#ffcdd2
+    style Y fill:#c8e6c9
+    style AA fill:#fff9c4
+    style AB fill:#c8e6c9
+```
+
+---
+
+## Try It Now: Your First Hook
+
+Let's create a hook that formats TypeScript files automatically after Claude writes them.
+
+**Step 1: Create the hooks directory**
+
+```bash
+mkdir -p .claude/hooks
+```
+
+**Step 2: Create the format hook**
+
+Create `.claude/hooks/auto-format.sh`:
+
+```bash
+#!/bin/bash
+# Auto-format code after Write/Edit
+# Receives JSON via stdin from Claude Code
+
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+
+# Skip if no file path
+[ -z "$FILE_PATH" ] && exit 0
+
+# Format based on extension
+case "$FILE_PATH" in
+  *.ts|*.tsx|*.js|*.jsx|*.json|*.md)
+    prettier --write "$FILE_PATH" 2>/dev/null && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+  *.py)
+    black "$FILE_PATH" 2>/dev/null && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+  *.go)
+    gofmt -w "$FILE_PATH" && \
+      echo "[Hook] Formatted: $FILE_PATH" >&2
+    ;;
+esac
+
+exit 0
+```
+
+**Step 3: Make it executable**
+
+```bash
+chmod +x .claude/hooks/auto-format.sh
+```
+
+**Step 4: Configure the hook**
+
+Add to `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Step 5: Test it**
+
+Ask Claude to write a TypeScript file. Watch the hook format it automatically:
+
+```
+> Create a simple utils.ts file with a formatDate function
+
+[Hook] Formatted: utils.ts  ← Hook ran automatically!
+```
+
+---
 
 ## Configuration
 
@@ -1104,6 +1269,709 @@ echo $?
 | **Parallelization** | All matching hooks run in parallel |
 | **Deduplication** | Identical hook commands deduplicated |
 | **Environment** | Runs in current directory with Claude Code's environment |
+
+---
+
+## Patterns & Recipes
+
+Battle-tested hook combinations that solve real problems.
+
+### Pattern 1: Format-on-Save Pipeline
+
+The most common hook pattern: automatic formatting after every file write.
+
+**Problem:** Code gets committed unformatted. CI fails. Developer time wasted.
+
+**Solution:** Chain formatters as PostToolUse hooks.
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh" },
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lint-check.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Benefits:**
+- Every file is formatted before you even see it
+- Lint errors caught instantly, not 20 minutes later in CI
+- Zero mental overhead - it just happens
+
+### Pattern 2: Security Gate
+
+Block dangerous operations before they execute.
+
+**Problem:** Claude sometimes suggests destructive commands. One wrong `rm -rf` can cost hours.
+
+**Solution:** PreToolUse validator that blocks dangerous patterns.
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**What it blocks:**
+- `rm -rf /` - Root deletion
+- `sudo rm` - Elevated deletion
+- `git push --force main` - Force push to main
+- `DROP DATABASE` - SQL destruction
+- `kubectl delete namespace` - Cluster destruction
+
+### Pattern 3: Test Guard
+
+Run relevant tests when code changes.
+
+**Problem:** Changes break tests. You don't know until CI runs.
+
+**Solution:** PostToolUse test runner for modified files.
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/test-runner.sh",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**How it works:**
+- Detects which file was modified
+- Finds related test files
+- Runs only those tests (fast feedback)
+- Reports results back to Claude
+
+### Pattern 4: Session Hygiene
+
+Track what happens in each session.
+
+**Problem:** Long sessions lose context. You forget what was done.
+
+**Solution:** Hook pair that tracks session activity.
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-init.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-summary.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Tracks:**
+- Files created/modified
+- Commands run
+- Tests passed/failed
+- Token usage
+
+### Pattern 5: Secret Scanner
+
+Prevent secrets from ever reaching git.
+
+**Problem:** API keys, passwords, tokens get committed. Public repos leak secrets.
+
+**Solution:** PostToolUse security scanner.
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/security-scan.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Scans for:**
+- Hardcoded passwords
+- API keys and tokens
+- AWS credentials
+- Private keys
+- Uses trufflehog/semgrep if available
+
+---
+
+## Try It Now: Security Guard
+
+Create a hook that blocks dangerous bash commands.
+
+**Step 1: Create the validator**
+
+`.claude/hooks/prompt-validator.sh`:
+
+```bash
+#!/bin/bash
+# Block dangerous bash commands
+# Hook: PreToolUse:Bash
+
+INPUT=$(cat)
+CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+
+# Dangerous patterns - exit 2 to block
+BLOCKED=(
+  'rm -rf /'
+  'rm -rf ~'
+  'sudo rm'
+  'git push --force main'
+  'git push --force master'
+  'DROP DATABASE'
+  'kubectl delete namespace'
+  ':(){ :|:& };:'  # Fork bomb
+)
+
+for pattern in "${BLOCKED[@]}"; do
+  if [[ "$CMD" == *"$pattern"* ]]; then
+    echo "[Hook] BLOCKED: Dangerous command detected: $pattern" >&2
+    echo "[Hook] Command: $CMD" >&2
+    exit 2  # Exit 2 = blocking error
+  fi
+done
+
+# Warn but allow for risky patterns
+WARN=(
+  'git reset --hard'
+  'npm publish'
+  'docker system prune'
+)
+
+for pattern in "${WARN[@]}"; do
+  if [[ "$CMD" == *"$pattern"* ]]; then
+    echo "[Hook] WARNING: Risky command: $pattern" >&2
+    # Continue but Claude sees the warning
+  fi
+done
+
+exit 0
+```
+
+**Step 2: Configure**
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Step 3: Test**
+
+Try asking Claude to run a dangerous command:
+
+```
+> Run rm -rf /tmp/test
+
+[Hook] BLOCKED: Dangerous command detected: rm -rf /
+[Hook] Command: rm -rf /tmp/test
+```
+
+Claude will see the block message and won't execute the command.
+
+---
+
+## Complete Hook Scripts Reference
+
+Production-ready hook scripts for common use cases. Each script includes error handling, logging, and configuration detection.
+
+### auto-format.sh
+
+Multi-language formatter with smart detection.
+
+```bash
+#!/bin/bash
+# auto-format.sh - Multi-language code formatter
+# Hook: PostToolUse (Write|Edit)
+# Receives JSON input via stdin
+
+set -euo pipefail
+
+# Parse JSON input
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+
+# Skip if not Write/Edit
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi
+
+# Skip if no file path
+[[ -z "$FILE_PATH" || ! -f "$FILE_PATH" ]] && exit 0
+
+# Log function
+log() {
+  echo "[Hook:format] $1" >&2
+}
+
+# Check for formatter config
+has_config() {
+  [[ -f ".prettierrc" || -f ".prettierrc.json" || -f "pyproject.toml" || -f ".rustfmt.toml" ]]
+}
+
+# Format based on file extension
+format_file() {
+  local ext="${FILE_PATH##*.}"
+  
+  case "$ext" in
+    js|jsx|ts|tsx|json|md|yaml|yml|css|scss)
+      if command -v prettier &>/dev/null; then
+        prettier --write "$FILE_PATH" 2>/dev/null && log "Formatted (prettier): $FILE_PATH"
+      fi
+      ;;
+    py)
+      if command -v black &>/dev/null; then
+        black "$FILE_PATH" 2>/dev/null && log "Formatted (black): $FILE_PATH"
+      elif command -v autopep8 &>/dev/null; then
+        autopep8 --in-place "$FILE_PATH" && log "Formatted (autopep8): $FILE_PATH"
+      fi
+      ;;
+    go)
+      if command -v gofmt &>/dev/null; then
+        gofmt -w "$FILE_PATH" && log "Formatted (gofmt): $FILE_PATH"
+      fi
+      ;;
+    rs)
+      if command -v rustfmt &>/dev/null; then
+        rustfmt "$FILE_PATH" && log "Formatted (rustfmt): $FILE_PATH"
+      fi
+      ;;
+    java)
+      if command -v google-java-format &>/dev/null; then
+        google-java-format -i "$FILE_PATH" && log "Formatted (google-java-format): $FILE_PATH"
+      fi
+      ;;
+    *)
+      # Unknown extension, skip
+      ;;
+  esac
+}
+
+format_file
+exit 0
+```
+
+### security-scan.sh
+
+Secrets and vulnerability scanner.
+
+```bash
+#!/bin/bash
+# security-scan.sh - Security scanner for secrets and vulnerabilities
+# Hook: PostToolUse (Write|Edit)
+# Receives JSON input via stdin
+
+set -euo pipefail
+
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+CONTENT=$(echo "$INPUT" | jq -r '.tool_input.content // .tool_input.new_string // empty')
+
+# Skip if not Write/Edit
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi
+
+[[ -z "$FILE_PATH" || ! -f "$FILE_PATH" ]] && exit 0
+
+log() {
+  echo "[Hook:security] $1" >&2
+}
+
+WARNINGS=()
+
+# Regex patterns for secrets
+check_secrets() {
+  # Hardcoded passwords
+  if grep -qE "(password|passwd|pwd)\s*=\s*['\"][^'\"]{8,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded password")
+  fi
+  
+  # API keys
+  if grep -qE "(api[_-]?key|apikey|access[_-]?token)\s*=\s*['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded API key")
+  fi
+  
+  # AWS keys
+  if grep -qE "AKIA[0-9A-Z]{16}" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("AWS access key detected")
+  fi
+  
+  # Private keys
+  if grep -q "BEGIN.*PRIVATE KEY" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Private key detected")
+  fi
+  
+  # Generic secrets
+  if grep -qE "(secret|token)\s*=\s*['\"][^'\"]{16,}['\"]" "$FILE_PATH" 2>/dev/null; then
+    WARNINGS+=("Potential hardcoded secret")
+  fi
+}
+
+# Run external scanners if available
+run_external_scanners() {
+  # Trufflehog - verified secrets only
+  if command -v trufflehog &>/dev/null; then
+    trufflehog filesystem "$FILE_PATH" --only-verified --json 2>/dev/null | \
+      jq -r '.DetectorName // empty' | while read detector; do
+        [[ -n "$detector" ]] && WARNINGS+=("Trufflehog: $detector")
+      done
+  fi
+  
+  # Semgrep - vulnerability patterns
+  if command -v semgrep &>/dev/null; then
+    semgrep --config=auto "$FILE_PATH" --json --quiet 2>/dev/null | \
+      jq -r '.results[].check_id // empty' | while read check; do
+        [[ -n "$check" ]] && WARNINGS+=("Semgrep: $check")
+      done
+  fi
+}
+
+# Main
+check_secrets
+run_external_scanners
+
+# Report warnings
+if [[ ${#WARNINGS[@]} -gt 0 ]]; then
+  log "Security warnings for $FILE_PATH:"
+  for warning in "${WARNINGS[@]}"; do
+    log "  - $warning"
+  done
+  
+  # Output JSON for Claude
+  jq -n --arg file "$FILE_PATH" --arg warnings "$(printf '%s; ' "${WARNINGS[@]}")" \
+    '{hookSpecificOutput: {hookEventName: "PostToolUse", additionalContext: "Security scan found issues in \($file): \($warnings)"}}'
+fi
+
+exit 0
+```
+
+### test-runner.sh
+
+Smart test runner for modified files.
+
+```bash
+#!/bin/bash
+# test-runner.sh - Run tests related to modified files
+# Hook: PostToolUse (Write|Edit)
+# Receives JSON input via stdin
+
+set -euo pipefail
+
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+
+# Skip if not Write/Edit
+if [[ "$TOOL_NAME" != "Write" && "$TOOL_NAME" != "Edit" ]]; then
+  exit 0
+fi
+
+[[ -z "$FILE_PATH" ]] && exit 0
+
+log() {
+  echo "[Hook:test] $1" >&2
+}
+
+# Find test file for source file
+find_test_file() {
+  local src="$1"
+  local base=$(basename "$src" | sed 's/\.[^.]*$//')
+  local dir=$(dirname "$src")
+  
+  # Common test file patterns
+  local patterns=(
+    "test_${base}.py"
+    "${base}_test.py"
+    "${base}.test.ts"
+    "${base}.test.js"
+    "${base}_test.go"
+    "${base}Test.java"
+  )
+  
+  # Check in test directories
+  local test_dirs=("tests" "test" "__tests__" "src/__tests__")
+  
+  for test_dir in "${test_dirs[@]}"; do
+    for pattern in "${patterns[@]}"; do
+      local candidate="$test_dir/$pattern"
+      [[ -f "$candidate" ]] && echo "$candidate" && return
+    done
+  done
+  
+  # Check same directory
+  for pattern in "${patterns[@]}"; do
+    [[ -f "$dir/$pattern" ]] && echo "$dir/$pattern" && return
+  done
+}
+
+# Run tests based on framework
+run_tests() {
+  local test_file="$1"
+  
+  if [[ "$test_file" == *.py ]]; then
+    if command -v pytest &>/dev/null; then
+      log "Running pytest on $test_file"
+      pytest "$test_file" -v --tb=short 2>&1 | tail -5 >&2
+    fi
+  elif [[ "$test_file" == *.ts || "$test_file" == *.js ]]; then
+    if command -v jest &>/dev/null; then
+      log "Running jest on $test_file"
+      jest "$test_file" --passWithNoTests 2>&1 | tail -5 >&2
+    elif command -v vitest &>/dev/null; then
+      log "Running vitest on $test_file"
+      vitest run "$test_file" 2>&1 | tail -5 >&2
+    fi
+  elif [[ "$test_file" == *.go ]]; then
+    log "Running go test"
+    go test -v "$(dirname "$test_file")" 2>&1 | tail -5 >&2
+  fi
+}
+
+# Main
+TEST_FILE=$(find_test_file "$FILE_PATH")
+
+if [[ -n "$TEST_FILE" ]]; then
+  log "Found test file: $TEST_FILE"
+  run_tests "$TEST_FILE"
+else
+  log "No test file found for $FILE_PATH"
+fi
+
+exit 0
+```
+
+### prompt-validator.sh
+
+Command and prompt safety validator.
+
+```bash
+#!/bin/bash
+# prompt-validator.sh - Validate bash commands and user prompts
+# Hook: PreToolUse (Bash) or UserPromptSubmit
+# Receives JSON input via stdin
+
+set -euo pipefail
+
+INPUT=$(cat)
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
+EVENT=$(echo "$INPUT" | jq -r '.hook_event_name // empty')
+
+log() {
+  echo "[Hook:validator] $1" >&2
+}
+
+# Get command or prompt based on event
+get_target() {
+  if [[ "$EVENT" == "PreToolUse" ]]; then
+    echo "$INPUT" | jq -r '.tool_input.command // empty'
+  elif [[ "$EVENT" == "UserPromptSubmit" ]]; then
+    echo "$INPUT" | jq -r '.user_prompt // .prompt // empty'
+  fi
+}
+
+TARGET=$(get_target)
+[[ -z "$TARGET" ]] && exit 0
+
+# Patterns that BLOCK execution (exit 2)
+BLOCKED_PATTERNS=(
+  'rm -rf /'
+  'rm -rf ~'
+  'rm -rf /*'
+  'sudo rm -rf'
+  'dd if=/dev/zero'
+  'dd if=/dev/urandom'
+  ':(){ :|:& };:'
+  'mkfs'
+  'git push --force main'
+  'git push --force master'
+  'git push --force origin main'
+  'git push --force origin master'
+  'DROP DATABASE'
+  'TRUNCATE TABLE'
+  'kubectl delete namespace'
+  'kubectl delete all'
+  'terraform destroy'
+)
+
+# Patterns that WARN but allow
+WARN_PATTERNS=(
+  'git reset --hard'
+  'npm publish'
+  'yarn publish'
+  'docker system prune'
+  'helm uninstall'
+  'kubectl delete'
+)
+
+# Check blocked patterns
+for pattern in "${BLOCKED_PATTERNS[@]}"; do
+  if [[ "$TARGET" == *"$pattern"* ]]; then
+    log "BLOCKED: Dangerous pattern detected"
+    log "Pattern: $pattern"
+    log "Target: $TARGET"
+    
+    # Return JSON block decision
+    jq -n --arg reason "Blocked dangerous operation: $pattern" \
+      '{decision: "block", reason: $reason}'
+    exit 0
+  fi
+done
+
+# Check warn patterns
+for pattern in "${WARN_PATTERNS[@]}"; do
+  if [[ "$TARGET" == *"$pattern"* ]]; then
+    log "WARNING: Risky operation: $pattern"
+    # Continue but Claude sees warning in stderr
+  fi
+done
+
+log "Validation passed"
+exit 0
+```
+
+### notify-session-end.sh
+
+Session completion notifications.
+
+```bash
+#!/bin/bash
+# notify-session-end.sh - Send notifications when session ends
+# Hook: SessionEnd or Stop
+# Receives JSON input via stdin
+
+set -euo pipefail
+
+INPUT=$(cat)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
+CWD=$(echo "$INPUT" | jq -r '.cwd // empty')
+REASON=$(echo "$INPUT" | jq -r '.reason // empty')
+
+log() {
+  echo "[Hook:notify] $1" >&2
+}
+
+# Desktop notification (macOS/Linux)
+desktop_notify() {
+  local title="Claude Code Session Ended"
+  local message="Session complete in $CWD"
+  
+  if [[ "$(uname)" == "Darwin" ]]; then
+    osascript -e 'display notification "'"$message"'" with title "'"$title"'"' 2>/dev/null || true
+  elif [[ "$(uname)" == "Linux" ]]; then
+    notify-send "$title" "$message" 2>/dev/null || true
+  fi
+}
+
+# Slack notification
+slack_notify() {
+  local webhook="${SLACK_WEBHOOK_URL:-}"
+  [[ -z "$webhook" ]] && return
+  
+  local project=$(basename "$CWD")
+  
+  curl -X POST "$webhook" \
+    -H 'Content-Type: application/json' \
+    -d '{"text": "Claude Code session ended in *'"$project"'*"}' \
+    --silent --max-time 5 || true
+  
+  log "Slack notification sent"
+}
+
+# Email notification
+email_notify() {
+  local to="${SESSION_EMAIL:-}"
+  [[ -z "$to" ]] && return
+  
+  local subject="Claude Code Session: $(basename "$CWD")"
+  
+  echo "Session ended in $CWD. Reason: $REASON" | mail -s "$subject" "$to" 2>/dev/null || true
+  
+  log "Email notification sent"
+}
+
+# Generate session summary
+generate_summary() {
+  local transcript=$(echo "$INPUT" | jq -r '.transcript_path // empty')
+  
+  if [[ -n "$transcript" && -f "$transcript" ]]; then
+    local lines=$(wc -l < "$transcript" 2>/dev/null || echo "0")
+    log "Session summary: $lines transcript lines"
+  fi
+}
+
+# Main
+log "Session ending: $REASON"
+generate_summary
+desktop_notify
+slack_notify
+email_notify
+
+exit 0
+```
+
+---
 
 ## Troubleshooting
 

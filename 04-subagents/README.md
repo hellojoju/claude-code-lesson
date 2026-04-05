@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟡 **Intermediate** | ⏱ 60 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Delegate tasks to specialized AI assistants.
 
 # Subagents - Complete Reference Guide
 
@@ -836,6 +846,162 @@ graph TB
 | Specialized expertise needed | Yes | Custom system prompts |
 | Long-running analysis | Yes | Prevents main context exhaustion |
 | Single task | No | Adds latency unnecessarily |
+
+## Try It Now
+
+### 🎯 Exercise 1: Explore Built-in Subagents
+
+Test Claude Code's built-in specialized agents:
+
+```bash
+# In Claude Code session:
+
+# Test Explore agent (codebase search)
+"I need to understand how authentication works in this codebase. Use the Explore agent."
+
+# Test Plan agent (implementation planning)
+"Plan the implementation of a new user profile feature."
+
+# Test Code Reviewer
+"Review the code I just wrote for security issues."
+
+# Test Build Error Resolver
+"My build is failing with TypeScript errors. Help me fix them."
+```
+
+### 🎯 Exercise 2: Create a Custom Subagent
+
+Create a specialized agent for your workflow:
+
+**Step 1: Define the agent purpose**
+```markdown
+# Need: A "Doc Writer" agent for documentation generation
+- Analyzes code structure
+- Generates comprehensive docs
+- Follows project documentation standards
+```
+
+**Step 2: Create agent configuration**
+```bash
+mkdir -p .claude/agents/doc-writer
+```
+
+Create `.claude/agents/doc-writer/agent.md`:
+```markdown
+---
+name: doc-writer
+description: Documentation generation specialist. Use when generating or updating docs.
+model: sonnet
+tools: Read, Write, Glob, Grep
+---
+
+# Documentation Writer Agent
+
+## Purpose
+Generate comprehensive, clear documentation for code modules.
+
+## Process
+
+1. **Analyze Code Structure**
+   - Read source files
+   - Identify key functions, classes, exports
+   - Understand module purpose
+
+2. **Generate Documentation**
+   - Module overview
+   - Function signatures and descriptions
+   - Usage examples
+   - Edge cases and error handling
+
+3. **Follow Standards**
+   - Check CLAUDE.md for project doc conventions
+   - Use consistent formatting
+   - Include code examples
+
+4. **Output Format**
+   ```markdown
+   # Module Name
+   
+   ## Overview
+   Brief description
+   
+   ## API Reference
+   ### Function Name
+   **Signature:** `functionName(param1, param2)`
+   **Purpose:** Description
+   **Returns:** Type
+   
+   ## Usage Examples
+   ```typescript
+   // Example code
+   ```
+   
+   ## Notes
+   - Edge cases
+   - Performance considerations
+   ```
+```
+
+**Step 3: Test the agent**
+```bash
+# Invoke in Claude Code
+"Use the doc-writer agent to document src/utils/helpers.ts"
+
+# Or use Agent tool directly
+Agent(subagent_type: "doc-writer", prompt: "Document src/utils/helpers.ts")
+```
+
+### 🎯 Exercise 3: Parallel Subagent Execution
+
+Run multiple agents simultaneously:
+
+```bash
+# In Claude Code:
+
+"I need a comprehensive code analysis. Run these agents in parallel:
+1. Security reviewer - check for vulnerabilities
+2. Performance optimizer - find bottlenecks
+3. Code reviewer - check quality and style
+
+After all complete, summarize findings."
+```
+
+**Expected behavior:**
+- Claude launches 3 subagents simultaneously
+- Each runs in isolated context
+- Results merged into final summary
+
+### 🎯 Exercise 4: Multi-Perspective Analysis
+
+Use split-role subagents for complex decisions:
+
+```bash
+"Analyze whether we should migrate from REST to GraphQL. Use split-role subagents:
+- Factual reviewer: Check technical facts
+- Senior engineer: Evaluate architecture impact
+- Security expert: Assess security implications
+- Consistency reviewer: Check alignment with existing patterns
+
+Provide a synthesized recommendation."
+```
+
+### 🎯 Exercise 5: Context Isolation Testing
+
+Test subagent context isolation:
+
+```bash
+# Step 1: Load large context in main session
+"Read all files in src/ and summarize the architecture"
+
+# Step 2: Run subagent without context pollution
+"Now use the code-reviewer agent to review src/api/users.ts"
+# The subagent won't have all the src/* files loaded
+# It starts fresh, preventing context bias
+
+# Step 3: Compare
+# Main session: broad but might miss details
+# Subagent: focused deep review
+```
 
 ---
 

@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟡 **Intermediate** | ⏱ 50 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Connect Claude to external tools and live data sources.
 
 # MCP (Model Context Protocol)
 
@@ -936,6 +946,145 @@ npx mcporter list
 ```
 
 MCPorter complements the code-execution approach described above by providing the runtime infrastructure for calling MCP tools as typed APIs — making it straightforward to keep intermediate data out of the model context.
+
+## Try It Now
+
+### 🎯 Exercise 1: Install Your First MCP Server
+
+Install the GitHub MCP server for PR management:
+
+**Step 1: Add GitHub MCP**
+```bash
+/mcp
+# Select "Add MCP server"
+# Choose "github" from the list
+# Or manually:
+/mcp add github
+```
+
+**Step 2: Authenticate**
+```bash
+/mcp github auth
+# Follow OAuth flow
+# Grant necessary permissions
+```
+
+**Step 3: Test the tools**
+```bash
+# In Claude Code:
+/mcp__github__list_prs
+/mcp__github__get_issue 123
+```
+
+### 🎯 Exercise 2: Use MCP Tools in Workflow
+
+Integrate MCP into your daily workflow:
+
+```bash
+# Morning routine with MCP
+/mcp__github__list_prs status:open
+# Shows open PRs needing review
+
+/mcp__github__get_issue 456
+# Get details on issue you're working on
+
+# After completing work
+/mcp__github__pr_review 789
+# Review PR with GitHub context
+```
+
+### 🎯 Exercise 3: MCP Prompts as Commands
+
+MCP servers expose prompts as slash commands:
+
+```bash
+# GitHub MCP prompts
+/mcp__github__create_pr title="Add auth feature" body="..."
+/mcp__github__comment_issue 123 "Fixed in PR #456"
+
+# Jira MCP prompts (if configured)
+/mcp__jira__create_issue "Bug in login" priority=high
+/mcp__jira__update_status ISSUE-123 "In Progress"
+```
+
+### 🎯 Exercise 4: Custom MCP Server (Advanced)
+
+Create a simple MCP server for your project:
+
+**Step 1: Create server package**
+```bash
+mkdir my-mcp-server
+cd my-mcp-server
+npm init -y
+npm install @modelcontextprotocol/sdk
+```
+
+**Step 2: Implement server**
+```typescript
+// server.ts
+import { Server } from '@modelcontextprotocol/sdk';
+
+const server = new Server({
+  name: 'my-project-mcp',
+  version: '1.0.0'
+});
+
+// Add a custom tool
+server.addTool({
+  name: 'get-project-stats',
+  description: 'Get project statistics',
+  inputSchema: { type: 'object', properties: {} },
+  handler: async () => {
+    // Your custom logic
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          files: await countFiles(),
+          tests: await countTests(),
+          coverage: await getCoverage()
+        })
+      }]
+    };
+  }
+});
+
+server.start();
+```
+
+**Step 3: Configure in Claude Code**
+```bash
+/mcp add custom --command "node my-mcp-server/server.js"
+```
+
+**Step 4: Use your tool**
+```bash
+/mcp__custom__get-project-stats
+```
+
+### 🎯 Exercise 5: MCP with Subagents
+
+Combine MCP tools with subagent delegation:
+
+```bash
+# In Claude Code:
+"Use the github MCP to fetch PR #456, then use the code-reviewer agent to analyze the changes"
+
+# Flow:
+# 1. MCP fetches PR data
+# 2. Subagent reviews code
+# 3. Results combined
+```
+
+**More complex workflow:**
+```bash
+"I'm working on issue #123. 
+1. Use github MCP to get issue details
+2. Use Explore agent to find related code
+3. Use Plan agent to design solution
+4. Implement the fix
+5. Use github MCP to create PR referencing the issue"
+```
 
 ## Best Practices
 

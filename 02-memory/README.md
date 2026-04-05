@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟢 **Beginner** | ⏱ 45 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Set up persistent context across Claude Code sessions.
 
 # Memory Guide
 
@@ -893,6 +903,223 @@ graph LR
 - Increase test coverage to 90%
 - Implement caching strategy
 - Document architecture
+```
+
+## Try It Now
+
+### 🎯 Exercise 1: Create Your First Project Memory
+
+Create a CLAUDE.md file for your project:
+
+**Step 1: Initialize with `/init`**
+```bash
+/init
+```
+
+**Step 2: Customize the template**
+
+Add your project-specific information:
+
+```markdown
+# Project Name
+
+## Purpose
+Brief description of what this project does.
+
+## Architecture
+- Key directories and their purposes
+- Main entry points
+- Important patterns used
+
+## Development Rules
+- Always run tests before committing
+- Use conventional commit format
+- No console.log in production code
+
+## Commands
+- `npm test` - Run all tests
+- `npm run build` - Production build
+- `npm run lint` - Check code style
+```
+
+**Step 3: Test it**
+
+Ask Claude: "What do you know about this project?"
+
+Claude should reference your CLAUDE.md content.
+
+### 🎯 Exercise 2: Memory Hierarchy Setup
+
+Set up memory at different levels:
+
+**Global Memory (~/.claude/CLAUDE.md):**
+```markdown
+# My Global Preferences
+
+## Coding Style
+- Prefer functional programming patterns
+- Use TypeScript for type safety
+- Keep functions under 50 lines
+
+## Communication
+- Be concise, avoid fluff
+- Explain reasoning before code
+- Use code examples over theory
+```
+
+**Project Memory (.claude/CLAUDE.md):**
+```markdown
+## Project-Specific Rules
+
+extends: @~/.claude/CLAUDE.md
+
+## Test Coverage
+- Minimum 80% coverage required
+- All new features must have tests
+- Use Jest for unit tests, Playwright for E2E
+
+## Git Workflow
+- Feature branches from main
+- PRs require 2 approvals
+- Squash merge to main
+```
+
+**Directory Memory (src/api/.claude/CLAUDE.md):**
+```markdown
+## API Module Rules
+
+## Authentication
+- All endpoints require auth token
+- Use JWT with 24-hour expiry
+- Rate limit: 100 requests/minute
+
+## Response Format
+{
+  "success": boolean,
+  "data": object | null,
+  "error": string | null
+}
+```
+
+**Verify hierarchy:**
+```bash
+# In Claude Code, type:
+/memory
+
+# Check which files are active
+# Ask: "What memory files are loaded for this directory?"
+```
+
+### 🎯 Exercise 3: Import External Documentation
+
+Reference existing docs instead of duplicating:
+
+```markdown
+## Project Documentation
+
+- Architecture: @docs/architecture.md
+- API Reference: @docs/api-reference.md  
+- Contributing: @CONTRIBUTING.md
+- Code Style: @docs/style-guide.md
+
+## Quick Reference
+For details not covered in imported docs:
+- Use PostgreSQL for database
+- Redis for caching
+- Docker for local development
+```
+
+**Test imports work:**
+```bash
+# Ask Claude about a topic covered in imported docs
+"What's our API authentication approach?"
+
+# Claude should reference @docs/api-reference.md
+```
+
+### 🎯 Exercise 4: Quick Memory Updates
+
+Add rules during conversation without editing files:
+
+**Single-line addition:**
+```bash
+# Always use early returns instead of deep nesting
+```
+
+**Multi-line addition:**
+```bash
+# new rule into memory
+## Error Handling Pattern
+- Catch errors at function boundaries
+- Log with context (function name, inputs)
+- Return structured error objects
+- Never swallow errors silently
+```
+
+**Conversational addition:**
+```bash
+# remember this
+When working with async functions:
+- Always use async/await over raw promises
+- Handle errors with try-catch
+- Use Promise.all for parallel operations
+```
+
+**Verify additions:**
+```bash
+# Check memory
+/memory
+
+# Ask Claude to apply the rule
+"Review this function for error handling"
+```
+
+### 🎯 Exercise 5: Memory for Team Collaboration
+
+Set up team-wide memory:
+
+**Step 1: Create shared memory file**
+```markdown
+# Team Development Standards
+
+## Code Review Checklist
+- [ ] Tests pass locally
+- [ ] No hardcoded secrets
+- [ ] Functions < 50 lines
+- [ ] Proper error handling
+- [ ] TypeScript types complete
+
+## Branch Naming
+- feature/<ticket-id>-<description>
+- fix/<ticket-id>-<description>
+- refactor/<description>
+
+## PR Template
+- Description of changes
+- Test plan with steps
+- Screenshots if UI changes
+- Breaking changes noted
+```
+
+**Step 2: Commit to repository**
+```bash
+git add .claude/CLAUDE.md
+git commit -m "docs: add team development standards to memory"
+git push
+```
+
+**Step 3: Team members sync**
+```bash
+git pull
+# Memory automatically loads on next Claude session
+```
+
+**Step 4: Verify team adoption**
+```bash
+# Ask Claude about team standards
+"What's our code review checklist?"
+
+# Should reference the committed CLAUDE.md
 ```
 
 ## Best Practices

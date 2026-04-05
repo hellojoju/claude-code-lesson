@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟢 **Beginner** | ⏱ 35 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Use Claude Code from the command line effectively.
 
 # CLI Reference
 
@@ -813,6 +823,126 @@ claude -p --output-format json "query"
 - Check `--permission-mode` setting
 - Review `--allowedTools` and `--disallowedTools` flags
 - Use `--dangerously-skip-permissions` for automation (with caution)
+
+## Try It Now
+
+### 🎯 Exercise 1: Headless Mode Basics
+
+Run Claude in headless mode for automation:
+
+```bash
+# Single prompt execution
+claude "Summarize the architecture of this project"
+
+# With specific output
+claude "Generate a README for src/utils/" > utils-readme.md
+
+# Pipe input
+cat error.log | claude "Explain these errors and suggest fixes"
+
+# With permissions
+claude --permission-mode acceptEdits "Fix the linting errors in src/"
+```
+
+### 🎯 Exercise 2: CI/CD Integration
+
+Add Claude to your CI pipeline:
+
+**GitHub Actions workflow:**
+```yaml
+name: Code Review
+
+on: [pull_request]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Claude Code Review
+        run: |
+          claude --permission-mode acceptEdits \
+            "Review the changes in this PR for:
+            - Security vulnerabilities
+            - Code quality issues
+            - Test coverage gaps
+            
+            Output a markdown report."
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```
+
+### 🎯 Exercise 3: Automated Testing Workflow
+
+Create a test generation script:
+
+```bash
+#!/bin/bash
+# generate-tests.sh
+
+for file in src/**/*.ts; do
+  echo "Generating tests for $file..."
+  claude --permission-mode acceptEdits \
+    "Generate comprehensive unit tests for @$file
+    Follow project test conventions from @CLAUDE.md
+    Include edge cases and error scenarios" \
+    > "tests/${file%.ts}.test.ts"
+done
+```
+
+### 🎯 Exercise 4: Batch Operations
+
+Process multiple files with Claude:
+
+```bash
+# Batch documentation generation
+find src -name "*.ts" -type f | while read file; do
+  claude "Generate API documentation for @$file in markdown format" \
+    >> docs/api-reference.md
+done
+
+# Batch code review
+claude "Review all modified files since last commit:
+!`git diff --name-only HEAD~1`
+Provide a consolidated review report."
+```
+
+### 🎯 Exercise 5: Session Management
+
+Manage Claude sessions via CLI:
+
+```bash
+# List recent sessions
+claude --list-sessions
+
+# Resume a session
+claude --resume session-abc123
+
+# Export session for review
+claude --export session-abc123 > session-log.md
+
+# Create named session
+claude --session-name "auth-feature" "Implement JWT authentication"
+```
+
+### 🎯 Exercise 6: Permission Profiles
+
+Use different permission modes:
+
+```bash
+# Read-only analysis
+claude --permission-mode readOnly \
+  "Analyze the codebase structure and identify refactoring opportunities"
+
+# Development with safety
+claude --permission-mode acceptEdits \
+  "Implement the suggested refactoring"
+
+# Full automation (caution!)
+claude --dangerously-skip-permissions \
+  "Complete the full CI pipeline: test, build, deploy"
+```
 
 ---
 

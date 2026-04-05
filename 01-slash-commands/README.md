@@ -1,7 +1,17 @@
+---
+cc_version_verified: "2.1.92"
+last_verified: "2026-04-05"
+---
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture>
+
+> 🟢 **Beginner** | ⏱ 30 minutes
+>
+> ✅ Verified against Claude Code **v2.1.92** · Last verified: 2026-04-05
+
+**What you'll build:** Learn to use slash commands for faster workflows.
 
 # Slash Commands
 
@@ -510,6 +520,467 @@ Deploy the application to production:
 | Use `disable-model-invocation` for side effects | Skip the description field |
 | Use `!` prefix for dynamic context | Assume Claude knows current state |
 | Organize related files in skill directories | Put everything in one file |
+
+## Try It Now
+
+### 🎯 Exercise 1: Create Your First Skill
+
+Create a simple `/hello` skill that greets you:
+
+```bash
+mkdir -p .claude/skills/hello
+```
+
+Create `.claude/skills/hello/SKILL.md`:
+
+```yaml
+---
+name: hello
+description: Greet the user. Use when user says hello or starts a session.
+---
+
+# Hello Skill
+
+Greet the user warmly and ask what they'd like to work on today.
+
+Include:
+1. Current time and date
+2. Quick status of the project (git branch, recent activity)
+3. Suggestions for what to work on based on recent changes
+```
+
+Test it: `/hello`
+
+### 🎯 Exercise 2: Dynamic Context Skill
+
+Create a `/status` skill that shows project status:
+
+```yaml
+---
+name: status
+description: Show comprehensive project status. Use when user asks about project state.
+allowed-tools: Bash(git *), Bash(npm *), Read
+---
+
+# Project Status Report
+
+## Git Status
+- Current branch: !`git branch --show-current`
+- Uncommitted changes: !`git status --short`
+- Recent commits: !`git log --oneline -5`
+
+## Dependencies
+- Package.json: @package.json
+- Outdated packages: !`npm outdated --json 2>/dev/null || echo "no outdated packages"`
+
+## Test Coverage
+- Last test run: !`npm test -- --coverage --silent 2>&1 | tail -20 || echo "tests not configured"`
+
+## Summary
+
+Provide a brief summary of:
+1. What needs attention (uncommitted changes, failing tests)
+2. What's ready to ship
+3. Recommended next steps
+```
+
+Test it: `/status`
+
+### 🎯 Exercise 3: Command Chaining Workflow
+
+Combine multiple commands for a complete workflow:
+
+```bash
+# Morning routine
+/status          # Check project health
+/diff            # Review yesterday's changes
+/memory          # Add context for today's focus
+
+# Pre-commit routine  
+/optimize        # Check for optimization opportunities  
+/commit          # Create contextual commit
+
+# PR preparation
+/pr              # Full PR checklist
+```
+
+## Practical Workflows
+
+### Daily Development Cycle
+
+```mermaid
+graph LR
+    A[/status] --> B[/diff]
+    B --> C[Work on Code]
+    C --> D[/optimize]
+    D --> E[/commit]
+    E --> F{/tests pass?}
+    F -->|Yes| G[/pr]
+    F -->|No| C
+```
+
+**Morning startup:**
+```bash
+/status           # Project health check
+/compact focus:bugs  # Focus on bug fixes
+```
+
+**After completing work:**
+```bash
+/optimize         # Performance review
+/test             # Run tests
+/commit           # Contextual commit
+```
+
+### Code Review Workflow
+
+Create a `/review-branch` skill for comprehensive reviews:
+
+```yaml
+---
+name: review-branch
+description: Review a branch for quality, security, and performance. Use before merging PRs.
+argument-hint: branch-name
+allowed-tools: Bash(git *), Read, Grep, Glob
+---
+
+# Branch Review: $ARGUMENTS
+
+## Changes Summary
+- Files changed: !`git diff main...$ARGUMENTS --stat`
+- Commits included: !`git log main..$ARGUMENTS --oneline`
+
+## Quality Checks
+For each changed file:
+
+1. **Code Style**
+   - Functions < 50 lines
+   - Files < 800 lines
+   - No deep nesting (>4 levels)
+
+2. **Security**
+   - No hardcoded secrets
+   - Input validation present
+   - Proper error handling
+
+3. **Performance**
+   - No N+1 queries
+   - Efficient algorithms
+   - No memory leaks
+
+## Report Format
+
+| File | Quality | Security | Performance | Issues |
+|------|---------|----------|-------------|--------|
+
+## Recommendation
+
+Provide merge recommendation with:
+- Blocking issues (must fix)
+- Warnings (should fix)
+- Suggestions (nice to have)
+```
+
+### Release Workflow
+
+Create a `/release-check` skill:
+
+```yaml
+---
+name: release-check
+description: Pre-release validation checklist. Use before cutting a release.
+allowed-tools: Bash(npm *), Bash(git *), Read
+---
+
+# Release Checklist
+
+## Version Check
+- Current version: !`node -e "console.log(require('./package.json').version)"`
+- Changelog updated: Check CHANGELOG.md for current version entry
+
+## Quality Gates
+- All tests passing: !`npm test 2>&1 | tail -5`
+- No TypeScript errors: !`npx tsc --noEmit 2>&1 || echo "No TS errors"`
+- Lint clean: !`npm run lint 2>&1 | tail -5 || echo "Lint passed"`
+
+## Security Scan
+- No secrets in code: !`grep -r "api_key\|password\|secret" --include="*.js" --include="*.ts" src/ || echo "Clean"`
+- Dependencies audited: !`npm audit 2>&1 || echo "Audit passed"`
+
+## Documentation
+- README updated
+- API docs current
+- Migration guide if breaking changes
+
+## Final Report
+
+Provide:
+1. ✅ Passed checks
+2. ❌ Failed checks (blocking)
+3. ⚠️ Warnings (non-blocking)
+4. Release recommendation
+```
+
+## Advanced Patterns
+
+### Pattern 1: Context Inheritance
+
+Skills can reference other skills or memory:
+
+```yaml
+---
+name: smart-commit
+description: Intelligent commit using project memory
+---
+
+# Smart Commit
+
+Use context from:
+- @CLAUDE.md for project conventions
+- Recent memory for current focus
+
+## Steps
+
+1. Review changes against CLAUDE.md conventions
+2. Check memory for ongoing work
+3. Create commit message matching project style
+4. Include co-authorship if collaborative
+```
+
+### Pattern 2: Conditional Execution
+
+Use shell conditions for smart behavior:
+
+```yaml
+---
+name: safe-push
+description: Safe push with automatic checks
+allowed-tools: Bash(git *), Bash(npm *)
+---
+
+# Safe Push
+
+## Pre-flight Checks
+- Tests passing: !`npm test 2>&1 | grep -q "passed" && echo "PASS" || echo "FAIL"`
+- Branch clean: !`git status --porcelain | wc -l | xargs`
+
+## Conditional Logic
+- If tests FAIL: "Cannot push - tests failing. Run /test-fix first"
+- If branch dirty: "Cannot push - uncommitted changes. Run /commit first"
+- If all PASS: Proceed with push
+
+## Push Steps
+!`npm test 2>&1 | grep -q "passed" && git push || echo "Blocked: tests failing"`
+```
+
+### Pattern 3: Error Recovery
+
+Handle errors gracefully:
+
+```yaml
+---
+name: robust-deploy
+description: Deploy with rollback capability
+allowed-tools: Bash(npm *), Bash(git *)
+---
+
+# Robust Deploy
+
+## Pre-deploy Snapshot
+- Current commit: !`git rev-parse HEAD`
+- Current branch: !`git branch --show-current`
+
+## Deploy Steps
+1. Build: !`npm run build 2>&1 | tail -10`
+2. Deploy: !`npm run deploy 2>&1 | tail -10`
+3. Verify: !`curl -s https://app.example.com/health || echo "FAILED"`
+
+## Rollback on Failure
+If any step fails:
+```bash
+git checkout !`git rev-parse HEAD`  # Return to snapshot
+npm run rollback  # Custom rollback command
+```
+
+Report success or rollback reason.
+```
+
+### Pattern 4: Multi-File Processing
+
+Process multiple files efficiently:
+
+```yaml
+---
+name: batch-optimize
+description: Optimize multiple files in parallel
+allowed-tools: Read, Edit, Glob, Bash
+---
+
+# Batch Optimization
+
+## Find Target Files
+!`find src -name "*.ts" -type f | head -20`
+
+## For Each File
+1. Read file
+2. Analyze for:
+   - Unused imports
+   - Dead code
+   - Optimization opportunities
+3. Apply optimizations
+4. Track changes
+
+## Summary Report
+- Files processed: $FILES_COUNT
+- Optimizations applied: $OPTIMIZATIONS_COUNT
+- Lines reduced: $LINES_SAVED
+```
+
+### Pattern 5: Interactive Prompts
+
+Skills can prompt for user input:
+
+```yaml
+---
+name: interactive-review
+description: Interactive code review with user guidance
+---
+
+# Interactive Review
+
+## Phase 1: Overview
+Show summary of changes and ask:
+- "Focus on specific areas? (security, performance, style)"
+- Wait for user response
+
+## Phase 2: Deep Dive
+Based on user's focus area:
+- Show relevant issues
+- Ask for decisions on each
+
+## Phase 3: Apply
+- "Apply all approved changes?"
+- If yes: Make edits
+- If no: List for manual review
+```
+
+## Performance Considerations
+
+### Skill Loading Speed
+
+Skills load faster when:
+
+1. **Minimal frontmatter**: Only include necessary fields
+2. **Efficient shell commands**: Use `--quiet`, `--silent`, pipe to `head`
+3. **File references over reads**: `@file` is cached, `Read` is fresh
+4. **Lazy loading**: Don't include every file, use `!` commands to fetch when needed
+
+### Command Execution Speed
+
+| Approach | Speed | Use Case |
+|----------|-------|----------|
+| Static content | Fastest | Fixed instructions |
+| `!` command (cached) | Fast | Git status, package.json |
+| `!` command (fresh) | Medium | Test results, build output |
+| `@file` reference | Medium | Large files, templates |
+| Inline Read tool | Slowest | Real-time file inspection |
+
+### Optimization Example
+
+**Slow skill:**
+```yaml
+# Reads every file every time
+Check all these files:
+- @src/index.ts
+- @src/utils.ts
+- @src/config.ts
+- @src/app.ts
+```
+
+**Fast skill:**
+```yaml
+# Lazy loads only what's needed
+Check files matching pattern:
+!`find src -name "*.ts" | head -5`
+
+Then selectively read:
+"Which files need detailed review?"
+```
+
+## Common Pitfalls
+
+### Pitfall 1: Circular Dependencies
+
+**Problem:** Skill A references Skill B, which references Skill A.
+
+**Solution:** Use memory (CLAUDE.md) for shared context instead of skill chains.
+
+### Pitfall 2: Permission Overreach
+
+**Problem:** Skill requests tools it doesn't need.
+
+```yaml
+# BAD: Requests everything
+allowed-tools: Bash(*), Read(*), Write(*)
+```
+
+**Solution:** Request only necessary tools:
+
+```yaml
+# GOOD: Specific permissions
+allowed-tools: Bash(git status), Bash(git log), Read
+```
+
+### Pitfall 3: Overly Complex Skills
+
+**Problem:** One skill does too much.
+
+**Solution:** Decompose into focused skills:
+
+```yaml
+# Instead of /full-review, create:
+/review-security  # Security-focused
+/review-performance  # Performance-focused  
+/review-style  # Style-focused
+```
+
+### Pitfall 4: Missing Error Handling
+
+**Problem:** Skill fails without guidance.
+
+```yaml
+# BAD: No fallback
+Run tests: !`npm test`
+```
+
+**Solution:** Include error guidance:
+
+```yaml
+# GOOD: Error handling
+Run tests: !`npm test 2>&1 || echo "Tests failed - check output above"`
+
+If tests fail:
+1. Show test output
+2. Suggest running /debug-tests
+3. Don't proceed with dependent steps
+```
+
+### Pitfall 5: Hardcoded Paths
+
+**Problem:** Skill only works in specific project.
+
+```yaml
+# BAD: Hardcoded
+Check: @/Users/dev/my-project/src/app.ts
+```
+
+**Solution:** Use relative paths and discovery:
+
+```yaml
+# GOOD: Portable
+Check: @src/app.ts
+Or discover: !`find . -name "app.ts" -type f`
+```
 
 ## Troubleshooting
 
