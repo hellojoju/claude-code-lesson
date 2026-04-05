@@ -80,31 +80,34 @@ class MarkdownProcessor {
   }
 
   /**
-   * Markdown 转 HTML
+   * Markdown 转 HTML - 重写，确保代码块不被破坏
    */
   toHtml(markdown) {
     let html = markdown;
 
-    // 先保护代码块，避免内部内容被处理
+    // 步骤 1: 提取并保护所有代码块
     const codeBlocks = [];
+    const CODEBLOCK_PREFIX = '\x00CB';
+    const CODEBLOCK_SUFFIX = 'CB\x00';
+
     html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
       const index = codeBlocks.length;
       codeBlocks.push({ lang: lang || '', code: code });
-      return `\n\n__CODEBLOCK_${index}__\n\n`;
+      return CODEBLOCK_PREFIX + index + CODEBLOCK_SUFFIX;
     });
 
-    // 处理表格
+    // 步骤 2: 处理表格
     html = this.processTables(html);
 
-    // 保护内联代码
+    // 步骤 3: 保护内联代码
     const inlineCodes = [];
     html = html.replace(/`([^`]+)`/g, (match, code) => {
       const index = inlineCodes.length;
       inlineCodes.push(code);
-      return `__INLINECODE_${index}__`;
+      return `\x00IC${index}IC\x00`;
     });
 
-    // 处理标题（带 id）
+    // 步骤 4: 处理标题（带 id）
     html = html.replace(/^### (.+)$/gm, (m, text) => {
       const cleanText = text.replace(/\*\*/g, '');
       const id = this.slugify(cleanText);
@@ -117,75 +120,94 @@ class MarkdownProcessor {
     });
     html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
 
-    // 转换模块间相对链接为绝对路径
+    // 步骤 5: 转换模块间相对链接为绝对路径
     html = this.convertModuleLinks(html);
 
-    // 处理链接（必须在内联代码恢复之前）
+    // 步骤 6: 处理链接（必须在内联代码恢复之前）
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 
-    // 粗体和斜体
+    // 步骤 7: 粗体和斜体
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    // 引用
+    // 步骤 8: 引用
     html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
 
-    // 列表
+    // 步骤 9: 列表
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
     html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
 
-    // 水平线
+    // 步骤 10: 水平线
     html = html.replace(/^---$/gm, '<hr>');
 
-    // 恢复内联代码
+    // 步骤 11: 恢复内联代码
     inlineCodes.forEach((code, index) => {
-      html = html.replace(`__INLINECODE_${index}__`, `<code>${this.escapeHtml(code)}</code>`);
+      html = html.split(`\x00IC${index}IC\x00`).join(`<code>${this.escapeHtml(code)}</code>`);
     });
 
-    // 恢复代码块（转换为 HTML）
-    codeBlocks.forEach((block, index) => {
+    // 步骤 12: 段落处理（在代码块恢复之前）
+    html = this.processParagraphs(html);
+
+    // 步骤 13: 恢复代码块（转换为 HTML）
+    for (let i = 0; i < codeBlocks.length; i++) {
+      const placeholder = CODEBLOCK_PREFIX + i + CODEBLOCK_SUFFIX;
+      const block = codeBlocks[i];
       let codeHtml;
       if (block.lang === 'mermaid') {
         codeHtml = `<div class="mermaid">${block.code}</div>`;
       } else {
         codeHtml = `<pre><code class="language-${block.lang}">${this.escapeHtml(block.code)}</code></pre>`;
       }
-      html = html.replace(`__CODEBLOCK_${index}__`, codeHtml);
-    });
+      html = html.split(placeholder).join(codeHtml);
+    }
 
-    // 段落处理
-    html = html.replace(/\n\n+/g, '</p><p>');
-    html = '<p>' + html + '</p>';
-    html = html.replace(/<p><\/p>/g, '');
-    html = html.replace(/<p>(<h[1-6])/g, '$1');
-    html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<pre>)/g, '$1');
-    html = html.replace(/(<\/pre>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<blockquote>)/g, '$1');
-    html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<ul>)/g, '$1');
-    html = html.replace(/(<\/ul>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<ol>)/g, '$1');
-    html = html.replace(/(<\/ol>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<hr>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<li>)/g, '$1');
-    html = html.replace(/(<\/li>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<table>)/g, '$1');
-    html = html.replace(/(<\/table>)<\/p>/g, '$1');
-    html = html.replace(/<p>(<div class="mermaid">)/g, '$1');
-    html = html.replace(/(<\/div>)<\/p>/g, '$1');
-
-    // 处理列表
+    // 步骤 14: 处理列表 - 将相邻的 li 包装在 ul 中
     html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
     html = html.replace(/<\/ul>\s*<ul>/g, '');
 
-    // 处理徽章行
+    // 步骤 15: 处理徽章行
     html = this.processBadges(html);
 
-    // 处理 Try It Now 区块
+    // 步骤 16: 处理 Try It Now 区块
     html = this.processTryItNow(html);
 
     return html;
+  }
+
+  /**
+   * 处理段落 - 不处理占位符内的内容
+   */
+  processParagraphs(html) {
+    // 分割成段落块
+    // 识别块级元素和占位符
+    const blockPattern = /(<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>|<blockquote>[\s\S]*?<\/blockquote>|<hr>|<ul>[\s\S]*?<\/ul>|<table>[\s\S]*?<\/table>|\x00CB\d+CB\x00)/g;
+
+    const parts = html.split(blockPattern);
+    let result = [];
+
+    for (const part of parts) {
+      if (part.match(blockPattern)) {
+        // 块级元素或代码块占位符，直接保留
+        result.push(part);
+      } else if (part.trim() === '') {
+        // 空内容，跳过
+        continue;
+      } else {
+        // 普通文本，包装在 <p> 中
+        // 处理多行文本
+        const lines = part.split(/\n\n+/);
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed && !trimmed.startsWith('<')) {
+            result.push(`<p>${trimmed}</p>`);
+          } else if (trimmed) {
+            result.push(trimmed);
+          }
+        }
+      }
+    }
+
+    return result.join('\n');
   }
 
   /**
