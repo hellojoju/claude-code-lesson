@@ -207,11 +207,10 @@
 <body>
   <nav>
     <div class="container">
-      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
-        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="/content/01-slash-commands.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -241,15 +240,15 @@
 </picture></p><blockquote>🟢 <strong>初级</strong> | ⏱ 35 分钟</blockquote>
 >
 <blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将学习：</strong> 有效使用 Claude Code CLI/命令行界面。</p><h1>CLI 参考手册</h1><h2 id="概述">概述</h2><p>Claude Code CLI（命令行界面）是与 Claude Code 交互的主要方式。它提供了强大的选项，用于运行查询、管理会话、配置模型，以及将 Claude 集成到你的开发工作流中。</p><h2 id="架构">架构</h2><div class="mermaid">graph TD
-    A["用户终端"] -->|"claude [options] [query]"| B["Claude Code CLI"]
-    B -->|交互式| C["REPL 模式"]
-    B -->|"--print"| D["Print 模式 (SDK)"]
-    B -->|"--resume"| E["会话恢复"]
-    C -->|对话| F["Claude API"]
-    D -->|单次查询| F
-    E -->|加载上下文| F
-    F -->|响应| G["输出"]
-    G -->|text/json/stream-json| H["终端/管道"]
+    A[&quot;用户终端&quot;] --&gt;|&quot;claude [options] [query]&quot;| B[&quot;Claude Code CLI&quot;]
+    B --&gt;|交互式| C[&quot;REPL 模式&quot;]
+    B --&gt;|&quot;--print&quot;| D[&quot;Print 模式 (SDK)&quot;]
+    B --&gt;|&quot;--resume&quot;| E[&quot;会话恢复&quot;]
+    C --&gt;|对话| F[&quot;Claude API&quot;]
+    D --&gt;|单次查询| F
+    E --&gt;|加载上下文| F
+    F --&gt;|响应| G[&quot;输出&quot;]
+    G --&gt;|text/json/stream-json| H[&quot;终端/管道&quot;]
 </div><h2 id="cli-命令">CLI 命令</h2><table>
 <thead>
 <tr>
@@ -265,21 +264,21 @@
 <td><code>claude</code></td>
 </tr>
 <tr>
-<td><code>claude "query"</code></td>
+<td><code>claude &quot;query&quot;</code></td>
 <td>启动 REPL 并附带初始提示</td>
-<td><code>claude "explain this project"</code></td>
+<td><code>claude &quot;explain this project&quot;</code></td>
 </tr>
 <tr>
-<td><code>claude -p "query"</code></td>
+<td><code>claude -p &quot;query&quot;</code></td>
 <td>Print 模式 - 查询后退出</td>
-<td><code>claude -p "explain this function"</code></td>
+<td><code>claude -p &quot;explain this function&quot;</code></td>
 </tr>
 <tr>
-<td><code>cat file \</td>
-<td>claude -p "query"</code></td>
+<td><code>cat file \&lt;/td&gt;
+&lt;td&gt;claude -p &quot;query&quot;</code></td>
 <td>处理管道内容</td>
-<td><code>cat logs.txt \</td>
-<td>claude -p "explain"</code></td>
+<td><code>cat logs.txt \&lt;/td&gt;
+&lt;td&gt;claude -p &quot;explain&quot;</code></td>
 </tr>
 <tr>
 <td><code>claude -c</code></td>
@@ -287,14 +286,14 @@
 <td><code>claude -c</code></td>
 </tr>
 <tr>
-<td><code>claude -c -p "query"</code></td>
+<td><code>claude -c -p &quot;query&quot;</code></td>
 <td>在 print 模式下继续</td>
-<td><code>claude -c -p "check for type errors"</code></td>
+<td><code>claude -c -p &quot;check for type errors&quot;</code></td>
 </tr>
 <tr>
-<td><code>claude -r "<session>" "query"</code></td>
+<td><code>claude -r &quot;&lt;session&gt;&quot; &quot;query&quot;</code></td>
 <td>通过 ID 或名称恢复会话</td>
-<td><code>claude -r "auth-refactor" "finish this PR"</code></td>
+<td><code>claude -r &quot;auth-refactor&quot; &quot;finish this PR&quot;</code></td>
 </tr>
 <tr>
 <td><code>claude update</code></td>
@@ -360,7 +359,7 @@
 <tr>
 <td><code>-p, --print</code></td>
 <td>Print 模式，不进入交互模式</td>
-<td><code>claude -p "query"</code></td>
+<td><code>claude -p &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>-c, --continue</code></td>
@@ -385,17 +384,17 @@
 <tr>
 <td><code>-n, --name</code></td>
 <td>会话显示名称</td>
-<td><code>claude -n "auth-refactor"</code></td>
+<td><code>claude -n &quot;auth-refactor&quot;</code></td>
 </tr>
 <tr>
-<td><code>--from-pr <number></code></td>
+<td><code>--from-pr &lt;number&gt;</code></td>
 <td>恢复链接到 GitHub PR 的会话</td>
 <td><code>claude --from-pr 42</code></td>
 </tr>
 <tr>
-<td><code>--remote "task"</code></td>
+<td><code>--remote &quot;task&quot;</code></td>
 <td>在 claude.ai 创建网页会话</td>
-<td><code>claude --remote "implement API"</code></td>
+<td><code>claude --remote &quot;implement API&quot;</code></td>
 </tr>
 <tr>
 <td><code>--remote-control, --rc</code></td>
@@ -455,24 +454,30 @@
 <tr>
 <td><code>--no-session-persistence</code></td>
 <td>禁用会话保存（print 模式）</td>
-<td><code>claude -p --no-session-persistence "query"</code></td>
+<td><code>claude -p --no-session-persistence &quot;query&quot;</code></td>
 </tr>
 </tbody>
 </table>
 <h3 id="交互式-vs-print-模式">交互式 vs Print 模式</h3><div class="mermaid">graph LR
-    A["claude"] -->|默认| B["交互式 REPL"]
-    A -->|"-p 标志"| C["Print 模式"]
-    B -->|特性| D["多轮对话<br>Tab 补全<br>历史记录<br>Slash 命令"]
-    C -->|特性| E["单次查询<br>可脚本化<br>可管道化<br>JSON 输出"]
+    A[&quot;claude&quot;] --&gt;|默认| B[&quot;交互式 REPL&quot;]
+    A --&gt;|&quot;-p 标志&quot;| C[&quot;Print 模式&quot;]
+    B --&gt;|特性| D[&quot;多轮对话&lt;br&gt;Tab 补全&lt;br&gt;历史记录&lt;br&gt;Slash 命令&quot;]
+    C --&gt;|特性| E[&quot;单次查询&lt;br&gt;可脚本化&lt;br&gt;可管道化&lt;br&gt;JSON 输出&quot;]
 </div><p><strong>交互式模式</strong>（默认）：
-<pre><code class="language-bash"><h1>启动交互式会话</h1>
-claude</p><h1>启动并附带初始提示</h1>
-claude "explain the authentication flow"
+<pre><code class="language-bash"># 启动交互式会话
+claude
+
+# 启动并附带初始提示
+claude &quot;explain the authentication flow&quot;
 </code></pre><p><strong>Print 模式</strong>（非交互式）：
-<pre><code class="language-bash"><h1>单次查询，然后退出</h1>
-claude -p "what does this function do?"</p><h1>处理文件内容</h1>
-cat error.log | claude -p "explain this error"</p><h1>与其他工具链式组合</h1>
-claude -p "list todos" | grep "URGENT"
+<pre><code class="language-bash"># 单次查询，然后退出
+claude -p &quot;what does this function do?&quot;
+
+# 处理文件内容
+cat error.log | claude -p &quot;explain this error&quot;
+
+# 与其他工具链式组合
+claude -p &quot;list todos&quot; | grep &quot;URGENT&quot;
 </code></pre><h2 id="模型与配置">模型与配置</h2><table>
 <thead>
 <tr>
@@ -490,7 +495,7 @@ claude -p "list todos" | grep "URGENT"
 <tr>
 <td><code>--fallback-model</code></td>
 <td>过载时自动模型降级</td>
-<td><code>claude -p --fallback-model sonnet "query"</code></td>
+<td><code>claude -p --fallback-model sonnet &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--agent</code></td>
@@ -509,12 +514,20 @@ claude -p "list todos" | grep "URGENT"
 </tr>
 </tbody>
 </table>
-<h3 id="模型选择示例">模型选择示例</h3><pre><code class="language-bash"><h1>使用 Opus 4.6 处理复杂任务</h1>
-claude --model opus "design a caching strategy"</p><h1>使用 Haiku 4.5 处理快速任务</h1>
-claude --model haiku -p "format this JSON"</p><h1>完整模型名称</h1>
-claude --model claude-sonnet-4-6-20250929 "review this code"</p><h1>配合降级以提高可靠性</h1>
-claude -p --model opus --fallback-model sonnet "analyze architecture"</p><h1>使用 opusplan（Opus 规划，Sonnet 执行）</h1>
-claude --model opusplan "design and implement the caching layer"
+<h3 id="模型选择示例">模型选择示例</h3><pre><code class="language-bash"># 使用 Opus 4.6 处理复杂任务
+claude --model opus &quot;design a caching strategy&quot;
+
+# 使用 Haiku 4.5 处理快速任务
+claude --model haiku -p &quot;format this JSON&quot;
+
+# 完整模型名称
+claude --model claude-sonnet-4-6-20250929 &quot;review this code&quot;
+
+# 配合降级以提高可靠性
+claude -p --model opus --fallback-model sonnet &quot;analyze architecture&quot;
+
+# 使用 opusplan（Opus 规划，Sonnet 执行）
+claude --model opusplan &quot;design and implement the caching layer&quot;
 </code></pre><h2 id="系统提示自定义">系统提示自定义</h2><table>
 <thead>
 <tr>
@@ -527,24 +540,28 @@ claude --model opusplan "design and implement the caching layer"
 <tr>
 <td><code>--system-prompt</code></td>
 <td>替换整个默认提示</td>
-<td><code>claude --system-prompt "You are a Python expert"</code></td>
+<td><code>claude --system-prompt &quot;You are a Python expert&quot;</code></td>
 </tr>
 <tr>
 <td><code>--system-prompt-file</code></td>
 <td>从文件加载提示（print 模式）</td>
-<td><code>claude -p --system-prompt-file ./prompt.txt "query"</code></td>
+<td><code>claude -p --system-prompt-file ./prompt.txt &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--append-system-prompt</code></td>
 <td>追加到默认提示</td>
-<td><code>claude --append-system-prompt "Always use TypeScript"</code></td>
+<td><code>claude --append-system-prompt &quot;Always use TypeScript&quot;</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="系统提示示例">系统提示示例</h3><pre><code class="language-bash"><h1>完全自定义 persona</h1>
-claude --system-prompt "You are a senior security engineer. Focus on vulnerabilities."</p><h1>追加特定指令</h1>
-claude --append-system-prompt "Always include unit tests with code examples"</p><h1>从文件加载复杂提示</h1>
-claude -p --system-prompt-file ./prompts/code-reviewer.txt "review main.py"
+<h3 id="系统提示示例">系统提示示例</h3><pre><code class="language-bash"># 完全自定义 persona
+claude --system-prompt &quot;You are a senior security engineer. Focus on vulnerabilities.&quot;
+
+# 追加特定指令
+claude --append-system-prompt &quot;Always include unit tests with code examples&quot;
+
+# 从文件加载复杂提示
+claude -p --system-prompt-file ./prompts/code-reviewer.txt &quot;review main.py&quot;
 </code></pre><h3 id="系统提示标志对比">系统提示标志对比</h3><table>
 <thead>
 <tr>
@@ -587,17 +604,17 @@ claude -p --system-prompt-file ./prompts/code-reviewer.txt "review main.py"
 <tr>
 <td><code>--tools</code></td>
 <td>限制可用的内置工具</td>
-<td><code>claude -p --tools "Bash,Edit,Read" "query"</code></td>
+<td><code>claude -p --tools &quot;Bash,Edit,Read&quot; &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--allowedTools</code></td>
 <td>无需提示即可执行的工具</td>
-<td><code>"Bash(git log:*)" "Read"</code></td>
+<td><code>&quot;Bash(git log:*)&quot; &quot;Read&quot;</code></td>
 </tr>
 <tr>
 <td><code>--disallowedTools</code></td>
 <td>从上下文中移除的工具</td>
-<td><code>"Bash(rm:*)" "Edit"</code></td>
+<td><code>&quot;Bash(rm:*)&quot; &quot;Edit&quot;</code></td>
 </tr>
 <tr>
 <td><code>--dangerously-skip-permissions</code></td>
@@ -612,7 +629,7 @@ claude -p --system-prompt-file ./prompts/code-reviewer.txt "review main.py"
 <tr>
 <td><code>--permission-prompt-tool</code></td>
 <td>用于权限处理的 MCP 工具</td>
-<td><code>claude -p --permission-prompt-tool mcp_auth "query"</code></td>
+<td><code>claude -p --permission-prompt-tool mcp_auth &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--enable-auto-mode</code></td>
@@ -621,11 +638,17 @@ claude -p --system-prompt-file ./prompts/code-reviewer.txt "review main.py"
 </tr>
 </tbody>
 </table>
-<h3 id="权限示例">权限示例</h3><pre><code class="language-bash"><h1>代码审查的只读模式</h1>
-claude --permission-mode plan "review this codebase"</p><h1>仅限制为安全工具</h1>
-claude --tools "Read,Grep,Glob" -p "find all TODO comments"</p><h1>允许特定 git 命令无需提示</h1>
-claude --allowedTools "Bash(git status:<em>)" "Bash(git log:</em>)"</p><h1>阻止危险操作</h1>
-claude --disallowedTools "Bash(rm -rf:<em>)" "Bash(git push --force:</em>)"
+<h3 id="权限示例">权限示例</h3><pre><code class="language-bash"># 代码审查的只读模式
+claude --permission-mode plan &quot;review this codebase&quot;
+
+# 仅限制为安全工具
+claude --tools &quot;Read,Grep,Glob&quot; -p &quot;find all TODO comments&quot;
+
+# 允许特定 git 命令无需提示
+claude --allowedTools &quot;Bash(git status:*)&quot; &quot;Bash(git log:*)&quot;
+
+# 阻止危险操作
+claude --disallowedTools &quot;Bash(rm -rf:*)&quot; &quot;Bash(git push --force:*)&quot;
 </code></pre><h2 id="输出与格式">输出与格式</h2><table>
 <thead>
 <tr>
@@ -640,7 +663,7 @@ claude --disallowedTools "Bash(rm -rf:<em>)" "Bash(git push --force:</em>)"
 <td><code>--output-format</code></td>
 <td>指定输出格式（print 模式）</td>
 <td><code>text</code>、<code>json</code>、<code>stream-json</code></td>
-<td><code>claude -p --output-format json "query"</code></td>
+<td><code>claude -p --output-format json &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--input-format</code></td>
@@ -657,26 +680,32 @@ claude --disallowedTools "Bash(rm -rf:<em>)" "Bash(git push --force:</em>)"
 <td><code>--include-partial-messages</code></td>
 <td>包含流式事件</td>
 <td>需要 <code>stream-json</code></td>
-<td><code>claude -p --output-format stream-json --include-partial-messages "query"</code></td>
+<td><code>claude -p --output-format stream-json --include-partial-messages &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--json-schema</code></td>
 <td>获取符合 schema 的验证 JSON</td>
-<td><code>claude -p --json-schema '{"type":"object"}' "query"</code></td>
+<td><code>claude -p --json-schema &#039;{&quot;type&quot;:&quot;object&quot;}&#039; &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--max-budget-usd</code></td>
 <td>print 模式的最大花费</td>
-<td><code>claude -p --max-budget-usd 5.00 "query"</code></td>
+<td><code>claude -p --max-budget-usd 5.00 &quot;query&quot;</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="输出格式示例">输出格式示例</h3><pre><code class="language-bash"><h1>纯文本（默认）</h1>
-claude -p "explain this code"</p><h1>JSON 用于程序化使用</h1>
-claude -p --output-format json "list all functions in main.py"</p><h1>流式 JSON 用于实时处理</h1>
-claude -p --output-format stream-json "generate a long report"</p><h1>带 schema 验证的结构化输出</h1>
-claude -p --json-schema '{"type":"object","properties":{"bugs":{"type":"array"}}}' \
-  "find bugs in this code and return as JSON"
+<h3 id="输出格式示例">输出格式示例</h3><pre><code class="language-bash"># 纯文本（默认）
+claude -p &quot;explain this code&quot;
+
+# JSON 用于程序化使用
+claude -p --output-format json &quot;list all functions in main.py&quot;
+
+# 流式 JSON 用于实时处理
+claude -p --output-format stream-json &quot;generate a long report&quot;
+
+# 带 schema 验证的结构化输出
+claude -p --json-schema &#039;{&quot;type&quot;:&quot;object&quot;,&quot;properties&quot;:{&quot;bugs&quot;:{&quot;type&quot;:&quot;array&quot;}}}&#039; \
+  &quot;find bugs in this code and return as JSON&quot;
 </code></pre><h2 id="工作区与目录">工作区与目录</h2><table>
 <thead>
 <tr>
@@ -708,9 +737,11 @@ claude -p --json-schema '{"type":"object","properties":{"bugs":{"type":"array"}}
 </tr>
 </tbody>
 </table>
-<h3 id="多目录示例">多目录示例</h3><pre><code class="language-bash"><h1>跨多个项目目录工作</h1>
-claude --add-dir ../frontend ../backend ../shared "find all API endpoints"</p><h1>加载自定义设置</h1>
-claude --settings '{"model":"opus","verbose":true}' "complex task"
+<h3 id="多目录示例">多目录示例</h3><pre><code class="language-bash"># 跨多个项目目录工作
+claude --add-dir ../frontend ../backend ../shared &quot;find all API endpoints&quot;
+
+# 加载自定义设置
+claude --settings &#039;{&quot;model&quot;:&quot;opus&quot;,&quot;verbose&quot;:true}&#039; &quot;complex task&quot;
 </code></pre><h2 id="mcp-配置">MCP 配置</h2><table>
 <thead>
 <tr>
@@ -737,9 +768,11 @@ claude --settings '{"model":"opus","verbose":true}' "complex task"
 </tr>
 </tbody>
 </table>
-<h3 id="mcp-示例">MCP 示例</h3><pre><code class="language-bash"><h1>加载 GitHub MCP 服务器</h1>
-claude --mcp-config ./github-mcp.json "list open PRs"</p><h1>严格模式 - 仅使用指定服务器</h1>
-claude --strict-mcp-config --mcp-config ./production-mcp.json "deploy to staging"
+<h3 id="mcp-示例">MCP 示例</h3><pre><code class="language-bash"># 加载 GitHub MCP 服务器
+claude --mcp-config ./github-mcp.json &quot;list open PRs&quot;
+
+# 严格模式 - 仅使用指定服务器
+claude --strict-mcp-config --mcp-config ./production-mcp.json &quot;deploy to staging&quot;
 </code></pre><h2 id="会话管理">会话管理</h2><table>
 <thead>
 <tr>
@@ -752,7 +785,7 @@ claude --strict-mcp-config --mcp-config ./production-mcp.json "deploy to staging
 <tr>
 <td><code>--session-id</code></td>
 <td>使用特定会话 ID（UUID）</td>
-<td><code>claude --session-id "550e8400-..."</code></td>
+<td><code>claude --session-id &quot;550e8400-...&quot;</code></td>
 </tr>
 <tr>
 <td><code>--fork-session</code></td>
@@ -761,14 +794,22 @@ claude --strict-mcp-config --mcp-config ./production-mcp.json "deploy to staging
 </tr>
 </tbody>
 </table>
-<h3 id="会话示例">会话示例</h3><pre><code class="language-bash"><h1>继续上次对话</h1>
-claude -c</p><h1>恢复命名会话</h1>
-claude -r "feature-auth" "continue implementing login"</p><h1>分叉会话用于实验</h1>
-claude --resume feature-auth --fork-session "try alternative approach"</p><h1>使用特定会话 ID</h1>
-claude --session-id "550e8400-e29b-41d4-a716-446655440000" "continue"
-</code></pre><h3 id="会话分叉">会话分叉</h3><p>从现有会话创建分支用于实验：</p><pre><code class="language-bash"><h1>分叉会话尝试不同方法</h1>
-claude --resume abc123 --fork-session "try alternative implementation"</p><h1>使用自定义消息分叉</h1>
-claude -r "feature-auth" --fork-session "test with different architecture"
+<h3 id="会话示例">会话示例</h3><pre><code class="language-bash"># 继续上次对话
+claude -c
+
+# 恢复命名会话
+claude -r &quot;feature-auth&quot; &quot;continue implementing login&quot;
+
+# 分叉会话用于实验
+claude --resume feature-auth --fork-session &quot;try alternative approach&quot;
+
+# 使用特定会话 ID
+claude --session-id &quot;550e8400-e29b-41d4-a716-446655440000&quot; &quot;continue&quot;
+</code></pre><h3 id="会话分叉">会话分叉</h3><p>从现有会话创建分支用于实验：</p><pre><code class="language-bash"># 分叉会话尝试不同方法
+claude --resume abc123 --fork-session &quot;try alternative implementation&quot;
+
+# 使用自定义消息分叉
+claude -r &quot;feature-auth&quot; --fork-session &quot;test with different architecture&quot;
 </code></pre><p><strong>用例：</strong>
 <ul><li>尝试替代实现而不丢失原始会话</li>
 <li>并行实验不同方法</li>
@@ -800,12 +841,12 @@ claude -r "feature-auth" --fork-session "test with different architecture"
 <tr>
 <td><code>--max-turns</code></td>
 <td>限制 agent 轮次（非交互式）</td>
-<td><code>claude -p --max-turns 3 "query"</code></td>
+<td><code>claude -p --max-turns 3 &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--debug</code></td>
 <td>启用带过滤的调试模式</td>
-<td><code>claude --debug "api,mcp"</code></td>
+<td><code>claude --debug &quot;api,mcp&quot;</code></td>
 </tr>
 <tr>
 <td><code>--enable-lsp-logging</code></td>
@@ -850,177 +891,237 @@ claude -r "feature-auth" --fork-session "test with different architecture"
 <tr>
 <td><code>--max-budget-usd</code></td>
 <td>最大花费（print 模式）</td>
-<td><code>claude -p --max-budget-usd 5.00 "query"</code></td>
+<td><code>claude -p --max-budget-usd 5.00 &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td><code>--json-schema</code></td>
 <td>验证 JSON 输出</td>
-<td><code>claude -p --json-schema '{"type":"object"}' "q"</code></td>
+<td><code>claude -p --json-schema &#039;{&quot;type&quot;:&quot;object&quot;}&#039; &quot;q&quot;</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="高级示例">高级示例</h3><pre><code class="language-bash"><h1>限制自主操作</h1>
-claude -p --max-turns 5 "refactor this module"</p><h1>调试 API 调用</h1>
-claude --debug "api" "test query"</p><h1>启用 IDE 集成</h1>
-claude --ide "help me with this file"
+<h3 id="高级示例">高级示例</h3><pre><code class="language-bash"># 限制自主操作
+claude -p --max-turns 5 &quot;refactor this module&quot;
+
+# 调试 API 调用
+claude --debug &quot;api&quot; &quot;test query&quot;
+
+# 启用 IDE 集成
+claude --ide &quot;help me with this file&quot;
 </code></pre><h2 id="agents-配置">Agents 配置</h2><p><code>--agents</code> 标志接受一个 JSON 对象，为会话定义自定义 subagent。</p><h3 id="agents-json-格式">Agents JSON 格式</h3><pre><code class="language-json">{
-  "agent-name": {
-    "description": "必需：何时调用此 agent",
-    "prompt": "必需：agent 的系统提示",
-    "tools": ["可选", "工具", "数组"],
-    "model": "可选: sonnet|opus|haiku"
+  &quot;agent-name&quot;: {
+    &quot;description&quot;: &quot;必需：何时调用此 agent&quot;,
+    &quot;prompt&quot;: &quot;必需：agent 的系统提示&quot;,
+    &quot;tools&quot;: [&quot;可选&quot;, &quot;工具&quot;, &quot;数组&quot;],
+    &quot;model&quot;: &quot;可选: sonnet|opus|haiku&quot;
   }
 }
 </code></pre><p><strong>必需字段：</strong>
 <li><code>description</code> - 描述何时使用此 agent 的自然语言</li>
 <li><code>prompt</code> - 定义 agent 角色 and 行为的系统提示</li><p><strong>可选字段：</strong>
 <li><code>tools</code> - 可用工具数组（省略则继承所有）</li>
-  - 格式：<code>["Read", "Grep", "Glob", "Bash"]</code>
+  - 格式：<code>[&quot;Read&quot;, &quot;Grep&quot;, &quot;Glob&quot;, &quot;Bash&quot;]</code>
 <li><code>model</code> - 使用的模型：<code>sonnet</code>、<code>opus</code> 或 <code>haiku</code></li><h3 id="完整-agents-示例">完整 Agents 示例</h3><pre><code class="language-json">{
-  "code-reviewer": {
-    "description": "Expert code reviewer. Use proactively after code changes.",
-    "prompt": "You are a senior code reviewer. Focus on code quality, security, and best practices.",
-    "tools": ["Read", "Grep", "Glob", "Bash"],
-    "model": "sonnet"
+  &quot;code-reviewer&quot;: {
+    &quot;description&quot;: &quot;Expert code reviewer. Use proactively after code changes.&quot;,
+    &quot;prompt&quot;: &quot;You are a senior code reviewer. Focus on code quality, security, and best practices.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Grep&quot;, &quot;Glob&quot;, &quot;Bash&quot;],
+    &quot;model&quot;: &quot;sonnet&quot;
   },
-  "debugger": {
-    "description": "Debugging specialist for errors and test failures.",
-    "prompt": "You are an expert debugger. Analyze errors, identify root causes, and provide fixes.",
-    "tools": ["Read", "Edit", "Bash", "Grep"],
-    "model": "opus"
+  &quot;debugger&quot;: {
+    &quot;description&quot;: &quot;Debugging specialist for errors and test failures.&quot;,
+    &quot;prompt&quot;: &quot;You are an expert debugger. Analyze errors, identify root causes, and provide fixes.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Edit&quot;, &quot;Bash&quot;, &quot;Grep&quot;],
+    &quot;model&quot;: &quot;opus&quot;
   },
-  "documenter": {
-    "description": "Documentation specialist for generating guides.",
-    "prompt": "You are a technical writer. Create clear, comprehensive documentation.",
-    "tools": ["Read", "Write"],
-    "model": "haiku"
+  &quot;documenter&quot;: {
+    &quot;description&quot;: &quot;Documentation specialist for generating guides.&quot;,
+    &quot;prompt&quot;: &quot;You are a technical writer. Create clear, comprehensive documentation.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Write&quot;],
+    &quot;model&quot;: &quot;haiku&quot;
   }
 }
-</code></pre><h3 id="agents-命令示例">Agents 命令示例</h3><pre><code class="language-bash"><h1>内联定义自定义 agent</h1>
-claude --agents '{
-  "security-auditor": {
-    "description": "Security specialist for vulnerability analysis",
-    "prompt": "You are a security expert. Find vulnerabilities and suggest fixes.",
-    "tools": ["Read", "Grep", "Glob"],
-    "model": "opus"
+</code></pre><h3 id="agents-命令示例">Agents 命令示例</h3><pre><code class="language-bash"># 内联定义自定义 agent
+claude --agents &#039;{
+  &quot;security-auditor&quot;: {
+    &quot;description&quot;: &quot;Security specialist for vulnerability analysis&quot;,
+    &quot;prompt&quot;: &quot;You are a security expert. Find vulnerabilities and suggest fixes.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Grep&quot;, &quot;Glob&quot;],
+    &quot;model&quot;: &quot;opus&quot;
   }
-}' "audit this codebase for security issues"</p><h1>从文件加载 agent</h1>
-claude --agents "$(cat ~/.claude/agents.json)" "review the auth module"</p><h1>与其他标志组合</h1>
-claude -p --agents "$(cat agents.json)" --model sonnet "analyze performance"
+}&#039; &quot;audit this codebase for security issues&quot;
+
+# 从文件加载 agent
+claude --agents &quot;$(cat ~/.claude/agents.json)&quot; &quot;review the auth module&quot;
+
+# 与其他标志组合
+claude -p --agents &quot;$(cat agents.json)&quot; --model sonnet &quot;analyze performance&quot;
 </code></pre><h3 id="agent-优先级">Agent 优先级</h3><p>当存在多个 agent 定义时，按以下优先顺序加载：
 <li><strong>CLI 定义</strong>（<code>--agents</code> 标志）- 会话特定</li>
 <li><strong>用户级别</strong>（<code>~/.claude/agents/</code>）- 所有项目</li>
-<li><strong>项目级别</strong>（<code>.claude/agents/</code>）- 当前项目</li><p>CLI 定义 agent 在会话中覆盖用户和项目 agent。</p><hr><h2 id="高价值用例">高价值用例</h2><h3 id="1-ci-cd-集成">1. CI/CD 集成</h3><p>在你的 CI/CD 流水线中使用 Claude Code 进行自动化代码审查、测试和文档生成。</p><p><strong>GitHub Actions 示例：</strong></p><pre><code class="language-yaml">name: AI Code Review</p><p>on: [pull_request]</p><p>jobs:
+<li><strong>项目级别</strong>（<code>.claude/agents/</code>）- 当前项目</li><p>CLI 定义 agent 在会话中覆盖用户和项目 agent。</p><hr><h2 id="高价值用例">高价值用例</h2><h3 id="1-ci-cd-集成">1. CI/CD 集成</h3><p>在你的 CI/CD 流水线中使用 Claude Code 进行自动化代码审查、测试和文档生成。</p><p><strong>GitHub Actions 示例：</strong></p><pre><code class="language-yaml">name: AI Code Review
+
+on: [pull_request]
+
+jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4</p><p>      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code</p><p>      - name: Run Code Review
+      - uses: actions/checkout@v4
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Code Review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           claude -p --output-format json \
             --max-turns 1 \
-            "Review the changes in this PR for:
+            &quot;Review the changes in this PR for:
             - Security vulnerabilities
             - Performance issues
             - Code quality
-            Output as JSON with 'issues' array" > review.json</p><p>      - name: Post Review Comment
+            Output as JSON with &#039;issues&#039; array&quot; &gt; review.json
+
+      - name: Post Review Comment
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const review = JSON.parse(fs.readFileSync('review.json', 'utf8'));
+            const fs = require(&#039;fs&#039;);
+            const review = JSON.parse(fs.readFileSync(&#039;review.json&#039;, &#039;utf8&#039;));
             // Process and post review comments
 </code></pre><p><strong>Jenkins Pipeline：</strong></p><pre><code class="language-groovy">pipeline {
     agent any
     stages {
-        stage('AI Review') {
+        stage(&#039;AI Review&#039;) {
             steps {
-                sh '''
+                sh &#039;&#039;&#039;
                     claude -p --output-format json \
                       --max-turns 3 \
-                      "Analyze test coverage and suggest missing tests" \
-                      > coverage-analysis.json
-                '''
+                      &quot;Analyze test coverage and suggest missing tests&quot; \
+                      &gt; coverage-analysis.json
+                &#039;&#039;&#039;
             }
         }
     }
 }
-</code></pre><h3 id="2-管道脚本化">2. 管道脚本化</h3><p>通过 Claude 处理文件、日志和数据进行分析。</p><p><strong>日志分析：</strong></p><pre><code class="language-bash"><h1>分析错误日志</h1>
-tail -1000 /var/log/app/error.log | claude -p "summarize these errors and suggest fixes"</p><h1>在访问日志中查找模式</h1>
-cat access.log | claude -p "identify suspicious access patterns"</p><h1>分析 git 历史</h1>
-git log --oneline -50 | claude -p "summarize recent development activity"
-</code></pre><p><strong>代码处理：</strong></p><pre><code class="language-bash"><h1>审查特定文件</h1>
-cat src/auth.ts | claude -p "review this authentication code for security issues"</p><h1>生成文档</h1>
-cat src/api/*.ts | claude -p "generate API documentation in markdown"</p><h1>查找 TODO 并排序</h1>
-grep -r "TODO" src/ | claude -p "prioritize these TODOs by importance"
-</code></pre><h3 id="3-多会话工作流">3. 多会话工作流</h3><p>用多个对话线程管理复杂项目。</p><pre><code class="language-bash"><h1>启动功能分支会话</h1>
-claude -r "feature-auth" "let's implement user authentication"</p><h1>之后，继续会话</h1>
-claude -r "feature-auth" "add password reset functionality"</p><h1>分叉尝试替代方法</h1>
-claude --resume feature-auth --fork-session "try OAuth instead"</p><h1>在不同功能会话间切换</h1>
-claude -r "feature-payments" "continue with Stripe integration"
-</code></pre><h3 id="4-自定义-agent-配置">4. 自定义 Agent 配置</h3><p>为团队工作流定义专用 agent。</p><pre><code class="language-bash"><h1>将 agent 配置保存到文件</h1>
-cat > ~/.claude/agents.json << 'EOF'
+</code></pre><h3 id="2-管道脚本化">2. 管道脚本化</h3><p>通过 Claude 处理文件、日志和数据进行分析。</p><p><strong>日志分析：</strong></p><pre><code class="language-bash"># 分析错误日志
+tail -1000 /var/log/app/error.log | claude -p &quot;summarize these errors and suggest fixes&quot;
+
+# 在访问日志中查找模式
+cat access.log | claude -p &quot;identify suspicious access patterns&quot;
+
+# 分析 git 历史
+git log --oneline -50 | claude -p &quot;summarize recent development activity&quot;
+</code></pre><p><strong>代码处理：</strong></p><pre><code class="language-bash"># 审查特定文件
+cat src/auth.ts | claude -p &quot;review this authentication code for security issues&quot;
+
+# 生成文档
+cat src/api/*.ts | claude -p &quot;generate API documentation in markdown&quot;
+
+# 查找 TODO 并排序
+grep -r &quot;TODO&quot; src/ | claude -p &quot;prioritize these TODOs by importance&quot;
+</code></pre><h3 id="3-多会话工作流">3. 多会话工作流</h3><p>用多个对话线程管理复杂项目。</p><pre><code class="language-bash"># 启动功能分支会话
+claude -r &quot;feature-auth&quot; &quot;let&#039;s implement user authentication&quot;
+
+# 之后，继续会话
+claude -r &quot;feature-auth&quot; &quot;add password reset functionality&quot;
+
+# 分叉尝试替代方法
+claude --resume feature-auth --fork-session &quot;try OAuth instead&quot;
+
+# 在不同功能会话间切换
+claude -r &quot;feature-payments&quot; &quot;continue with Stripe integration&quot;
+</code></pre><h3 id="4-自定义-agent-配置">4. 自定义 Agent 配置</h3><p>为团队工作流定义专用 agent。</p><pre><code class="language-bash"># 将 agent 配置保存到文件
+cat &gt; ~/.claude/agents.json &lt;&lt; &#039;EOF&#039;
 {
-  "reviewer": {
-    "description": "Code reviewer for PR reviews",
-    "prompt": "Review code for quality, security, and maintainability.",
-    "model": "opus"
+  &quot;reviewer&quot;: {
+    &quot;description&quot;: &quot;Code reviewer for PR reviews&quot;,
+    &quot;prompt&quot;: &quot;Review code for quality, security, and maintainability.&quot;,
+    &quot;model&quot;: &quot;opus&quot;
   },
-  "documenter": {
-    "description": "Documentation specialist",
-    "prompt": "Generate clear, comprehensive documentation.",
-    "model": "sonnet"
+  &quot;documenter&quot;: {
+    &quot;description&quot;: &quot;Documentation specialist&quot;,
+    &quot;prompt&quot;: &quot;Generate clear, comprehensive documentation.&quot;,
+    &quot;model&quot;: &quot;sonnet&quot;
   },
-  "refactorer": {
-    "description": "Code refactoring expert",
-    "prompt": "Suggest and implement clean code refactoring.",
-    "tools": ["Read", "Edit", "Glob"]
+  &quot;refactorer&quot;: {
+    &quot;description&quot;: &quot;Code refactoring expert&quot;,
+    &quot;prompt&quot;: &quot;Suggest and implement clean code refactoring.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Edit&quot;, &quot;Glob&quot;]
   }
 }
-EOF</p><h1>在会话中使用 agent</h1>
-claude --agents "$(cat ~/.claude/agents.json)" "review the auth module"
-</code></pre><h3 id="5-批量处理">5. 批量处理</h3><p>使用一致设置处理多个查询。</p><pre><code class="language-bash"><h1>处理多个文件</h1>
+EOF
+
+# 在会话中使用 agent
+claude --agents &quot;$(cat ~/.claude/agents.json)&quot; &quot;review the auth module&quot;
+</code></pre><h3 id="5-批量处理">5. 批量处理</h3><p>使用一致设置处理多个查询。</p><pre><code class="language-bash"># 处理多个文件
 for file in src/*.ts; do
-  echo "Processing $file..."
-  claude -p --model haiku "summarize this file: $(cat $file)" >> summaries.md
-done</p><h1>批量代码审查</h1>
-find src -name "*.py" -exec sh -c '
-  echo "## $1" >> review.md
-  cat "$1" | claude -p "brief code review" >> review.md
-' _ {} \;</p><h1>为所有模块生成测试</h1>
-for module in $(ls src/modules/); do
-  claude -p "generate unit tests for src/modules/$module" > "tests/$module.test.ts"
+  echo &quot;Processing $file...&quot;
+  claude -p --model haiku &quot;summarize this file: $(cat $file)&quot; &gt;&gt; summaries.md
 done
-</code></pre><h3 id="6-安全意识开发">6. 安全意识开发</h3><p>使用权限控制进行安全操作。</p><pre><code class="language-bash"><h1>只读安全审计</h1>
+
+# 批量代码审查
+find src -name &quot;*.py&quot; -exec sh -c &#039;
+  echo &quot;## $1&quot; &gt;&gt; review.md
+  cat &quot;$1&quot; | claude -p &quot;brief code review&quot; &gt;&gt; review.md
+&#039; _ {} \;
+
+# 为所有模块生成测试
+for module in $(ls src/modules/); do
+  claude -p &quot;generate unit tests for src/modules/$module&quot; &gt; &quot;tests/$module.test.ts&quot;
+done
+</code></pre><h3 id="6-安全意识开发">6. 安全意识开发</h3><p>使用权限控制进行安全操作。</p><pre><code class="language-bash"># 只读安全审计
 claude --permission-mode plan \
-  --tools "Read,Grep,Glob" \
-  "audit this codebase for security vulnerabilities"</p><h1>阻止危险命令</h1>
-claude --disallowedTools "Bash(rm:<em>)" "Bash(curl:</em>)" "Bash(wget:*)" \
-  "help me clean up this project"</p><h1>受限自动化</h1>
+  --tools &quot;Read,Grep,Glob&quot; \
+  &quot;audit this codebase for security vulnerabilities&quot;
+
+# 阻止危险命令
+claude --disallowedTools &quot;Bash(rm:*)&quot; &quot;Bash(curl:*)&quot; &quot;Bash(wget:*)&quot; \
+  &quot;help me clean up this project&quot;
+
+# 受限自动化
 claude -p --max-turns 2 \
-  --allowedTools "Read" "Glob" \
-  "find all hardcoded credentials"
-</code></pre><h3 id="7-json-api-集成">7. JSON API 集成</h3><p>将 Claude 作为工具的可编程 API 使用，配合 <code>jq</code> 解析。</p><pre><code class="language-bash"><h1>获取结构化分析</h1>
+  --allowedTools &quot;Read&quot; &quot;Glob&quot; \
+  &quot;find all hardcoded credentials&quot;
+</code></pre><h3 id="7-json-api-集成">7. JSON API 集成</h3><p>将 Claude 作为工具的可编程 API 使用，配合 <code>jq</code> 解析。</p><pre><code class="language-bash"># 获取结构化分析
 claude -p --output-format json \
-  --json-schema '{"type":"object","properties":{"functions":{"type":"array"},"complexity":{"type":"string"}}}' \
-  "analyze main.py and return function list with complexity rating"</p><h1>与 jq 集成处理</h1>
-claude -p --output-format json "list all API endpoints" | jq '.endpoints[]'</p><h1>在脚本中使用</h1>
-RESULT=$(claude -p --output-format json "is this code secure? answer with {secure: boolean, issues: []}" < code.py)
-if echo "$RESULT" | jq -e '.secure == false' > /dev/null; then
-  echo "Security issues found!"
-  echo "$RESULT" | jq '.issues[]'
+  --json-schema &#039;{&quot;type&quot;:&quot;object&quot;,&quot;properties&quot;:{&quot;functions&quot;:{&quot;type&quot;:&quot;array&quot;},&quot;complexity&quot;:{&quot;type&quot;:&quot;string&quot;}}}&#039; \
+  &quot;analyze main.py and return function list with complexity rating&quot;
+
+# 与 jq 集成处理
+claude -p --output-format json &quot;list all API endpoints&quot; | jq &#039;.endpoints[]&#039;
+
+# 在脚本中使用
+RESULT=$(claude -p --output-format json &quot;is this code secure? answer with {secure: boolean, issues: []}&quot; &lt; code.py)
+if echo &quot;$RESULT&quot; | jq -e &#039;.secure == false&#039; &gt; /dev/null; then
+  echo &quot;Security issues found!&quot;
+  echo &quot;$RESULT&quot; | jq &#039;.issues[]&#039;
 fi
-</code></pre><h3 id="jq-解析示例">jq 解析示例</h3><p>使用 <code>jq</code> 解析和处理 Claude 的 JSON 输出：</p><pre><code class="language-bash"><h1>提取特定字段</h1>
-claude -p --output-format json "analyze this code" | jq '.result'</p><h1>过滤数组元素</h1>
-claude -p --output-format json "list issues" | jq -r '.issues[] | select(.severity=="high")'</p><h1>提取多个字段</h1>
-claude -p --output-format json "describe the project" | jq -r '.{name, version, description}'</p><h1>转换为 CSV</h1>
-claude -p --output-format json "list functions" | jq -r '.functions[] | [.name, .lineCount] | @csv'</p><h1>条件处理</h1>
-claude -p --output-format json "check security" | jq 'if .vulnerabilities | length > 0 then "UNSAFE" else "SAFE" end'</p><h1>提取嵌套值</h1>
-claude -p --output-format json "analyze performance" | jq '.metrics.cpu.usage'</p><h1>处理整个数组</h1>
-claude -p --output-format json "find todos" | jq '.todos | length'</p><h1>转换输出</h1>
-claude -p --output-format json "list improvements" | jq 'map({title: .title, priority: .priority})'
+</code></pre><h3 id="jq-解析示例">jq 解析示例</h3><p>使用 <code>jq</code> 解析和处理 Claude 的 JSON 输出：</p><pre><code class="language-bash"># 提取特定字段
+claude -p --output-format json &quot;analyze this code&quot; | jq &#039;.result&#039;
+
+# 过滤数组元素
+claude -p --output-format json &quot;list issues&quot; | jq -r &#039;.issues[] | select(.severity==&quot;high&quot;)&#039;
+
+# 提取多个字段
+claude -p --output-format json &quot;describe the project&quot; | jq -r &#039;.{name, version, description}&#039;
+
+# 转换为 CSV
+claude -p --output-format json &quot;list functions&quot; | jq -r &#039;.functions[] | [.name, .lineCount] | @csv&#039;
+
+# 条件处理
+claude -p --output-format json &quot;check security&quot; | jq &#039;if .vulnerabilities | length &gt; 0 then &quot;UNSAFE&quot; else &quot;SAFE&quot; end&#039;
+
+# 提取嵌套值
+claude -p --output-format json &quot;analyze performance&quot; | jq &#039;.metrics.cpu.usage&#039;
+
+# 处理整个数组
+claude -p --output-format json &quot;find todos&quot; | jq &#039;.todos | length&#039;
+
+# 转换输出
+claude -p --output-format json &quot;list improvements&quot; | jq &#039;map({title: .title, priority: .priority})&#039;
 </code></pre><hr><h2 id="模型">模型</h2><p>Claude Code 支持多种具有不同能力的模型：</p><table>
 <thead>
 <tr>
@@ -1051,15 +1152,23 @@ claude -p --output-format json "list improvements" | jq 'map({title: .title, pri
 </tr>
 </tbody>
 </table>
-<h3 id="模型选择">模型选择</h3><pre><code class="language-bash"><h1>使用短名称</h1>
-claude --model opus "complex architectural review"
-claude --model sonnet "implement this feature"
-claude --model haiku -p "format this JSON"</p><h1>使用 opusplan 别名（Opus 规划，Sonnet 执行）</h1>
-claude --model opusplan "design and implement the API"</p><h1>在会话中切换快速模式</h1>
+<h3 id="模型选择">模型选择</h3><pre><code class="language-bash"># 使用短名称
+claude --model opus &quot;complex architectural review&quot;
+claude --model sonnet &quot;implement this feature&quot;
+claude --model haiku -p &quot;format this JSON&quot;
+
+# 使用 opusplan 别名（Opus 规划，Sonnet 执行）
+claude --model opusplan &quot;design and implement the API&quot;
+
+# 在会话中切换快速模式
 /fast
-</code></pre><h3 id="effort-级别-opus-4-6">Effort 级别（Opus 4.6）</h3><p>Opus 4.6 支持自适应推理的 effort 级别：</p><pre><code class="language-bash"><h1>通过 CLI 标志设置 effort 级别</h1>
-claude --effort high "complex review"</p><h1>通过 slash 命令设置 effort 级别</h1>
-/effort high</p><h1>通过环境变量设置 effort 级别</h1>
+</code></pre><h3 id="effort-级别-opus-4-6">Effort 级别（Opus 4.6）</h3><p>Opus 4.6 支持自适应推理的 effort 级别：</p><pre><code class="language-bash"># 通过 CLI 标志设置 effort 级别
+claude --effort high &quot;complex review&quot;
+
+# 通过 slash 命令设置 effort 级别
+/effort high
+
+# 通过环境变量设置 effort 级别
 export CLAUDE_CODE_EFFORT_LEVEL=high   # low、medium、high 或 max（仅 Opus 4.6）
 </code></pre><p>提示中的 "ultrathink" 关键词激活深度推理。<code>max</code> effort 级别仅限 Opus 4.6。</p><hr><h2 id="关键环境变量">关键环境变量</h2><table>
 <thead>
@@ -1187,12 +1296,20 @@ export CLAUDE_CODE_EFFORT_LEVEL=high   # low、medium、high 或 max（仅 Opus 
 </tr>
 </tbody>
 </table>
-<hr></p><h2 id="快速参考">快速参考</h2><h3 id="最常用命令">最常用命令</h3><pre><code class="language-bash"><h1>交互式会话</h1>
-claude</p><h1>快速提问</h1>
-claude -p "how do I..."</p><h1>继续对话</h1>
-claude -c</p><h1>处理文件</h1>
-cat file.py | claude -p "review this"</p><h1>JSON 输出用于脚本</h1>
-claude -p --output-format json "query"
+<hr></p><h2 id="快速参考">快速参考</h2><h3 id="最常用命令">最常用命令</h3><pre><code class="language-bash"># 交互式会话
+claude
+
+# 快速提问
+claude -p &quot;how do I...&quot;
+
+# 继续对话
+claude -c
+
+# 处理文件
+cat file.py | claude -p &quot;review this&quot;
+
+# JSON 输出用于脚本
+claude -p --output-format json &quot;query&quot;
 </code></pre><h3 id="标志组合">标志组合</h3><table>
 <thead>
 <tr>
@@ -1203,12 +1320,12 @@ claude -p --output-format json "query"
 <tbody>
 <tr>
 <td>快速代码审查</td>
-<td><code>cat file</td>
-<td>claude -p "review"</code></td>
+<td><code>cat file&lt;/td&gt;
+&lt;td&gt;claude -p &quot;review&quot;</code></td>
 </tr>
 <tr>
 <td>结构化输出</td>
-<td><code>claude -p --output-format json "query"</code></td>
+<td><code>claude -p --output-format json &quot;query&quot;</code></td>
 </tr>
 <tr>
 <td>安全探索</td>
@@ -1224,19 +1341,19 @@ claude -p --output-format json "query"
 </tr>
 <tr>
 <td>恢复工作</td>
-<td><code>claude -r "session-name"</code></td>
+<td><code>claude -r &quot;session-name&quot;</code></td>
 </tr>
 <tr>
 <td>自定义模型</td>
-<td><code>claude --model opus "complex task"</code></td>
+<td><code>claude --model opus &quot;complex task&quot;</code></td>
 </tr>
 <tr>
 <td>最小化模式</td>
-<td><code>claude --bare "quick query"</code></td>
+<td><code>claude --bare &quot;quick query&quot;</code></td>
 </tr>
 <tr>
 <td>预算上限运行</td>
-<td><code>claude -p --max-budget-usd 2.00 "analyze code"</code></td>
+<td><code>claude -p --max-budget-usd 2.00 &quot;analyze code&quot;</code></td>
 </tr>
 </tbody>
 </table>
@@ -1255,13 +1372,23 @@ claude -p --output-format json "query"
 <li>使用 <code>--output-format json</code>（不仅在提示中要求 JSON）</li><h3 id="权限拒绝">权限拒绝</h3><p><strong>问题：</strong> 工具执行被阻止</p><p><strong>解决方案：</strong>
 <li>检查 <code>--permission-mode</code> 设置</li>
 <li>查看 <code>--allowedTools</code> 和 <code>--disallowedTools</code> 标志</li>
-<li>使用 <code>--dangerously-skip-permissions</code> 用于自动化（谨慎使用）</li><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-headless-模式基础">🎯 练习 1：Headless 模式基础</h3><p>在 headless 模式下运行 Claude 用于自动化：</p><pre><code class="language-bash"><h1>单次提示执行</h1>
-claude "Summarize the architecture of this project"</p><h1>指定输出</h1>
-claude "Generate a README for src/utils/" > utils-readme.md</p><h1>管道输入</h1>
-cat error.log | claude "Explain these errors and suggest fixes"</p><h1>配合权限</h1>
-claude --permission-mode acceptEdits "Fix the linting errors in src/"
+<li>使用 <code>--dangerously-skip-permissions</code> 用于自动化（谨慎使用）</li><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-headless-模式基础">🎯 练习 1：Headless 模式基础</h3><p>在 headless 模式下运行 Claude 用于自动化：</p><pre><code class="language-bash"># 单次提示执行
+claude &quot;Summarize the architecture of this project&quot;
+
+# 指定输出
+claude &quot;Generate a README for src/utils/&quot; &gt; utils-readme.md
+
+# 管道输入
+cat error.log | claude &quot;Explain these errors and suggest fixes&quot;
+
+# 配合权限
+claude --permission-mode acceptEdits &quot;Fix the linting errors in src/&quot;
 </code></pre><h3 id="练习-2-ci-cd-集成">🎯 练习 2：CI/CD 集成</h3><p>将 Claude 加入你的 CI 流水线：</p><p><strong>GitHub Actions workflow：</strong>
-<pre><code class="language-yaml">name: Code Review</p><p>on: [pull_request]</p><p>jobs:
+<pre><code class="language-yaml">name: Code Review
+
+on: [pull_request]
+
+jobs:
   review:
     runs-on: ubuntu-latest
     steps:
@@ -1270,43 +1397,57 @@ claude --permission-mode acceptEdits "Fix the linting errors in src/"
       - name: Claude Code Review
         run: |
           claude --permission-mode acceptEdits \
-            "Review the changes in this PR for:
+            &quot;Review the changes in this PR for:
             - Security vulnerabilities
             - Code quality issues
             - Test coverage gaps
             
-            Output a markdown report."
+            Output a markdown report.&quot;
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 </code></pre><h3 id="练习-3-自动化测试工作流">🎯 练习 3：自动化测试工作流</h3><p>创建测试生成脚本：</p><pre><code class="language-bash">#!/bin/bash
-<h1>generate-tests.sh</h1><p>for file in src/<em>*/</em>.ts; do
-  echo "Generating tests for $file..."
+# generate-tests.sh
+
+for file in src/**/*.ts; do
+  echo &quot;Generating tests for $file...&quot;
   claude --permission-mode acceptEdits \
-    "Generate comprehensive unit tests for @$file
+    &quot;Generate comprehensive unit tests for @$file
     Follow project test conventions from @CLAUDE.md
-    Include edge cases and error scenarios" \
-    > "tests/${file%.ts}.test.ts"
+    Include edge cases and error scenarios&quot; \
+    &gt; &quot;tests/${file%.ts}.test.ts&quot;
 done
-</code></pre><h3 id="练习-4-批量操作">🎯 练习 4：批量操作</h3><p>使用 Claude 处理多个文件：</p><pre><code class="language-bash"><h1>批量文档生成</h1>
-find src -name "*.ts" -type f | while read file; do
-  claude "Generate API documentation for @$file in markdown format" \
-    >> docs/api-reference.md
-done</p><h1>批量代码审查</h1>
-claude "Review all modified files since last commit:
-!<code>git diff --name-only HEAD~1</code>
-Provide a consolidated review report."
-</code></pre><h3 id="练习-5-会话管理">🎯 练习 5：会话管理</h3><p>通过 CLI 管理 Claude 会话：</p><pre><code class="language-bash"><h1>列出最近会话</h1>
-claude --list-sessions</p><h1>恢复会话</h1>
-claude --resume session-abc123</p><h1>导出会话用于审查</h1>
-claude --export session-abc123 > session-log.md</p><h1>创建命名会话</h1>
-claude --session-name "auth-feature" "Implement JWT authentication"
-</code></pre><h3 id="练习-6-权限模式">🎯 练习 6：权限模式</h3><p>使用不同的权限模式：</p><pre><code class="language-bash"><h1>只读分析</h1>
+</code></pre><h3 id="练习-4-批量操作">🎯 练习 4：批量操作</h3><p>使用 Claude 处理多个文件：</p><pre><code class="language-bash"># 批量文档生成
+find src -name &quot;*.ts&quot; -type f | while read file; do
+  claude &quot;Generate API documentation for @$file in markdown format&quot; \
+    &gt;&gt; docs/api-reference.md
+done
+
+# 批量代码审查
+claude &quot;Review all modified files since last commit:
+!`git diff --name-only HEAD~1`
+Provide a consolidated review report.&quot;
+</code></pre><h3 id="练习-5-会话管理">🎯 练习 5：会话管理</h3><p>通过 CLI 管理 Claude 会话：</p><pre><code class="language-bash"># 列出最近会话
+claude --list-sessions
+
+# 恢复会话
+claude --resume session-abc123
+
+# 导出会话用于审查
+claude --export session-abc123 &gt; session-log.md
+
+# 创建命名会话
+claude --session-name &quot;auth-feature&quot; &quot;Implement JWT authentication&quot;
+</code></pre><h3 id="练习-6-权限模式">🎯 练习 6：权限模式</h3><p>使用不同的权限模式：</p><pre><code class="language-bash"># 只读分析
 claude --permission-mode readOnly \
-  "Analyze the codebase structure and identify refactoring opportunities"</p><h1>安全开发</h1>
+  &quot;Analyze the codebase structure and identify refactoring opportunities&quot;
+
+# 安全开发
 claude --permission-mode acceptEdits \
-  "Implement the suggested refactoring"</p><h1>完全自动化（谨慎使用！）</h1>
+  &quot;Implement the suggested refactoring&quot;
+
+# 完全自动化（谨慎使用！）
 claude --dangerously-skip-permissions \
-  "Complete the full CI pipeline: test, build, deploy"
+  &quot;Complete the full CI pipeline: test, build, deploy&quot;
 </code></pre><hr><h2 id="更多资源">更多资源</h2><li><strong><a href="https://code.claude.com/docs/en/cli-reference">官方 CLI 参考</a></strong> - 完整命令参考</li>
 <li><strong><a href="https://code.claude.com/docs/en/headless">Headless 模式文档</a></strong> - 自动化执行</li>
 <li><strong><a href="/content/01-slash-commands.html">Slash 命令</a></strong> - Claude 内的自定义快捷方式</li>

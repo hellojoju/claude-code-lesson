@@ -207,11 +207,10 @@
 <body>
   <nav>
     <div class="container">
-      <a href="/" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">核心模块</a></li>
-        <li><a href="/content/11-multi-agent.html">多 Agent</a></li>
+        <li><a href="/content/01-slash-commands.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -245,20 +244,26 @@
 <li><strong>组合能力</strong>：组合 Skills 构建复杂工作流程</li>
 <li><strong>规模化工作流程</strong>：跨多个项目和团队复用 skills</li>
 <li><strong>保持质量</strong>：将最佳实践直接嵌入工作流程</li><p>Skills 遵循 <a href="https://agentskills.io">Agent Skills</a> 开放标准，该标准适用于多种 AI 工具。Claude Code 扩展了该标准，增加了调用控制、子智能体执行和动态上下文注入等功能。</p><blockquote><strong>注意</strong>：自定义 slash 命令已合并到 skills 中。<code>.claude/commands/</code> 文件仍然有效并支持相同的 frontmatter 字段。建议新开发使用 Skills。当同一路径存在两者时（如 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code>），skill 优先。</blockquote><h2 id="skills-工作原理-渐进式披露">Skills 工作原理：渐进式披露</h2><p>Skills 采用<strong>渐进式披露</strong>架构——Claude 按需分阶段加载信息，而非预先占用上下文。这实现了高效的上下文管理，同时保持无限的可扩展性。</p><h3 id="三级加载">三级加载</h3><div class="mermaid">graph TB
-    subgraph "Level 1: Metadata (Always Loaded)"
-        A["YAML Frontmatter"]
-        A1["~100 tokens per skill"]
-        A2["name + description"]
-    end</p><p>    subgraph "Level 2: Instructions (When Triggered)"
-        B["SKILL.md Body"]
-        B1["Under 5k tokens"]
-        B2["Workflows & guidance"]
-    end</p><p>    subgraph "Level 3: Resources (As Needed)"
-        C["Bundled Files"]
-        C1["Effectively unlimited"]
-        C2["Scripts, templates, docs"]
-    end</p><p>    A --> B
-    B --> C
+    subgraph &quot;Level 1: Metadata (Always Loaded)&quot;
+        A[&quot;YAML Frontmatter&quot;]
+        A1[&quot;~100 tokens per skill&quot;]
+        A2[&quot;name + description&quot;]
+    end
+
+    subgraph &quot;Level 2: Instructions (When Triggered)&quot;
+        B[&quot;SKILL.md Body&quot;]
+        B1[&quot;Under 5k tokens&quot;]
+        B2[&quot;Workflows &amp; guidance&quot;]
+    end
+
+    subgraph &quot;Level 3: Resources (As Needed)&quot;
+        C[&quot;Bundled Files&quot;]
+        C1[&quot;Effectively unlimited&quot;]
+        C2[&quot;Scripts, templates, docs&quot;]
+    end
+
+    A --&gt; B
+    B --&gt; C
 </div><table>
 <thead>
 <tr>
@@ -293,17 +298,19 @@
     participant User
     participant Claude as Claude
     participant System as System
-    participant Skill as Skill</p><p>    User->>Claude: "Review this code for security issues"
-    Claude->>System: Check available skills (metadata)
-    System-->>Claude: Skill descriptions loaded at startup
-    Claude->>Claude: Match request to skill description
-    Claude->>Skill: bash: read code-review/SKILL.md
-    Skill-->>Claude: Instructions loaded into context
-    Claude->>Claude: Determine: Need templates?
-    Claude->>Skill: bash: read templates/checklist.md
-    Skill-->>Claude: Template loaded
-    Claude->>Claude: Execute skill instructions
-    Claude->>User: Comprehensive code review
+    participant Skill as Skill
+
+    User-&gt;&gt;Claude: &quot;Review this code for security issues&quot;
+    Claude-&gt;&gt;System: Check available skills (metadata)
+    System--&gt;&gt;Claude: Skill descriptions loaded at startup
+    Claude-&gt;&gt;Claude: Match request to skill description
+    Claude-&gt;&gt;Skill: bash: read code-review/SKILL.md
+    Skill--&gt;&gt;Claude: Instructions loaded into context
+    Claude-&gt;&gt;Claude: Determine: Need templates?
+    Claude-&gt;&gt;Skill: bash: read templates/checklist.md
+    Skill--&gt;&gt;Claude: Template loaded
+    Claude-&gt;&gt;Claude: Execute skill instructions
+    Claude-&gt;&gt;User: Comprehensive code review
 </div><h2 id="skill-类型与位置">Skill 类型与位置</h2><table>
 <thead>
 <tr>
@@ -324,21 +331,21 @@
 </tr>
 <tr>
 <td><strong>Personal</strong></td>
-<td><code>~/.claude/skills/<skill-name>/SKILL.md</code></td>
+<td><code>~/.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
 <td>个人</td>
 <td>否</td>
 <td>个人工作流程</td>
 </tr>
 <tr>
 <td><strong>Project</strong></td>
-<td><code>.claude/skills/<skill-name>/SKILL.md</code></td>
+<td><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
 <td>团队</td>
 <td>是（通过 git）</td>
 <td>团队标准</td>
 </tr>
 <tr>
 <td><strong>Plugin</strong></td>
-<td><code><plugin>/skills/<skill-name>/SKILL.md</code></td>
+<td><code>&lt;plugin&gt;/skills/&lt;skill-name&gt;/SKILL.md</code></td>
 <td>启用范围</td>
 <td>取决于插件</td>
 <td>与插件捆绑</td>
@@ -355,14 +362,20 @@
 </code></pre><h3 id="skill-md-格式">SKILL.md 格式</h3><pre><code class="language-yaml">---
 name: your-skill-name
 description: Brief description of what this Skill does and when to use it
-<hr></p><h1>Your Skill Name</h1><h2 id="instructions">Instructions</h2>
-Provide clear, step-by-step guidance for Claude.</p><h2 id="examples">Examples</h2>
+---
+
+# Your Skill Name
+
+## Instructions
+Provide clear, step-by-step guidance for Claude.
+
+## Examples
 Show concrete examples of using this Skill.
 </code></pre><h3 id="必填字段">必填字段</h3><li><strong>name</strong>：仅限小写字母、数字、连字符（最多 64 字符）。不能包含 "anthropic" 或 "claude"。</li>
 <li><strong>description</strong>：Skill 的功能以及何时使用（最多 1024 字符）。这对 Claude 知道何时激活 skill 至关重要。</li><h3 id="可选-frontmatter-字段">可选 Frontmatter 字段</h3><pre><code class="language-yaml">---
 name: my-skill
 description: What this skill does and when to use it
-argument-hint: "[filename] [format]"        # 自动补全提示
+argument-hint: &quot;[filename] [format]&quot;        # 自动补全提示
 disable-model-invocation: true              # 仅用户可调用
 user-invocable: false                       # 从 slash 菜单隐藏
 allowed-tools: Read, Grep, Glob             # 限制工具访问
@@ -373,11 +386,11 @@ agent: Explore                              # 哪种智能体类型（配合 con
 shell: bash                                 # 命令 shell：bash（默认）或 powershell
 hooks:                                      # Skill 范围的 hooks
   PreToolUse:
-    - matcher: "Bash"
+    - matcher: &quot;Bash&quot;
       hooks:
         - type: command
-          command: "./scripts/validate.sh"
-<hr>
+          command: &quot;./scripts/validate.sh&quot;
+---
 </code></pre><table>
 <thead>
 <tr>
@@ -396,7 +409,7 @@ hooks:                                      # Skill 范围的 hooks
 </tr>
 <tr>
 <td><code>argument-hint</code></td>
-<td><code>/</code> 自动补全菜单中显示的提示（如 <code>"[filename] [format]"</code>）。</td>
+<td><code>/</code> 自动补全菜单中显示的提示（如 <code>&quot;[filename] [format]&quot;</code>）。</td>
 </tr>
 <tr>
 <td><code>disable-model-invocation</code></td>
@@ -428,529 +441,527 @@ hooks:                                      # Skill 范围的 hooks
 </tr>
 <tr>
 <td><code>shell</code></td>
-<td><code>!</code>command`<code> 替换和脚本使用的 shell：</code>bash<code>（默认）或 </code>powershell<code>。</td>
-</tr>
-<tr>
-<td></code>hooks<code></td>
-<td>限制于此 skill 生命周期的 hooks（格式与全局 hooks 相同）。</td>
-</tr>
-</tbody>
-</table>
-<h2 id="skill-内容类型">Skill 内容类型</h2><p>Skills 可包含两种内容类型，各自适合不同目的：</p><h3 id="参考内容">参考内容</h3><p>添加 Claude 应用于当前工作的知识——约定、模式、风格指南、领域知识。在你的对话上下文中内联运行。</p><pre><code class="language-yaml">---
-name: api-conventions
-description: API design patterns for this codebase
-<hr></p><p>When writing API endpoints:
-<li>Use RESTful naming conventions</li>
-<li>Return consistent error formats</li>
-<li>Include request validation</li>
-</code></pre><h3 id="任务内容">任务内容</h3><p>针对特定操作的步骤指令。通常直接用 </code>/skill-name<code> 调用。</p><pre><code class="language-yaml">---
-name: deploy
-description: Deploy the application to production
-context: fork
-disable-model-invocation: true
-<hr></p><p>Deploy the application:
-<li>Run the test suite</li>
-<li>Build the application</li>
-<li>Push to the deployment target</li>
-</code></pre><h2 id="控制-skill-调用">控制 Skill 调用</h2><p>默认情况下，你和 Claude 都可以调用任何 skill。两个 frontmatter 字段控制三种调用模式：</p><table>
-<thead>
-<tr>
-<th>Frontmatter</th>
-<th>你可调用</th>
-<th>Claude 可调用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>（默认）</td>
-<td>是</td>
-<td>是</td>
-</tr>
-<tr>
-<td></code>disable-model-invocation: true<code></td>
-<td>是</td>
-<td>否</td>
-</tr>
-<tr>
-<td></code>user-invocable: false<code></td>
-<td>否</td>
-<td>是</td>
-</tr>
-</tbody>
-</table>
-<strong>使用 </code>disable-model-invocation: true<code></strong> 用于有副作用的工作流程：</code>/commit<code>、</code>/deploy<code>、</code>/send-slack-message<code>。你不希望 Claude 因为代码看起来准备好就决定部署。</p><p><strong>使用 </code>user-invocable: false<code></strong> 用于非可操作命令的后台知识。</code>legacy-system-context<code> skill 解释旧系统如何工作——对 Claude 有用，但对用户不是一个有意义的操作。</p><h2 id="字符串替换">字符串替换</h2><p>Skills 支持动态值，在 skill 内容发送给 Claude 之前解析：</p><table>
-<thead>
-<tr>
-<th>变量</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></code>$ARGUMENTS<code></td>
-<td>调用 skill 时传入的所有参数</td>
-</tr>
-<tr>
-<td></code>$ARGUMENTS[N]<code> 或 </code>$N<code></td>
-<td>按索引访问特定参数（从 0 开始）</td>
-</tr>
-<tr>
-<td></code>${CLAUDE_SESSION_ID}<code></td>
-<td>当前会话 ID</td>
-</tr>
-<tr>
-<td></code>${CLAUDE_SKILL_DIR}<code></td>
-<td>包含 skill 的 SKILL.md 文件的目录</td>
-</tr>
-<tr>
-<td></code><code> !</code>command<code> </code><code></td>
-<td>动态上下文注入 — 运行 shell 命令并内联输出</td>
-</tr>
-</tbody>
-</table>
-<strong>示例：</strong></p><pre><code class="language-yaml">---
-name: fix-issue
-description: Fix a GitHub issue
-<hr></p><p>Fix GitHub issue $ARGUMENTS following our coding standards.
-<li>Read the issue description</li>
-<li>Implement the fix</li>
-<li>Write tests</li>
-<li>Create a commit</li>
-</code></pre><p>运行 </code>/fix-issue 123<code> 会将 </code>$ARGUMENTS<code> 替换为 </code>123<code>。</p><h2 id="注入动态上下文">注入动态上下文</h2><p></code>!<code>command</code><code> 语法在 skill 内容发送给 Claude 之前运行 shell 命令：</p><pre><code class="language-yaml">---
-name: pr-summary
-description: Summarize changes in a pull request
-context: fork
-agent: Explore
-<hr></p><h2 id="pull-request-context">Pull request context</h2>
-<li>PR diff: !</code>gh pr diff<code></li>
-<li>PR comments: !</code>gh pr view --comments<code></li>
-<li>Changed files: !</code>gh pr diff --name-only<code></li><h2 id="your-task">Your task</h2>
-Summarize this pull request...
-</code></pre><p>命令立即执行；Claude 只看到最终输出。默认情况下，命令在 </code>bash<code> 中运行。在 frontmatter 中设置 </code>shell: powershell<code> 以使用 PowerShell。</p><h2 id="在子智能体中运行-skills">在子智能体中运行 Skills</h2><p>添加 </code>context: fork<code> 在隔离的子智能体上下文中运行 skill。skill 内容成为专属子智能体的任务，拥有自己的上下文窗口，保持主对话整洁。</p><p></code>agent<code> 字段指定使用的智能体类型：</p><table>
-<thead>
-<tr>
-<th>智能体类型</th>
-<th>最适用于</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></code>Explore<code></td>
-<td>只读研究、代码库分析</td>
-</tr>
-<tr>
-<td></code>Plan<code></td>
-<td>创建实现计划</td>
-</tr>
-<tr>
-<td></code>general-purpose<code></td>
-<td>需要所有工具的广泛任务</td>
-</tr>
-<tr>
-<td>自定义智能体</td>
-<td>配置中定义的专业智能体</td>
-</tr>
-</tbody>
-</table>
-<strong>示例 frontmatter：</strong></p><pre><code class="language-yaml">---
-context: fork
-agent: Explore
-<hr>
-</code></pre><p><strong>完整 skill 示例：</strong></p><pre><code class="language-yaml">---
-name: deep-research
-description: Research a topic thoroughly
-context: fork
-agent: Explore
-<hr></p><p>Research $ARGUMENTS thoroughly:
-<li>Find relevant files using Glob and Grep</li>
-<li>Read and analyze the code</li>
-<li>Summarize findings with specific file references</li>
-</code></pre><h2 id="实用示例">实用示例</h2><h3 id="示例-1-代码审查-skill">示例 1：代码审查 Skill</h3><p><strong>目录结构：</strong></p><pre><code class="language-">~/.claude/skills/code-review/
-├── SKILL.md
-├── templates/
-│   ├── review-checklist.md
-│   └── finding-template.md
-└── scripts/
-    ├── analyze-metrics.py
-    └ compare-complexity.py
-</code></pre><p><strong>文件：</strong> </code>~/.claude/skills/code-review/SKILL.md<code></p><pre><code class="language-yaml">---
-name: code-review-specialist
-description: Comprehensive code review with security, performance, and quality analysis. Use when users ask to review code, analyze code quality, evaluate pull requests, or mention code review, security analysis, or performance optimization.
-<hr></p><h1>Code Review Skill</h1><p>This skill provides comprehensive code review capabilities focusing on:</p><li><strong>Security Analysis</strong></li>
-   - Authentication/authorization issues
-   - Data exposure risks
-   - Injection vulnerabilities
-   - Cryptographic weaknesses</p><li><strong>Performance Review</strong></li>
-   - Algorithm efficiency (Big O analysis)
-   - Memory optimization
-   - Database query optimization
-   - Caching opportunities</p><li><strong>Code Quality</strong></li>
-   - SOLID principles
-   - Design patterns
-   - Naming conventions
-   - Test coverage</p><li><strong>Maintainability</strong></li>
-   - Code readability
-   - Function size (should be < 50 lines)
-   - Cyclomatic complexity
-   - Type safety</p><h2 id="review-template">Review Template</h2><p>For each piece of code reviewed, provide:</p><h3 id="summary">Summary</h3>
-<li>Overall quality assessment (1-5)</li>
-<li>Key findings count</li>
-<li>Recommended priority areas</li><h3 id="critical-issues-if-any">Critical Issues (if any)</h3>
-<li><strong>Issue</strong>: Clear description</li>
-<li><strong>Location</strong>: File and line number</li>
-<li><strong>Impact</strong>: Why this matters</li>
-<li><strong>Severity</strong>: Critical/High/Medium</li>
-<li><strong>Fix</strong>: Code example</li><p>For detailed checklists, see <a href="templates/review-checklist.md">templates/review-checklist.md</a>.
-</code></pre><h3 id="示例-2-代码库可视化-skill">示例 2：代码库可视化 Skill</h3><p>一个生成交互式 HTML 可视化的 skill：</p><p><strong>目录结构：</strong></p><pre><code class="language-">~/.claude/skills/codebase-visualizer/
-├── SKILL.md
-└── scripts/
-    └ visualize.py
-</code></pre><p><strong>文件：</strong> </code>~/.claude/skills/codebase-visualizer/SKILL.md<code></p><pre><code class="language-yaml">---
-name: codebase-visualizer
-description: Generate an interactive collapsible tree visualization of your codebase. Use when exploring a new repo, understanding project structure, or identifying large files.
-allowed-tools: Bash(python *)
-<hr></p><h1>Codebase Visualizer</h1><p>Generate an interactive HTML tree view showing your project's file structure.</p><h2 id="usage">Usage</h2><p>Run the visualization script from your project root:</p><p></code></pre>bash
+<td><code>!</code>command`<code> 替换和脚本使用的 shell：</code>bash<code>（默认）或 </code>powershell<code>。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>hooks<code>&lt;/td&gt;
+&lt;td&gt;限制于此 skill 生命周期的 hooks（格式与全局 hooks 相同）。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+## Skill 内容类型
+
+Skills 可包含两种内容类型，各自适合不同目的：
+
+### 参考内容
+
+添加 Claude 应用于当前工作的知识——约定、模式、风格指南、领域知识。在你的对话上下文中内联运行。
+
+__CODEBLOCK_5__
+
+### 任务内容
+
+针对特定操作的步骤指令。通常直接用 </code>/skill-name<code> 调用。
+
+__CODEBLOCK_6__
+
+## 控制 Skill 调用
+
+默认情况下，你和 Claude 都可以调用任何 skill。两个 frontmatter 字段控制三种调用模式：
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Frontmatter&lt;/th&gt;
+&lt;th&gt;你可调用&lt;/th&gt;
+&lt;th&gt;Claude 可调用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;（默认）&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>disable-model-invocation: true<code>&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>user-invocable: false<code>&lt;/td&gt;
+&lt;td&gt;否&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+**使用 </code>disable-model-invocation: true<code>** 用于有副作用的工作流程：</code>/commit<code>、</code>/deploy<code>、</code>/send-slack-message<code>。你不希望 Claude 因为代码看起来准备好就决定部署。
+
+**使用 </code>user-invocable: false<code>** 用于非可操作命令的后台知识。</code>legacy-system-context<code> skill 解释旧系统如何工作——对 Claude 有用，但对用户不是一个有意义的操作。
+
+## 字符串替换
+
+Skills 支持动态值，在 skill 内容发送给 Claude 之前解析：
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;变量&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>$ARGUMENTS<code>&lt;/td&gt;
+&lt;td&gt;调用 skill 时传入的所有参数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>$ARGUMENTS[N]<code> 或 </code>$N<code>&lt;/td&gt;
+&lt;td&gt;按索引访问特定参数（从 0 开始）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>${CLAUDE_SESSION_ID}<code>&lt;/td&gt;
+&lt;td&gt;当前会话 ID&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>${CLAUDE_SKILL_DIR}<code>&lt;/td&gt;
+&lt;td&gt;包含 skill 的 SKILL.md 文件的目录&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code><code> !</code>command<code> </code><code>&lt;/td&gt;
+&lt;td&gt;动态上下文注入 — 运行 shell 命令并内联输出&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+**示例：**
+
+__CODEBLOCK_7__
+
+运行 </code>/fix-issue 123<code> 会将 </code>$ARGUMENTS<code> 替换为 </code>123<code>。
+
+## 注入动态上下文
+
+</code>!<code>command</code><code> 语法在 skill 内容发送给 Claude 之前运行 shell 命令：
+
+__CODEBLOCK_8__
+
+命令立即执行；Claude 只看到最终输出。默认情况下，命令在 </code>bash<code> 中运行。在 frontmatter 中设置 </code>shell: powershell<code> 以使用 PowerShell。
+
+## 在子智能体中运行 Skills
+
+添加 </code>context: fork<code> 在隔离的子智能体上下文中运行 skill。skill 内容成为专属子智能体的任务，拥有自己的上下文窗口，保持主对话整洁。
+
+</code>agent<code> 字段指定使用的智能体类型：
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;智能体类型&lt;/th&gt;
+&lt;th&gt;最适用于&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>Explore<code>&lt;/td&gt;
+&lt;td&gt;只读研究、代码库分析&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>Plan<code>&lt;/td&gt;
+&lt;td&gt;创建实现计划&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>general-purpose<code>&lt;/td&gt;
+&lt;td&gt;需要所有工具的广泛任务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;自定义智能体&lt;/td&gt;
+&lt;td&gt;配置中定义的专业智能体&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+**示例 frontmatter：**
+
+__CODEBLOCK_9__
+
+**完整 skill 示例：**
+
+__CODEBLOCK_10__
+
+## 实用示例
+
+### 示例 1：代码审查 Skill
+
+**目录结构：**
+
+__CODEBLOCK_11__
+
+**文件：** </code>~/.claude/skills/code-review/SKILL.md<code>
+
+__CODEBLOCK_12__
+
+### 示例 2：代码库可视化 Skill
+
+一个生成交互式 HTML 可视化的 skill：
+
+**目录结构：**
+
+__CODEBLOCK_13__
+
+**文件：** </code>~/.claude/skills/codebase-visualizer/SKILL.md<code>
+
+__CODEBLOCK_14__bash
 python ~/.claude/skills/codebase-visualizer/scripts/visualize.py .
-<pre><code class="language-">
-This creates </code>codebase-map.html<code> and opens it in your default browser.</p><h2 id="what-the-visualization-shows">What the visualization shows</h2><li><strong>Collapsible directories</strong>: Click folders to expand/collapse</li>
-<li><strong>File sizes</strong>: Displayed next to each file</li>
-<li><strong>Colors</strong>: Different colors for different file types</li>
-<li><strong>Directory totals</strong>: Shows aggregate size of each folder</li>
-</code></pre><p>捆绑的 Python 脚本处理繁重工作，而 Claude 负责编排。</p><h3 id="示例-3-部署-skill-仅用户调用">示例 3：部署 Skill（仅用户调用）</h3><pre><code class="language-yaml">---
-name: deploy
-description: Deploy the application to production
-disable-model-invocation: true
-allowed-tools: Bash(npm <em>), Bash(git </em>)
-<hr></p><p>Deploy $ARGUMENTS to production:</p><li>Run the test suite: </code>npm test<code></li>
-<li>Build the application: </code>npm run build<code></li>
-<li>Push to the deployment target</li>
-<li>Verify the deployment succeeded</li>
-<li>Report deployment status</li>
-</code></pre><h3 id="示例-4-品牌语调-skill-后台知识">示例 4：品牌语调 Skill（后台知识）</h3><pre><code class="language-yaml">---
-name: brand-voice
-description: Ensure all communication matches brand voice and tone guidelines. Use when creating marketing copy, customer communications, or public-facing content.
-user-invocable: false
-<hr></p><h2 id="tone-of-voice">Tone of Voice</h2>
-<li><strong>Friendly but professional</strong> - approachable without being casual</li>
-<li><strong>Clear and concise</strong> - avoid jargon</li>
-<li><strong>Confident</strong> - we know what we're doing</li>
-<li><strong>Empathetic</strong> - understand user needs</li><h2 id="writing-guidelines">Writing Guidelines</h2>
-<li>Use "you" when addressing readers</li>
-<li>Use active voice</li>
-<li>Keep sentences under 20 words</li>
-<li>Start with value proposition</li><p>For templates, see <a href="templates/">templates/</a>.
-</code></pre><h3 id="示例-5-claude-md-生成器-skill">示例 5：CLAUDE.md 生成器 Skill</h3><pre><code class="language-yaml">---
-name: claude-md
-description: Create or update CLAUDE.md files following best practices for optimal AI agent onboarding. Use when users mention CLAUDE.md, project documentation, or AI onboarding.
-<hr></p><h2 id="core-principles">Core Principles</h2><p><strong>LLMs are stateless</strong>: CLAUDE.md is the only file automatically included in every conversation.</p><h3 id="the-golden-rules">The Golden Rules</h3><li><strong>Less is More</strong>: Keep under 300 lines (ideally under 100)</li>
-<li><strong>Universal Applicability</strong>: Only include information relevant to EVERY session</li>
-<li><strong>Don't Use Claude as a Linter</strong>: Use deterministic tools instead</li>
-<li><strong>Never Auto-Generate</strong>: Craft it manually with careful consideration</li><h2 id="essential-sections">Essential Sections</h2><li><strong>Project Name</strong>: Brief one-line description</li>
-<li><strong>Tech Stack</strong>: Primary language, frameworks, database</li>
-<li><strong>Development Commands</strong>: Install, test, build commands</li>
-<li><strong>Critical Conventions</strong>: Only non-obvious, high-impact conventions</li>
-<li><strong>Known Issues / Gotchas</strong>: Things that trip up developers</li>
-</code></pre><h3 id="示例-6-带脚本的重构-skill">示例 6：带脚本的重构 Skill</h3><p><strong>目录结构：</strong></p><pre><code class="language-">refactor/
-├── SKILL.md
-├── references/
-│   ├── code-smells.md
-│   └ refactoring-catalog.md
-├── templates/
-│   └ refactoring-plan.md
-└── scripts/
-    ├── analyze-complexity.py
-    └ detect-smells.py
-</code></pre><p><strong>文件：</strong> </code>refactor/SKILL.md<code></p><pre><code class="language-yaml">---
-name: code-refactor
-description: Systematic code refactoring based on Martin Fowler's methodology. Use when users ask to refactor code, improve code structure, reduce technical debt, or eliminate code smells.
-<hr></p><h1>Code Refactoring Skill</h1><p>A phased approach emphasizing safe, incremental changes backed by tests.</p><h2 id="workflow">Workflow</h2><p>Phase 1: Research & Analysis → Phase 2: Test Coverage Assessment →
-Phase 3: Code Smell Identification → Phase 4: Refactoring Plan Creation →
-Phase 5: Incremental Implementation → Phase 6: Review & Iteration</p><h2 id="core-principles">Core Principles</h2><li><strong>Behavior Preservation</strong>: External behavior must remain unchanged</li>
-<li><strong>Small Steps</strong>: Make tiny, testable changes</li>
-<li><strong>Test-Driven</strong>: Tests are the safety net</li>
-<li><strong>Continuous</strong>: Refactoring is ongoing, not a one-time event</li><p>For code smell catalog, see <a href="references/code-smells.md">references/code-smells.md</a>.
-For refactoring techniques, see <a href="references/refactoring-catalog.md">references/refactoring-catalog.md</a>.
-</code></pre><h2 id="支持文件">支持文件</h2><p>Skills 可在其目录中包含多个文件，不仅是 </code>SKILL.md<code>。这些支持文件（模板、示例、脚本、参考文档）让你保持主 skill 文件聚焦，同时提供 Claude 可按需加载的额外资源。</p><pre><code class="language-">my-skill/
-├── SKILL.md              # 主要指令（必需，保持在 500 行以下）
-├── templates/            # Claude 填写的模板
-│   └ output-format.md
-├── examples/             # 示例输出，展示预期格式
-│   └ sample-output.md
-├── references/           # 领域知识和规范
-│   └ api-spec.md
-└── scripts/              # Claude 可执行的脚本
-    └ validate.sh
-</code></pre><p>支持文件指南：</p><li>保持 </code>SKILL.md<code> 在 <strong>500 行以下</strong>。将详细参考材料、大型示例和规范移到单独文件。</li>
-<li>从 </code>SKILL.md<code> 使用<strong>相对路径</strong>引用其他文件（如 </code><a href="references/api-spec.md">API reference</a><code>）。</li>
-<li>支持文件在 Level 3（按需）加载，所以 Claude 实际读取前不占用上下文。</li><h2 id="管理-skills">管理 Skills</h2><h3 id="查看可用-skills">查看可用 Skills</h3><p>直接询问 Claude：
-<pre><code class="language-">What Skills are available?
-</code></pre><p>或检查文件系统：
-<pre><code class="language-bash"><h1>列出个人 Skills</h1>
-ls ~/.claude/skills/</p><h1>列出项目 Skills</h1>
-ls .claude/skills/
-</code></pre><h3 id="测试-skill">测试 Skill</h3><p>两种测试方式：</p><p><strong>让 Claude 自动调用</strong>，通过询问匹配描述的内容：
-<pre><code class="language-">Can you help me review this code for security issues?
-</code></pre><p><strong>或直接调用</strong>，使用 skill 名称：
-<pre><code class="language-">/code-review src/auth/login.ts
-</code></pre><h3 id="更新-skill">更新 Skill</h3><p>直接编辑 </code>SKILL.md<code> 文件。更改在下次 Claude Code 启动时生效。</p><pre><code class="language-bash"><h1>个人 Skill</h1>
-code ~/.claude/skills/my-skill/SKILL.md</p><h1>项目 Skill</h1>
-code .claude/skills/my-skill/SKILL.md
-</code></pre><h3 id="限制-claude-的-skill-访问">限制 Claude 的 Skill 访问</h3><p>三种方式控制 Claude 可调用的 skills：</p><p><strong>在 </code>/permissions<code> 中禁用所有 skills</strong>：
-<pre><code class="language-"><h1>添加到拒绝规则：</h1>
-Skill
-</code></pre><p><strong>允许或拒绝特定 skills</strong>：
-<pre><code class="language-"><h1>仅允许特定 skills</h1>
-Skill(commit)
-Skill(review-pr *)</p><h1>拒绝特定 skills</h1>
-Skill(deploy *)
-</code></pre><p><strong>隐藏单个 skills</strong>，在它们的 frontmatter 中添加 </code>disable-model-invocation: true<code>。</p><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-创建你的第一个-skill">🎯 练习 1：创建你的第一个 Skill</h3><p>构建一个 </code>/hello<code> skill 用于问候团队成员：</p><p><strong>步骤 1：创建 skill 目录</strong>
-<pre><code class="language-bash">mkdir -p .claude/skills/hello
-</code></pre><p><strong>步骤 2：创建 SKILL.md</strong>
-<pre><code class="language-markdown">---
-name: hello
-description: Greet team members. Use when user says hello or starts a session.
-<hr></p><h1>Hello Skill</h1><p>Greet the user with:
-<li>Current date and time</li>
-<li>Quick project status (branch, recent commits)</li>
-<li>Ask what they'd like to work on</li><p>Be warm but concise.
-</code></pre><p><strong>步骤 3：测试</strong>
-<pre><code class="language-bash"><h1>在 Claude Code 中：</h1>
-/hello</p><h1>或直接输入 "hello"，Claude 应自动调用</h1>
-</code></pre><h3 id="练习-2-带动态上下文的-skill">🎯 练习 2：带动态上下文的 Skill</h3><p>使用 shell 命令创建 </code>/status<code> skill：</p><pre><code class="language-markdown">---
-name: status
-description: Show comprehensive project status. Use when user asks about project health or status.
-allowed-tools: Bash(git <em>), Bash(npm </em>), Read
-<hr></p><h1>Project Status</h1><h2 id="git-context">Git Context</h2>
-<li>Branch: !</code>git branch --show-current<code></li>
-<li>Changes: !</code>git status --short | head -10<code></li>
-<li>Recent: !</code>git log --oneline -5<code></li><h2 id="package-info">Package Info</h2>
-<li>Version: !</code>node -e "console.log(require('./package.json').version)" 2>/dev/null || echo "N/A"<code></li>
-<li>Dependencies: !</code>npm ls --depth=0 2>/dev/null | head -15 || echo "Run npm install first"<code></li><h2 id="summary">Summary</h2>
-Provide a brief health report with recommendations.
-</code></pre><p><strong>测试：</strong>
-<pre><code class="language-bash">/status
-</code></pre><h3 id="练习-3-带参数的-skill">🎯 练习 3：带参数的 Skill</h3><p>创建一个接收问题编号的 </code>/fix-issue<code> skill：</p><pre><code class="language-markdown">---
-name: fix-issue
-description: Fix a GitHub issue by number. Use when user mentions fixing an issue.
-argument-hint: issue-number
-allowed-tools: Bash(git <em>), Bash(gh </em>), Read, Edit, Write
-<hr></p><h1>Fix Issue #$ARGUMENTS</h1><h2 id="steps">Steps</h2><li><strong>Fetch Issue Details</strong></li>
-   - Title and description from GitHub
-   - Labels and priority
-   - Related files based on issue context</p><li><strong>Analyze Codebase</strong></li>
-   - Find relevant files
-   - Understand current implementation
-   - Identify root cause</p><li><strong>Implement Fix</strong></li>
-   - Make minimal, focused changes
-   - Add/update tests
-   - Follow project conventions from CLAUDE.md</p><li><strong>Verify</strong></li>
-   - Tests pass
-   - Fix addresses the issue
-   - No side effects</p><li><strong>Commit</strong></li>
-   - Reference issue in commit message
-   - Include co-authorship if collaborative</p><h2 id="output-format">Output Format</h2>
-Report: issue title, changes made, tests added, verification results
-</code></pre><p><strong>测试：</strong>
-<pre><code class="language-bash">/fix-issue 123
-</code></pre><h3 id="练习-4-多文件-skill-目录">🎯 练习 4：多文件 Skill 目录</h3><p>创建一个完整的 </code>/review<code> skill，包含支持文件：</p><p><strong>目录结构：</strong>
-<pre><code class="language-bash">mkdir -p .claude/skills/review
-touch .claude/skills/review/SKILL.md
-touch .claude/skills/review/checklist.md
-touch .claude/skills/review/template.md
-</code></pre><p><strong>SKILL.md：</strong>
-<pre><code class="language-markdown">---
-name: review
-description: Comprehensive code review. Use before commits or PRs.
-allowed-tools: Read, Grep, Glob, Bash(git *)
-<hr></p><h1>Code Review</h1><p>Load checklist: @checklist.md</p><h2 id="current-changes">Current Changes</h2>
-!</code>git diff HEAD<code></p><h2 id="review-process">Review Process</h2>
-<li>Load each changed file</li>
-<li>Check against checklist items</li>
-<li>Note issues by severity (CRITICAL, HIGH, MEDIUM, LOW)</li>
-<li>Provide actionable recommendations</li><h2 id="output-template">Output Template</h2>
-Use: @template.md
-</code></pre><p><strong>checklist.md：</strong>
-<pre><code class="language-markdown"><h1>Review Checklist</h1><h2 id="security">Security</h2>
-<li>[ ] No hardcoded secrets</li>
-<li>[ ] Input validation present</li>
-<li>[ ] Proper error handling</li>
-<li>[ ] No SQL injection risks</li><h2 id="quality">Quality</h2>
-<li>[ ] Functions < 50 lines</li>
-<li>[ ] Files < 800 lines</li>
-<li>[ ] No deep nesting (>4 levels)</li>
-<li>[ ] Clear naming</li><h2 id="performance">Performance</h2>
-<li>[ ] No N+1 queries</li>
-<li>[ ] Efficient algorithms</li>
-<li>[ ] No memory leaks</li><h2 id="testing">Testing</h2>
-<li>[ ] Tests for new code</li>
-<li>[ ] Edge cases covered</li>
-<li>[ ] Mocks properly configured</li>
-</code></pre><p><strong>template.md：</strong>
-<pre><code class="language-markdown"><h1>Review Report</h1><h2 id="files-reviewed">Files Reviewed</h2>
-<li>List each file with severity summary</li><h2 id="issues-found">Issues Found</h2><p>| Severity | File | Line | Issue | Fix |
-|----------|------|------|-------|-----|</p><h2 id="summary">Summary</h2>
-<li>Critical issues: X (must fix)</li>
-<li>High issues: Y (should fix)  </li>
-<li>Medium issues: Z (consider)</li>
-<li>Low issues: W (optional)</li><h2 id="recommendation">Recommendation</h2>
-[Approve / Block / Warn]
-</code></pre><p><strong>测试：</strong>
-<pre><code class="language-bash">/review
-</code></pre><h3 id="练习-5-仅用户-skill-禁止自动调用">🎯 练习 5：仅用户 Skill（禁止自动调用）</h3><p>创建一个 </code>/deploy<code> skill，Claude 不应自动触发：</p><pre><code class="language-markdown">---
-name: deploy
-description: Deploy to production. Only invoke when user explicitly requests deploy.
-disable-model-invocation: true
-allowed-tools: Bash(npm <em>), Bash(git </em>)
-<hr></p><h1>Deploy to Production</h1><h2 id="pre-flight-checks">Pre-flight Checks</h2>
-<li>Tests passing: !</code>npm test 2>&1 | tail -5<code></li>
-<li>Build succeeds: !</code>npm run build 2>&1 | tail -5<code></li>
-<li>No uncommitted changes: !</code>git status --short<code></li><h2 id="deploy-steps">Deploy Steps</h2>
-<li>Tag release: !</code>git tag -a v!<code>node -e "console.log(require('./package.json').version)"</code> -m "Release"<code></li>
-<li>Push tag: git push origin --tags</li>
-<li>Trigger CI: npm run deploy:trigger</li><h2 id="post-deploy">Post-deploy</h2>
-<li>Verify health: curl health endpoint</li>
-<li>Notify team: post to Slack</li><h2 id="rollback-plan">Rollback Plan</h2>
-If deployment fails:
-<li>Revert to previous tag</li>
-<li>Run rollback script</li>
-<li>Notify team immediately</li>
-</code></pre><p><strong>测试（仅在显式调用时有效）：</strong>
-<pre><code class="language-bash">/deploy</p><h1>Claude 不会自动调用此 skill，即使你说 "let's deploy"</h1>
-<h1>它需要显式的 /deploy 命令</h1>
-</code></pre><h2 id="最佳实践">最佳实践</h2><h3 id="1-描述要具体">1. 描述要具体</h3><li><strong>差（模糊）</strong>："Helps with documents"</li>
-<li><strong>好（具体）</strong>："Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."</li><h3 id="2-保持-skill-聚焦">2. 保持 Skill 聚焦</h3><li>一个 Skill = 一个能力</li>
-<li>✅ "PDF form filling"</li>
-<li>❌ "Document processing"（太宽泛）</li><h3 id="3-包含触发词">3. 包含触发词</h3><p>在描述中添加匹配用户请求的关键词：
-<pre><code class="language-yaml">description: Analyze Excel spreadsheets, generate pivot tables, create charts. Use when working with Excel files, spreadsheets, or .xlsx files.
-</code></pre><h3 id="4-保持-skill-md-在-500-行以下">4. 保持 SKILL.md 在 500 行以下</h3><p>将详细参考材料移到 Claude 按需加载的单独文件。</p><h3 id="5-引用支持文件">5. 引用支持文件</h3><pre><code class="language-markdown"><h2 id="additional-resources">Additional resources</h2><li>For complete API details, see <a href="reference.md">reference.md</a></li>
-<li>For usage examples, see <a href="examples.md">examples.md</a></li>
-</code></pre><h3 id="应该做的">应该做的</h3><li>使用清晰、描述性的名称</li>
-<li>包含全面的指令</li>
-<li>添加具体示例</li>
-<li>打包相关脚本和模板</li>
-<li>用真实场景测试</li>
-<li>文档化依赖</li><h3 id="不该做的">不该做的</h3><li>不要为一次性任务创建 skills</li>
-<li>不要复制现有功能</li>
-<li>不要让 skills 太宽泛</li>
-<li>不要跳过 description 字段</li>
-<li>不要从未经审计的不可信来源安装 skills</li><h2 id="故障排查">故障排查</h2><h3 id="快速参考">快速参考</h3><table>
-<thead>
-<tr>
-<th>问题</th>
-<th>解决方案</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Claude 不使用 Skill</td>
-<td>让描述更具体，添加触发词</td>
-</tr>
-<tr>
-<td>Skill 文件找不到</td>
-<td>验证路径：</code>~/.claude/skills/name/SKILL.md<code></td>
-</tr>
-<tr>
-<td>YAML 错误</td>
-<td>检查 </code>---<code> 标记、缩进、无制表符</td>
-</tr>
-<tr>
-<td>Skills 冲突</td>
-<td>在描述中使用不同的触发词</td>
-</tr>
-<tr>
-<td>脚本不运行</td>
-<td>检查权限：</code>chmod +x scripts/*.py<code></td>
-</tr>
-<tr>
-<td>Claude 看不到所有 skills</td>
-<td>skills 太多；检查 </code>/context<code> 的警告</td>
-</tr>
-</tbody>
-</table>
-<h3 id="skill-不触发">Skill 不触发</h3><p>如果 Claude 在预期时不使用你的 skill：</p><li>检查描述是否包含用户会自然说出的关键词</li>
-<li>验证询问 "What skills are available?" 时 skill 出现</li>
-<li>尝试改写请求以匹配描述</li>
-<li>直接用 </code>/skill-name<code> 调用测试</li><h3 id="skill-触发太频繁">Skill 触发太频繁</h3><p>如果 Claude 在你不想时使用你的 skill：</p><li>让描述更具体</li>
-<li>添加 </code>disable-model-invocation: true<code> 仅限手动调用</li><h3 id="claude-看不到所有-skills">Claude 看不到所有 Skills</h3><p>Skill 描述加载上限为<strong>上下文窗口的 2%</strong>（后备值：<strong>16,000 字符</strong>）。运行 </code>/context<code> 查看关于被排除 skills 的警告。可通过 </code>SLASH_COMMAND_TOOL_CHAR_BUDGET<code> 环境变量覆盖预算。</p><h2 id="安全考虑">安全考虑</h2><p><strong>仅使用来自可信来源的 Skills。</strong> Skills 通过指令和代码为 Claude 提供能力——恶意 Skill 可引导 Claude 以有害方式调用工具或执行代码。</p><p><strong>关键安全考虑：</strong></p><li><strong>彻底审计</strong>：审查 Skill 目录中的所有文件</li>
-<li><strong>外部来源有风险</strong>：从外部 URL 获取的 Skills 可能被篡改</li>
-<li><strong>工具滥用</strong>：恶意 Skills 可有害地调用工具</li>
-<li><strong>像安装软件一样对待</strong>：仅使用来自可信来源的 Skills</li><h2 id="skills-与其他功能对比">Skills 与其他功能对比</h2><table>
-<thead>
-<tr>
-<th>功能</th>
-<th>调用方式</th>
-<th>最适用于</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Skills</strong></td>
-<td>自动或 </code>/name<code></td>
-<td>可复用专业知识、工作流程</td>
-</tr>
-<tr>
-<td><strong>Slash Commands</strong></td>
-<td>用户发起 </code>/name<code></td>
-<td>快捷方式（已合并到 skills）</td>
-</tr>
-<tr>
-<td><strong>Subagents</strong></td>
-<td>自动委托</td>
-<td>隔离任务执行</td>
-</tr>
-<tr>
-<td><strong>Memory (CLAUDE.md)</strong></td>
-<td>始终加载</td>
-<td>持久项目上下文</td>
-</tr>
-<tr>
-<td><strong>MCP</strong></td>
-<td>实时</td>
-<td>外部数据/服务访问</td>
-</tr>
-<tr>
-<td><strong>Hooks</strong></td>
-<td>事件驱动</td>
-<td>自动化副作用</td>
-</tr>
-</tbody>
-</table>
-<h2 id="内置-skills">内置 Skills</h2><p>Claude Code 附带多个内置 skills，无需安装即可使用：</p><table>
-<thead>
-<tr>
-<th>Skill</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></code>/simplify<code></td>
-<td>审查变更文件的复用、质量和效率；启动 3 个并行审查智能体</td>
-</tr>
-<tr>
-<td></code>/batch <instruction><code></td>
-<td>使用 git worktrees 在代码库中编排大规模并行变更</td>
-</tr>
-<tr>
-<td></code>/debug [description]<code></td>
-<td>通过读取 debug 日志排查当前会话</td>
-</tr>
-<tr>
-<td></code>/loop [interval] <prompt><code></td>
-<td>按间隔重复运行提示词（如 </code>/loop 5m check the deploy<code>）</td>
-</tr>
-<tr>
-<td></code>/claude-api<code></td>
-<td>加载 Claude API/SDK 参考；在 </code>anthropic<code>/</code>@anthropic-ai/sdk<code> 导入时自动激活</td>
-</tr>
-</tbody>
-</table>
-这些 skills 开箱即用，无需安装或配置。它们遵循与自定义 skills 相同的 SKILL.md 格式。</p><h2 id="分享-skills">分享 Skills</h2><h3 id="项目-skills-团队共享">项目 Skills（团队共享）</h3><li>在 </code>.claude/skills/<code> 创建 Skill</li>
-<li>提交到 git</li>
-<li>团队成员拉取变更 — Skills 立即可用</li><h3 id="个人-skills">个人 Skills</h3><pre><code class="language-bash"><h1>复制到个人目录</h1>
-cp -r my-skill ~/.claude/skills/</p><h1>使脚本可执行</h1>
-chmod +x ~/.claude/skills/my-skill/scripts/*.py
-</code></pre><h3 id="plugin-发布">Plugin 发布</h3><p>将 skills 打包在 plugin 的 </code>skills/<code> 目录中以广泛分发。</p><h2 id="进阶-skill-收集和-skill-管理器">进阶：Skill 收集和 Skill 管理器</h2><p>当你开始认真构建 skills 时，两件事变得必不可少：经验证 skills 的库和管理它们的工具。</p><p><strong><a href="https://github.com/luongnv89/skills">luongnv89/skills</a></strong> — 我在几乎所有项目中日常使用的 skills 收集。亮点包括 </code>logo-designer<code>（即时生成项目 logo）和 </code>ollama-optimizer<code>（为你的硬件调优本地 LLM 性能）。如果你想要即用的 skills，这是很好的起点。</p><p><strong><a href="https://github.com/luongnv89/asm">luongnv89/asm</a></strong> — Agent Skill Manager。处理 skill 开发、重复检测和测试。</code>asm link` 命令让你在任何项目中测试 skill，无需复制文件——当你有超过几个 skills 时必不可少。</p><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a></li>
+__CODEBLOCK_15__
+
+捆绑的 Python 脚本处理繁重工作，而 Claude 负责编排。
+
+### 示例 3：部署 Skill（仅用户调用）
+
+__CODEBLOCK_16__
+
+### 示例 4：品牌语调 Skill（后台知识）
+
+__CODEBLOCK_17__
+
+### 示例 5：CLAUDE.md 生成器 Skill
+
+__CODEBLOCK_18__
+
+### 示例 6：带脚本的重构 Skill
+
+**目录结构：**
+
+__CODEBLOCK_19__
+
+**文件：** </code>refactor/SKILL.md<code>
+
+__CODEBLOCK_20__
+
+## 支持文件
+
+Skills 可在其目录中包含多个文件，不仅是 </code>SKILL.md<code>。这些支持文件（模板、示例、脚本、参考文档）让你保持主 skill 文件聚焦，同时提供 Claude 可按需加载的额外资源。
+
+__CODEBLOCK_21__
+
+支持文件指南：
+
+- 保持 </code>SKILL.md<code> 在 **500 行以下**。将详细参考材料、大型示例和规范移到单独文件。
+- 从 </code>SKILL.md<code> 使用**相对路径**引用其他文件（如 </code><a href="references/api-spec.md">API reference</a><code>）。
+- 支持文件在 Level 3（按需）加载，所以 Claude 实际读取前不占用上下文。
+
+## 管理 Skills
+
+### 查看可用 Skills
+
+直接询问 Claude：
+__CODEBLOCK_22__
+
+或检查文件系统：
+__CODEBLOCK_23__
+
+### 测试 Skill
+
+两种测试方式：
+
+**让 Claude 自动调用**，通过询问匹配描述的内容：
+__CODEBLOCK_24__
+
+**或直接调用**，使用 skill 名称：
+__CODEBLOCK_25__
+
+### 更新 Skill
+
+直接编辑 </code>SKILL.md<code> 文件。更改在下次 Claude Code 启动时生效。
+
+__CODEBLOCK_26__
+
+### 限制 Claude 的 Skill 访问
+
+三种方式控制 Claude 可调用的 skills：
+
+**在 </code>/permissions<code> 中禁用所有 skills**：
+__CODEBLOCK_27__
+
+**允许或拒绝特定 skills**：
+__CODEBLOCK_28__
+
+**隐藏单个 skills**，在它们的 frontmatter 中添加 </code>disable-model-invocation: true<code>。
+
+## 立即尝试
+
+### 🎯 练习 1：创建你的第一个 Skill
+
+构建一个 </code>/hello<code> skill 用于问候团队成员：
+
+**步骤 1：创建 skill 目录**
+__CODEBLOCK_29__
+
+**步骤 2：创建 SKILL.md**
+__CODEBLOCK_30__
+
+**步骤 3：测试**
+__CODEBLOCK_31__
+
+### 🎯 练习 2：带动态上下文的 Skill
+
+使用 shell 命令创建 </code>/status<code> skill：
+
+__CODEBLOCK_32__
+
+**测试：**
+__CODEBLOCK_33__
+
+### 🎯 练习 3：带参数的 Skill
+
+创建一个接收问题编号的 </code>/fix-issue<code> skill：
+
+__CODEBLOCK_34__
+
+**测试：**
+__CODEBLOCK_35__
+
+### 🎯 练习 4：多文件 Skill 目录
+
+创建一个完整的 </code>/review<code> skill，包含支持文件：
+
+**目录结构：**
+__CODEBLOCK_36__
+
+**SKILL.md：**
+__CODEBLOCK_37__
+
+**checklist.md：**
+__CODEBLOCK_38__
+
+**template.md：**
+__CODEBLOCK_39__
+
+**测试：**
+__CODEBLOCK_40__
+
+### 🎯 练习 5：仅用户 Skill（禁止自动调用）
+
+创建一个 </code>/deploy<code> skill，Claude 不应自动触发：
+
+__CODEBLOCK_41__
+
+**测试（仅在显式调用时有效）：**
+__CODEBLOCK_42__
+
+## 最佳实践
+
+### 1. 描述要具体
+
+- **差（模糊）**：&quot;Helps with documents&quot;
+- **好（具体）**：&quot;Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.&quot;
+
+### 2. 保持 Skill 聚焦
+
+- 一个 Skill = 一个能力
+- ✅ &quot;PDF form filling&quot;
+- ❌ &quot;Document processing&quot;（太宽泛）
+
+### 3. 包含触发词
+
+在描述中添加匹配用户请求的关键词：
+__CODEBLOCK_43__
+
+### 4. 保持 SKILL.md 在 500 行以下
+
+将详细参考材料移到 Claude 按需加载的单独文件。
+
+### 5. 引用支持文件
+
+__CODEBLOCK_44__
+
+### 应该做的
+
+- 使用清晰、描述性的名称
+- 包含全面的指令
+- 添加具体示例
+- 打包相关脚本和模板
+- 用真实场景测试
+- 文档化依赖
+
+### 不该做的
+
+- 不要为一次性任务创建 skills
+- 不要复制现有功能
+- 不要让 skills 太宽泛
+- 不要跳过 description 字段
+- 不要从未经审计的不可信来源安装 skills
+
+## 故障排查
+
+### 快速参考
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;问题&lt;/th&gt;
+&lt;th&gt;解决方案&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Claude 不使用 Skill&lt;/td&gt;
+&lt;td&gt;让描述更具体，添加触发词&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Skill 文件找不到&lt;/td&gt;
+&lt;td&gt;验证路径：</code>~/.claude/skills/name/SKILL.md<code>&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;YAML 错误&lt;/td&gt;
+&lt;td&gt;检查 </code>---<code> 标记、缩进、无制表符&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Skills 冲突&lt;/td&gt;
+&lt;td&gt;在描述中使用不同的触发词&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;脚本不运行&lt;/td&gt;
+&lt;td&gt;检查权限：</code>chmod +x scripts/*.py<code>&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Claude 看不到所有 skills&lt;/td&gt;
+&lt;td&gt;skills 太多；检查 </code>/context<code> 的警告&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+### Skill 不触发
+
+如果 Claude 在预期时不使用你的 skill：
+
+1. 检查描述是否包含用户会自然说出的关键词
+2. 验证询问 &quot;What skills are available?&quot; 时 skill 出现
+3. 尝试改写请求以匹配描述
+4. 直接用 </code>/skill-name<code> 调用测试
+
+### Skill 触发太频繁
+
+如果 Claude 在你不想时使用你的 skill：
+
+1. 让描述更具体
+2. 添加 </code>disable-model-invocation: true<code> 仅限手动调用
+
+### Claude 看不到所有 Skills
+
+Skill 描述加载上限为**上下文窗口的 2%**（后备值：**16,000 字符**）。运行 </code>/context<code> 查看关于被排除 skills 的警告。可通过 </code>SLASH_COMMAND_TOOL_CHAR_BUDGET<code> 环境变量覆盖预算。
+
+## 安全考虑
+
+**仅使用来自可信来源的 Skills。** Skills 通过指令和代码为 Claude 提供能力——恶意 Skill 可引导 Claude 以有害方式调用工具或执行代码。
+
+**关键安全考虑：**
+
+- **彻底审计**：审查 Skill 目录中的所有文件
+- **外部来源有风险**：从外部 URL 获取的 Skills 可能被篡改
+- **工具滥用**：恶意 Skills 可有害地调用工具
+- **像安装软件一样对待**：仅使用来自可信来源的 Skills
+
+## Skills 与其他功能对比
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;功能&lt;/th&gt;
+&lt;th&gt;调用方式&lt;/th&gt;
+&lt;th&gt;最适用于&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;**Skills**&lt;/td&gt;
+&lt;td&gt;自动或 </code>/name<code>&lt;/td&gt;
+&lt;td&gt;可复用专业知识、工作流程&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Slash Commands**&lt;/td&gt;
+&lt;td&gt;用户发起 </code>/name<code>&lt;/td&gt;
+&lt;td&gt;快捷方式（已合并到 skills）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Subagents**&lt;/td&gt;
+&lt;td&gt;自动委托&lt;/td&gt;
+&lt;td&gt;隔离任务执行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Memory (CLAUDE.md)**&lt;/td&gt;
+&lt;td&gt;始终加载&lt;/td&gt;
+&lt;td&gt;持久项目上下文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**MCP**&lt;/td&gt;
+&lt;td&gt;实时&lt;/td&gt;
+&lt;td&gt;外部数据/服务访问&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Hooks**&lt;/td&gt;
+&lt;td&gt;事件驱动&lt;/td&gt;
+&lt;td&gt;自动化副作用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+## 内置 Skills
+
+Claude Code 附带多个内置 skills，无需安装即可使用：
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Skill&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>/simplify<code>&lt;/td&gt;
+&lt;td&gt;审查变更文件的复用、质量和效率；启动 3 个并行审查智能体&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>/batch <instruction><code>&lt;/td&gt;
+&lt;td&gt;使用 git worktrees 在代码库中编排大规模并行变更&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>/debug [description]<code>&lt;/td&gt;
+&lt;td&gt;通过读取 debug 日志排查当前会话&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>/loop [interval] <prompt><code>&lt;/td&gt;
+&lt;td&gt;按间隔重复运行提示词（如 </code>/loop 5m check the deploy<code>）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>/claude-api<code>&lt;/td&gt;
+&lt;td&gt;加载 Claude API/SDK 参考；在 </code>anthropic<code>/</code>@anthropic-ai/sdk<code> 导入时自动激活&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+这些 skills 开箱即用，无需安装或配置。它们遵循与自定义 skills 相同的 SKILL.md 格式。
+
+## 分享 Skills
+
+### 项目 Skills（团队共享）
+
+1. 在 </code>.claude/skills/<code> 创建 Skill
+2. 提交到 git
+3. 团队成员拉取变更 — Skills 立即可用
+
+### 个人 Skills
+
+__CODEBLOCK_45__
+
+### Plugin 发布
+
+将 skills 打包在 plugin 的 </code>skills/<code> 目录中以广泛分发。
+
+## 进阶：Skill 收集和 Skill 管理器
+
+当你开始认真构建 skills 时，两件事变得必不可少：经验证 skills 的库和管理它们的工具。
+
+**[luongnv89/skills](https://github.com/luongnv89/skills)** — 我在几乎所有项目中日常使用的 skills 收集。亮点包括 </code>logo-designer<code>（即时生成项目 logo）和 </code>ollama-optimizer<code>（为你的硬件调优本地 LLM 性能）。如果你想要即用的 skills，这是很好的起点。
+
+**[luongnv89/asm](https://github.com/luongnv89/asm)** — Agent Skill Manager。处理 skill 开发、重复检测和测试。</code>asm link` 命令让你在任何项目中测试 skill，无需复制文件——当你有超过几个 skills 时必不可少。</p><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a></li>
 <li><a href="https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills 架构博客</a></li>
 <li><a href="https://github.com/luongnv89/skills">Skills 仓库</a> - 即用 skills 收集</li>
 <li><a href="/content/01-slash-commands.html">Slash Commands 指南</a> - 用户发起的快捷方式</li>

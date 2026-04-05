@@ -88,17 +88,33 @@ class MarkdownProcessor {
     // 处理表格
     html = this.processTables(html);
 
+    // 先保护代码块，避免内部 # 被当作标题处理
+    const codeBlocks = [];
+    html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+      const index = codeBlocks.length;
+      codeBlocks.push(`<pre><code class="language-${lang || ''}">${this.escapeHtml(code)}</code></pre>`);
+      return `__CODEBLOCK_${index}__`;
+    });
+
+    // 保护内联代码
+    const inlineCodes = [];
+    html = html.replace(/`([^`]+)`/g, (match, code) => {
+      const index = inlineCodes.length;
+      inlineCodes.push(`<code>${this.escapeHtml(code)}</code>`);
+      return `__INLINECODE_${index}__`;
+    });
+
     // 先提取所有 h2/h3 标题并生成 id 映射
     const headingIdMap = new Map();
     const headingRegex = /^(#{2,3})\s+(.+)$/gm;
     let match;
-    while ((match = headingRegex.exec(markdown)) !== null) {
+    while ((match = headingRegex.exec(html)) !== null) {
       const text = match[2].replace(/\*\*/g, '');
       const id = this.slugify(text);
       headingIdMap.set(text, id);
     }
 
-    // 处理标题（带 id）
+    // 处理标题（带 id）- 只处理行首的 #
     html = html.replace(/^### (.+)$/gm, (m, text) => {
       const cleanText = text.replace(/\*\*/g, '');
       const id = this.slugify(cleanText);
@@ -119,10 +135,6 @@ class MarkdownProcessor {
       // 粗体和斜体
       { pattern: /\*\*(.+?)\*\*/g, replacement: '<strong>$1</strong>' },
       { pattern: /\*(.+?)\*/g, replacement: '<em>$1</em>' },
-      // 代码块
-      { pattern: /```(\w+)?\n([\s\S]*?)```/g, replacement: '<pre><code class="language-$1">$2</code></pre>' },
-      // 内联代码
-      { pattern: /`([^`]+)`/g, replacement: '<code>$1</code>' },
       // 链接
       { pattern: /\[([^\]]+)\]\(([^)]+)\)/g, replacement: '<a href="$2">$1</a>' },
       // 引用
@@ -139,6 +151,16 @@ class MarkdownProcessor {
     for (const rule of rules) {
       html = html.replace(rule.pattern, rule.replacement);
     }
+
+    // 恢复代码块
+    codeBlocks.forEach((block, index) => {
+      html = html.replace(`__CODEBLOCK_${index}__`, block);
+    });
+
+    // 恢复内联代码
+    inlineCodes.forEach((code, index) => {
+      html = html.replace(`__INLINECODE_${index}__`, code);
+    });
 
     // 包装段落
     html = '<p>' + html + '</p>';
@@ -173,6 +195,18 @@ class MarkdownProcessor {
     html = this.processMermaid(html);
 
     return html;
+  }
+
+  /**
+   * HTML 转义
+   */
+  escapeHtml(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   /**
