@@ -313,14 +313,98 @@ graph LR
 
 ---
 
+## Boris Cherny 的实战技巧
+
+Boris Cherny（Anthropic 工程师）分享的使用经验：
+
+### 重复模式自动化
+
+> "让 Claude Code 处理重复的样板代码——它在模式化工作方面表现出色"
+> — Boris Cherny
+
+**示例场景：**
+- API 端点生成
+- CRUD 操作模板
+- 测试用例框架
+- 文档格式化
+
+### 任务分解策略
+
+> "将大任务拆分为小而具体的请求"
+> — Boris 建议
+
+**流程：**
+
+```markdown
+❌ 错误：大任务
+"重构整个认证系统"
+
+✅ 正确：分解任务
+1. 分析现有认证代码结构
+2. 设计新的认证架构
+3. 实现密码哈希模块
+4. 更新 session 管理
+5. 添加测试用例
+6. 逐个验证
+```
+
+### 学习式提问
+
+> "让 Claude 解释代码变更——这是学习的最佳方式"
+> — Boris
+
+**示例：**
+
+```bash
+"实现这个功能后，解释：
+1. 为什么选择这个方案
+2. 有哪些替代方案
+3. 关键的权衡决策"
+```
+
+---
+
+## 更多官方技巧
+
+### /compact 使用时机
+
+> "定期使用 /compact 减少 token 使用量"
+> — 官方文档
+
+**触发条件：**
+- 对话超过 50% 容量
+- 完成复杂任务后
+- 开始新主题前
+
+### 键盘快捷键
+
+| 快捷键 | 功能 |
+|--------|------|
+| Option+T | 切换扩展思考 |
+| Ctrl+O | 显示思考输出 |
+| ↑/↓ | 浏览历史命令 |
+
+### IDE 集成最佳实践
+
+> "VS Code 和 JetBrains 集成有特定优化"
+> — IDE 文档
+
+**配置要点：**
+- 启用自动补全集成
+- 配置文件监听
+- 设置快捷键绑定
+
+---
+
 ## 来源
 
 本技巧汇总来自以下官方资源：
 
 - [Claude Code 官方文档](https://docs.anthropic.com/en/docs/claude-code)
 - [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)
+- [Anthropic Engineering Blog](https://anthropic.com/engineering)
 - [GitHub Discussions](https://github.com/anthropics/claude-code/discussions)
-- Claude Code 团队社区分享
+- Boris Cherny 社区分享
 
 ---
 
