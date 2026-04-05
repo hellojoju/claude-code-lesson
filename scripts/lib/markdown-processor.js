@@ -85,36 +85,26 @@ class MarkdownProcessor {
   toHtml(markdown) {
     let html = markdown;
 
-    // 处理表格
-    html = this.processTables(html);
-
-    // 先保护代码块，避免内部 # 被当作标题处理
+    // 先保护代码块，避免内部内容被处理
     const codeBlocks = [];
     html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
       const index = codeBlocks.length;
-      codeBlocks.push(`<pre><code class="language-${lang || ''}">${this.escapeHtml(code)}</code></pre>`);
-      return `__CODEBLOCK_${index}__`;
+      codeBlocks.push({ lang: lang || '', code: code });
+      return `\n\n__CODEBLOCK_${index}__\n\n`;
     });
+
+    // 处理表格
+    html = this.processTables(html);
 
     // 保护内联代码
     const inlineCodes = [];
     html = html.replace(/`([^`]+)`/g, (match, code) => {
       const index = inlineCodes.length;
-      inlineCodes.push(`<code>${this.escapeHtml(code)}</code>`);
+      inlineCodes.push(code);
       return `__INLINECODE_${index}__`;
     });
 
-    // 先提取所有 h2/h3 标题并生成 id 映射
-    const headingIdMap = new Map();
-    const headingRegex = /^(#{2,3})\s+(.+)$/gm;
-    let match;
-    while ((match = headingRegex.exec(html)) !== null) {
-      const text = match[2].replace(/\*\*/g, '');
-      const id = this.slugify(text);
-      headingIdMap.set(text, id);
-    }
-
-    // 处理标题（带 id）- 只处理行首的 #
+    // 处理标题（带 id）
     html = html.replace(/^### (.+)$/gm, (m, text) => {
       const cleanText = text.replace(/\*\*/g, '');
       const id = this.slugify(cleanText);
@@ -130,39 +120,41 @@ class MarkdownProcessor {
     // 转换模块间相对链接为绝对路径
     html = this.convertModuleLinks(html);
 
-    // 其余转换规则
-    const rules = [
-      // 粗体和斜体
-      { pattern: /\*\*(.+?)\*\*/g, replacement: '<strong>$1</strong>' },
-      { pattern: /\*(.+?)\*/g, replacement: '<em>$1</em>' },
-      // 链接
-      { pattern: /\[([^\]]+)\]\(([^)]+)\)/g, replacement: '<a href="$2">$1</a>' },
-      // 引用
-      { pattern: /^> (.+)$/gm, replacement: '<blockquote>$1</blockquote>' },
-      // 列表
-      { pattern: /^- (.+)$/gm, replacement: '<li>$1</li>' },
-      { pattern: /^\d+\. (.+)$/gm, replacement: '<li>$1</li>' },
-      // 水平线
-      { pattern: /^---$/gm, replacement: '<hr>' },
-      // 段落
-      { pattern: /\n\n/g, replacement: '</p><p>' },
-    ];
+    // 处理链接（必须在内联代码恢复之前）
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 
-    for (const rule of rules) {
-      html = html.replace(rule.pattern, rule.replacement);
-    }
+    // 粗体和斜体
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    // 恢复代码块
-    codeBlocks.forEach((block, index) => {
-      html = html.replace(`__CODEBLOCK_${index}__`, block);
-    });
+    // 引用
+    html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+
+    // 列表
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+    // 水平线
+    html = html.replace(/^---$/gm, '<hr>');
 
     // 恢复内联代码
     inlineCodes.forEach((code, index) => {
-      html = html.replace(`__INLINECODE_${index}__`, code);
+      html = html.replace(`__INLINECODE_${index}__`, `<code>${this.escapeHtml(code)}</code>`);
     });
 
-    // 包装段落
+    // 恢复代码块（转换为 HTML）
+    codeBlocks.forEach((block, index) => {
+      let codeHtml;
+      if (block.lang === 'mermaid') {
+        codeHtml = `<div class="mermaid">${block.code}</div>`;
+      } else {
+        codeHtml = `<pre><code class="language-${block.lang}">${this.escapeHtml(block.code)}</code></pre>`;
+      }
+      html = html.replace(`__CODEBLOCK_${index}__`, codeHtml);
+    });
+
+    // 段落处理
+    html = html.replace(/\n\n+/g, '</p><p>');
     html = '<p>' + html + '</p>';
     html = html.replace(/<p><\/p>/g, '');
     html = html.replace(/<p>(<h[1-6])/g, '$1');
@@ -180,6 +172,8 @@ class MarkdownProcessor {
     html = html.replace(/(<\/li>)<\/p>/g, '$1');
     html = html.replace(/<p>(<table>)/g, '$1');
     html = html.replace(/(<\/table>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<div class="mermaid">)/g, '$1');
+    html = html.replace(/(<\/div>)<\/p>/g, '$1');
 
     // 处理列表
     html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
@@ -190,9 +184,6 @@ class MarkdownProcessor {
 
     // 处理 Try It Now 区块
     html = this.processTryItNow(html);
-
-    // 处理 Mermaid 代码块
-    html = this.processMermaid(html);
 
     return html;
   }

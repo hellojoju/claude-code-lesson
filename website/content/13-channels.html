@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -238,13 +238,13 @@
 <ul><li><strong>实时推送</strong>：主动发送消息到外部平台</li>
 <li><strong>双向通信</strong>：接收外部指令和反馈</li>
 <li><strong>事件驱动</strong>：响应代码事件自动触发</li><h3 id="核心概念">核心概念</h3><div class="mermaid">graph LR
-    A[Claude Code] --&gt; B[MCP Server]
-    B --&gt; C[Discord]
-    B --&gt; D[Slack]
-    B --&gt; E[Custom Endpoint]
-    C --&gt; F[用户反馈]
-    D --&gt; F
-    F --&gt; A
+    A[Claude Code] --> B[MCP Server]
+    B --> C[Discord]
+    B --> D[Slack]
+    B --> E[Custom Endpoint]
+    C --> F[用户反馈]
+    D --> F
+    F --> A
 </div><h2 id="配置方式">配置方式</h2><h3 id="mcp-server-配置">MCP Server 配置</h3><p>在 <code>~/.claude/settings.json</code> 中配置：</p><pre><code class="language-json">{
   &quot;mcpServers&quot;: {
     &quot;discord-channel&quot;: {
@@ -292,9 +292,7 @@
 </tbody>
 </table>
 <h2 id="使用场景">使用场景</h2><h3 id="场景-1-构建通知">场景 1：构建通知</h3><pre><code class="language-bash"># 构建完成后自动通知 Discord
-&quot;配置 Hook：构建完成后发送 Discord 消息&quot;
-
-# Hook 配置
+&quot;配置 Hook：构建完成后发送 Discord 消息&quot;</p><p># Hook 配置
 {
   &quot;hooks&quot;: {
     &quot;Stop&quot;: [{
@@ -304,17 +302,11 @@
   }
 }
 </code></pre><h3 id="场景-2-团队协作">场景 2：团队协作</h3><pre><code class="language-markdown"># 通过 Slack 接收团队反馈
-&quot;检查 Slack channel 中的新消息&quot;
-
-# Claude 使用 MCP 工具
-mcp__slack-channel__receive_messages
-
-# 处理反馈
+&quot;检查 Slack channel 中的新消息&quot;</p><p># Claude 使用 MCP 工具
+mcp__slack-channel__receive_messages</p><p># 处理反馈
 &quot;根据团队反馈修改代码&quot;
 </code></pre><h3 id="场景-3-事件订阅">场景 3：事件订阅</h3><pre><code class="language-bash"># 订阅代码变更事件
-&quot;当检测到 git commit 时，通知 Discord&quot;
-
-# 配置自动触发
+&quot;当检测到 git commit 时，通知 Discord&quot;</p><p># 配置自动触发
 {
   &quot;hooks&quot;: {
     &quot;PostToolUse&quot;: [{
@@ -342,9 +334,7 @@ mcp__slack-channel__receive_messages
 </code></pre><h3 id="discord-工具使用">Discord 工具使用</h3><pre><code class="language-markdown"># 发送消息
 mcp__discord__send_message({
   &quot;content&quot;: &quot;构建成功！✅&quot;
-})
-
-# 接收消息
+})</p><p># 接收消息
 mcp__discord__receive_messages({
   &quot;limit&quot;: 10
 })
@@ -367,27 +357,19 @@ mcp__discord__receive_messages({
 mcp__slack__send_message({
   &quot;text&quot;: &quot;测试通过 ✅&quot;,
   &quot;channel&quot;: &quot;C...&quot;
-})
-
-# 接收消息
+})</p><p># 接收消息
 mcp__slack__receive_messages({
   &quot;channel&quot;: &quot;C...&quot;,
   &quot;limit&quot;: 20
 })
 </code></pre><h2 id="自定义-channels">自定义 Channels</h2><h3 id="创建自定义-mcp-server">创建自定义 MCP Server</h3><pre><code class="language-python"># mcp_custom_channel.py
 from mcp.server import Server
-from mcp.types import Tool
-
-server = Server(&quot;custom-channel&quot;)
-
-@server.tool()
+from mcp.types import Tool</p><p>server = Server(&quot;custom-channel&quot;)</p><p>@server.tool()
 async def send_notification(message: str) -&gt; str:
     &quot;&quot;&quot;发送通知到自定义端点&quot;&quot;&quot;
     # 发送到你的 API
     response = await post_to_api(message)
-    return f&quot;已发送: {message}&quot;
-
-@server.tool()
+    return f&quot;已发送: {message}&quot;</p><p>@server.tool()
 async def receive_feedback() -&gt; list:
     &quot;&quot;&quot;接收反馈&quot;&quot;&quot;
     # 从你的 API 获取
@@ -439,9 +421,7 @@ async def receive_feedback() -&gt; list:
 </code></pre><h2 id="消息格式">消息格式</h2><h3 id="discord-消息格式">Discord 消息格式</h3><pre><code class="language-markdown"># 使用 Discord Markdown
 **构建状态**: ✅ 成功
 **分支**: main
-**提交**: abc123
-
-变更摘要:
+**提交**: abc123</p><p>变更摘要:
 - feat: 添加认证
 - fix: 修复 bug
 </code></pre><h3 id="slack-消息格式">Slack 消息格式</h3><pre><code class="language-json">{
@@ -459,13 +439,9 @@ async def receive_feedback() -&gt; list:
 </code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-配置-discord">🎯 练习 1：配置 Discord</h3><pre><code class="language-bash"># 1. 创建 Discord Bot
 # 2. 获取 Token 和 Channel ID
 # 3. 配置 ~/.claude/settings.json
-# 4. 测试发送消息
-
-&quot;测试 Discord Channel：发送 &#039;Hello from Claude Code&#039;&quot;
+# 4. 测试发送消息</p><p>&quot;测试 Discord Channel：发送 &#039;Hello from Claude Code&#039;&quot;
 </code></pre><h3 id="练习-2-自动通知">🎯 练习 2：自动通知</h3><pre><code class="language-bash"># 配置 Stop Hook
-&quot;配置 Hook：每次会话结束时通知 Discord&quot;
-
-# 编辑 ~/.claude/settings.json
+&quot;配置 Hook：每次会话结束时通知 Discord&quot;</p><p># 编辑 ~/.claude/settings.json
 {
   &quot;hooks&quot;: {
     &quot;Stop&quot;: [{
@@ -474,9 +450,7 @@ async def receive_feedback() -&gt; list:
     }]
   }
 }
-</code></pre><h3 id="练习-3-接收反馈">🎯 练习 3：接收反馈</h3><pre><code class="language-bash">&quot;检查 Slack Channel 的最新消息并处理反馈&quot;
-
-# Claude 会：
+</code></pre><h3 id="练习-3-接收反馈">🎯 练习 3：接收反馈</h3><pre><code class="language-bash">&quot;检查 Slack Channel 的最新消息并处理反馈&quot;</p><p># Claude 会：
 1. 调用 mcp__slack__receive_messages
 2. 分析消息内容
 3. 根据反馈执行操作

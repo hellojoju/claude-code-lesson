@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -239,23 +239,11 @@
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
 </picture></p><blockquote>🟢 <strong>初级</strong> | ⏱ 25 分钟</blockquote>
 >
-<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将构建：</strong> 保存和恢复会话状态。</p><h1>Checkpoints（检查点）与回滚</h1><p>你的重构刚刚破坏了 3 个功能。测试失败了。API 返回 500 错误。而且你无法准确记得改了什么。这就是 checkpoints 如何拯救你 —— 一个按键操作，你就回到了正常工作状态，准备好尝试更谨慎的方法。</p><p>Checkpoints 允许你保存会话状态并回滚到 Claude Code 会话中的先前时刻。这对于探索不同方法、从错误中恢复或比较替代方案非常有价值。</p><hr><h2 id="糟糕-时刻">"糟糕"时刻</h2><p>我们都经历过：</p><pre><code class="language-">你: 重构认证模块以使用 OAuth2
-
-Claude: [跨 12 个文件进行了 47 处更改]
-
-你: 运行测试
-
-Claude: 测试失败。23 个断言被破坏。
+<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将构建：</strong> 保存和恢复会话状态。</p><h1>Checkpoints（检查点）与回滚</h1><p>你的重构刚刚破坏了 3 个功能。测试失败了。API 返回 500 错误。而且你无法准确记得改了什么。这就是 checkpoints 如何拯救你 —— 一个按键操作，你就回到了正常工作状态，准备好尝试更谨慎的方法。</p><p>Checkpoints 允许你保存会话状态并回滚到 Claude Code 会话中的先前时刻。这对于探索不同方法、从错误中恢复或比较替代方案非常有价值。</p><hr><h2 id="糟糕-时刻">"糟糕"时刻</h2><p>我们都经历过：</p><pre><code class="language-">你: 重构认证模块以使用 OAuth2</p><p>Claude: [跨 12 个文件进行了 47 处更改]</p><p>你: 运行测试</p><p>Claude: 测试失败。23 个断言被破坏。
        支付处理出错。
-       数据库连接丢失。
-
-你: ...刚才发生了什么？
-</code></pre><p>没有 checkpoints，你就陷入困境了。你可能要花几个小时调试。或者你可能不得不撤销一切重新开始，丢失所有混在错误中的正确更改。</p><p><strong>有了 checkpoints：</strong></p><pre><code class="language-">你: [按两次 Esc] 回滚到重构前
-
-Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
-       所有文件已还原。会话已恢复。
-
-你: 让我们再试一次，一次一个模块。
+       数据库连接丢失。</p><p>你: ...刚才发生了什么？
+</code></pre><p>没有 checkpoints，你就陷入困境了。你可能要花几个小时调试。或者你可能不得不撤销一切重新开始，丢失所有混在错误中的正确更改。</p><p><strong>有了 checkpoints：</strong></p><pre><code class="language-">你: [按两次 Esc] 回滚到重构前</p><p>Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
+       所有文件已还原。会话已恢复。</p><p>你: 让我们再试一次，一次一个模块。
 </code></pre><p>这就是 checkpoints 的威力 —— 从任何"糟糕"时刻瞬间恢复。</p><hr><h2 id="什么是-checkpoints">什么是 Checkpoints？</h2><p>Checkpoints 是会话状态的快照，包括：</p><table>
 <thead>
 <tr>
@@ -309,42 +297,40 @@ Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
 </tbody>
 </table>
 <hr></p><h2 id="访问-checkpoints">访问 Checkpoints</h2><p>你可以通过两种主要方式访问和管理 checkpoints：</p><h3 id="使用键盘快捷键">使用键盘快捷键</h3><p>按两次 <code>Esc</code>（<code>Esc</code> + <code>Esc</code>）打开 checkpoint 界面并浏览已保存的 checkpoints。</p><h3 id="使用-slash-命令">使用 Slash 命令</h3><p>使用 <code>/rewind</code> 命令（别名：<code>/checkpoint</code>）快速访问：</p><pre><code class="language-bash"># 打开回滚界面
-/rewind
-
-# 或使用别名
+/rewind</p><p># 或使用别名
 /checkpoint
 </code></pre><hr><h2 id="checkpoint-策略决策树">Checkpoint 策略决策树</h2><p>何时应该创建 checkpoints？何时应该回滚？这个决策树指导你通过 checkpoint 工作流：</p><div class="mermaid">flowchart TD
-    A[我想做出更改] --&gt; B{是否有风险？}
-    B --&gt;|是| C[记录当前 checkpoint ID]
-    B --&gt;|否| D[正常进行]
+    A[我想做出更改] --> B{是否有风险？}
+    B -->|是| C[记录当前 checkpoint ID]
+    B -->|否| D[正常进行]
     
-    C --&gt; E[进行更改]
-    D --&gt; E
+    C --> E[进行更改]
+    D --> E
     
-    E --&gt; F{成功了吗？}
-    F --&gt;|是| G[继续工作]
-    F --&gt;|否| H{想尝试不同方法？}
+    E --> F{成功了吗？}
+    F -->|是| G[继续工作]
+    F -->|否| H{想尝试不同方法？}
     
-    H --&gt;|是| I[按 Esc+Esc]
-    H --&gt;|否| J[调试问题]
+    H -->|是| I[按 Esc+Esc]
+    H -->|否| J[调试问题]
     
-    I --&gt; K[选择较早的 checkpoint]
-    K --&gt; L{恢复什么？}
+    I --> K[选择较早的 checkpoint]
+    K --> L{恢复什么？}
     
-    L --&gt;|全部| M[恢复代码和会话]
-    L --&gt;|仅文件| N[仅恢复代码]
-    L --&gt;|仅上下文| O[仅恢复会话]
-    L --&gt;|保留但压缩| P[从此处开始摘要]
+    L -->|全部| M[恢复代码和会话]
+    L -->|仅文件| N[仅恢复代码]
+    L -->|仅上下文| O[仅恢复会话]
+    L -->|保留但压缩| P[从此处开始摘要]
     
-    M --&gt; E
-    N --&gt; E
-    O --&gt; E
-    P --&gt; Q[摘要替换消息]
+    M --> E
+    N --> E
+    O --> E
+    P --> Q[摘要替换消息]
     
-    G --&gt; R{想比较方法？}
-    R --&gt;|是| S[记录当前状态]
-    S --&gt; I
-    R --&gt;|否| T[继续会话]
+    G --> R{想比较方法？}
+    R -->|是| S[记录当前状态]
+    S --> I
+    R -->|否| T[继续会话]
 </div><hr><h2 id="回滚选项详解">回滚选项详解</h2><p>当你回滚时，会看到五个选项。理解每个选项有助于你选择正确的恢复策略：</p><h3 id="1-恢复代码和会话">1. 恢复代码和会话</h3><p><strong>使用场景：</strong> 你想要完全重置到一个已知良好的状态。</p><pre><code class="language-">之前: Checkpoint A（正常状态）
       ↓
       已做出更改（损坏状态）
@@ -354,21 +340,15 @@ Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
       消息：已还原
       工具历史：已还原
 </code></pre><p>这是你的"核选项" —— 完全回滚到保存点。</p><h3 id="2-仅恢复会话">2. 仅恢复会话</h3><p><strong>使用场景：</strong> 你想要重置上下文但保留文件更改。</p><pre><code class="language-">场景：你做出了正确的代码更改但会话
-      变得混乱或走向了错误的方向。
-
-结果：文件保持原样
+      变得混乱或走向了错误的方向。</p><p>结果：文件保持原样
       会话重置到 checkpoint
       你可以在干净的上下文中重新解释需求
 </code></pre><h3 id="3-仅恢复代码">3. 仅恢复代码</h3><p><strong>使用场景：</strong> 会话有帮助但代码更改破坏了某些东西。</p><pre><code class="language-">场景：Claude 搞清楚了架构但实现
-      有 bug。
-
-结果：文件还原到 checkpoint 状态
+      有 bug。</p><p>结果：文件还原到 checkpoint 状态
       会话历史保留
       你可以回顾推理过程
 </code></pre><h3 id="4-从此处开始摘要">4. 从此处开始摘要</h3><p><strong>使用场景：</strong> 会话太长，你想压缩历史。</p><pre><code class="language-">场景：你已经工作了 2 小时，上下文
-      变得臃肿，但不想丢失一切。
-
-结果：Claude 生成会话摘要
+      变得臃肿，但不想丢失一切。</p><p>结果：Claude 生成会话摘要
       摘要替换从 checkpoint 开始的消息
       原始消息保留在转录中
       上下文窗口释放
@@ -404,98 +384,86 @@ Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
     participant C as Claude Code
     participant CP as Checkpoint 系统
     
-    U-&gt;&gt;C: 请求重构
+    U->>C: 请求重构
     Note over C,CP: 自动 checkpoint 已创建
     
-    C-&gt;&gt;U: 正在对认证模块进行更改...
-    C-&gt;&gt;U: 已修改 8 个文件
+    C->>U: 正在对认证模块进行更改...
+    C->>U: 已修改 8 个文件
     
-    U-&gt;&gt;C: 运行测试
-    C-&gt;&gt;U: 5 个测试失败！
+    U->>C: 运行测试
+    C->>U: 5 个测试失败！
     
-    U-&gt;&gt;CP: 按 Esc+Esc
-    CP-&gt;&gt;U: 显示 checkpoints
+    U->>CP: 按 Esc+Esc
+    CP->>U: 显示 checkpoints
     
-    U-&gt;&gt;CP: 选择重构前的 checkpoint
-    U-&gt;&gt;CP: 选择&quot;恢复代码和会话&quot;
+    U->>CP: 选择重构前的 checkpoint
+    U->>CP: 选择"恢复代码和会话"
     
-    CP-&gt;&gt;U: 已恢复到 checkpoint
+    CP->>U: 已恢复到 checkpoint
     Note over U: 干净的状态，准备再试一次
     
-    U-&gt;&gt;C: 这次让我们更谨慎地重构
+    U->>C: 这次让我们更谨慎地重构
 </div><p><strong>立即尝试：</strong></p><p>上下文：你即将对认证模块进行可能有风险的操作。</p><li>开始一个可能有风险的操作：</li>
-   <pre><code class="language-">   你: 重构数据库层以使用连接池
+   </p><pre><code class="language-">   你: 重构数据库层以使用连接池
    </code></pre><li>如果出现问题，按两次 <code>Esc</code> 并选择重构前的 checkpoint。</li><li>选择"恢复代码和会话"获得干净的状态。</li><p>预期输出：所有更改已还原，会话重置到重构前状态。</p><h3 id="模板-2-a-b-测试工作流">模板 2：A/B 测试工作流</h3><p>当你想要比较两种不同方法时使用此工作流。</p><div class="mermaid">flowchart LR
-    A[起始点] --&gt; B[实现方法 A]
-    B --&gt; C[保存结果 A]
-    C --&gt; D[回滚到起点]
-    D --&gt; E[实现方法 B]
-    E --&gt; F[保存结果 B]
-    F --&gt; G[比较 A vs B]
-    G --&gt; H[选择胜者]
+    A[起始点] --> B[实现方法 A]
+    B --> C[保存结果 A]
+    C --> D[回滚到起点]
+    D --> E[实现方法 B]
+    E --> F[保存结果 B]
+    F --> G[比较 A vs B]
+    G --> H[选择胜者]
 </div><p><strong>分步操作：</strong></p><li><strong>记录你的起始 checkpoint：</strong></li>
-   <pre><code class="language-">   你: 我在 checkpoint &quot;feature-start-001&quot;
+   </p><pre><code class="language-">   你: 我在 checkpoint &quot;feature-start-001&quot;
    Claude: 已记录。当前状态已保存。
    </code></pre><li><strong>实现方法 A：</strong></li>
-   <pre><code class="language-">   你: 用 Redis 实现缓存
+   </p><pre><code class="language-">   你: 用 Redis 实现缓存
    Claude: [实现 Redis 缓存]
    
    你: 运行基准测试
    Claude: 平均响应时间：45ms
    </code></pre><li><strong>保存你的结果：</strong></li>
-   <pre><code class="language-">   你: 记录：Redis 方法给出 45ms 响应时间
+   </p><pre><code class="language-">   你: 记录：Redis 方法给出 45ms 响应时间
    </code></pre><li><strong>回滚并尝试方法 B：</strong></li>
-   <pre><code class="language-">   你: [按 Esc+Esc，回滚到 &quot;feature-start-001&quot;]
+   </p><pre><code class="language-">   你: [按 Esc+Esc，回滚到 &quot;feature-start-001&quot;]
    你: 用内存缓存实现缓存
    Claude: [实现内存缓存]
    
    你: 运行基准测试
    Claude: 平均响应时间：12ms
    </code></pre><li><strong>比较并选择：</strong></li>
-   <pre><code class="language-">   你: 内存缓存快 3 倍。就用那个。
+   </p><pre><code class="language-">   你: 内存缓存快 3 倍。就用那个。
    </code></pre><p><strong>立即尝试：</strong></p><p>上下文：你需要为数据处理管道比较两种不同的排序算法。</p><pre><code class="language-">你: 我想比较两种排序算法。 
-     当前 checkpoint 是我的基线。
-
-Claude: 准备实现第一个算法。
-
-你: 实现快速排序并运行基准测试套件。
-
-[Claude 运行基准测试，报告结果]
-
-你: 很好，结果已保存。现在我要回滚并尝试归并排序。
-
-[按 Esc+Esc，回滚到基线]
-
-你: 实现归并排序并运行相同的基准测试。
+     当前 checkpoint 是我的基线。</p><p>Claude: 准备实现第一个算法。</p><p>你: 实现快速排序并运行基准测试套件。</p><p>[Claude 运行基准测试，报告结果]</p><p>你: 很好，结果已保存。现在我要回滚并尝试归并排序。</p><p>[按 Esc+Esc，回滚到基线]</p><p>你: 实现归并排序并运行相同的基准测试。
 </code></pre><p>预期输出：两个基准测试结果可供比较，无代码冲突。</p><h3 id="模板-3-灾难恢复工作流">模板 3：灾难恢复工作流</h3><p>当发生严重问题时使用此工作流。</p><div class="mermaid">stateDiagram-v2
-    [*] --&gt; NormalWork
-    NormalWork --&gt; Disaster: 某些东西坏了
+    [*] --> NormalWork
+    NormalWork --> Disaster: 某些东西坏了
     
-    Disaster --&gt; Panic: 不要惊慌！
-    Panic --&gt; Assess: 深呼吸
-    Assess --&gt; Rewind: 使用 checkpoints
+    Disaster --> Panic: 不要惊慌！
+    Panic --> Assess: 深呼吸
+    Assess --> Rewind: 使用 checkpoints
     
-    Rewind --&gt; SelectPoint: 打开 checkpoint 浏览器
-    SelectPoint --&gt; ChooseRestore: 选择安全点
-    ChooseRestore --&gt; Restored: 应用恢复
+    Rewind --> SelectPoint: 打开 checkpoint 浏览器
+    SelectPoint --> ChooseRestore: 选择安全点
+    ChooseRestore --> Restored: 应用恢复
     
-    Restored --&gt; Verify: 检查一切是否正常
-    Verify --&gt; NormalWork: 都好了！
-    Verify --&gt; Rewind: 还是坏了，尝试更早的点
+    Restored --> Verify: 检查一切是否正常
+    Verify --> NormalWork: 都好了！
+    Verify --> Rewind: 还是坏了，尝试更早的点
 </div><p><strong>恢复流程：</strong></p><li><strong>不要惊慌。</strong> Checkpoints 会保护你。</li><li><strong>评估损害：</strong></li>
-   <pre><code class="language-">   你: 刚刚什么坏了？
+   </p><pre><code class="language-">   你: 刚刚什么坏了？
    Claude: 部署失败，3 个服务下线，
            数据库迁移部分回滚。
    </code></pre><li><strong>打开 checkpoint 浏览器：</strong></li>
-   <pre><code class="language-">   按 Esc+Esc（或 /rewind）
+   </p><pre><code class="language-">   按 Esc+Esc（或 /rewind）
    </code></pre><li><strong>选择一个已知良好的 checkpoint：</strong></li>
    - 寻找危险操作前的 checkpoints
    - 检查时间戳找到正确的那个
    - "恢复代码和会话"用于完全回滚</p><li><strong>验证恢复：</strong></li>
-   <pre><code class="language-">   你: 运行测试套件
+   </p><pre><code class="language-">   你: 运行测试套件
    Claude: 所有 847 个测试通过。
    </code></pre><li><strong>记录发生的事情：</strong></li>
-   <pre><code class="language-">   你: 未来注意：不要在高峰流量期间运行迁移。
+   </p><pre><code class="language-">   你: 未来注意：不要在高峰流量期间运行迁移。
    </code></pre><hr><h2 id="与规划模式的集成">与规划模式的集成</h2><p>规划模式和 Checkpoints 作为复杂任务的强大组合一起工作。</p><h3 id="它们如何互补">它们如何互补</h3><table>
 <thead>
 <tr>
@@ -528,25 +496,23 @@ Claude: 准备实现第一个算法。
 </tbody>
 </table>
 <h3 id="推荐工作流">推荐工作流</h3><div class="mermaid">flowchart TD
-    A[复杂任务] --&gt; B[启用规划模式]
-    B --&gt; C[记录 checkpoint ID]
-    C --&gt; D[审查计划]
+    A[复杂任务] --> B[启用规划模式]
+    B --> C[记录 checkpoint ID]
+    C --> D[审查计划]
     
-    D --&gt; E{计划看起来好？}
-    E --&gt;|否| F[修订计划]
-    F --&gt; D
+    D --> E{计划看起来好？}
+    E -->|否| F[修订计划]
+    F --> D
     
-    E --&gt;|是| G[执行计划]
-    G --&gt; H{执行成功？}
+    E -->|是| G[执行计划]
+    G --> H{执行成功？}
     
-    H --&gt;|是| I[提交更改]
-    H --&gt;|否| J[回滚到 checkpoint]
-    J --&gt; K[修订计划]
-    K --&gt; D
+    H -->|是| I[提交更改]
+    H -->|否| J[回滚到 checkpoint]
+    J --> K[修订计划]
+    K --> D
 </div><h3 id="示例-规划-checkpoints-实战">示例：规划 + Checkpoints 实战</h3><pre><code class="language-">你: /plan 重构认证系统以支持 
-     多租户。这很复杂，涉及 20+ 个文件。
-
-Claude: [规划模式已启用]
+     多租户。这很复杂，涉及 20+ 个文件。</p><p>Claude: [规划模式已启用]
         创建实施计划...
         
         计划：
@@ -556,65 +522,52 @@ Claude: [规划模式已启用]
         4. 迁移现有数据
         5. 更新测试
         
-        注意：当前 checkpoint 是 &quot;auth-multitenant-start&quot;
-
-你: 计划批准。执行。
-
-Claude: [逐步执行计划]
+        注意：当前 checkpoint 是 &quot;auth-multitenant-start&quot;</p><p>你: 计划批准。执行。</p><p>Claude: [逐步执行计划]
         步骤 1 完成...
         步骤 2 完成...
-        步骤 3 失败！迁移错误。
-
-你: [按 Esc+Esc] 回滚到 &quot;auth-multitenant-start&quot;
-
-Claude: 已恢复到 checkpoint。 
-        问题在步骤 3 —— 让我们调整计划。
-
-你: /plan 修订步骤 3 以处理迁移错误
-
-Claude: [规划模式已启用]
+        步骤 3 失败！迁移错误。</p><p>你: [按 Esc+Esc] 回滚到 &quot;auth-multitenant-start&quot;</p><p>Claude: 已恢复到 checkpoint。 
+        问题在步骤 3 —— 让我们调整计划。</p><p>你: /plan 修订步骤 3 以处理迁移错误</p><p>Claude: [规划模式已启用]
         步骤 3 的修订计划...
 </code></pre><h3 id="关键集成点">关键集成点</h3><li><strong>规划前：</strong> 记录你的 checkpoint ID</li>
 <li><strong>规划中：</strong> 参考 checkpoint 以便回滚</li>
 <li><strong>规划后：</strong> 如果计划失败，回滚并修订</li><hr><h2 id="checkpoint-生命周期">Checkpoint 生命周期</h2><p>理解完整生命周期有助于你有效使用 checkpoints。</p><div class="mermaid">flowchart TD
     subgraph Creation[创建]
-        A[用户消息发送] --&gt; B[Checkpoint 创建]
-        B --&gt; C[存储在会话中]
+        A[用户消息发送] --> B[Checkpoint 创建]
+        B --> C[存储在会话中]
     end
     
     subgraph Storage[存储]
-        C --&gt; D{已存在？}
-        D --&gt;|否| E[保存到磁盘]
-        D --&gt;|是| F[更新现有]
-        E --&gt; G[按时间戳索引]
-        F --&gt; G
+        C --> D{已存在？}
+        D -->|否| E[保存到磁盘]
+        D -->|是| F[更新现有]
+        E --> G[按时间戳索引]
+        F --> G
     end
     
     subgraph Usage[使用]
-        G --&gt; H[可用于回滚]
-        H --&gt; I{用户回滚？}
-        I --&gt;|是| J[加载 Checkpoint]
-        J --&gt; K[恢复状态]
-        K --&gt; L[继续会话]
-        I --&gt;|否| M[继续工作]
-        M --&gt; A
+        G --> H[可用于回滚]
+        H --> I{用户回滚？}
+        I -->|是| J[加载 Checkpoint]
+        J --> K[恢复状态]
+        K --> L[继续会话]
+        I -->|否| M[继续工作]
+        M --> A
     end
     
     subgraph Cleanup[清理]
-        N[清理进程] --&gt; O{年龄 &gt; 30 天？}
-        O --&gt;|是| P[标记删除]
-        O --&gt;|否| Q[保留]
-        P --&gt; R[从磁盘删除]
-        Q --&gt; H
+        N[清理进程] --> O{年龄 > 30 天？}
+        O -->|是| P[标记删除]
+        O -->|否| Q[保留]
+        P --> R[从磁盘删除]
+        Q --> H
     end
     
-    G --&gt; N
+    G --> N
 </div><hr><h2 id="立即尝试-checkpoint-探索器">立即尝试：Checkpoint 探索器</h2><p><strong>目标：</strong> 熟悉 checkpoint 界面并了解可用的信息。</p><p>上下文：你想查看当前会话中存在的 checkpoints 并了解它们包含的详细信息。</p><li>打开 checkpoint 浏览器：</li>
-   <pre><code class="language-">   按两次 Esc（Esc + Esc）
-   </code></pre>
-   
+   </p><pre><code class="language-">   按两次 Esc（Esc + Esc）
+   </code></pre><p>   
    或使用 slash 命令：
-   <pre><code class="language-">   /rewind
+   </p><pre><code class="language-">   /rewind
    </code></pre><li>浏览 checkpoint 列表：</li>
    - 注意每个 checkpoint 的时间戳
    - 查看每个时刻的消息数量
@@ -663,44 +616,44 @@ Claude: [规划模式已启用]
 ├── 使用工具：Edit（23），Bash（8），Read（15）
 └── 会话上下文：可用
 </code></pre><hr><h2 id="立即尝试-动手练习">立即尝试：动手练习</h2><h3 id="练习-1-基本回滚">练习 1：基本回滚</h3><p><strong>目标：</strong> 亲身体验 checkpoint 工作流。</p><p>上下文：你想通过做出一个可逆更改来理解 checkpoints 如何工作。</p><li>做一个更改：</li>
-   <pre><code class="language-">   你: 在 README.md 顶部添加一个注释，内容是&quot;临时测试&quot;
+   </p><pre><code class="language-">   你: 在 README.md 顶部添加一个注释，内容是&quot;临时测试&quot;
    </code></pre><li>验证更改：</li>
-   <pre><code class="language-">   你: 读取 README.md 的第一行
+   </p><pre><code class="language-">   你: 读取 README.md 的第一行
    Claude: &quot;临时测试&quot;在顶部。
    </code></pre><li>回滚：</li>
    - 按两次 <code>Esc</code>
    - 选择步骤 1 之前的 checkpoint
    - 选择"恢复代码和会话"</p><li>验证回滚：</li>
-   <pre><code class="language-">   你: 读取 README.md 的第一行
+   </p><pre><code class="language-">   你: 读取 README.md 的第一行
    Claude: 原始第一行回来了。
    </code></pre><p>预期输出：步骤 2 后，注释可见。步骤 4 后，注释消失，原始内容恢复。</p><h3 id="练习-2-分支探索">练习 2：分支探索</h3><p><strong>目标：</strong> 使用 checkpoints 探索两种不同方法。</p><p>上下文：你在设计一个按钮组件，想比较样式选项。</p><li>记录你的起始点：</li>
-   <pre><code class="language-">   你: 我在 checkpoint &quot;exploration-base&quot;。我想尝试 
+   </p><pre><code class="language-">   你: 我在 checkpoint &quot;exploration-base&quot;。我想尝试 
        两种不同的按钮样式。
    </code></pre><li>实现样式 A：</li>
-   <pre><code class="language-">   你: 用渐变背景样式化按钮
+   </p><pre><code class="language-">   你: 用渐变背景样式化按钮
    Claude: [添加渐变 CSS]
    </code></pre><li>记录结果：</li>
-   <pre><code class="language-">   你: 样式 A：渐变背景已应用
+   </p><pre><code class="language-">   你: 样式 A：渐变背景已应用
    </code></pre><li>回滚并尝试样式 B：</li>
-   <pre><code class="language-">   [按 Esc+Esc，回滚到 &quot;exploration-base&quot;]
+   </p><pre><code class="language-">   [按 Esc+Esc，回滚到 &quot;exploration-base&quot;]
    
    你: 用实色和阴影样式化按钮
    Claude: [添加实色 CSS]
    </code></pre><li>比较：</li>
-   <pre><code class="language-">   你: 哪种样式更适合我们的品牌？
+   </p><pre><code class="language-">   你: 哪种样式更适合我们的品牌？
    Claude: 如果你提醒我样式 A 
            看起来什么样，我可以描述两者...
    </code></pre><p>预期输出：你有两个不同的实现可供选择，无代码冲突，因为每个都是独立测试的。</p><h3 id="练习-3-恢复练习">练习 3：恢复练习</h3><p><strong>目标：</strong> 练习从"损坏"状态恢复。</p><p>上下文：你意外做了一个破坏性更改，需要快速恢复。</p><li>故意制造问题：</li>
-   <pre><code class="language-">   你: 删除整个 src/ 目录
+   </p><pre><code class="language-">   你: 删除整个 src/ 目录
    Claude: [删除 src/ 目录]
    </code></pre><li>惊慌（开玩笑）：</li>
-   <pre><code class="language-">   你: 糟糕！我需要把它恢复回来！
+   </p><pre><code class="language-">   你: 糟糕！我需要把它恢复回来！
    </code></pre><li>恢复：</li>
-   <pre><code class="language-">   [按 Esc+Esc]
+   </p><pre><code class="language-">   [按 Esc+Esc]
    [选择删除前的 checkpoint]
    [选择&quot;仅恢复代码&quot;]
    </code></pre><li>验证：</li>
-   <pre><code class="language-">   你: 列出 src/ 中的文件
+   </p><pre><code class="language-">   你: 列出 src/ 中的文件
    Claude: 所有文件已恢复。
    </code></pre><p>预期输出：目录恢复到删除前状态，无永久损坏。</p><hr><h2 id="模式与配方">模式与配方</h2><h3 id="模式-1-分支探索">模式 1：分支探索</h3><p><strong>何时使用：</strong> 比较多种实现方法。</p><p><strong>配方：</strong></p><pre><code class="language-">1. 记录起始 checkpoint
 2. 实现方法 A
@@ -709,23 +662,15 @@ Claude: [规划模式已启用]
 5. 实现方法 B
 6. 记录结果/指标
 7. 比较并选择胜者
-</code></pre><p><strong>示例：</strong></p><pre><code class="language-markdown"># 比较：数据库连接策略
-
-## 基线 Checkpoint：&quot;db-optimization-start&quot;
-
-### 方法 A：连接池
+</code></pre><p><strong>示例：</strong></p><pre><code class="language-markdown"># 比较：数据库连接策略</p><p>## 基线 Checkpoint：&quot;db-optimization-start&quot;</p><p>### 方法 A：连接池
 - Checkpoint：&quot;db-pooling-complete&quot;
 - 连接时间：2ms 平均
 - 内存：+15MB
-- 复杂度：低
-
-### 方法 B：连接复用
+- 复杂度：低</p><p>### 方法 B：连接复用
 - Checkpoint：&quot;db-multiplex-complete&quot;
 - 连接时间：1.5ms 平均
 - 内存：+8MB
-- 复杂度：中
-
-## 决策：方法 B
+- 复杂度：中</p><p>## 决策：方法 B
 - 连接快 25%
 - 更低的内存占用
 - 复杂度对我们的用例可接受
@@ -736,23 +681,11 @@ Claude: [规划模式已启用]
 5. 如果失败：回滚，调整方法
 6. 如果通过：提交，记录新 checkpoint
 7. 对下一个更改重复
-</code></pre><p><strong>示例：</strong></p><pre><code class="language-">你: 所有测试通过。Checkpoint：&quot;refactor-step-0&quot;
-
-你: 将验证逻辑提取到单独的函数
-Claude: [将验证提取到 validateInput()]
-
-你: 运行测试
-Claude: 验证模块中 3 个测试失败
-
-你: [回滚到 &quot;refactor-step-0&quot;]
-
-你: 让我们用不同方式提取 —— 保持签名相同
-Claude: [用相同签名提取]
-
-你: 运行测试
-Claude: 所有测试通过。Checkpoint：&quot;refactor-step-1&quot;
-
-你: 很好，提交这一步并继续。
+</code></pre><p><strong>示例：</strong></p><pre><code class="language-">你: 所有测试通过。Checkpoint：&quot;refactor-step-0&quot;</p><p>你: 将验证逻辑提取到单独的函数
+Claude: [将验证提取到 validateInput()]</p><p>你: 运行测试
+Claude: 验证模块中 3 个测试失败</p><p>你: [回滚到 &quot;refactor-step-0&quot;]</p><p>你: 让我们用不同方式提取 —— 保持签名相同
+Claude: [用相同签名提取]</p><p>你: 运行测试
+Claude: 所有测试通过。Checkpoint：&quot;refactor-step-1&quot;</p><p>你: 很好，提交这一步并继续。
 </code></pre><h3 id="模式-3-恢复流程">模式 3：恢复流程</h3><p><strong>何时使用：</strong> 出了问题需要恢复。</p><p><strong>配方：</strong></p><pre><code class="language-">1. 停止！不要做更多更改。
 2. 评估：什么坏了？
 3. 打开 checkpoint 浏览器（Esc+Esc）
@@ -764,24 +697,16 @@ Claude: 所有测试通过。Checkpoint：&quot;refactor-step-1&quot;
 6. 用测试验证恢复
 7. 记录哪里出了问题
 8. 用修订的方法继续
-</code></pre><p><strong>示例恢复日志：</strong></p><pre><code class="language-markdown"># 恢复日志：2024-01-15
-
-## 事故
+</code></pre><p><strong>示例恢复日志：</strong></p><pre><code class="language-markdown"># 恢复日志：2024-01-15</p><p>## 事故
 - 尝试：高峰流量期间数据库架构迁移
 - 结果：连接池耗尽，500 错误
-- Checkpoint：&quot;pre-migration-stable&quot;
-
-## 恢复
+- Checkpoint：&quot;pre-migration-stable&quot;</p><p>## 恢复
 - 回滚到：&quot;pre-migration-stable&quot;
 - 恢复类型：代码和会话
-- 验证：所有健康检查通过
-
-## 经验教训
+- 验证：所有健康检查通过</p><p>## 经验教训
 - 永不在高峰时段迁移
 - 添加连接池监控
-- 先在 staging 测试迁移
-
-## 下一步
+- 先在 staging 测试迁移</p><p>## 下一步
 - 在非高峰时段调度迁移
 - 添加回滚流程到运维手册
 </code></pre><h3 id="模式-4-增量-checkpoint-命名">模式 4：增量 Checkpoint 命名</h3><p><strong>何时使用：</strong> 复杂的多步操作。</p><p><strong>配方：</strong></p><pre><code class="language-">1. 在每个主要步骤前，记录 checkpoint
@@ -791,44 +716,18 @@ Claude: 所有测试通过。Checkpoint：&quot;refactor-step-1&quot;
    &quot;Checkpoint：step-3-tests-passing&quot;
 3. 如果步骤 3 失败，回滚到步骤 2
 </code></pre><p><strong>示例：</strong></p><pre><code class="language-">你: 开始功能实现。
-     Checkpoint：&quot;feature-start&quot;
-
-Claude: [实现模型]
-        模型已创建并迁移。
-
-你: 测试通过。Checkpoint：&quot;feature-models-done&quot;
-
-Claude: [实现路由]
-        路由已添加。
-
-你: 测试通过。Checkpoint：&quot;feature-routes-done&quot;
-
-Claude: [实现控制器]
-        控制器已添加。
-
-你: 测试失败！回滚到 &quot;feature-routes-done&quot;
-
-Claude: [已恢复] 控制器哪里出了问题？
-
-你: 这次让我们更仔细地实现它们。
+     Checkpoint：&quot;feature-start&quot;</p><p>Claude: [实现模型]
+        模型已创建并迁移。</p><p>你: 测试通过。Checkpoint：&quot;feature-models-done&quot;</p><p>Claude: [实现路由]
+        路由已添加。</p><p>你: 测试通过。Checkpoint：&quot;feature-routes-done&quot;</p><p>Claude: [实现控制器]
+        控制器已添加。</p><p>你: 测试失败！回滚到 &quot;feature-routes-done&quot;</p><p>Claude: [已恢复] 控制器哪里出了问题？</p><p>你: 这次让我们更仔细地实现它们。
 </code></pre><h3 id="模式-5-checkpoint-作为文档">模式 5：Checkpoint 作为文档</h3><p><strong>何时使用：</strong> 协作或记录决策点。</p><p><strong>配方：</strong></p><pre><code class="language-">1. 在关键决策点，记录 checkpoint
 2. 记录做出的决策
 3. 如果稍后回顾，checkpoint 作为参考
-</code></pre><p><strong>示例：</strong></p><pre><code class="language-markdown"># 决策日志
-
-## 2024-01-15：API 版本策略
-
-**Checkpoint：**&quot;api-versioning-decision&quot;
-
-**考虑的选项：**
+</code></pre><p><strong>示例：</strong></p><pre><code class="language-markdown"># 决策日志</p><p>## 2024-01-15：API 版本策略</p><p>**Checkpoint：**&quot;api-versioning-decision&quot;</p><p>**考虑的选项：**
 - A：URL 路径版本化（/v1/users）
 - B：查询参数版本化（/users?version=1）
-- C：头部版本化（Accept：application/vnd.api.v1+json）
-
-**决策：**选项 A - URL 路径版本化
-**理由：**对客户端更简单，更容易缓存
-
-**回顾：**
+- C：头部版本化（Accept：application/vnd.api.v1+json）</p><p>**决策：**选项 A - URL 路径版本化
+**理由：**对客户端更简单，更容易缓存</p><p>**回顾：**
 回滚到 checkpoint &quot;api-versioning-decision&quot; 并 
 尝试选项 B 进行比较。
 </code></pre><hr><h2 id="用例">用例</h2><table>
@@ -865,72 +764,26 @@ Claude: [已恢复] 控制器哪里出了问题？
 <li>创建时的时间戳</li>
 <li>修改的文件</li>
 <li>会话中的消息数量</li>
-<li>使用的工具</li><hr><h2 id="实际示例">实际示例</h2><h3 id="示例-1-探索不同方法">示例 1：探索不同方法</h3><pre><code class="language-">用户: 让我们给 API 添加一个缓存层
-
-Claude: 我会给你的 API 端点添加 Redis 缓存...
-[在 checkpoint A 处做更改]
-
-用户: 实际上，让我们尝试内存缓存代替
-
-Claude: 我会回滚以探索不同的方法...
+<li>使用的工具</li><hr><h2 id="实际示例">实际示例</h2><h3 id="示例-1-探索不同方法">示例 1：探索不同方法</h3><pre><code class="language-">用户: 让我们给 API 添加一个缓存层</p><p>Claude: 我会给你的 API 端点添加 Redis 缓存...
+[在 checkpoint A 处做更改]</p><p>用户: 实际上，让我们尝试内存缓存代替</p><p>Claude: 我会回滚以探索不同的方法...
 [用户按 Esc+Esc 并回滚到 checkpoint A]
-[在 checkpoint B 处实现内存缓存]
-
-用户: 现在我可以比较两种方法
-</code></pre><h3 id="示例-2-从错误恢复">示例 2：从错误恢复</h3><pre><code class="language-">用户: 重构认证模块以使用 JWT
-
-Claude: 我会重构认证模块...
-[做出大量更改]
-
-用户: 等等，那破坏了 OAuth 集成。让我们回去。
-
-Claude: 我会帮你回滚到重构前...
-[用户按 Esc+Esc 并选择重构前的 checkpoint]
-
-用户: 这次让我们尝试更保守的方法
+[在 checkpoint B 处实现内存缓存]</p><p>用户: 现在我可以比较两种方法
+</code></pre><h3 id="示例-2-从错误恢复">示例 2：从错误恢复</h3><pre><code class="language-">用户: 重构认证模块以使用 JWT</p><p>Claude: 我会重构认证模块...
+[做出大量更改]</p><p>用户: 等等，那破坏了 OAuth 集成。让我们回去。</p><p>Claude: 我会帮你回滚到重构前...
+[用户按 Esc+Esc 并选择重构前的 checkpoint]</p><p>用户: 这次让我们尝试更保守的方法
 </code></pre><h3 id="示例-3-安全实验">示例 3：安全实验</h3><pre><code class="language-">用户: 让我们尝试用函数式风格重写这个
-[在实验前创建 checkpoint]
-
-Claude: [做出实验性更改]
-
-用户: 测试失败了。让我们回滚。
-[用户按 Esc+Esc 并回滚到 checkpoint]
-
-Claude: 我已回滚更改。让我们尝试不同的方法。
+[在实验前创建 checkpoint]</p><p>Claude: [做出实验性更改]</p><p>用户: 测试失败了。让我们回滚。
+[用户按 Esc+Esc 并回滚到 checkpoint]</p><p>Claude: 我已回滚更改。让我们尝试不同的方法。
 </code></pre><h3 id="示例-4-分支方法">示例 4：分支方法</h3><pre><code class="language-">用户: 我想比较两种数据库设计
-[记录 checkpoint - 称之为&quot;起点&quot;]
-
-Claude: 我会创建第一个设计...
-[实现架构 A]
-
-用户: 现在让我回去尝试第二种方法
-[用户按 Esc+Esc 并回滚到&quot;起点&quot;]
-
-Claude: 现在我会实现架构 B...
-[实现架构 B]
-
-用户: 太好了！现在我有两个架构可供选择
-</code></pre><h3 id="示例-5-增量功能开发">示例 5：增量功能开发</h3><pre><code class="language-">用户: 我在构建一个新功能。Checkpoint：&quot;feature-start&quot;
-
-Claude: [实现步骤 1：模型]
-        模型已创建。
-
-用户: 测试通过。Checkpoint：&quot;feature-step-1&quot;
-
-Claude: [实现步骤 2：API 路由]
-        路由已创建。
-
-用户: 测试通过。Checkpoint：&quot;feature-step-2&quot;
-
-Claude: [实现步骤 3：前端]
-        UI 已创建。
-
-用户: 集成测试失败！回滚到 &quot;feature-step-2&quot;
-
-Claude: [已恢复] 问题在 API 契约中。
-        让我们修复它。
-
-用户: 好的。测试通过。Checkpoint：&quot;feature-step-3&quot;
+[记录 checkpoint - 称之为&quot;起点&quot;]</p><p>Claude: 我会创建第一个设计...
+[实现架构 A]</p><p>用户: 现在让我回去尝试第二种方法
+[用户按 Esc+Esc 并回滚到&quot;起点&quot;]</p><p>Claude: 现在我会实现架构 B...
+[实现架构 B]</p><p>用户: 太好了！现在我有两个架构可供选择
+</code></pre><h3 id="示例-5-增量功能开发">示例 5：增量功能开发</h3><pre><code class="language-">用户: 我在构建一个新功能。Checkpoint：&quot;feature-start&quot;</p><p>Claude: [实现步骤 1：模型]
+        模型已创建。</p><p>用户: 测试通过。Checkpoint：&quot;feature-step-1&quot;</p><p>Claude: [实现步骤 2：API 路由]
+        路由已创建。</p><p>用户: 测试通过。Checkpoint：&quot;feature-step-2&quot;</p><p>Claude: [实现步骤 3：前端]
+        UI 已创建。</p><p>用户: 集成测试失败！回滚到 &quot;feature-step-2&quot;</p><p>Claude: [已恢复] 问题在 API 契约中。
+        让我们修复它。</p><p>用户: 好的。测试通过。Checkpoint：&quot;feature-step-3&quot;
 </code></pre><hr><h2 id="checkpoint-保留">Checkpoint 保留</h2><p>Claude Code 自动管理你的 checkpoints：</p><table>
 <thead>
 <tr>
@@ -1018,9 +871,7 @@ Claude: [已恢复] 问题在 API 契约中。
 ├── 在你的编辑器中做出的更改
 ├── 在 Claude Code 外的终端中做出的更改
 ├── Git 操作（commit, push, pull）
-└── 环境变量更改
-
-被捕获：
+└── 环境变量更改</p><p>被捕获：
 ├── 所有用户消息
 ├── 所有助手响应
 ├── 通过 Edit/Write 工具做出的文件更改
@@ -1030,26 +881,14 @@ Claude: [已恢复] 问题在 API 契约中。
 <li>检查 checkpoints 是否被清除（手动清理或设置）</li>
 <li>验证设置中 <code>autoCheckpoint</code> 已启用</li>
 <li>检查可用磁盘空间</li>
-<li>寻找时间戳略有不同的 checkpoints</li><p><strong>调试步骤：</strong></p><pre><code class="language-">你: /rewind
-
-[Checkpoint 列表出现]
-
-你: 我看不到 2 小时前的 checkpoint。
-
-Claude: Checkpoints 按时间戳列出。 
-        让我帮你找到它...
-
-[滚动列表或按日期搜索]
+<li>寻找时间戳略有不同的 checkpoints</li><p><strong>调试步骤：</strong></p><pre><code class="language-">你: /rewind</p><p>[Checkpoint 列表出现]</p><p>你: 我看不到 2 小时前的 checkpoint。</p><p>Claude: Checkpoints 按时间戳列出。 
+        让我帮你找到它...</p><p>[滚动列表或按日期搜索]
 </code></pre><h3 id="回滚失败">回滚失败</h3><p><strong>问题：</strong> 无法回滚到 checkpoint</p><p><strong>解决方案：</strong>
 <li>确保没有未提交更改与 git 冲突</li>
 <li>检查 checkpoint 是否损坏（罕见）</li>
 <li>尝试回滚到不同的 checkpoint</li>
 <li>重启 Claude Code 并重试</li><p><strong>错误恢复：</strong></p><pre><code class="language-">用户: [尝试回滚]
-错误：回滚失败 - 检测到文件冲突
-
-用户: 我该怎么办？
-
-Claude: 文件已在此会话外被修改。
+错误：回滚失败 - 检测到文件冲突</p><p>用户: 我该怎么办？</p><p>Claude: 文件已在此会话外被修改。
         选项：
         1. 提交或暂存你的外部更改
         2. 尝试&quot;仅恢复代码&quot;以保留会话
@@ -1121,25 +960,25 @@ Claude: 文件已在此会话外被修改。
    ↓
 6. 如果 git 操作失败，回滚 checkpoint
 </code></pre><h3 id="git-checkpoints-工作流">Git + Checkpoints 工作流</h3><div class="mermaid">flowchart LR
-    A[开始工作] --&gt; B[Checkpoint 自动创建]
-    B --&gt; C[实验]
-    C --&gt; D{成功？}
+    A[开始工作] --> B[Checkpoint 自动创建]
+    B --> C[实验]
+    C --> D{成功？}
     
-    D --&gt;|否| E[回滚 Checkpoint]
-    E --&gt; C
+    D -->|否| E[回滚 Checkpoint]
+    E --> C
     
-    D --&gt;|是| F[提交到 Git]
-    F --&gt; G[继续工作]
-    G --&gt; B
+    D -->|是| F[提交到 Git]
+    F --> G[继续工作]
+    G --> B
     
-    subgraph &quot;Checkpoint 区域&quot;
+    subgraph "Checkpoint 区域"
         B
         C
         D
         E
     end
     
-    subgraph &quot;Git 区域&quot;
+    subgraph "Git 区域"
         F
         G
     end
@@ -1258,9 +1097,7 @@ Claude: 文件已在此会话外被修改。
 </tbody>
 </table>
 <h3 id="checkpoint-思维模式">Checkpoint 思维模式</h3><pre><code class="language-">没有 CHECKPOINTS：
-  做更改 → 希望成功 → 如果坏了调试 → 惊慌
-
-有了 CHECKPOINTS：
+  做更改 → 希望成功 → 如果坏了调试 → 惊慌</p><p>有了 CHECKPOINTS：
   记录 checkpoint → 做更改 → 测试 → 
   如果成功：继续 → 
   如果失败：回滚 → 尝试不同方法

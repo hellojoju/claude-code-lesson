@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -584,10 +584,8 @@
 </tr>
 </tbody>
 </table>
-如果 skill 和命令同名，<strong>skill 优先</strong>。例如，当 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code> 同时存在时，使用 skill 版本。</p><h3 id="迁移路径">迁移路径</h3><p>现有的 <code>.claude/commands/</code> 文件无需修改即可继续工作。要迁移到 skills：</p><p><strong>迁移前（命令）：</strong>
-<pre><code class="language-">.claude/commands/optimize.md
-</code></pre><p><strong>迁移后（Skill）：</strong>
-<pre><code class="language-">.claude/skills/optimize/SKILL.md
+如果 skill 和命令同名，<strong>skill 优先</strong>。例如，当 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code> 同时存在时，使用 skill 版本。</p><h3 id="迁移路径">迁移路径</h3><p>现有的 <code>.claude/commands/</code> 文件无需修改即可继续工作。要迁移到 skills：</p><p><strong>迁移前（命令）：</strong></p><pre><code class="language-">.claude/commands/optimize.md
+</code></pre><p><strong>迁移后（Skill）：</strong></p><pre><code class="language-">.claude/skills/optimize/SKILL.md
 </code></pre><h3 id="为什么选择-skills">为什么选择 Skills？</h3><p>Skills 比旧版命令提供更多功能：</p><li><strong>目录结构</strong>：可打包脚本、模板和参考文件</li>
 <li><strong>自动调用</strong>：Claude 可在相关时自动触发 skills</li>
 <li><strong>调用控制</strong>：选择用户、Claude 或两者是否可调用</li>
@@ -596,13 +594,7 @@
 </code></pre><p><strong>文件：</strong> <code>.claude/skills/my-command/SKILL.md</code></p><pre><code class="language-yaml">---
 name: my-command
 description: 此命令的功能及何时使用
----
-
-# My Command
-
-调用此命令时 Claude 应遵循的指令。
-
-1. 第一步
+---</p><p># My Command</p><p>调用此命令时 Claude 应遵循的指令。</p><p>1. 第一步
 2. 第二步
 3. 第三步
 </code></pre><h3 id="frontmatter-参考">Frontmatter 参考</h3><table>
@@ -669,161 +661,98 @@ description: 此命令的功能及何时使用
 <h3 id="参数">参数</h3><p>命令可接收参数：</p><p><strong>使用 <code>$ARGUMENTS</code> 接收所有参数：</strong></p><pre><code class="language-yaml">---
 name: fix-issue
 description: 根据编号修复 GitHub issue
----
-
-按照我们的编码标准修复 issue #$ARGUMENTS
+---</p><p>按照我们的编码标准修复 issue #$ARGUMENTS
 </code></pre><p>用法：<code>/fix-issue 123</code> → <code>$ARGUMENTS</code> 变为 "123"</p><p><strong>使用 <code>$0</code>、<code>$1</code> 等接收单个参数：</strong></p><pre><code class="language-yaml">---
 name: review-pr
 description: 以指定优先级审查 PR
----
-
-以优先级 $1 审查 PR #$0
-</code></pre><p>用法：<code>/review-pr 456 high</code> → <code>$0</code>="456", <code>$1</code>="high"</p><h3 id="使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</h3><p>使用 <code>!</code>command`<code> 在提示前执行 bash 命令：
-
-__CODEBLOCK_6__
-
-### 文件引用
-
-使用 </code>@<code> 包含文件内容：
-
-__CODEBLOCK_7__
-
-## 插件命令
-
-插件可提供自定义命令：
-
-__CODEBLOCK_8__
-
-或当无命名冲突时直接使用 </code>/command-name<code>。
-
-**示例：**
-__CODEBLOCK_9__
-
-## MCP Prompts 作为命令
-
-MCP servers 可将 prompts 暴露为 slash commands：
-
-__CODEBLOCK_10__
-
-**示例：**
-__CODEBLOCK_11__
-
-### MCP 权限语法
-
-在权限中控制 MCP server 访问：
-
-- </code>mcp__github<code> - 访问整个 GitHub MCP server
+---</p><p>以优先级 $1 审查 PR #$0
+</code></pre><p>用法：<code>/review-pr 456 high</code> → <code>$0</code>="456", <code>$1</code>="high"</p><h3 id="使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</h3><p>使用 <code>!</code>command`<code> 在提示前执行 bash 命令：</p><pre><code class="language-yaml">---
+name: commit
+description: 创建包含上下文的 git commit
+allowed-tools: Bash(git *)
+---</p><p>## 上下文</p><p>- 当前 git 状态：!`git status`
+- 当前 git diff：!`git diff HEAD`
+- 当前分支：!`git branch --show-current`
+- 最近提交：!`git log --oneline -5`</p><p>## 你的任务</p><p>基于以上更改，创建一个 git commit。
+</code></pre><p>### 文件引用</p><p>使用 </code>@<code> 包含文件内容：</p><pre><code class="language-markdown">审查 @src/utils/helpers.js 中的实现
+比较 @src/old-version.js 和 @src/new-version.js
+</code></pre><p>## 插件命令</p><p>插件可提供自定义命令：</p><pre><code class="language-">/plugin-name:command-name
+</code></pre><p>或当无命名冲突时直接使用 </code>/command-name<code>。</p><p>**示例：**</p><pre><code class="language-bash">/frontend-design:frontend-design
+/commit-commands:commit
+</code></pre><p>## MCP Prompts 作为命令</p><p>MCP servers 可将 prompts 暴露为 slash commands：</p><pre><code class="language-">/mcp__&lt;server-name&gt;__&lt;prompt-name&gt; [arguments]
+</code></pre><p>**示例：**</p><pre><code class="language-bash">/mcp__github__list_prs
+/mcp__github__pr_review 456
+/mcp__jira__create_issue &quot;Bug 标题&quot; high
+</code></pre><p>### MCP 权限语法</p><p>在权限中控制 MCP server 访问：</p><p>- </code>mcp__github<code> - 访问整个 GitHub MCP server
 - </code>mcp__github__<em><code> - 通配符访问所有工具
-- </code>mcp__github__get_issue<code> - 特定工具访问
-
-## 命令架构
-
-__CODEBLOCK_12__
-
-## 命令生命周期
-
-__CODEBLOCK_13__
-
-## 本文件夹中的可用命令
-
-这些示例命令可作为 skills 或旧版命令安装。
-
-### 1. </code>/optimize<code> - 代码优化
-
-分析代码的性能问题、内存泄漏和优化机会。
-
-**用法：**
-__CODEBLOCK_14__
-
-### 2. </code>/pr<code> - Pull Request 准备
-
-引导完成 PR 准备检查清单，包括 linting、测试和提交格式化。
-
-**用法：**
-__CODEBLOCK_15__
-
-**截图：**
-![/pr](pr-slash-command.png)
-
-### 3. </code>/generate-api-docs<code> - API 文档生成器
-
-从源代码生成全面的 API 文档。
-
-**用法：**
-__CODEBLOCK_16__
-
-### 4. </code>/commit<code> - 带上下文的 Git Commit
-
-创建包含仓库动态上下文的 git commit。
-
-**用法：**
-__CODEBLOCK_17__
-
-### 5. </code>/push-all<code> -暂存、提交和推送
-
-暂存所有更改、创建 commit 并推送到远程，附带安全检查。
-
-**用法：**
-__CODEBLOCK_18__
-
-**安全检查：**
+- </code>mcp__github__get_issue<code> - 特定工具访问</p><p>## 命令架构</p><div class="mermaid">graph TD
+    A["用户输入：/command-name"] --> B{"命令类型？"}
+    B -->|内置| C["执行内置命令"]
+    B -->|Skill| D["加载 SKILL.md"]
+    B -->|插件| E["加载插件命令"]
+    B -->|MCP| F["执行 MCP Prompt"]</p><p>    D --> G["解析 Frontmatter"]
+    G --> H["替换变量"]
+    H --> I["执行 Shell 命令"]
+    I --> J["发送到 Claude"]
+    J --> K["返回结果"]
+</div><p>## 命令生命周期</p><div class="mermaid">sequenceDiagram
+    participant User as 用户
+    participant Claude as Claude Code
+    participant FS as 文件系统
+    participant CLI as Shell/Bash</p><p>    User->>Claude: 输入 /optimize
+    Claude->>FS: 搜索 .claude/skills/ 和 .claude/commands/
+    FS-->>Claude: 返回 optimize/SKILL.md
+    Claude->>Claude: 解析 frontmatter
+    Claude->>CLI: 执行 !`command` 替换
+    CLI-->>Claude: 命令输出
+    Claude->>Claude: 替换 $ARGUMENTS
+    Claude->>User: 处理提示
+    Claude->>User: 返回结果
+</div><p>## 本文件夹中的可用命令</p><p>这些示例命令可作为 skills 或旧版命令安装。</p><p>### 1. </code>/optimize<code> - 代码优化</p><p>分析代码的性能问题、内存泄漏和优化机会。</p><p>**用法：**</p><pre><code class="language-">/optimize
+[粘贴你的代码]
+</code></pre><p>### 2. </code>/pr<code> - Pull Request 准备</p><p>引导完成 PR 准备检查清单，包括 linting、测试和提交格式化。</p><p>**用法：**</p><pre><code class="language-">/pr
+</code></pre><p>**截图：**
+![/pr](pr-slash-command.png)</p><p>### 3. </code>/generate-api-docs<code> - API 文档生成器</p><p>从源代码生成全面的 API 文档。</p><p>**用法：**</p><pre><code class="language-">/generate-api-docs
+</code></pre><p>### 4. </code>/commit<code> - 带上下文的 Git Commit</p><p>创建包含仓库动态上下文的 git commit。</p><p>**用法：**</p><pre><code class="language-">/commit [可选消息]
+</code></pre><p>### 5. </code>/push-all<code> -暂存、提交和推送</p><p>暂存所有更改、创建 commit 并推送到远程，附带安全检查。</p><p>**用法：**</p><pre><code class="language-">/push-all
+</code></pre><p>**安全检查：**
 - 密钥：</code>.env</em><code>、</code><em>.key<code>、</code></em>.pem<code>、</code>credentials.json<code>
 - API 密钥：检测真实密钥与占位符
 - 大文件：</code>>10MB<code> 无 Git LFS
-- 构建产物：</code>node_modules/<code>、</code>dist/<code>、</code>__pycache__/<code>
-
-### 6. </code>/doc-refactor<code> - 文档重构
-
-重构项目文档以提高清晰度和可访问性。
-
-**用法：**
-__CODEBLOCK_19__
-
-### 7. </code>/setup-ci-cd<code> - CI/CD 管道设置
-
-实现 pre-commit hooks 和 GitHub Actions 用于质量保证。
-
-**用法：**
-__CODEBLOCK_20__
-
-### 8. </code>/unit-test-expand<code> - 测试覆盖扩展
-
-通过针对未测试分支和边缘情况提高测试覆盖率。
-
-**用法：**
-__CODEBLOCK_21__
-
-## 安装
-
-### 作为 Skills（推荐）
-
-复制到你的 skills 目录：
-
-__CODEBLOCK_22__
-
-### 作为旧版命令
-
-复制到你的 commands 目录：
-
-__CODEBLOCK_23__
-
-## 创建自己的命令
-
-### Skill 模板（推荐）
-
-创建 </code>.claude/skills/my-command/SKILL.md<code>：
-
-__CODEBLOCK_24__
-
-### 仅用户命令（禁止自动调用）
-
-对于有副作用且 Claude 不应自动触发的命令：
-
-__CODEBLOCK_25__
-
-## 最佳实践
-
-&lt;table&gt;
+- 构建产物：</code>node_modules/<code>、</code>dist/<code>、</code>__pycache__/<code></p><p>### 6. </code>/doc-refactor<code> - 文档重构</p><p>重构项目文档以提高清晰度和可访问性。</p><p>**用法：**</p><pre><code class="language-">/doc-refactor
+</code></pre><p>### 7. </code>/setup-ci-cd<code> - CI/CD 管道设置</p><p>实现 pre-commit hooks 和 GitHub Actions 用于质量保证。</p><p>**用法：**</p><pre><code class="language-">/setup-ci-cd
+</code></pre><p>### 8. </code>/unit-test-expand<code> - 测试覆盖扩展</p><p>通过针对未测试分支和边缘情况提高测试覆盖率。</p><p>**用法：**</p><pre><code class="language-">/unit-test-expand
+</code></pre><p>## 安装</p><p>### 作为 Skills（推荐）</p><p>复制到你的 skills 目录：</p><pre><code class="language-bash"># 创建 skills 目录
+mkdir -p .claude/skills</p><p># 为每个命令文件创建 skill 目录
+for cmd in optimize pr commit; do
+  mkdir -p .claude/skills/$cmd
+  cp 01-slash-commands/$cmd.md .claude/skills/$cmd/SKILL.md
+done
+</code></pre><p>### 作为旧版命令</p><p>复制到你的 commands 目录：</p><pre><code class="language-bash"># 项目级（团队共享）
+mkdir -p .claude/commands
+cp 01-slash-commands/*.md .claude/commands/</p><p># 个人使用
+mkdir -p ~/.claude/commands
+cp 01-slash-commands/*.md ~/.claude/commands/
+</code></pre><p>## 创建自己的命令</p><p>### Skill 模板（推荐）</p><p>创建 </code>.claude/skills/my-command/SKILL.md<code>：</p><pre><code class="language-yaml">---
+name: my-command
+description: 此命令的功能。当 [触发条件] 时使用。
+argument-hint: [可选参数]
+allowed-tools: Bash(npm *), Read, Grep
+---</p><p># 命令标题</p><p>## 上下文</p><p>- 当前分支：!`git branch --show-current`
+- 相关文件：@package.json</p><p>## 指令</p><p>1. 第一步
+2. 使用参数的第二步：$ARGUMENTS
+3. 第三步</p><p>## 输出格式</p><p>- 如何格式化响应
+- 包含什么内容
+</code></pre><p>### 仅用户命令（禁止自动调用）</p><p>对于有副作用且 Claude 不应自动触发的命令：</p><pre><code class="language-yaml">---
+name: deploy
+description: 部署到生产环境
+disable-model-invocation: true
+allowed-tools: Bash(npm *), Bash(git *)
+---</p><p>将应用部署到生产环境：</p><p>1. 运行测试
+2. 构建应用
+3. 推送到部署目标
+4. 验证部署
+</code></pre><p>## 最佳实践</p><p>&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;应该&lt;/th&gt;
@@ -857,107 +786,157 @@ __CODEBLOCK_25__
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-## 立即尝试
-
-### 🎯 练习 1：创建你的第一个 Skill
-
-创建一个简单的 </code>/hello<code> skill 来问候你：
-
-__CODEBLOCK_26__
-
-创建 </code>.claude/skills/hello/SKILL.md<code>：
-
-__CODEBLOCK_27__
-
-测试：</code>/hello<code>
-
-### 🎯 练习 2：动态上下文 Skill
-
-创建一个 </code>/status<code> skill 显示项目状态：
-
-__CODEBLOCK_28__
-
-测试：</code>/status<code>
-
-### 🎯 练习 3：命令链工作流
-
-组合多个命令完成工作流：
-
-__CODEBLOCK_29__
-
-## 实用工作流
-
-### 每日开发周期
-
-__CODEBLOCK_30__
-
-**早晨启动：**
-__CODEBLOCK_31__
-
-**完成工作后：**
-__CODEBLOCK_32__
-
-### 代码审查工作流
-
-创建一个 </code>/review-branch<code> skill 用于全面审查：
-
-__CODEBLOCK_33__
-
-### 发布工作流
-
-创建一个 </code>/release-check<code> skill：
-
-__CODEBLOCK_34__
-
-## 高级模式
-
-### 模式 1：上下文继承
-
-Skills 可引用其他 skills 或记忆：
-
-__CODEBLOCK_35__
-
-### 模式 2：条件执行
-
-使用 shell 条件实现智能行为：
-
-__CODEBLOCK_36__
-
-### 模式 3：错误恢复
-
-优雅处理错误：
-
-__CODEBLOCK_37__bash
+## 立即尝试</p><p>### 🎯 练习 1：创建你的第一个 Skill</p><p>创建一个简单的 </code>/hello<code> skill 来问候你：</p><pre><code class="language-bash">mkdir -p .claude/skills/hello
+</code></pre><p>创建 </code>.claude/skills/hello/SKILL.md<code>：</p><pre><code class="language-yaml">---
+name: hello
+description: 问候用户。当用户打招呼或开始会话时使用。
+---</p><p># Hello Skill</p><p>热情问候用户，询问他们今天想做什么。</p><p>包含：
+1. 当前时间和日期
+2. 项目快速状态（git 分支、最近活动）
+3. 根据最近更改建议做什么
+</code></pre><p>测试：</code>/hello<code></p><p>### 🎯 练习 2：动态上下文 Skill</p><p>创建一个 </code>/status<code> skill 显示项目状态：</p><pre><code class="language-yaml">---
+name: status
+description: 显示全面的项目状态。当用户询问项目状态时使用。
+allowed-tools: Bash(git *), Bash(npm *), Read
+---</p><p># 项目状态报告</p><p>## Git 状态
+- 当前分支：!`git branch --show-current`
+- 未提交更改：!`git status --short`
+- 最近提交：!`git log --oneline -5`</p><p>## 依赖
+- Package.json：@package.json
+- 过期包：!`npm outdated --json 2&gt;/dev/null || echo &quot;无过期包&quot;`</p><p>## 测试覆盖率
+- 最近测试运行：!`npm test -- --coverage --silent 2&gt;&amp;1 | tail -20 || echo &quot;测试未配置&quot;`</p><p>## 概要</p><p>简要总结：
+1. 需要关注的内容（未提交更改、失败的测试）
+2. 准备好可发布的
+3. 建议的下一步
+</code></pre><p>测试：</code>/status<code></p><p>### 🎯 练习 3：命令链工作流</p><p>组合多个命令完成工作流：</p><pre><code class="language-bash"># 早晨例行
+/status          # 检查项目健康
+/diff            # 回顾昨天的更改
+/memory          # 添加今天的聚焦上下文</p><p># 提交前例行  
+/optimize        # 检查优化机会  
+/commit          # 创建上下文提交</p><p># PR 准备
+/pr              # 完整 PR 检查清单
+</code></pre><p>## 实用工作流</p><p>### 每日开发周期</p><div class="mermaid">graph LR
+    A[/status] --> B[/diff]
+    B --> C[编写代码]
+    C --> D[/optimize]
+    D --> E[/commit]
+    E --> F{/测试通过？}
+    F -->|是| G[/pr]
+    F -->|否| C
+</div><p>**早晨启动：**</p><pre><code class="language-bash">/status           # 项目健康检查
+/compact focus:bugs  # 聚焦 bug 修复
+</code></pre><p>**完成工作后：**</p><pre><code class="language-bash">/optimize         # 性能审查
+/test             # 运行测试
+/commit           # 上下文提交
+</code></pre><p>### 代码审查工作流</p><p>创建一个 </code>/review-branch<code> skill 用于全面审查：</p><pre><code class="language-yaml">---
+name: review-branch
+description: 审查分支的质量、安全和性能。合并 PR 前使用。
+argument-hint: branch-name
+allowed-tools: Bash(git *), Read, Grep, Glob
+---</p><p># 分支审查：$ARGUMENTS</p><p>## 更改概要
+- 更改的文件：!`git diff main...$ARGUMENTS --stat`
+- 包含的提交：!`git log main..$ARGUMENTS --oneline`</p><p>## 质量检查
+对于每个更改的文件：</p><p>1. **代码风格**
+   - 函数 &lt; 50 行
+   - 文件 &lt; 800 行
+   - 无深层嵌套（&gt;4 层）</p><p>2. **安全**
+   - 无硬编码密钥
+   - 存在输入验证
+   - 正确的错误处理</p><p>3. **性能**
+   - 无 N+1 查询
+   - 高效算法
+   - 无内存泄漏</p><p>## 报告格式</p><p>| 文件 | 质量 | 安全 | 性能 | 问题 |
+|------|---------|----------|-------------|--------|</p><p>## 建议</p><p>提供合并建议：
+- 阻塞问题（必须修复）
+- 警告（应该修复）
+- 建议（可选）
+</code></pre><p>### 发布工作流</p><p>创建一个 </code>/release-check<code> skill：</p><pre><code class="language-yaml">---
+name: release-check
+description: 发布前验证检查清单。发布前使用。
+allowed-tools: Bash(npm *), Bash(git *), Read
+---</p><p># 发布检查清单</p><p>## 版本检查
+- 当前版本：!`node -e &quot;console.log(require(&#039;./package.json&#039;).version)&quot;`
+- 变更日志已更新：检查 CHANGELOG.md 是否有当前版本条目</p><p>## 质量门控
+- 所有测试通过：!`npm test 2&gt;&amp;1 | tail -5`
+- 无 TypeScript 错误：!`npx tsc --noEmit 2&gt;&amp;1 || echo &quot;无 TS 错误&quot;`
+- Lint 清洁：!`npm run lint 2&gt;&amp;1 | tail -5 || echo &quot;Lint 通过&quot;`</p><p>## 安全扫描
+- 代码中无密钥：!`grep -r &quot;api_key\|password\|secret&quot; --include=&quot;*.js&quot; --include=&quot;*.ts&quot; src/ || echo &quot;清洁&quot;`
+- 依赖已审计：!`npm audit 2&gt;&amp;1 || echo &quot;审计通过&quot;`</p><p>## 文档
+- README 已更新
+- API 文档当前
+- 如有破坏性更改需迁移指南</p><p>## 最终报告</p><p>提供：
+1. ✅ 通过的检查
+2. ❌ 失败的检查（阻塞）
+3. ⚠️ 警告（非阻塞）
+4. 发布建议
+</code></pre><p>## 高级模式</p><p>### 模式 1：上下文继承</p><p>Skills 可引用其他 skills 或记忆：</p><pre><code class="language-yaml">---
+name: smart-commit
+description: 使用项目记忆的智能提交
+---</p><p># Smart Commit</p><p>使用来自以下的上下文：
+- @CLAUDE.md 用于项目约定
+- 最近记忆用于当前聚焦</p><p>## 步骤</p><p>1. 对照 CLAUDE.md 约定审查更改
+2. 检查记忆中的进行中工作
+3. 创建符合项目风格的提交消息
+4. 如有协作需包含共同作者信息
+</code></pre><p>### 模式 2：条件执行</p><p>使用 shell 条件实现智能行为：</p><pre><code class="language-yaml">---
+name: safe-push
+description: 自动检查的安全推送
+allowed-tools: Bash(git *), Bash(npm *)
+---</p><p># Safe Push</p><p>## 预检查
+- 测试通过：!`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; echo &quot;PASS&quot; || echo &quot;FAIL&quot;`
+- 分支清洁：!`git status --porcelain | wc -l | xargs`</p><p>## 条件逻辑
+- 若测试 FAIL：&quot;无法推送 - 测试失败。先运行 /test-fix&quot;
+- 若分支有未提交更改：&quot;无法推送 - 有未提交更改。先运行 /commit&quot;
+- 若全 PASS：继续推送</p><p>## 推送步骤
+!`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; git push || echo &quot;阻塞：测试失败&quot;`
+</code></pre><p>### 模式 3：错误恢复</p><p>优雅处理错误：</p><pre><code class="language-yaml">---
+name: robust-deploy
+description: 带回滚能力的部署
+allowed-tools: Bash(npm *), Bash(git *)
+---</p><p># Robust Deploy</p><p>## 部署前快照
+- 当前提交：!`git rev-parse HEAD`
+- 当前分支：!`git branch --show-current`</p><p>## 部署步骤
+1. 构建：!`npm run build 2&gt;&amp;1 | tail -10`
+2. 部署：!`npm run deploy 2&gt;&amp;1 | tail -10`
+3. 验证：!`curl -s https://app.example.com/health || echo &quot;FAILED&quot;`</p><p>## 失败时回滚
+若任何步骤失败：
+</code></pre><p>bash
 git checkout !</code>git rev-parse HEAD<code>  # 返回快照
-npm run rollback  # 自定义回滚命令
-__CODEBLOCK_38__
-
-### 模式 4：多文件处理
-
-高效处理多个文件：
-
-__CODEBLOCK_39__
-
-### 模式 5：交互式提示
-
-Skills 可提示用户输入：
-
-__CODEBLOCK_40__
-
-## 性能考量
-
-### Skill 加载速度
-
-以下情况 Skills 加载更快：
-
-1. **精简 frontmatter**：仅包含必要字段
+npm run rollback  # 自定义回滚命令</p><pre><code class="language-">
+报告成功或回滚原因。
+</code></pre><p>### 模式 4：多文件处理</p><p>高效处理多个文件：</p><pre><code class="language-yaml">---
+name: batch-optimize
+description: 并行优化多个文件
+allowed-tools: Read, Edit, Glob, Bash
+---</p><p># 批量优化</p><p>## 查找目标文件
+!`find src -name &quot;*.ts&quot; -type f | head -20`</p><p>## 对每个文件
+1. 读取文件
+2. 分析：
+   - 未使用的导入
+   - 死代码
+   - 优化机会
+3. 应用优化
+4. 跟踪更改</p><p>## 概要报告
+- 处理文件数：$FILES_COUNT
+- 应用优化数：$OPTIMIZATIONS_COUNT
+- 减少行数：$LINES_SAVED
+</code></pre><p>### 模式 5：交互式提示</p><p>Skills 可提示用户输入：</p><pre><code class="language-yaml">---
+name: interactive-review
+description: 带用户引导的交互式代码审查
+---</p><p># Interactive Review</p><p>## 第一阶段：概览
+显示更改摘要并询问：
+- &quot;聚焦特定领域？（安全、性能、风格）&quot;
+- 等待用户响应</p><p>## 第二阶段：深入
+基于用户聚焦领域：
+- 显示相关问题
+- 对每个问题请求决策</p><p>## 第三阶段：应用
+- &quot;应用所有批准的更改？&quot;
+- 若是：进行编辑
+- 若否：列出供人工审查
+</code></pre><p>## 性能考量</p><p>### Skill 加载速度</p><p>以下情况 Skills 加载更快：</p><p>1. **精简 frontmatter**：仅包含必要字段
 2. **高效 shell 命令**：使用 </code>--quiet<code>、</code>--silent<code>，管道到 </code>head<code>
 3. **优先文件引用而非读取**：</code>@file<code> 有缓存，</code>Read<code> 为最新
-4. **惰性加载**：不包含所有文件，使用 </code>!<code> 命令按需获取
-
-### 命令执行速度
-
-&lt;table&gt;
+4. **惰性加载**：不包含所有文件，使用 </code>!<code> 命令按需获取</p><p>### 命令执行速度</p><p>&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;方式&lt;/th&gt;
@@ -993,73 +972,41 @@ __CODEBLOCK_40__
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-### 优化示例
-
-**慢 skill：**
-__CODEBLOCK_41__
-
-**快 skill：**
-__CODEBLOCK_42__
-
-## 常见陷阱
-
-### 陷阱 1：循环依赖
-
-**问题：** Skill A 引用 Skill B，Skill B 又引用 Skill A。
-
-**解决方案：** 使用记忆（CLAUDE.md）作为共享上下文，而非 skill 链。
-
-### 陷阱 2：权限过度
-
-**问题：** Skill 请求它不需要的工具。
-
-__CODEBLOCK_43__
-
-**解决方案：** 仅请求必要工具：
-
-__CODEBLOCK_44__
-
-### 陷阱 3：过于复杂的 Skills
-
-**问题：** 一个 skill 做太多事情。
-
-**解决方案：** 分解为聚焦的 skills：
-
-__CODEBLOCK_45__
-
-### 陷阱 4：缺少错误处理
-
-**问题：** Skill 失败但无指导。
-
-__CODEBLOCK_46__
-
-**解决方案：** 包含错误指导：
-
-__CODEBLOCK_47__
-
-### 陷阱 5：硬编码路径
-
-**问题：** Skill 仅在特定项目中工作。
-
-__CODEBLOCK_48__
-
-**解决方案：** 使用相对路径和发现：
-
-__CODEBLOCK_49__
-
-## 故障排查
-
-### 命令未找到
-
-**解决方案：**
+### 优化示例</p><p>**慢 skill：**</p><pre><code class="language-yaml"># 每次读取所有文件
+检查所有这些文件：
+- @src/index.ts
+- @src/utils.ts
+- @src/config.ts
+- @src/app.ts
+</code></pre><p>**快 skill：**</p><pre><code class="language-yaml"># 惰性加载仅所需内容
+检查匹配模式的文件：
+!`find src -name &quot;*.ts&quot; | head -5`</p><p>然后选择性读取：
+&quot;哪些文件需要详细审查？&quot;
+</code></pre><p>## 常见陷阱</p><p>### 陷阱 1：循环依赖</p><p>**问题：** Skill A 引用 Skill B，Skill B 又引用 Skill A。</p><p>**解决方案：** 使用记忆（CLAUDE.md）作为共享上下文，而非 skill 链。</p><p>### 陷阱 2：权限过度</p><p>**问题：** Skill 请求它不需要的工具。</p><pre><code class="language-yaml"># 不好：请求所有权限
+allowed-tools: Bash(*), Read(*), Write(*)
+</code></pre><p>**解决方案：** 仅请求必要工具：</p><pre><code class="language-yaml"># 好：特定权限
+allowed-tools: Bash(git status), Bash(git log), Read
+</code></pre><p>### 陷阱 3：过于复杂的 Skills</p><p>**问题：** 一个 skill 做太多事情。</p><p>**解决方案：** 分解为聚焦的 skills：</p><pre><code class="language-yaml"># 代替 /full-review，创建：
+/review-security  # 聚焦安全
+/review-performance  # 聚焦性能  
+/review-style  # 聚焦风格
+</code></pre><p>### 陷阱 4：缺少错误处理</p><p>**问题：** Skill 失败但无指导。</p><pre><code class="language-yaml"># 不好：无回退
+运行测试：!`npm test`
+</code></pre><p>**解决方案：** 包含错误指导：</p><pre><code class="language-yaml"># 好：错误处理
+运行测试：!`npm test 2&gt;&amp;1 || echo &quot;测试失败 - 查看上方输出&quot;`</p><p>若测试失败：
+1. 显示测试输出
+2. 建议运行 /debug-tests
+3. 不要继续依赖步骤
+</code></pre><p>### 陷阱 5：硬编码路径</p><p>**问题：** Skill 仅在特定项目中工作。</p><pre><code class="language-yaml"># 不好：硬编码
+检查：@/Users/dev/my-project/src/app.ts
+</code></pre><p>**解决方案：** 使用相对路径和发现：</p><pre><code class="language-yaml"># 好：可移植
+检查：@src/app.ts
+或发现：!`find . -name &quot;app.ts&quot; -type f`
+</code></pre><p>## 故障排查</p><p>### 命令未找到</p><p>**解决方案：**
 - 检查文件是否在 </code>.claude/skills/<name>/SKILL.md<code> 或 </code>.claude/commands/<name>.md<code>
 - 验证 frontmatter 中的 </code>name<code> 字段是否匹配预期命令名
 - 重启 Claude Code 会话
-- 运行 </code>/help<code> 查看可用命令
-
-### 命令未按预期执行
-
-**解决方案：**
+- 运行 </code>/help<code> 查看可用命令</p><p>### 命令未按预期执行</p><p>**解决方案：**
 - 添加更具体的指令
 - 在 skill 文件中包含示例
 - 若使用 bash 命令，检查 </code>allowed-tools`

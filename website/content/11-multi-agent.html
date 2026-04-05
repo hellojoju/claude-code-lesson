@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -235,29 +235,26 @@
 
         <div class="content">
           <blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote><h1>多 Agent 协作</h1><h2 id="概述">概述</h2><p>Claude Code 支持多种多 Agent 协作模式，让你能够同时运行多个专业化的智能体来处理复杂任务。</p><h2 id="协作模式">协作模式</h2><h3 id="1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</h3><p>中央协调器将任务分发给专业工作者：</p><div class="mermaid">graph TD
-    A[Orchestrator] --&gt; B[Worker 1: 代码审查]
-    A --&gt; C[Worker 2: 测试]
-    A --&gt; D[Worker 3: 文档]
-    B --&gt; E[结果合并]
-    C --&gt; E
-    D --&gt; E
-</div><p><strong>使用场景：</strong> 复杂功能开发、大规模重构</p><p><strong>实现方式：</strong>
-<pre><code class="language-bash"># 在 Claude Code 中使用 Agent 工具
+    A[Orchestrator] --> B[Worker 1: 代码审查]
+    A --> C[Worker 2: 测试]
+    A --> D[Worker 3: 文档]
+    B --> E[结果合并]
+    C --> E
+    D --> E
+</div><p><strong>使用场景：</strong> 复杂功能开发、大规模重构</p><p><strong>实现方式：</strong></p><pre><code class="language-bash"># 在 Claude Code 中使用 Agent 工具
 Claude 会自动调度多个子代理并行处理任务
 </code></pre><h3 id="2-并行执行模式">2. 并行执行模式</h3><p>多个 Agent 同时处理独立子任务：</p><pre><code class="language-bash"># 在 Claude Code 中请求并行执行
 &quot;同时运行 3 个子任务：
 1. 安全审查 - 检查认证模块
 2. 性能分析 - 检查数据库查询
-3. 代码质量 - 检查代码风格
-
-完成后汇总报告。&quot;
+3. 代码质量 - 检查代码风格</p><p>完成后汇总报告。&quot;
 </code></pre><p><strong>使用场景：</strong> 代码审查、测试执行、文档更新</p><h3 id="3-层级管理模式">3. 层级管理模式</h3><p>多层管理结构处理大型项目：</p><div class="mermaid">graph TD
-    M[Manager Agent] --&gt; F[Frontend Lead]
-    M --&gt; B[Backend Lead]
-    F --&gt; C1[Component Writer]
-    F --&gt; S[Style Specialist]
-    B --&gt; A[API Developer]
-    B --&gt; D[Database Expert]
+    M[Manager Agent] --> F[Frontend Lead]
+    M --> B[Backend Lead]
+    F --> C1[Component Writer]
+    F --> S[Style Specialist]
+    B --> A[API Developer]
+    B --> D[Database Expert]
 </div><p><strong>使用场景：</strong> 大型团队项目、复杂系统重构</p><h3 id="4-流水线模式">4. 流水线模式</h3><p>顺序处理带依赖的任务：</p><pre><code class="language-bash">&quot;按顺序执行：
 1. 设计 API 结构（等待完成）
 2. 实现端点（等待完成）
@@ -265,9 +262,7 @@ Claude 会自动调度多个子代理并行处理任务
 4. 生成文档&quot;
 </code></pre><p><strong>使用场景：</strong> 有严格依赖关系的开发流程</p><h3 id="5-点对点协作模式">5. 点对点协作模式</h3><p>平等的 Agent 共享上下文协作：</p><pre><code class="language-bash">&quot;启动两个协作 Agent：
 - Agent A: 实现功能
-- Agent B: 同时编写测试
-
-它们共享代码变更，实时同步。&quot;
+- Agent B: 同时编写测试</p><p>它们共享代码变更，实时同步。&quot;
 </code></pre><p><strong>使用场景：</strong> 功能开发与测试同步进行</p><h2 id="agent-工具详解">Agent 工具详解</h2><h3 id="基本用法">基本用法</h3><p>Claude Code 使用 Agent 工具来调度子代理：</p><pre><code class="language-">Agent 工具参数：
 - subagent_type: 代理类型（如 general-purpose, Explore, Plan）
 - prompt: 任务描述
@@ -329,28 +324,18 @@ Claude 会自动调度多个子代理并行处理任务
 同时启动 3 个 Agent：
 1. security-reviewer 分析认证模块
 2. performance-optimizer 分析数据库查询
-3. code-reviewer 检查代码风格
-
-# 错误：不必要的顺序
+3. code-reviewer 检查代码风格</p><p># 错误：不必要的顺序
 先 Agent 1，等完成，再 Agent 2
 </code></pre><h2 id="实战案例">实战案例</h2><h3 id="案例-完整功能开发">案例：完整功能开发</h3><pre><code class="language-bash"># 使用 Orchestrator 模式开发新功能
-&quot;我需要实现用户认证功能。使用多 Agent 协作：
-
-1. Plan Agent：设计认证架构
+&quot;我需要实现用户认证功能。使用多 Agent 协作：</p><p>1. Plan Agent：设计认证架构
 2. TypeScript Agent：实现前端登录 UI
 3. Python Agent：实现后端 API
 4. tdd-guide Agent：编写测试用例
-5. doc-updater Agent：更新文档
-
-协调这些 Agent 完成任务。&quot;
-</code></pre><h3 id="案例-代码审查流水线">案例：代码审查流水线</h3><pre><code class="language-bash">&quot;对当前变更执行多 Agent 审查：
-
-并行启动：
+5. doc-updater Agent：更新文档</p><p>协调这些 Agent 完成任务。&quot;
+</code></pre><h3 id="案例-代码审查流水线">案例：代码审查流水线</h3><pre><code class="language-bash">&quot;对当前变更执行多 Agent 审查：</p><p>并行启动：
 - security-reviewer：检查漏洞
 - performance-optimizer：检查性能问题
-- code-reviewer：检查代码风格
-
-完成后生成综合报告。&quot;
+- code-reviewer：检查代码风格</p><p>完成后生成综合报告。&quot;
 </code></pre><h3 id="案例-探索与研究">案例：探索与研究</h3><pre><code class="language-bash">&quot;使用 Explore Agent：
 - 探索代码库中的认证相关代码
 - 搜索关键词 &#039;auth&#039; 和 &#039;login&#039;
@@ -403,16 +388,12 @@ Claude 会自动调度多个子代理并行处理任务
 &quot;使用并行 Agent 审查 src/ 目录：
 1. security-reviewer 检查安全
 2. performance-optimizer 检查性能  
-3. code-reviewer 检查风格
-
-生成合并报告。&quot;
+3. code-reviewer 检查风格</p><p>生成合并报告。&quot;
 </code></pre><h3 id="练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</h3><pre><code class="language-bash">&quot;使用流水线模式：
 1. Plan 设计数据模型
 2. TypeScript 实现 CRUD API
 3. tdd-guide 编写单元测试
-4. doc-updater 生成 API 文档
-
-每步等待前一步完成。&quot;
+4. doc-updater 生成 API 文档</p><p>每步等待前一步完成。&quot;
 </code></pre><h3 id="练习-3-探索模式">🎯 练习 3：探索模式</h3><pre><code class="language-bash">&quot;使用 Explore Agent（thoroughness: medium）：
 - 查找所有 API 端点
 - 搜索错误处理模式

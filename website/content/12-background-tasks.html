@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -277,20 +277,15 @@
 <li>子代理独立运行</li>
 <li>不阻塞主会话</li>
 <li>完成后自动通知</li><h2 id="任务管理">任务管理</h2><h3 id="查看任务列表">查看任务列表</h3><p>使用 <code>/tasks</code> 命令查看所有后台任务：</p><pre><code class="language-bash">/tasks
-</code></pre><p>输出示例：
-<pre><code class="language-">Running Tasks:
+</code></pre><p>输出示例：</p><pre><code class="language-">Running Tasks:
 - a024a90: 探索 API 结构 (running)
-- a195852d: 运行测试 (completed)
-
-Background Shells:
+- a195852d: 运行测试 (completed)</p><p>Background Shells:
 - shell_001: npm build (running)
 </code></pre><h3 id="获取任务输出">获取任务输出</h3><p>使用 TaskOutput 工具：</p><pre><code class="language-markdown"># 获取任务结果
 {
   &quot;task_id&quot;: &quot;a024a90f936a08281&quot;,
   &quot;block&quot;: false  // 不阻塞，只检查状态
-}
-
-# 或阻塞等待完成
+}</p><p># 或阻塞等待完成
 {
   &quot;task_id&quot;: &quot;a024a90f936a08281&quot;,
   &quot;block&quot;: true,
@@ -300,48 +295,34 @@ Background Shells:
   &quot;task_id&quot;: &quot;a024a90f936a08281&quot;
 }
 </code></pre><h2 id="实战案例">实战案例</h2><h3 id="案例-长时间构建">案例：长时间构建</h3><pre><code class="language-bash"># 启动构建，继续其他工作
-&quot;运行 npm build 在后台，我继续写文档&quot;
-
-# Claude 执行：
+&quot;运行 npm build 在后台，我继续写文档&quot;</p><p># Claude 执行：
 {
   &quot;command&quot;: &quot;npm run build&quot;,
   &quot;run_in_background&quot;: true
-}
-
-# 你可以继续：
-&quot;现在帮我写 README&quot;
-
-# 构建完成后收到通知
+}</p><p># 你可以继续：
+&quot;现在帮我写 README&quot;</p><p># 构建完成后收到通知
 &lt;task-notification task_id=&quot;...&quot;&gt;构建完成&lt;/task-notification&gt;
 </code></pre><h3 id="案例-并行探索">案例：并行探索</h3><pre><code class="language-markdown"># 同时启动多个探索任务
 &quot;并行探索：
 1. 搜索认证相关代码
 2. 搜索数据库相关代码
-3. 搜索 API 相关代码
-
-都完成后汇总。&quot;
-
-# Claude 并行启动 3 个后台 Agent
+3. 搜索 API 相关代码</p><p>都完成后汇总。&quot;</p><p># Claude 并行启动 3 个后台 Agent
 </code></pre><h3 id="案例-测试执行">案例：测试执行</h3><pre><code class="language-bash"># 后台运行测试套件
-&quot;在后台运行完整测试套件，我继续开发&quot;
-
-{
+&quot;在后台运行完整测试套件，我继续开发&quot;</p><p>{
   &quot;command&quot;: &quot;pytest tests/ -v&quot;,
   &quot;run_in_background&quot;: true,
   &quot;timeout&quot;: 300000  // 5 分钟超时
 }
 </code></pre><h2 id="任务状态">任务状态</h2><h3 id="状态流转">状态流转</h3><div class="mermaid">graph LR
-    A[pending] --&gt; B[running]
-    B --&gt; C[completed]
-    B --&gt; D[failed]
-    B --&gt; E[stopped]
+    A[pending] --> B[running]
+    B --> C[completed]
+    B --> D[failed]
+    B --> E[stopped]
 </div><h3 id="状态查询">状态查询</h3><pre><code class="language-markdown"># 使用 TaskOutput 查询状态
 {
   &quot;task_id&quot;: &quot;...&quot;,
   &quot;block&quot;: false  // 只查询，不等待
-}
-
-# 返回状态信息
+}</p><p># 返回状态信息
 {
   &quot;status&quot;: &quot;running&quot;,
   &quot;progress&quot;: &quot;50%&quot;
@@ -397,16 +378,12 @@ Background Shells:
   &quot;file_path&quot;: &quot;/tmp/output.txt&quot;
 }
 </code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-后台构建">🎯 练习 1：后台构建</h3><pre><code class="language-bash"># 在 Claude Code 中：
-&quot;在后台运行 npm run build，完成后告诉我结果&quot;
-
-# 焦点放在这，让我继续其他工作
+&quot;在后台运行 npm run build，完成后告诉我结果&quot;</p><p># 焦点放在这，让我继续其他工作
 &quot;同时帮我写一个简单的测试用例&quot;
 </code></pre><h3 id="练习-2-并行探索">🎯 练习 2：并行探索</h3><pre><code class="language-bash">&quot;启动 3 个后台 Explore Agent：
 1. 探索 src/ 目录结构
 2. 搜索所有 async 函数
-3. 搜索所有 TODO 注释
-
-完成后汇总报告。&quot;
+3. 搜索所有 TODO 注释</p><p>完成后汇总报告。&quot;
 </code></pre><h3 id="练习-3-任务监控">🎯 练习 3：任务监控</h3><pre><code class="language-bash">&quot;启动一个长时间测试，然后：
 - 用 /tasks 查看状态
 - 继续其他对话

@@ -210,7 +210,7 @@
       <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/01-slash-commands.html">模块</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -292,12 +292,9 @@
 <li>简单 bug 修复</li>
 <li>格式化变更</li>
 <li>单文件编辑</li>
-<li>快速查询</li><h3 id="激活规划模式">激活规划模式</h3><p><strong>Slash command</strong>:
-<pre><code class="language-bash">/plan Implement user authentication system
-</code></pre><p><strong>CLI 标志</strong>:
-<pre><code class="language-bash">claude --permission-mode plan
-</code></pre><p><strong>设置为默认</strong>:
-<pre><code class="language-json">{
+<li>快速查询</li><h3 id="激活规划模式">激活规划模式</h3><p><strong>Slash command</strong>:</p><pre><code class="language-bash">/plan Implement user authentication system
+</code></pre><p><strong>CLI 标志</strong>:</p><pre><code class="language-bash">claude --permission-mode plan
+</code></pre><p><strong>设置为默认</strong>:</p><pre><code class="language-json">{
   &quot;permissions&quot;: {
     &quot;defaultMode&quot;: &quot;plan&quot;
   }
@@ -307,56 +304,28 @@
 <li><code>Alt + M</code> - 切换权限模式（Windows/Linux）</li><h3 id="规划模式的优势">规划模式的优势</h3><li><strong>结构化实现方法</strong>: 实现步骤的详细分解</li>
 <li><strong>审查和批准</strong>: 在执行前批准或调整计划</li>
 <li><strong>风险识别</strong>: 在实现前识别潜在问题</li>
-<li><strong>清晰阶段</strong>: 有组织的实现阶段和里程碑</li><h3 id="示例-功能实现">示例: 功能实现</h3><pre><code class="language-">User: /plan Add a real-time notification system
-
-Claude: I&#039;ll create a plan for implementing real-time notifications.
-
-## Implementation Plan
-
-### Phase 1: Infrastructure Setup
+<li><strong>清晰阶段</strong>: 有组织的实现阶段和里程碑</li><h3 id="示例-功能实现">示例: 功能实现</h3><pre><code class="language-">User: /plan Add a real-time notification system</p><p>Claude: I&#039;ll create a plan for implementing real-time notifications.</p><p>## Implementation Plan</p><p>### Phase 1: Infrastructure Setup
 1. Install WebSocket libraries (socket.io)
 2. Set up WebSocket server
-3. Configure connection management
-
-### Phase 2: Backend Implementation
+3. Configure connection management</p><p>### Phase 2: Backend Implementation
 4. Create notification service
 5. Implement notification queue
 6. Add database schema for notifications
-7. Create API endpoints
-
-### Phase 3: Frontend Integration
+7. Create API endpoints</p><p>### Phase 3: Frontend Integration
 8. Set up WebSocket client
 9. Create notification UI components
 10. Implement notification state management
-11. Add notification permissions
-
-### Phase 4: Testing &amp; Deployment
+11. Add notification permissions</p><p>### Phase 4: Testing &amp; Deployment
 12. Write unit tests
 13. Write integration tests
 14. Update documentation
-15. Deploy to staging
-
-Estimated time: 3-4 hours
+15. Deploy to staging</p><p>Estimated time: 3-4 hours
 Files to modify: 12
-New files to create: 8
-
-Ready to proceed? (yes/no/modify plan)
-
-User: yes
-
-Claude: [Begins implementation following the plan]
-</code></pre><h3 id="计划修改">计划修改</h3><pre><code class="language-">User: Modify the plan - skip the queue for now, we&#039;ll add it later
-
-Claude: Updated plan:
-[Shows modified plan with queue removed]
-
-User: Looks good, proceed
-
-Claude: [Implements modified plan]
+New files to create: 8</p><p>Ready to proceed? (yes/no/modify plan)</p><p>User: yes</p><p>Claude: [Begins implementation following the plan]
+</code></pre><h3 id="计划修改">计划修改</h3><pre><code class="language-">User: Modify the plan - skip the queue for now, we&#039;ll add it later</p><p>Claude: Updated plan:
+[Shows modified plan with queue removed]</p><p>User: Looks good, proceed</p><p>Claude: [Implements modified plan]
 </code></pre><h3 id="规划模式配置">规划模式配置</h3><p>规划模式通过 CLI 标志或 slash command 激活:</p><pre><code class="language-bash"># 通过 CLI 激活规划模式
-claude --permission-mode plan
-
-# 或在 REPL 中使用 /plan slash command
+claude --permission-mode plan</p><p># 或在 REPL 中使用 /plan slash command
 /plan Implement user authentication system
 </code></pre><p><strong>规划模型别名</strong>: 使用 <code>opusplan</code> 作为模型别名，让 Opus 用于规划，Sonnet 用于执行:</p><pre><code class="language-bash">claude --model opusplan &quot;design and implement the new API&quot;
 </code></pre><p><strong>外部编辑计划</strong>: 按 <code>Ctrl+G</code> 在外部编辑器中打开当前计划进行详细修改。</p><hr><h2 id="扩展思考">扩展思考</h2><p>扩展思考允许 Claude 在提供解决方案之前花更多时间推理复杂问题。</p><h3 id="什么是扩展思考">什么是扩展思考？</h3><p>扩展思考是一种深思熟虑的逐步推理过程，Claude:
@@ -370,97 +339,64 @@ claude --permission-mode plan
 <li>其他模型: 固定预算，最多 31,999 tokens</li><p><strong>配置方法</strong>:
 <li>切换: <code>Alt+T</code> / <code>Option+T</code>，或通过 <code>/config</code></li>
 <li>查看推理: <code>Ctrl+O</code>（详细模式）</li>
-<li>设置努力级别: <code>/effort</code> 命令或 <code>--effort</code> 标志</li><p><strong>自定义预算</strong>:
-<pre><code class="language-bash">export MAX_THINKING_TOKENS=1024
-</code></pre><p><strong>努力级别</strong>（仅 Opus 4.6）:
-<pre><code class="language-bash">export CLAUDE_CODE_EFFORT_LEVEL=high   # low (○), medium (◐), high (●), 或 max (仅 Opus 4.6)
-</code></pre><p><strong>CLI 标志</strong>:
-<pre><code class="language-bash">claude --effort high &quot;complex architectural review&quot;
-</code></pre><p><strong>Slash command</strong>:
-<pre><code class="language-">/effort high
+<li>设置努力级别: <code>/effort</code> 命令或 <code>--effort</code> 标志</li><p><strong>自定义预算</strong>:</p><pre><code class="language-bash">export MAX_THINKING_TOKENS=1024
+</code></pre><p><strong>努力级别</strong>（仅 Opus 4.6）:</p><pre><code class="language-bash">export CLAUDE_CODE_EFFORT_LEVEL=high   # low (○), medium (◐), high (●), 或 max (仅 Opus 4.6)
+</code></pre><p><strong>CLI 标志</strong>:</p><pre><code class="language-bash">claude --effort high &quot;complex architectural review&quot;
+</code></pre><p><strong>Slash command</strong>:</p><pre><code class="language-">/effort high
 </code></pre><blockquote><strong>注意:</strong> 提示中的关键词 "ultrathink" 会激活深度推理模式。努力级别 <code>low</code>、<code>medium</code>、<code>high</code> 和 <code>max</code>（仅 Opus 4.6）控制 Claude 执行多少推理。</blockquote><h3 id="扩展思考的优势">扩展思考的优势</h3><li><strong>深度推理</strong>: 花更多时间思考复杂问题</li>
 <li><strong>更好的架构决策</strong>: 通过全面评估做出明智选择</li>
 <li><strong>边缘情况考虑</strong>: 思考潜在问题和场景</li>
-<li><strong>彻底分析</strong>: 复杂问题的结构化方法</li><h3 id="示例-架构决策">示例: 架构决策</h3><pre><code class="language-">User: /think Should we use microservices or a monolith for our e-commerce platform?
-
-Claude: Let me think through this architectural decision carefully...
-
-&lt;extended_thinking&gt;
+<li><strong>彻底分析</strong>: 复杂问题的结构化方法</li><h3 id="示例-架构决策">示例: 架构决策</h3><pre><code class="language-">User: /think Should we use microservices or a monolith for our e-commerce platform?</p><p>Claude: Let me think through this architectural decision carefully...</p><p>&lt;extended_thinking&gt;
 ## Context Analysis
 - Team size: 5 developers
 - Expected traffic: 10k daily users initially
 - Need to scale to 100k+ users
 - Limited DevOps resources
-- 6-month timeline to MVP
-
-## Approach 1: Microservices
+- 6-month timeline to MVP</p><p>## Approach 1: Microservices
 Pros:
 + Independent scaling
 + Technology flexibility
 + Team independence
-+ Fault isolation
-
-Cons:
++ Fault isolation</p><p>Cons:
 - Operational complexity
 - Network overhead
 - Distributed tracing needed
 - Requires DevOps expertise
-- Slower initial development
-
-## Approach 2: Monolith
+- Slower initial development</p><p>## Approach 2: Monolith
 Pros:
 + Simpler deployment
 + Faster initial development
 + Easier debugging
 + Lower operational overhead
-+ Single codebase
-
-Cons:
++ Single codebase</p><p>Cons:
 - Scaling challenges later
 - All-or-nothing deployments
 - Technology lock-in
-- Potential for tight coupling
-
-## Decision Factors
+- Potential for tight coupling</p><p>## Decision Factors
 1. Team size (5 devs) → Favors monolith
 2. DevOps resources (limited) → Favors monolith
 3. Timeline (6 months) → Favors monolith
 4. Future scale (100k users) → Achievable with monolith + caching
-5. Complexity budget → Limited
-
-## Recommendation
+5. Complexity budget → Limited</p><p>## Recommendation
 Start with a **modular monolith**:
 - Single deployment unit
 - Clear module boundaries
 - Clean interfaces between modules
-- Prepare for future extraction to microservices if needed
-
-This gives you:
+- Prepare for future extraction to microservices if needed</p><p>This gives you:
 ✓ Fast initial development
 ✓ Low operational complexity
 ✓ Option to extract services later
-✓ Clear architecture
-
-Migration path: When you reach 50k+ users or specific modules need independent scaling, extract those modules into microservices.
-&lt;/extended_thinking&gt;
-
-**Recommendation**: Implement a modular monolith with clean module boundaries.
-
-This approach balances your current constraints (team size, timeline, DevOps resources) with future scalability needs. You can migrate specific modules to microservices later when there&#039;s a clear business need.
+✓ Clear architecture</p><p>Migration path: When you reach 50k+ users or specific modules need independent scaling, extract those modules into microservices.
+&lt;/extended_thinking&gt;</p><p>**Recommendation**: Implement a modular monolith with clean module boundaries.</p><p>This approach balances your current constraints (team size, timeline, DevOps resources) with future scalability needs. You can migrate specific modules to microservices later when there&#039;s a clear business need.
 </code></pre><h3 id="扩展思考配置">扩展思考配置</h3><p>扩展思考通过环境变量、键盘快捷键和 CLI 标志控制:</p><pre><code class="language-bash"># 设置思考 token 预算
-export MAX_THINKING_TOKENS=16000
-
-# 设置努力级别（仅 Opus 4.6）: low (○), medium (◐), high (●), 或 max (仅 Opus 4.6)
+export MAX_THINKING_TOKENS=16000</p><p># 设置努力级别（仅 Opus 4.6）: low (○), medium (◐), high (●), 或 max (仅 Opus 4.6)
 export CLAUDE_CODE_EFFORT_LEVEL=high
 </code></pre><p>在会话中使用 <code>Alt+T</code> / <code>Option+T</code> 切换，使用 <code>/effort</code> 设置努力级别，或通过 <code>/config</code> 配置。</p><hr><h2 id="auto-mode">Auto Mode</h2><p>Auto Mode 是一种研究预览权限模式（2026 年 3 月），使用后台安全分类器在执行前审查每个操作。它允许 Claude 自主工作，同时阻止危险操作。</p><h3 id="要求">要求</h3><li><strong>计划</strong>: 团队计划（企业和 API 正在推出）</li>
 <li><strong>模型</strong>: Claude Sonnet 4.6 或 Opus 4.6</li>
 <li><strong>分类器</strong>: 在 Claude Sonnet 4.6 上运行（增加额外 token 成本）</li><h3 id="启用-auto-mode">启用 Auto Mode</h3><pre><code class="language-bash"># 使用 CLI 标志解锁 auto mode
-claude --enable-auto-mode
-
-# 然后在 REPL 中使用 Shift+Tab 切换到它
+claude --enable-auto-mode</p><p># 然后在 REPL 中使用 Shift+Tab 切换到它
 </code></pre><p>或将其设置为默认权限模式:</p><pre><code class="language-bash">claude --permission-mode auto
-</code></pre><p>通过配置设置:
-<pre><code class="language-json">{
+</code></pre><p>通过配置设置:</p><pre><code class="language-json">{
   &quot;permissions&quot;: {
     &quot;defaultMode&quot;: &quot;auto&quot;
   }
@@ -529,17 +465,12 @@ claude --enable-auto-mode
 </tr>
 </tbody>
 </table>
-<h3 id="配置-auto-mode">配置 Auto Mode</h3><p><strong>以 JSON 格式打印默认规则</strong>:
-<pre><code class="language-bash">claude auto-mode defaults
+<h3 id="配置-auto-mode">配置 Auto Mode</h3><p><strong>以 JSON 格式打印默认规则</strong>:</p><pre><code class="language-bash">claude auto-mode defaults
 </code></pre><p><strong>配置可信基础设施</strong> 通过 <code>autoMode.environment</code> 托管设置进行企业部署。这允许管理员定义可信的 CI/CD 环境、部署目标和基础设施模式。</p><h3 id="回退行为">回退行为</h3><p>当分类器不确定时，auto mode 回退到提示用户:
 <li>连续 <strong>3 次</strong>分类器阻止后</li>
 <li>会话中总共 <strong>20 次</strong>分类器阻止后</li><p>这确保当分类器无法自信批准操作时，用户始终保留控制权。</p><h3 id="配置等效-auto-mode-的权限-无需团队计划">配置等效 Auto-Mode 的权限（无需团队计划）</h3><p>如果您没有团队计划或想要更简单的方法（无需后台分类器），可以在 <code>~/.claude/settings.json</code> 中配置保守的安全权限规则基线。脚本从只读和本地检查规则开始，然后让您按需选择启用编辑、测试、本地 git 写入、包安装和 GitHub 写入操作。</p><p><strong>文件:</strong> <code>09-advanced-features/setup-auto-mode-permissions.py</code></p><pre><code class="language-bash"># 预览将要添加的内容（不写入任何更改）
-python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run
-
-# 应用保守基线
-python3 09-advanced-features/setup-auto-mode-permissions.py
-
-# 仅在需要时添加更多能力
+python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run</p><p># 应用保守基线
+python3 09-advanced-features/setup-auto-mode-permissions.py</p><p># 仅在需要时添加更多能力
 python3 09-advanced-features/setup-auto-mode-permissions.py --include-edits --include-tests
 python3 09-advanced-features/setup-auto-mode-permissions.py --include-git-write --include-packages
 </code></pre><p>脚本在这些类别中添加规则:</p><table>
@@ -597,75 +528,28 @@ python3 09-advanced-features/setup-auto-mode-permissions.py --include-git-write 
 <li>构建过程</li>
 <li>数据库迁移</li>
 <li>部署脚本</li>
-<li>分析工具</li><p><strong>基本用法</strong>:
-<pre><code class="language-bash">User: Run tests in background
-
-Claude: Started task bg-1234
-
-/task list           # 显示所有任务
+<li>分析工具</li><p><strong>基本用法</strong>:</p><pre><code class="language-bash">User: Run tests in background</p><p>Claude: Started task bg-1234</p><p>/task list           # 显示所有任务
 /task status bg-1234 # 检查进度
 /task show bg-1234   # 查看输出
 /task cancel bg-1234 # 取消任务
-</code></pre><h3 id="启动后台任务">启动后台任务</h3><pre><code class="language-">User: Run the full test suite in the background
-
-Claude: Starting tests in background (task-id: bg-1234)
-You can continue working while tests run.
-
-[你可以继续对话]
-
-User: Meanwhile, let&#039;s refactor the auth module
-
-Claude: [在测试后台运行时处理 auth 模块]
-
-[稍后，当测试完成时]
-
-Claude: 📢 Background task bg-1234 completed:
+</code></pre><h3 id="启动后台任务">启动后台任务</h3><pre><code class="language-">User: Run the full test suite in the background</p><p>Claude: Starting tests in background (task-id: bg-1234)
+You can continue working while tests run.</p><p>[你可以继续对话]</p><p>User: Meanwhile, let&#039;s refactor the auth module</p><p>Claude: [在测试后台运行时处理 auth 模块]</p><p>[稍后，当测试完成时]</p><p>Claude: 📢 Background task bg-1234 completed:
 ✅ 245 tests passed
 ❌ 3 tests failed
 View results: /task show bg-1234
-</code></pre><h3 id="管理后台任务">管理后台任务</h3><p><strong>列出活跃任务</strong>:
-<pre><code class="language-">User: /task list
-
-Active background tasks:
+</code></pre><h3 id="管理后台任务">管理后台任务</h3><p><strong>列出活跃任务</strong>:</p><pre><code class="language-">User: /task list</p><p>Active background tasks:
 1. [bg-1234] Running tests (50% complete, 2min remaining)
 2. [bg-1235] Building Docker image (25% complete, 8min remaining)
 3. [bg-1236] Deploying to staging (90% complete, 30sec remaining)
-</code></pre><p><strong>检查任务状态</strong>:
-<pre><code class="language-">User: /task status bg-1234
-
-Task bg-1234: Running tests
+</code></pre><p><strong>检查任务状态</strong>:</p><pre><code class="language-">User: /task status bg-1234</p><p>Task bg-1234: Running tests
 Status: In progress
 Progress: 120/245 tests (49%)
 Started: 2025-11-08 10:30:15
 Estimated completion: 2025-11-08 10:34:22
-</code></pre><p><strong>查看任务输出</strong>:
-<pre><code class="language-">User: /task show bg-1234
-
-[显示测试运行的实时输出]
-</code></pre><p><strong>取消任务</strong>:
-<pre><code class="language-">User: /task cancel bg-1234
-
-Cancelled background task bg-1234
-</code></pre><h3 id="示例-并行开发">示例: 并行开发</h3><pre><code class="language-">User: Run the build in the background
-
-Claude: Starting build... (task-id: bg-5001)
-
-User: Also run the linter in background
-
-Claude: Starting linter... (task-id: bg-5002)
-
-User: While those run, let&#039;s implement the new API endpoint
-
-Claude: [在构建和 linter 运行时实现 API 端点]
-
-[10 分钟后]
-
-Claude: 📢 Build completed successfully (bg-5001)
-📢 Linter found 12 issues (bg-5002)
-
-User: Show me the linter issues
-
-Claude: [显示 bg-5002 的 linter 输出]
+</code></pre><p><strong>查看任务输出</strong>:</p><pre><code class="language-">User: /task show bg-1234</p><p>[显示测试运行的实时输出]
+</code></pre><p><strong>取消任务</strong>:</p><pre><code class="language-">User: /task cancel bg-1234</p><p>Cancelled background task bg-1234
+</code></pre><h3 id="示例-并行开发">示例: 并行开发</h3><pre><code class="language-">User: Run the build in the background</p><p>Claude: Starting build... (task-id: bg-5001)</p><p>User: Also run the linter in background</p><p>Claude: Starting linter... (task-id: bg-5002)</p><p>User: While those run, let&#039;s implement the new API endpoint</p><p>Claude: [在构建和 linter 运行时实现 API 端点]</p><p>[10 分钟后]</p><p>Claude: 📢 Build completed successfully (bg-5001)
+📢 Linter found 12 issues (bg-5002)</p><p>User: Show me the linter issues</p><p>Claude: [显示 bg-5002 的 linter 输出]
 </code></pre><h3 id="配置">配置</h3><pre><code class="language-json">{
   &quot;backgroundTasks&quot;: {
     &quot;enabled&quot;: true,
@@ -676,9 +560,7 @@ Claude: [显示 bg-5002 的 linter 输出]
   }
 }
 </code></pre><hr><h2 id="定时任务">定时任务</h2><p>定时任务让您按周期性计划自动运行提示，或作为一次性提醒。任务是会话范围的 — 在 Claude Code 活跃时运行，会话结束时清除。自 v2.1.72+ 起可用。</p><h3 id="__inlinecode_81__-命令"><code>/loop</code> 命令</h3><pre><code class="language-bash"># 显式间隔
-/loop 5m check if the deployment finished
-
-# 自然语言
+/loop 5m check if the deployment finished</p><p># 自然语言
 /loop check build status every 30 minutes
 </code></pre><p>也支持标准的 5 字段 cron 表达式用于精确调度。</p><h3 id="一次性提醒">一次性提醒</h3><p>设置在特定时间触发一次的提醒:</p><pre><code class="language-">remind me at 3pm to push the release branch
 in 45 minutes, run the integration tests
@@ -773,92 +655,50 @@ in 45 minutes, run the integration tests
 </tr>
 </tbody>
 </table>
-在 CLI 中使用 <code>Shift+Tab</code> 切换模式。使用 <code>--permission-mode</code> 标志或 <code>permissions.defaultMode</code> 设置设置默认值。</p><h3 id="激活方法">激活方法</h3><p><strong>键盘快捷键</strong>:
-<pre><code class="language-bash">Shift + Tab  # 切换所有 6 种模式
-</code></pre><p><strong>Slash command</strong>:
-<pre><code class="language-bash">/plan                  # 进入规划模式
-</code></pre><p><strong>CLI 标志</strong>:
-<pre><code class="language-bash">claude --permission-mode plan
+在 CLI 中使用 <code>Shift+Tab</code> 切换模式。使用 <code>--permission-mode</code> 标志或 <code>permissions.defaultMode</code> 设置设置默认值。</p><h3 id="激活方法">激活方法</h3><p><strong>键盘快捷键</strong>:</p><pre><code class="language-bash">Shift + Tab  # 切换所有 6 种模式
+</code></pre><p><strong>Slash command</strong>:</p><pre><code class="language-bash">/plan                  # 进入规划模式
+</code></pre><p><strong>CLI 标志</strong>:</p><pre><code class="language-bash">claude --permission-mode plan
 claude --permission-mode auto
-</code></pre><p><strong>设置</strong>:
-<pre><code class="language-json">{
+</code></pre><p><strong>设置</strong>:</p><pre><code class="language-json">{
   &quot;permissions&quot;: {
     &quot;defaultMode&quot;: &quot;auto&quot;
   }
 }
 </code></pre><h3 id="权限模式示例">权限模式示例</h3><p>#### Default Mode
-Claude 在重要操作上请求确认:</p><pre><code class="language-">User: Fix the bug in auth.ts
-
-Claude: I need to modify src/auth.ts to fix the bug.
-The change will update the password validation logic.
-
-Approve this change? (yes/no/show)
+Claude 在重要操作上请求确认:</p><pre><code class="language-">User: Fix the bug in auth.ts</p><p>Claude: I need to modify src/auth.ts to fix the bug.
+The change will update the password validation logic.</p><p>Approve this change? (yes/no/show)
 </code></pre><p>#### Plan Mode
-在执行前审查实现计划:</p><pre><code class="language-">User: /plan Implement user authentication system
-
-Claude: I&#039;ll create a plan for implementing authentication.
-
-## Implementation Plan
-[包含阶段和步骤的详细计划]
-
-Ready to proceed? (yes/no/modify)
+在执行前审查实现计划:</p><pre><code class="language-">User: /plan Implement user authentication system</p><p>Claude: I&#039;ll create a plan for implementing authentication.</p><p>## Implementation Plan
+[包含阶段和步骤的详细计划]</p><p>Ready to proceed? (yes/no/modify)
 </code></pre><p>#### Accept Edits Mode
 自动接受文件修改:</p><pre><code class="language-">User: acceptEdits
-User: Fix the bug in auth.ts
-
-Claude: [无需询问直接修改]
-</code></pre><h3 id="使用场景">使用场景</h3><p><strong>代码审查</strong>:
-<pre><code class="language-">User: claude --permission-mode plan
-User: Review this PR and suggest improvements
-
-Claude: [读取代码，提供反馈，但不能修改]
-</code></pre><p><strong>结对编程</strong>:
-<pre><code class="language-">User: claude --permission-mode default
-User: Let&#039;s implement the feature together
-
-Claude: [每次变更前请求批准]
-</code></pre><p><strong>自动化任务</strong>:
-<pre><code class="language-">User: claude --permission-mode acceptEdits
-User: Fix all linting issues in the codebase
-
-Claude: [自动接受文件编辑，无需询问]
+User: Fix the bug in auth.ts</p><p>Claude: [无需询问直接修改]
+</code></pre><h3 id="使用场景">使用场景</h3><p><strong>代码审查</strong>:</p><pre><code class="language-">User: claude --permission-mode plan
+User: Review this PR and suggest improvements</p><p>Claude: [读取代码，提供反馈，但不能修改]
+</code></pre><p><strong>结对编程</strong>:</p><pre><code class="language-">User: claude --permission-mode default
+User: Let&#039;s implement the feature together</p><p>Claude: [每次变更前请求批准]
+</code></pre><p><strong>自动化任务</strong>:</p><pre><code class="language-">User: claude --permission-mode acceptEdits
+User: Fix all linting issues in the codebase</p><p>Claude: [自动接受文件编辑，无需询问]
 </code></pre><hr><h2 id="headless-mode">Headless Mode</h2><p>Print mode (<code>claude -p</code>) 允许 Claude Code 无需交互输入运行，非常适合自动化和 CI/CD。这是非交互模式，取代了旧的 <code>--headless</code> 标志。</p><h3 id="什么是-print-mode">什么是 Print Mode？</h3><p>Print mode 支持:
 <li>自动脚本执行</li>
 <li>CI/CD 集成</li>
 <li>批处理</li>
 <li>定时任务</li><h3 id="在-print-mode-下运行-非交互">在 Print Mode 下运行（非交互）</h3><pre><code class="language-bash"># 运行特定任务
-claude -p &quot;Run all tests&quot;
-
-# 处理管道内容
-cat error.log | claude -p &quot;Analyze these errors&quot;
-
-# CI/CD 集成（GitHub Actions）
+claude -p &quot;Run all tests&quot;</p><p># 处理管道内容
+cat error.log | claude -p &quot;Analyze these errors&quot;</p><p># CI/CD 集成（GitHub Actions）
 - name: AI Code Review
   run: claude -p &quot;Review PR&quot;
 </code></pre><h3 id="更多-print-mode-使用示例">更多 Print Mode 使用示例</h3><pre><code class="language-bash"># 运行特定任务并捕获输出
-claude -p &quot;Run all tests and generate coverage report&quot;
-
-# 结构化输出
-claude -p --output-format json &quot;Analyze code quality&quot;
-
-# 从 stdin 输入
+claude -p &quot;Run all tests and generate coverage report&quot;</p><p># 结构化输出
+claude -p --output-format json &quot;Analyze code quality&quot;</p><p># 从 stdin 输入
 echo &quot;Analyze code quality&quot; | claude -p &quot;explain this&quot;
-</code></pre><h3 id="示例-ci-cd-集成">示例: CI/CD 集成</h3><p><strong>GitHub Actions</strong>:
-<pre><code class="language-yaml"># .github/workflows/code-review.yml
-name: AI Code Review
-
-on: [pull_request]
-
-jobs:
+</code></pre><h3 id="示例-ci-cd-集成">示例: CI/CD 集成</h3><p><strong>GitHub Actions</strong>:</p><pre><code class="language-yaml"># .github/workflows/code-review.yml
+name: AI Code Review</p><p>on: [pull_request]</p><p>jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Run Claude Code Review
+      - uses: actions/checkout@v4</p><p>      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code</p><p>      - name: Run Claude Code Review
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
@@ -869,9 +709,7 @@ jobs:
             - Security vulnerabilities
             - Performance concerns
             - Test coverage
-            Output results as JSON&quot; &gt; review.json
-
-      - name: Post Review Comment
+            Output results as JSON&quot; &gt; review.json</p><p>      - name: Post Review Comment
         uses: actions/github-script@v7
         with:
           script: |
@@ -884,16 +722,10 @@ jobs:
               body: JSON.stringify(review, null, 2)
             });
 </code></pre><h3 id="print-mode-配置">Print Mode 配置</h3><p>Print mode (<code>claude -p</code>) 支持多个自动化标志:</p><pre><code class="language-bash"># 限制自主轮次
-claude -p --max-turns 5 &quot;refactor this module&quot;
-
-# 结构化 JSON 输出
-claude -p --output-format json &quot;analyze this codebase&quot;
-
-# 配合 schema 验证
+claude -p --max-turns 5 &quot;refactor this module&quot;</p><p># 结构化 JSON 输出
+claude -p --output-format json &quot;analyze this codebase&quot;</p><p># 配合 schema 验证
 claude -p --json-schema &#039;{&quot;type&quot;:&quot;object&quot;,&quot;properties&quot;:{&quot;issues&quot;:{&quot;type&quot;:&quot;array&quot;}}}&#039; \
-  &quot;find bugs in this code&quot;
-
-# 禁用会话持久化
+  &quot;find bugs in this code&quot;</p><p># 禁用会话持久化
 claude -p --no-session-persistence &quot;one-off analysis&quot;
 </code></pre><hr><h2 id="会话管理">会话管理</h2><p>有效管理多个 Claude Code 会话。</p><h3 id="会话管理命令">会话管理命令</h3><table>
 <thead>
@@ -925,22 +757,14 @@ claude -p --no-session-persistence &quot;one-off analysis&quot;
 </tr>
 </tbody>
 </table>
-<h3 id="恢复会话">恢复会话</h3><p><strong>继续上次对话</strong>:
-<pre><code class="language-bash">claude -c
-</code></pre><p><strong>恢复命名会话</strong>:
-<pre><code class="language-bash">claude -r &quot;auth-refactor&quot; &quot;finish this PR&quot;
-</code></pre><p><strong>重命名当前会话</strong>（在 REPL 中）:
-<pre><code class="language-">/rename auth-refactor
+<h3 id="恢复会话">恢复会话</h3><p><strong>继续上次对话</strong>:</p><pre><code class="language-bash">claude -c
+</code></pre><p><strong>恢复命名会话</strong>:</p><pre><code class="language-bash">claude -r &quot;auth-refactor&quot; &quot;finish this PR&quot;
+</code></pre><p><strong>重命名当前会话</strong>（在 REPL 中）:</p><pre><code class="language-">/rename auth-refactor
 </code></pre><h3 id="分叉会话">分叉会话</h3><p>分叉会话以尝试替代方案而不丢失原始会话:</p><pre><code class="language-">/fork
-</code></pre><p>或从 CLI:
-<pre><code class="language-bash">claude --resume auth-refactor --fork-session &quot;try OAuth instead&quot;
+</code></pre><p>或从 CLI:</p><pre><code class="language-bash">claude --resume auth-refactor --fork-session &quot;try OAuth instead&quot;
 </code></pre><h3 id="会话持久化">会话持久化</h3><p>会话自动保存并可恢复:</p><pre><code class="language-bash"># 继续上次对话
-claude -c
-
-# 按名称或 ID 恢复特定会话
-claude -r &quot;auth-refactor&quot;
-
-# 恢复并分叉用于实验
+claude -c</p><p># 按名称或 ID 恢复特定会话
+claude -r &quot;auth-refactor&quot;</p><p># 恢复并分叉用于实验
 claude --resume auth-refactor --fork-session &quot;alternative approach&quot;
 </code></pre><hr><h2 id="交互功能">交互功能</h2><h3 id="键盘快捷键">键盘快捷键</h3><p>Claude Code 支持键盘快捷键以提高效率。以下是官方文档的完整参考:</p><table>
 <thead>
@@ -1145,20 +969,14 @@ claude --resume auth-refactor --fork-session &quot;alternative approach&quot;
 </tbody>
 </table>
 <blockquote><strong>提示</strong>: 如果快捷键不工作，请检查终端模拟器或复用器的冲突。</blockquote><h3 id="tab-补全">Tab 补全</h3><p>Claude Code 提供智能 tab 补全:</p><pre><code class="language-">User: /rew&lt;TAB&gt;
-→ /rewind
-
-User: /plu&lt;TAB&gt;
-→ /plugin
-
-User: /plugin &lt;TAB&gt;
+→ /rewind</p><p>User: /plu&lt;TAB&gt;
+→ /plugin</p><p>User: /plugin &lt;TAB&gt;
 → /plugin install
 → /plugin enable
 → /plugin disable
 </code></pre><h3 id="命令历史">命令历史</h3><p>访问之前的命令:</p><pre><code class="language-">User: &lt;↑&gt;  # 上一个命令
 User: &lt;↓&gt;  # 下一个命令
-User: Ctrl+R  # 搜索历史
-
-(reverse-i-search)`test&#039;: run all tests
+User: Ctrl+R  # 搜索历史</p><p>(reverse-i-search)`test&#039;: run all tests
 </code></pre><h3 id="多行输入">多行输入</h3><p>对于复杂查询，使用多行模式:</p><pre><code class="language-bash">User: \
 &gt; Long complex prompt
 &gt; spanning multiple lines
@@ -1170,12 +988,8 @@ User: Ctrl+R  # 搜索历史
 &gt; - Email verification
 &gt; - Password reset
 &gt; - 2FA support
-&gt; \end
-
-Claude: [处理多行请求]
-</code></pre><h3 id="内联编辑">内联编辑</h3><p>在发送前编辑命令:</p><pre><code class="language-">User: Deploy to prodcution&lt;Backspace&gt;&lt;Backspace&gt;uction
-
-[发送前原地编辑]
+&gt; \end</p><p>Claude: [处理多行请求]
+</code></pre><h3 id="内联编辑">内联编辑</h3><p>在发送前编辑命令:</p><pre><code class="language-">User: Deploy to prodcution&lt;Backspace&gt;&lt;Backspace&gt;uction</p><p>[发送前原地编辑]
 </code></pre><h3 id="vim-mode">Vim Mode</h3><p>启用 Vi/Vim 键绑定进行文本编辑:</p><p><strong>激活</strong>:
 <li>使用 <code>/vim</code> 命令或 <code>/config</code> 启用</li>
 <li>使用 <code>Esc</code> 切换到 NORMAL，<code>i/a/o</code> 切换到 INSERT</li><p><strong>导航键</strong>:
@@ -1283,9 +1097,7 @@ claude --no-chrome   # 禁用 Chrome 连接
 <li><strong>WSL</strong>: 在 Windows Subsystem for Linux 中不可用</li>
 <li><strong>第三方提供商</strong>: 不支持 Bedrock、Vertex 或 Foundry API 提供商</li>
 <li><strong>Service worker 空闲</strong>: Chrome 扩展 service worker 在长时间会话中可能进入空闲状态</li><blockquote><strong>提示</strong>: Chrome 集成是 beta 功能。浏览器支持可能在未来版本中扩展。</blockquote><hr><h2 id="远程控制">远程控制</h2><p>远程控制让您从手机、平板或任何浏览器继续本地运行的 Claude Code 会话。本地会话在您的机器上持续运行 — 不转移到云端。适用于 Pro、Max、Team 和 Enterprise 计划（v2.1.51+）。</p><h3 id="启动远程控制">启动远程控制</h3><p><strong>从 CLI</strong>:</p><pre><code class="language-bash"># 以默认会话名称启动
-claude remote-control
-
-# 以自定义名称启动
+claude remote-control</p><p># 以自定义名称启动
 claude remote-control --name &quot;Auth Refactor&quot;
 </code></pre><p><strong>从会话内</strong>:</p><pre><code class="language-">/remote-control
 /remote-control &quot;Auth Refactor&quot;
@@ -1354,8 +1166,7 @@ claude remote-control --name &quot;Auth Refactor&quot;
 claude --remote &quot;implement the new API endpoints&quot;
 </code></pre><p>这会在 claude.ai 上启动 Claude Code 会话，您可以从任意浏览器访问。</p><h3 id="本地恢复-web-会话">本地恢复 Web 会话</h3><p>如果您在 Web 上启动会话并想在本地继续:</p><pre><code class="language-bash"># 在本地终端恢复 Web 会话
 claude --teleport
-</code></pre><p>或从交互 REPL 中:
-<pre><code class="language-">/teleport
+</code></pre><p>或从交互 REPL 中:</p><pre><code class="language-">/teleport
 </code></pre><h3 id="使用场景">使用场景</h3><li>在一台机器上开始工作，在另一台机器上继续</li>
 <li>与团队成员分享会话 URL</li>
 <li>使用 Web UI 进行可视化差异审查，然后切换到终端执行</li><hr><h2 id="桌面应用">桌面应用</h2><p>Claude Code 桌面应用提供独立应用，具有可视化差异审查、并行会话和集成连接器。适用于 macOS 和 Windows（Pro、Max、Team 和 Enterprise 计划）。</p><h3 id="安装">安装</h3><p>从 <a href="https://claude.ai">claude.ai</a> 下载适用于您平台的版本:
@@ -1474,8 +1285,7 @@ claude --teleport
 claude --worktree
 # 或
 claude -w
-</code></pre><h3 id="worktree-位置">Worktree 位置</h3><p>Worktrees 创建于:
-<pre><code class="language-">&lt;repo&gt;/.claude/worktrees/&lt;name&gt;
+</code></pre><h3 id="worktree-位置">Worktree 位置</h3><p>Worktrees 创建于:</p><pre><code class="language-">&lt;repo&gt;/.claude/worktrees/&lt;name&gt;
 </code></pre><h3 id="monorepo-稀疏检出">Monorepo 稀疏检出</h3><p>使用 <code>worktree.sparsePaths</code> 设置在 monorepo 中执行稀疏检出，减少磁盘使用和克隆时间:</p><pre><code class="language-json">{
   &quot;worktree&quot;: {
     &quot;sparsePaths&quot;: [&quot;packages/my-package&quot;, &quot;shared/&quot;]
@@ -1506,10 +1316,8 @@ claude -w
 <h3 id="自动清理">自动清理</h3><p>如果在 worktree 中未进行任何更改，会话结束时自动清理。</p><h3 id="使用场景">使用场景</h3><li>在功能分支上工作，同时保持 main 分支不变</li>
 <li>在隔离环境中运行测试，不影响工作目录</li>
 <li>在可丢弃环境中尝试实验性更改</li>
-<li>在 monorepo 中稀疏检出特定包以加快启动</li><hr><h2 id="沙箱">沙箱</h2><p>沙箱为 Claude Code 执行的 Bash 命令提供操作系统级别的文件系统和网络隔离。这与权限规则互补，提供额外的安全层。</p><h3 id="启用沙箱">启用沙箱</h3><p><strong>Slash command</strong>:
-<pre><code class="language-">/sandbox
-</code></pre><p><strong>CLI 标志</strong>:
-<pre><code class="language-bash">claude --sandbox       # 启用沙箱
+<li>在 monorepo 中稀疏检出特定包以加快启动</li><hr><h2 id="沙箱">沙箱</h2><p>沙箱为 Claude Code 执行的 Bash 命令提供操作系统级别的文件系统和网络隔离。这与权限规则互补，提供额外的安全层。</p><h3 id="启用沙箱">启用沙箱</h3><p><strong>Slash command</strong>:</p><pre><code class="language-">/sandbox
+</code></pre><p><strong>CLI 标志</strong>:</p><pre><code class="language-bash">claude --sandbox       # 启用沙箱
 claude --no-sandbox    # 禁用沙箱
 </code></pre><h3 id="配置设置">配置设置</h3><table>
 <thead>
@@ -1666,15 +1474,11 @@ claude --no-sandbox    # 禁用沙箱
     &quot;mode&quot;: &quot;default&quot;,
     &quot;allowedTools&quot;: [&quot;Bash(git log:*)&quot;, &quot;Read&quot;],
     &quot;disallowedTools&quot;: [&quot;Bash(rm -rf:*)&quot;]
-  },
-
-  &quot;hooks&quot;: {
+  },</p><p>  &quot;hooks&quot;: {
     &quot;PreToolUse&quot;: [{ &quot;matcher&quot;: &quot;Edit&quot;, &quot;hooks&quot;: [&quot;eslint --fix ${file_path}&quot;] }],
     &quot;PostToolUse&quot;: [{ &quot;matcher&quot;: &quot;Write&quot;, &quot;hooks&quot;: [&quot;~/.claude/hooks/security-scan.sh&quot;] }],
     &quot;Stop&quot;: [{ &quot;hooks&quot;: [&quot;~/.claude/hooks/notify.sh&quot;] }]
-  },
-
-  &quot;mcp&quot;: {
+  },</p><p>  &quot;mcp&quot;: {
     &quot;enabled&quot;: true,
     &quot;servers&quot;: {
       &quot;github&quot;: {
@@ -1691,16 +1495,10 @@ claude --no-sandbox    # 禁用沙箱
 export ANTHROPIC_MODEL=claude-opus-4-6
 export ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-4-6
 export ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-4-6
-export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5
-
-# API 配置
-export ANTHROPIC_API_KEY=sk-ant-...
-
-# 思考配置
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5</p><p># API 配置
+export ANTHROPIC_API_KEY=sk-ant-...</p><p># 思考配置
 export MAX_THINKING_TOKENS=16000
-export CLAUDE_CODE_EFFORT_LEVEL=high
-
-# 功能开关
+export CLAUDE_CODE_EFFORT_LEVEL=high</p><p># 功能开关
 export CLAUDE_CODE_DISABLE_AUTO_MEMORY=true
 export CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=true
 export CLAUDE_CODE_DISABLE_CRON=1
@@ -1710,24 +1508,14 @@ export CLAUDE_CODE_DISABLE_1M_CONTEXT=true
 export CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK=true
 export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false
 export CLAUDE_CODE_ENABLE_TASKS=true
-export CLAUDE_CODE_SIMPLE=true              # 由 --bare 标志设置
-
-# MCP 配置
+export CLAUDE_CODE_SIMPLE=true              # 由 --bare 标志设置</p><p># MCP 配置
 export MAX_MCP_OUTPUT_TOKENS=50000
-export ENABLE_TOOL_SEARCH=true
-
-# 任务管理
-export CLAUDE_CODE_TASK_LIST_ID=my-project-tasks
-
-# Agent teams（实验性）
-export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=true
-
-# Subagent 和 plugin 配置
+export ENABLE_TOOL_SEARCH=true</p><p># 任务管理
+export CLAUDE_CODE_TASK_LIST_ID=my-project-tasks</p><p># Agent teams（实验性）
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=true</p><p># Subagent 和 plugin 配置
 export CLAUDE_CODE_SUBAGENT_MODEL=sonnet
 export CLAUDE_CODE_PLUGIN_SEED_DIR=./my-plugins
-export CLAUDE_CODE_NEW_INIT=true
-
-# 子进程和流式
+export CLAUDE_CODE_NEW_INIT=true</p><p># 子进程和流式
 export CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=&quot;SECRET_KEY,DB_PASSWORD&quot;
 export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=80
 export CLAUDE_STREAM_IDLE_TIMEOUT_MS=30000
@@ -1758,40 +1546,25 @@ export SLASH_COMMAND_TOOL_CHAR_BUDGET=50000
   }
 }
 </code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-规划模式实践">🎯 练习 1: 规划模式实践</h3><p>使用规划模式处理复杂功能:</p><pre><code class="language-bash"># 进入规划模式
-/plan
-
-# 描述任务
+/plan</p><p># 描述任务
 &quot;I need to implement user authentication with:
 - JWT token generation
 - Refresh token rotation
 - Session management
-- Rate limiting
-
-Create a detailed implementation plan.&quot;
-
-# Claude 创建计划文件
-# 审查并修改计划
-
-# 准备好后批准
+- Rate limiting</p><p>Create a detailed implementation plan.&quot;</p><p># Claude 创建计划文件
+# 审查并修改计划</p><p># 准备好后批准
 # Claude 逐步执行
 </code></pre><h3 id="练习-2-扩展思考用于复杂分析">🎯 练习 2: 扩展思考用于复杂分析</h3><p>切换扩展思考进行深度推理:</p><pre><code class="language-bash"># 启用扩展思考（默认: 开）
-# Option+T (macOS) 或 Alt+T (Windows/Linux)
-
-# 需要深度推理的复杂任务
+# Option+T (macOS) 或 Alt+T (Windows/Linux)</p><p># 需要深度推理的复杂任务
 &quot;Analyze whether we should adopt a microservices architecture. 
 Consider:
 - Current monolith complexity
 - Team size and expertise
 - Deployment frequency
 - Performance requirements
-- Long-term maintenance
-
-Provide a thorough analysis with trade-offs.&quot;
-
-# 扩展思考分配最多 32K tokens 用于推理
+- Long-term maintenance</p><p>Provide a thorough analysis with trade-offs.&quot;</p><p># 扩展思考分配最多 32K tokens 用于推理
 # 结果显示比标准响应更深入的分析
-</code></pre><h3 id="练习-3-自定义权限基线">🎯 练习 3: 自定义权限基线</h3><p>设置权限配置:</p><p><strong>步骤 1: 创建权限配置</strong>
-<pre><code class="language-json">// ~/.claude/settings.json
+</code></pre><h3 id="练习-3-自定义权限基线">🎯 练习 3: 自定义权限基线</h3><p>设置权限配置:</p><p><strong>步骤 1: 创建权限配置</strong></p><pre><code class="language-json">// ~/.claude/settings.json
 {
   &quot;allowedTools&quot;: {
     &quot;readOnly&quot;: [
@@ -1807,62 +1580,35 @@ Provide a thorough analysis with trade-offs.&quot;
     ]
   }
 }
-</code></pre><p><strong>步骤 2: 切换配置</strong>
-<pre><code class="language-bash"># 在 Claude Code 中:
+</code></pre><p><strong>步骤 2: 切换配置</strong></p><pre><code class="language-bash"># 在 Claude Code 中:
 /permissions
 # 选择配置: readOnly, development, 或 fullAccess
 </code></pre><h3 id="练习-4-auto-compact-用于长会话">🎯 练习 4: Auto-Compact 用于长会话</h3><p>在长会话中管理上下文窗口:</p><pre><code class="language-bash"># 开始长分析会话
-# 大量工作后:
-
-# 手动压缩带焦点
-/compact focus: authentication implementation
-
-# Claude 总结:
+# 大量工作后:</p><p># 手动压缩带焦点
+/compact focus: authentication implementation</p><p># Claude 总结:
 # - 保留认证相关上下文
 # - 移除偏离主题的讨论
-# - 保留最近的工具调用
-
-# 使用保留的上下文继续工作
+# - 保留最近的工具调用</p><p># 使用保留的上下文继续工作
 </code></pre><h3 id="练习-5-组合高级功能">🎯 练习 5: 组合高级功能</h3><p>组合规划模式 + 扩展思考 + 权限:</p><pre><code class="language-bash"># 首先设置严格权限
 /permissions
-# 选择: readOnly（用于分析阶段）
-
-# 启用扩展思考
-# Option+T
-
-# 进入规划模式
-/plan
-
-# 复杂分析任务
+# 选择: readOnly（用于分析阶段）</p><p># 启用扩展思考
+# Option+T</p><p># 进入规划模式
+/plan</p><p># 复杂分析任务
 &quot;Analyze our codebase architecture and propose improvements.
 I want:
 1. Current architecture assessment
 2. Identified bottlenecks
 3. Improvement recommendations with priorities
-4. Implementation roadmap
-
-Use extended thinking for thorough analysis.&quot;
-
-# 审查计划
+4. Implementation roadmap</p><p>Use extended thinking for thorough analysis.&quot;</p><p># 审查计划
 # 准备好实现时切换权限
 /permissions
-# 选择: development
-
-# 执行计划
-</code></pre><h3 id="练习-6-auto-mode-配置">🎯 练习 6: Auto-Mode 配置</h3><p>设置自动模式切换:</p><p><strong>在 CLAUDE.md 中</strong>:
-<pre><code class="language-markdown">## Auto-Mode Rules
-
-When I say &quot;analyze&quot; → use readOnly permissions
+# 选择: development</p><p># 执行计划
+</code></pre><h3 id="练习-6-auto-mode-配置">🎯 练习 6: Auto-Mode 配置</h3><p>设置自动模式切换:</p><p><strong>在 CLAUDE.md 中</strong>:</p><pre><code class="language-markdown">## Auto-Mode Rules</p><p>When I say &quot;analyze&quot; → use readOnly permissions
 When I say &quot;implement&quot; → use development permissions  
-When I say &quot;experiment&quot; → use fullAccess permissions
-
-Auto-switch based on task type.
-</code></pre><p><strong>测试</strong>:
-<pre><code class="language-bash"># 在 Claude Code 中:
+When I say &quot;experiment&quot; → use fullAccess permissions</p><p>Auto-switch based on task type.
+</code></pre><p><strong>测试</strong>:</p><pre><code class="language-bash"># 在 Claude Code 中:
 &quot;Analyze the authentication module&quot;
-# → 自动使用 readOnly 配置
-
-&quot;Implement rate limiting&quot;
+# → 自动使用 readOnly 配置</p><p>&quot;Implement rate limiting&quot;
 # → 自动使用 development 配置
 </code></pre><hr><h2 id="最佳实践">最佳实践</h2><h3 id="规划模式">规划模式</h3>
 <li>✅ 用于复杂多步骤任务</li>
