@@ -5,63 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PDF 下载 - Claude Code 终极教程</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <style>
-    .pdf-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
     }
 
-    .pdf-card {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 0.5rem;
-      padding: 1.5rem;
-      transition: box-shadow 0.2s, transform 0.2s;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
     }
 
-    .pdf-card:hover {
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
     }
 
-    .pdf-card h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.1rem;
-      color: #1f2937;
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    .pdf-card .size {
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+    .nav-links a.active { color: var(--primary); }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* 徽章 */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
       font-size: 0.875rem;
-      color: #6b7280;
-      margin-bottom: 1rem;
-    }
-
-    .pdf-card .badge {
-      margin-bottom: 1rem;
-    }
-
-    .pdf-card a {
-      display: inline-block;
-      background: #D97706;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      text-decoration: none;
       font-weight: 500;
-      transition: background 0.2s;
     }
 
-    .pdf-card a:hover {
-      background: #b45309;
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 页面标题 */
+    .page-header {
+      margin-bottom: 2rem;
     }
 
+    .page-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* 完整 PDF 下载区 */
     .complete-pdf {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-      border: 2px solid #D97706;
-      padding: 2rem;
+      border: 2px solid var(--primary);
       border-radius: 0.75rem;
+      padding: 2rem;
       margin-bottom: 2rem;
       text-align: center;
     }
@@ -69,6 +107,7 @@
     .complete-pdf h2 {
       margin: 0 0 0.5rem 0;
       color: #92400e;
+      font-size: 1.5rem;
     }
 
     .complete-pdf p {
@@ -78,7 +117,7 @@
 
     .complete-pdf .download-btn {
       display: inline-block;
-      background: #D97706;
+      background: var(--primary);
       color: white;
       padding: 0.75rem 2rem;
       border-radius: 0.5rem;
@@ -91,6 +130,92 @@
     .complete-pdf .download-btn:hover {
       background: #b45309;
     }
+
+    /* PDF 网格 */
+    .section-title {
+      font-size: 1.25rem;
+      margin: 2rem 0 1rem 0;
+    }
+
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .pdf-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .pdf-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .pdf-card h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .pdf-card .meta {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+    }
+
+    .pdf-card a {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: background 0.2s;
+    }
+
+    .pdf-card a:hover {
+      background: #b45309;
+    }
+
+    /* 使用建议 */
+    .tips-box {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+    }
+
+    .tips-box h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 1rem;
+    }
+
+    .tips-box ul {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .tips-box li {
+      margin: 0.3rem 0;
+    }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
   </style>
 </head>
 <body>
@@ -100,7 +225,7 @@
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
         <li><a href="/content/modules.html">模块</a></li>
-        <li><a href="/pdf.html">PDF 下载</a></li>
+        <li><a href="/pdf.html" class="active">PDF 下载</a></li>
         <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
@@ -109,113 +234,115 @@
   <main>
     <div class="container">
       <article>
-        <h1>📥 PDF 下载</h1>
+        <div class="page-header">
+          <h1>📥 PDF 下载</h1>
+        </div>
 
         <div class="complete-pdf">
           <h2>📚 完整教程 PDF</h2>
-          <p>包含所有 13 个模块，共 22MB，适合离线阅读和打印</p>
+          <p>包含所有 13 个模块，适合离线阅读和打印</p>
           <a href="/pdf/Claude-Code-终极教程.pdf" class="download-btn" download>
             下载完整教程 (1.5 MB)
           </a>
         </div>
 
-        <h2>分模块下载</h2>
-        <p>选择你需要的模块单独下载：</p>
+        <h2 class="section-title">分模块下载</h2>
+        <p style="color: #6b7280; margin-bottom: 1rem;">选择你需要的模块单独下载：</p>
 
         <div class="pdf-grid">
           <div class="pdf-card">
             <span class="badge badge-beginner">🟢 初级</span>
-            <h3>Slash Commands</h3>
-            <p class="size">1.9 MB · 30 分钟</p>
+            <h3>01. Slash Commands</h3>
+            <p class="meta">1.9 MB · 30 分钟</p>
             <a href="/pdf/01-slash-commands.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-beginner">🟢 初级</span>
-            <h3>Memory</h3>
-            <p class="size">1.8 MB · 45 分钟</p>
+            <h3>02. Memory</h3>
+            <p class="meta">1.8 MB · 45 分钟</p>
             <a href="/pdf/02-memory.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-beginner">🟢 初级</span>
-            <h3>Skills</h3>
-            <p class="size">1.7 MB · 40 分钟</p>
+            <h3>03. Skills</h3>
+            <p class="meta">1.7 MB · 40 分钟</p>
             <a href="/pdf/03-skills.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>Subagents</h3>
-            <p class="size">1.9 MB · 60 分钟</p>
+            <h3>04. Subagents</h3>
+            <p class="meta">1.9 MB · 60 分钟</p>
             <a href="/pdf/04-subagents.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>MCP</h3>
-            <p class="size">1.8 MB · 50 分钟</p>
+            <h3>05. MCP</h3>
+            <p class="meta">1.8 MB · 50 分钟</p>
             <a href="/pdf/05-mcp.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>Hooks</h3>
-            <p class="size">2.4 MB · 70 分钟</p>
+            <h3>06. Hooks</h3>
+            <p class="meta">2.4 MB · 70 分钟</p>
             <a href="/pdf/06-hooks.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>Plugins</h3>
-            <p class="size">1.7 MB · 90 分钟</p>
+            <h3>07. Plugins</h3>
+            <p class="meta">1.7 MB · 90 分钟</p>
             <a href="/pdf/07-plugins.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-beginner">🟢 初级</span>
-            <h3>Checkpoints</h3>
-            <p class="size">1.8 MB · 25 分钟</p>
+            <h3>08. Checkpoints</h3>
+            <p class="meta">1.8 MB · 25 分钟</p>
             <a href="/pdf/08-checkpoints.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-advanced">🔴 高级</span>
-            <h3>Advanced Features</h3>
-            <p class="size">2.4 MB · 120 分钟</p>
+            <h3>09. Advanced Features</h3>
+            <p class="meta">2.4 MB · 120 分钟</p>
             <a href="/pdf/09-advanced-features.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-beginner">🟢 初级</span>
-            <h3>CLI</h3>
-            <p class="size">1.6 MB · 35 分钟</p>
+            <h3>10. CLI</h3>
+            <p class="meta">1.6 MB · 35 分钟</p>
             <a href="/pdf/10-cli.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>多 Agent 协作</h3>
-            <p class="size">748 KB</p>
+            <h3>11. 多 Agent 协作</h3>
+            <p class="meta">748 KB</p>
             <a href="/pdf/11-multi-agent.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>后台任务</h3>
-            <p class="size">655 KB</p>
+            <h3>12. 后台任务</h3>
+            <p class="meta">655 KB</p>
             <a href="/pdf/12-background-tasks.pdf" download>下载 PDF</a>
           </div>
 
           <div class="pdf-card">
             <span class="badge badge-intermediate">🟡 中级</span>
-            <h3>Channels</h3>
-            <p class="size">750 KB</p>
+            <h3>13. Channels</h3>
+            <p class="meta">750 KB</p>
             <a href="/pdf/13-channels.pdf" download>下载 PDF</a>
           </div>
         </div>
 
-        <div style="margin-top: 3rem; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem;">
+        <div class="tips-box">
           <h3>💡 使用建议</h3>
           <ul>
             <li><strong>完整教程</strong>：适合系统学习，建议打印或使用平板阅读</li>
@@ -229,10 +356,9 @@
 
   <footer>
     <div class="container">
-      <p>© 2026 Claude Code Community. 内容基于 MIT 许可发布。</p>
-      <p>
-        <a href="https://github.com/anthropics/claude-code">GitHub</a> ·
-        <a href="https://claude.ai">Claude.ai</a>
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
       </p>
     </div>
   </footer>
