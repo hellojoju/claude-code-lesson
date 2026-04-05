@@ -21,7 +21,8 @@ const MODULES = [
   { id: '10-cli', title: 'CLI', difficulty: 'beginner' },
   { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'intermediate' },
   { id: '12-background-tasks', title: '后台任务', difficulty: 'intermediate' },
-  { id: '13-channels', title: 'Channels', difficulty: 'intermediate' }
+  { id: '13-channels', title: 'Channels', difficulty: 'intermediate' },
+  { id: '14-powerup-buddy', title: 'Powerup 与 Buddy', difficulty: 'beginner' }
 ];
 
 const WEBSITE_DIR = path.join(__dirname, '..', 'website');

@@ -21,7 +21,8 @@ const MODULES = [
   { id: '10-cli', title: 'CLI', difficulty: 'beginner', prev: '09-advanced-features', next: '11-multi-agent' },
   { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'intermediate', prev: '10-cli', next: '12-background-tasks' },
   { id: '12-background-tasks', title: '后台任务', difficulty: 'intermediate', prev: '11-multi-agent', next: '13-channels' },
-  { id: '13-channels', title: 'Channels', difficulty: 'intermediate', prev: '12-background-tasks', next: null }
+  { id: '13-channels', title: 'Channels', difficulty: 'intermediate', prev: '12-background-tasks', next: '14-powerup-buddy' },
+  { id: '14-powerup-buddy', title: 'Powerup 与 Buddy', difficulty: 'beginner', prev: '13-channels', next: null }
 ];
 
 const REPO_ROOT = path.join(__dirname, '..');

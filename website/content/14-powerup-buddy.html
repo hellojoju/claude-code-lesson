@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Powerup 与 Buddy - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Powerup 与 Buddy 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    article {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 目录 */
+    .toc {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc h3::after {
+      content: "▼";
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+    }
+
+    .toc.collapsed h3::after {
+      transform: rotate(-90deg);
+    }
+
+    .toc.collapsed ul {
+      display: none;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .toc a { color: var(--primary); }
+    .toc li { margin: 0.25rem 0; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
+        <li><a href="/pdf.html">PDF 下载</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <article>
+        <nav class="breadcrumb">
+          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / Powerup 与 Buddy
+        </nav>
+
+        <div class="meta">
+          <span class="badge badge-beginner">
+            🟢 初级
+          </span>
+          <span class="badge">✅ Claude Code v2.1.92</span>
+        </div>
+
+        <div class="toc"><h3>目录</h3><ul><li ><a href="#目录">目录</a></li><li ><a href="#概述">概述</a></li><li ><a href="#什么是-powerup">什么是 Powerup？</a></li><li ><a href="#什么是-buddy">什么是 Buddy？</a></li><li ><a href="#powerup-交互式课程">Powerup 交互式课程</a></li><li ><a href="#启动-powerup">启动 Powerup</a></li><li ><a href="#可用课程">可用课程</a></li><li ><a href="#课程结构">课程结构</a></li><li ><a href="#学习路径">学习路径</a></li><li ><a href="#使用技巧">使用技巧</a></li><li ><a href="#buddy-虚拟伙伴">Buddy 虚拟伙伴</a></li><li ><a href="#孵化-buddy">孵化 Buddy</a></li><li ><a href="#孵化过程">孵化过程</a></li><li ><a href="#互动方式">互动方式</a></li><li ><a href="#buddy-种类">Buddy 种类</a></li><li ><a href="#buddy-功能">Buddy 功能</a></li><li ><a href="#注意事项">注意事项</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#powerup-学习建议">Powerup 学习建议</a></li><li ><a href="#buddy-使用建议">Buddy 使用建议</a></li><li ><a href="#常见问题">常见问题</a></li><li ><a href="#powerup-相关">Powerup 相关</a></li><li ><a href="#buddy-相关">Buddy 相关</a></li><li ><a href="#相关资源">相关资源</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-完成一个-powerup-课程">🎯 练习 1：完成一个 Powerup 课程</a></li><li ><a href="#练习-2-孵化你的-buddy">🎯 练习 2：孵化你的 Buddy</a></li></ul></div>
+
+        <div class="content">
+          <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
+  <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
+</picture>
+<blockquote>🟢 <strong>初级</strong> | ⏱ 15 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证: 2026-04-05</blockquote>
+<strong>你将学到:</strong> 通过交互式课程学习 Claude Code 功能，解锁趣味陪伴系统。
+<h1>Powerup 与 Buddy</h1>
+<p>Claude Code v2.1.89 和 v2.1.90 引入了两个创新功能：交互式学习系统和虚拟伙伴。本章介绍如何使用这些功能来提升学习体验。</p>
+<h2 id="目录">目录</h2>
+<ul><li><a href="#概述">概述</a></li>
+<li><a href="#powerup-交互式课程">Powerup 交互式课程</a></li>
+<li><a href="#buddy-虚拟伙伴">Buddy 虚拟伙伴</a></li>
+<li><a href="#最佳实践">最佳实践</a></li>
+<li><a href="#常见问题">常见问题</a></li>
+
+</ul>
+<hr>
+<h2 id="概述">概述</h2>
+<h3 id="什么是-powerup">什么是 Powerup？</h3>
+<p>Powerup 是 Claude Code 的交互式学习系统，通过动画演示和互动练习教你掌握 Claude Code 的各种功能。</p>
+<strong>核心特点：</strong>
+<ul><li>📚 <strong>交互式课程</strong> - 分步学习各种功能</li>
+<li>🎬 <strong>动画演示</strong> - 可视化展示功能使用方法</li>
+<li>🎯 <strong>实战练习</strong> - 在实际环境中练习技能</li>
+<li>📊 <strong>进度追踪</strong> - 记录学习进度和成就</li>
+
+</ul>
+<h3 id="什么是-buddy">什么是 Buddy？</h3>
+<p>Buddy 是 Claude Code 的虚拟伙伴系统，你可以孵化并陪伴一个小生物一起写代码。</p>
+<strong>核心特点：</strong>
+<ul><li>🥚 <strong>孵化系统</strong> - 孵化属于你的独特伙伴</li>
+<li>👀 <strong>陪伴编程</strong> - 小伙伴看着你写代码</li>
+<li>🎮 <strong>互动体验</strong> - 与伙伴进行简单互动</li>
+<li>🌟 <strong>收集要素</strong> - 解锁不同种类的伙伴</li>
+
+</ul>
+<hr>
+<h2 id="powerup-交互式课程">Powerup 交互式课程</h2>
+<h3 id="启动-powerup">启动 Powerup</h3>
+<p>在 Claude Code 中输入：</p>
+<pre><code class="language-">/powerup
+</code></pre>
+<p>系统会显示可用的课程列表，你可以选择想要学习的内容。</p>
+<h3 id="可用课程">可用课程</h3>
+<p>Powerup 提供多种课程，涵盖 Claude Code 的核心功能：</p>
+<table>
+<thead>
+<tr>
+<th>课程</th>
+<th>内容</th>
+<th>时长</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>入门基础</strong></td>
+<td>基本操作、命令使用</td>
+<td>10 分钟</td>
+</tr>
+<tr>
+<td><strong>Slash Commands</strong></td>
+<td>所有内置命令详解</td>
+<td>15 分钟</td>
+</tr>
+<tr>
+<td><strong>Memory 系统</strong></td>
+<td>CLAUDE.md 配置和记忆管理</td>
+<td>20 分钟</td>
+</tr>
+<tr>
+<td><strong>Skills 创建</strong></td>
+<td>编写自定义技能</td>
+<td>25 分钟</td>
+</tr>
+<tr>
+<td><strong>Hooks 自动化</strong></td>
+<td>事件驱动脚本</td>
+<td>30 分钟</td>
+</tr>
+<tr>
+<td><strong>MCP 集成</strong></td>
+<td>连接外部工具</td>
+<td>25 分钟</td>
+</tr>
+<tr>
+<td><strong>多 Agent 协作</strong></td>
+<td>子代理使用</td>
+<td>20 分钟</td>
+</tr>
+<tr>
+<td><strong>高级功能</strong></td>
+<td>规划模式、扩展思考</td>
+<td>30 分钟</td>
+</tr>
+</tbody>
+</table>
+<h3 id="课程结构">课程结构</h3>
+<p>每个 Powerup 课程遵循统一的结构：</p>
+<pre><code class="language-">1. 概念介绍
+   ├── 什么是这个功能？
+   ├── 为什么需要它？
+   └── 什么时候使用？
+
+2. 动画演示
+   ├── 可视化展示功能
+   ├── 步骤标注
+   └── 关键操作高亮
+
+3. 互动练习
+   ├── 跟随练习
+   ├── 实时反馈
+   └── 错误纠正
+
+4. 总结与挑战
+   ├── 知识点回顾
+   ├── 进阶挑战
+   └── 相关课程推荐
+</code></pre>
+<h3 id="学习路径">学习路径</h3>
+<strong>推荐的学习顺序：</strong>
+<div class="mermaid">graph TD
+    A[入门基础] --> B[Slash Commands]
+    B --> C[Memory 系统]
+    C --> D[Skills 创建]
+    D --> E[Hooks 自动化]
+    E --> F[MCP 集成]
+    F --> G[多 Agent 协作]
+    G --> H[高级功能]
+</div>
+<h3 id="使用技巧">使用技巧</h3>
+<strong>技巧 1：暂停和继续</strong>
+<ul><li>按 <code>Space</code> 暂停演示</li>
+<li>按 <code>Enter</code> 继续播放</li>
+<li>按 <code>Esc</code> 退出课程</li>
+
+</ul>
+<strong>技巧 2：重复观看</strong>
+<ul><li>可以随时重新观看课程</li>
+<li>练习模式可以反复尝试</li>
+
+</ul>
+<strong>技巧 3：笔记记录</strong>
+<ul><li>Powerup 会记录你的进度</li>
+<li>查看已完成课程：<code>/powerup --progress</code></li>
+
+</ul>
+<hr>
+<h2 id="buddy-虚拟伙伴">Buddy 虚拟伙伴</h2>
+<h3 id="孵化-buddy">孵化 Buddy</h3>
+<p>在 Claude Code 中输入：</p>
+<pre><code class="language-">/buddy
+</code></pre>
+<p>系统会给你一个蛋，你需要通过使用 Claude Code 来孵化它。</p>
+<h3 id="孵化过程">孵化过程</h3>
+<div class="mermaid">graph LR
+    A[🥚 蛋] -->|使用 Claude Code| B[🐣 孵化中]
+    B -->|积累互动| C[🐥 小伙伴]
+    C -->|持续使用| D[🌟 成长]
+</div>
+<h3 id="互动方式">互动方式</h3>
+<strong>与 Buddy 互动的方法：</strong>
+<ul><li><strong>日常编程</strong> - 每次使用 Claude Code 都会增加亲密度</li>
+<li><strong>完成任务</strong> - 完成复杂的编程任务获得额外奖励</li>
+<li><strong>特殊事件</strong> - 节日期间有特殊的 Buddy 活动</li>
+
+</ul>
+<h3 id="buddy-种类">Buddy 种类</h3>
+<p>根据孵化方式和时间，你可能获得不同种类的 Buddy：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>获取方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🐤 经典型</td>
+<td>可爱、友好</td>
+<td>默认孵化</td>
+</tr>
+<tr>
+<td>🦄 稀有型</td>
+<td>独特外观</td>
+<td>特殊条件</td>
+</tr>
+<tr>
+<td>🐉 传说型</td>
+<td>华丽特效</td>
+<td>极低概率</td>
+</tr>
+<tr>
+<td>🎭 节日型</td>
+<td>限时主题</td>
+<td>节日活动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="buddy-功能">Buddy 功能</h3>
+<strong>当前支持的功能：</strong>
+<ul><li>在终端角落显示 Buddy</li>
+<li>Buddy 会根据你的操作做出反应</li>
+<li>长时间不使用会进入休眠状态</li>
+
+</ul>
+<h3 id="注意事项">注意事项</h3>
+<blockquote>⚠️ <strong>重要提示：</strong>
+<ul><li>Buddy 功能主要是趣味性质，不影响 Claude Code 的核心功能</li>
+<li>Buddy 数据存储在本地，清除缓存会重置</li>
+<li>此功能可能在未来版本中有所变化</blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="powerup-学习建议">Powerup 学习建议</h3>
+<ul><li><strong>循序渐进</strong> - 按推荐顺序学习，打好基础</li>
+<li><strong>动手实践</strong> - 学习后立即在实际项目中应用</li>
+<li><strong>定期复习</strong> - 隔一段时间重温课程，巩固记忆</li>
+<li><strong>记录笔记</strong> - 将重要知识点记录下来</li>
+
+</ul>
+<h3 id="buddy-使用建议">Buddy 使用建议</h3>
+<ul><li><strong>自然使用</strong> - 不要刻意刷亲密度，正常使用即可</li>
+<li><strong>享受过程</strong> - Buddy 是编程旅程的陪伴，不必太在意收集</li>
+<li><strong>分享乐趣</strong> - 与社区分享你的 Buddy 截图</li>
+
+</ul>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="powerup-相关">Powerup 相关</h3>
+<strong>Q: Powerup 课程会更新吗？</strong>
+A: 会的。Claude Code 每次大版本更新通常会增加新的课程。
+<strong>Q: 可以跳过课程吗？</strong>
+A: 可以，但建议按顺序学习以获得完整体验。
+<strong>Q: 进度会同步吗？</strong>
+A: Powerup 进度存储在本地，不会跨设备同步。
+<h3 id="buddy-相关">Buddy 相关</h3>
+<strong>Q: Buddy 会消失吗？</strong>
+A: Buddy 会一直陪伴你，除非你清除 Claude Code 的本地数据。
+<strong>Q: 可以同时拥有多个 Buddy 吗？</strong>
+A: 目前每个会话只能有一个活跃的 Buddy。
+<strong>Q: Buddy 会影响性能吗？</strong>
+A: 不会，Buddy 只是简单的视觉元素，对性能影响微乎其微。
+<hr>
+<h2 id="相关资源">相关资源</h2>
+<ul><li><a href="/content/01-slash-commands.html">Slash Commands 参考</a></li>
+<li><a href="/content/03-skills.html">Skills 创建指南</a></li>
+<li><a href="https://code.claude.com/docs">官方文档</a></li>
+
+</ul>
+<hr>
+<h2 id="立即尝试">立即尝试</h2>
+<h3 id="练习-1-完成一个-powerup-课程">🎯 练习 1：完成一个 Powerup 课程</h3>
+<ul><li>打开 Claude Code</li>
+<li>输入 <code>/powerup</code></li>
+<li>选择"入门基础"课程</li>
+<li>完成所有章节</li>
+
+</ul>
+<h3 id="练习-2-孵化你的-buddy">🎯 练习 2：孵化你的 Buddy</h3>
+<ul><li>输入 <code>/buddy</code></li>
+<li>使用 Claude Code 编写一些代码</li>
+<li>观察 Buddy 的孵化进度</li>
+<li>与你的新伙伴互动</li>
+
+</ul>
+<hr>
+<blockquote>💡 <strong>提示：</strong> Powerup 和 Buddy 是 Claude Code 团队在功能创新上的尝试。它们让学习编程变得更加有趣。期待更多这样的功能在未来版本中出现！</blockquote>
+        </div>
+
+        
+    <div class="nav-buttons">
+      <a href="/content/13-channels.html">← Channels</a>
+      <span></span>
+    </div>
+  
+      </article>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
+        本教程由社区维护，与 Anthropic 官方无关联
+      </p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录折叠功能
+    document.querySelectorAll('.toc h3').forEach(h3 => {
+      h3.addEventListener('click', () => {
+        h3.parentElement.classList.toggle('collapsed');
+      });
+    });
+
+    // 如果目录超过 15 项，默认折叠
+    document.querySelectorAll('.toc').forEach(toc => {
+      if (toc.querySelectorAll('li').length > 15) {
+        toc.classList.add('collapsed');
+      }
+    });
+  </script>
+</body>
+</html>

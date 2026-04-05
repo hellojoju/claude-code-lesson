@@ -71,6 +71,7 @@ Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它
 | `/permissions` | 查看/更新权限（别名：`/allowed-tools`） |
 | `/plan [description]` | 进入规划模式 |
 | `/plugin` | 管理插件 |
+| `/powerup` | 🆕 交互式学习课程，动画演示 Claude Code 功能（v2.1.90+） |
 | `/pr-comments [PR]` | 获取 GitHub PR 评论 |
 | `/privacy-settings` | 隐私设置（仅限 Pro/Max） |
 | `/release-notes` | 查看变更日志 |
@@ -93,6 +94,12 @@ Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它
 | `/theme` | 更改颜色主题 |
 | `/vim` | 切换 Vim/普通模式 |
 | `/voice` | 切换按键说话语音听写 |
+
+### 🎮 趣味功能
+
+| 命令 | 用途 |
+|------|------|
+| `/buddy` | 🆕 孵化一个小伙伴陪你写代码（v2.1.89+，四月特别功能） |
 
 ### 内置 Skills
 
