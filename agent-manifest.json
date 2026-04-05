@@ -1,0 +1,427 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-05T09:11:18.024598",
+  "claude_code_version": "2.1.92",
+  "modules": [
+    {
+      "name": "01-slash-commands",
+      "path": "01-slash-commands/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "Built-in Commands Reference",
+        "Custom Commands (Now Skills)",
+        "Context",
+        "Your task",
+        "Plugin Commands",
+        "MCP Prompts as Commands",
+        "Command Architecture",
+        "Command Lifecycle",
+        "Available Commands in This Folder"
+      ],
+      "examples": [
+        {
+          "language": "text",
+          "content": ".claude/commands/optimize.md"
+        },
+        {
+          "language": "text",
+          "content": ".claude/skills/optimize/SKILL.md"
+        },
+        {
+          "language": "bash",
+          "content": "mkdir -p .claude/skills/my-command"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: my-command\ndescription: What this command does and when to use it\n---\n\n# My Command\n\nInstructions for Claude to follow when this command is invoked.\n\n1. First step\n2. Second step\n3. Third step"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: fix-issue\ndescription: Fix a GitHub issue by number\n---\n\nFix issue #$ARGUMENTS following our coding standards"
+        }
+      ],
+      "code_blocks_count": 26,
+      "headings_count": 52
+    },
+    {
+      "name": "02-memory",
+      "path": "02-memory/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "Memory Commands Quick Reference",
+        "Quick Start: Initializing Memory",
+        "Project Overview",
+        "Development Standards",
+        "Memory Architecture",
+        "Memory Hierarchy in Claude Code",
+        "Excluding CLAUDE.md Files with `claudeMdExcludes`",
+        "Settings File Hierarchy",
+        "Modular Rules System"
+      ],
+      "examples": [
+        {
+          "language": "bash",
+          "content": "/init"
+        },
+        {
+          "language": "bash",
+          "content": "CLAUDE_CODE_NEW_INIT=true claude\n/init"
+        },
+        {
+          "language": "markdown",
+          "content": "# In your project directory\n/init\n\n# Claude creates CLAUDE.md with structure like:\n# Project Configuration\n## Project Overview\n- Name: Your Project\n- Tech Stack: [Your technologies]\n- Team Size: [Number of developers]\n\n## Development Standards\n- Code style preferences\n- Testing requirements\n- Git workflow conventions"
+        },
+        {
+          "language": "markdown",
+          "content": "# Your memory rule or instruction here"
+        },
+        {
+          "language": "markdown",
+          "content": "# Always use TypeScript strict mode in this project\n\n# Prefer async/await over promise chains\n\n# Run npm test before every commit\n\n# Use kebab-case for file names"
+        }
+      ],
+      "code_blocks_count": 47,
+      "headings_count": 122
+    },
+    {
+      "name": "03-skills",
+      "path": "03-skills/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "How Skills Work: Progressive Disclosure",
+        "Skill Loading Process",
+        "Skill Types & Locations",
+        "Creating Custom Skills",
+        "Instructions",
+        "Examples",
+        "Skill Content Types",
+        "Controlling Skill Invocation",
+        "String Substitutions"
+      ],
+      "examples": [
+        {
+          "language": "mermaid",
+          "content": "graph TB\n    subgraph \"Level 1: Metadata (Always Loaded)\"\n        A[\"YAML Frontmatter\"]\n        A1[\"~100 tokens per skill\"]\n        A2[\"name + description\"]\n    end\n\n    subgraph \"Level 2: Instructions (When Triggered)\"\n        B[\"SKILL.md Body\"]\n        B1[\"Under 5k tokens\"]\n        B2[\"Workflows & guidance\"]\n    end\n\n    subgraph \"Level 3: Resources (As Needed)\"\n        C[\"Bundled Files\"]\n        C1[\"Effectively unlimited\"]\n        C2[\"Scripts, templates, docs\"]\n    end\n\n    A --> B\n    B --> ...[truncated]"
+        },
+        {
+          "language": "mermaid",
+          "content": "sequenceDiagram\n    participant User\n    participant Claude as Claude\n    participant System as System\n    participant Skill as Skill\n\n    User->>Claude: \"Review this code for security issues\"\n    Claude->>System: Check available skills (metadata)\n    System-->>Claude: Skill descriptions loaded at startup\n    Claude->>Claude: Match request to skill description\n    Claude->>Skill: bash: read code-review/SKILL.md\n    Skill-->>Claude: Instructions loaded into context\n    Claude->>Claude: Determine:...[truncated]"
+        },
+        {
+          "language": "text",
+          "content": "my-skill/\n\u251c\u2500\u2500 SKILL.md           # Main instructions (required)\n\u251c\u2500\u2500 template.md        # Template for Claude to fill in\n\u251c\u2500\u2500 examples/\n\u2502   \u2514\u2500\u2500 sample.md      # Example output showing expected format\n\u2514\u2500\u2500 scripts/\n    \u2514\u2500\u2500 validate.sh    # Script Claude can execute"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: your-skill-name\ndescription: Brief description of what this Skill does and when to use it\n---\n\n# Your Skill Name\n\n## Instructions\nProvide clear, step-by-step guidance for Claude.\n\n## Examples\nShow concrete examples of using this Skill."
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: my-skill\ndescription: What this skill does and when to use it\nargument-hint: \"[filename] [format]\"        # Hint for autocomplete\ndisable-model-invocation: true              # Only user can invoke\nuser-invocable: false                       # Hide from slash menu\nallowed-tools: Read, Grep, Glob             # Restrict tool access\nmodel: opus                                 # Specific model to use\neffort: high                                # Effort level override (low, medium, high, max...[truncated]"
+        }
+      ],
+      "code_blocks_count": 32,
+      "headings_count": 85
+    },
+    {
+      "name": "04-subagents",
+      "path": "04-subagents/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Table of Contents",
+        "Overview",
+        "Key Benefits",
+        "File Locations",
+        "Configuration",
+        "Built-in Subagents",
+        "Managing Subagents",
+        "Using Subagents",
+        "Resumable Agents",
+        "Chaining Subagents"
+      ],
+      "examples": [
+        {
+          "language": "yaml",
+          "content": "---\nname: your-sub-agent-name\ndescription: Description of when this subagent should be invoked\ntools: tool1, tool2, tool3  # Optional - inherits all tools if omitted\ndisallowedTools: tool4  # Optional - explicitly disallowed tools\nmodel: sonnet  # Optional - sonnet, opus, haiku, or inherit\npermissionMode: default  # Optional - permission mode\nmaxTurns: 20  # Optional - limit agentic turns\nskills: skill1, skill2  # Optional - skills to preload into context\nmcpServers: server1  # Optional - MCP se...[truncated]"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: full-access-agent\ndescription: Agent with all available tools\n---"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: limited-agent\ndescription: Agent with specific tools only\ntools: Read, Grep, Glob, Bash\n---"
+        },
+        {
+          "language": "yaml",
+          "content": "---\nname: conditional-agent\ndescription: Agent with filtered tool access\ntools: Read, Bash(npm:*), Bash(test:*)\n---"
+        },
+        {
+          "language": "bash",
+          "content": "claude --agents '{\n  \"code-reviewer\": {\n    \"description\": \"Expert code reviewer. Use proactively after code changes.\",\n    \"prompt\": \"You are a senior code reviewer. Focus on code quality, security, and best practices.\",\n    \"tools\": [\"Read\", \"Grep\", \"Glob\", \"Bash\"],\n    \"model\": \"sonnet\"\n  }\n}'"
+        }
+      ],
+      "code_blocks_count": 42,
+      "headings_count": 101
+    },
+    {
+      "name": "05-mcp",
+      "path": "05-mcp/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "MCP Architecture",
+        "MCP Ecosystem",
+        "MCP Installation Methods",
+        "MCP Setup Process",
+        "MCP Tool Search",
+        "Dynamic Tool Updates",
+        "MCP Elicitation",
+        "Tool Description and Instruction Cap",
+        "MCP Prompts as Slash Commands"
+      ],
+      "examples": [
+        {
+          "language": "mermaid",
+          "content": "graph TB\n    A[\"Claude\"]\n    B[\"MCP Server\"]\n    C[\"External Service\"]\n\n    A -->|Request: list_issues| B\n    B -->|Query| C\n    C -->|Data| B\n    B -->|Response| A\n\n    A -->|Request: create_issue| B\n    B -->|Action| C\n    C -->|Result| B\n    B -->|Response| A\n\n    style A fill:#e1f5fe,stroke:#333,color:#333\n    style B fill:#f3e5f5,stroke:#333,color:#333\n    style C fill:#e8f5e9,stroke:#333,color:#333"
+        },
+        {
+          "language": "mermaid",
+          "content": "graph TB\n    A[\"Claude\"] -->|MCP| B[\"Filesystem<br/>MCP Server\"]\n    A -->|MCP| C[\"GitHub<br/>MCP Server\"]\n    A -->|MCP| D[\"Database<br/>MCP Server\"]\n    A -->|MCP| E[\"Slack<br/>MCP Server\"]\n    A -->|MCP| F[\"Google Docs<br/>MCP Server\"]\n\n    B -->|File I/O| G[\"Local Files\"]\n    C -->|API| H[\"GitHub Repos\"]\n    D -->|Query| I[\"PostgreSQL/MySQL\"]\n    E -->|Messages| J[\"Slack Workspace\"]\n    F -->|Docs| K[\"Google Drive\"]\n\n    style A fill:#e1f5fe,stroke:#333,color:#333\n    style B fill:#f3e5f5,st...[truncated]"
+        },
+        {
+          "language": "bash",
+          "content": "# Basic HTTP connection\nclaude mcp add --transport http notion https://mcp.notion.com/mcp\n\n# HTTP with authentication header\nclaude mcp add --transport http secure-api https://api.example.com/mcp \\\n  --header \"Authorization: Bearer your-token\""
+        },
+        {
+          "language": "bash",
+          "content": "# Local Node.js server\nclaude mcp add --transport stdio myserver -- npx @myorg/mcp-server\n\n# With environment variables\nclaude mcp add --transport stdio myserver --env KEY=value -- npx server"
+        },
+        {
+          "language": "bash",
+          "content": "claude mcp add --transport sse legacy-server https://example.com/sse"
+        }
+      ],
+      "code_blocks_count": 58,
+      "headings_count": 102
+    },
+    {
+      "name": "06-hooks",
+      "path": "06-hooks/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "The Hook Moment",
+        "Choosing the Right Hook Event",
+        "Try It Now: Your First Hook",
+        "Configuration",
+        "Hook Types",
+        "Hook Events",
+        "Component-Scoped Hooks",
+        "PermissionRequest Event",
+        "Hook Input and Output"
+      ],
+      "examples": [
+        {
+          "language": "text",
+          "content": "Write code \u2192 Commit \u2192 Push \u2192 CI starts \u2192 5 min install \u2192 10 min build \u2192 5 min test \u2192 FAIL \u2192 Fix \u2192 Repeat"
+        },
+        {
+          "language": "text",
+          "content": "Write code \u2192 Hook runs \u2192 2 sec \u2192 Fix immediately \u2192 Commit clean code \u2192 CI passes"
+        },
+        {
+          "language": "mermaid",
+          "content": "flowchart TD\n    A[\"I want to trigger X when Y\"] --> B{What event?}\n    \n    B -->|Tool execution| C{When?}\n    C -->|Before| D[\"PreToolUse<br/>Validate inputs, block dangerous ops\"]\n    C -->|After success| E[\"PostToolUse<br/>Format, log, add context\"]\n    C -->|After failure| F[\"PostToolUseFailure<br/>Error recovery, cleanup\"]\n    \n    B -->|User input| G[\"UserPromptSubmit<br/>Validate/block prompts\"]\n    \n    B -->|Session lifecycle| H{Which moment?}\n    H -->|Start| I[\"SessionStart<br/>Setup...[truncated]"
+        },
+        {
+          "language": "bash",
+          "content": "mkdir -p .claude/hooks"
+        },
+        {
+          "language": "bash",
+          "content": "#!/bin/bash\n# Auto-format code after Write/Edit\n# Receives JSON via stdin from Claude Code\n\nINPUT=$(cat)\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // empty')\n\n# Skip if no file path\n[ -z \"$FILE_PATH\" ] && exit 0\n\n# Format based on extension\ncase \"$FILE_PATH\" in\n  *.ts|*.tsx|*.js|*.jsx|*.json|*.md)\n    prettier --write \"$FILE_PATH\" 2>/dev/null && \\\n      echo \"[Hook] Formatted: $FILE_PATH\" >&2\n    ;;\n  *.py)\n    black \"$FILE_PATH\" 2>/dev/null && \\\n      echo \"[Hook] Formatted: $FIL...[truncated]"
+        }
+      ],
+      "code_blocks_count": 56,
+      "headings_count": 129
+    },
+    {
+      "name": "07-plugins",
+      "path": "07-plugins/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "Plugin Architecture",
+        "Plugin Loading Process",
+        "Plugin Types & Distribution",
+        "Plugin Definition Structure",
+        "Plugin Structure Example",
+        "Plugin Options (v2.1.83+)",
+        "Persistent Plugin Data (`${CLAUDE_PLUGIN_DATA}`) (v2.1.78+)",
+        "Inline Plugin via Settings (`source: 'settings'`) (v2.1.80+)",
+        "Plugin Settings"
+      ],
+      "examples": [
+        {
+          "language": "mermaid",
+          "content": "graph TB\n    A[\"Plugin\"]\n    B[\"Slash Commands\"]\n    C[\"Subagents\"]\n    D[\"MCP Servers\"]\n    E[\"Hooks\"]\n    F[\"Configuration\"]\n\n    A -->|bundles| B\n    A -->|bundles| C\n    A -->|bundles| D\n    A -->|bundles| E\n    A -->|bundles| F"
+        },
+        {
+          "language": "mermaid",
+          "content": "sequenceDiagram\n    participant User\n    participant Claude as Claude Code\n    participant Plugin as Plugin Marketplace\n    participant Install as Installation\n    participant SlashCmds as Slash Commands\n    participant Subagents\n    participant MCPServers as MCP Servers\n    participant Hooks\n    participant Tools as Configured Tools\n\n    User->>Claude: /plugin install pr-review\n    Claude->>Plugin: Download plugin manifest\n    Plugin-->>Claude: Return plugin definition\n    Claude->>Install: Ext...[truncated]"
+        },
+        {
+          "language": "json",
+          "content": "{\n  \"name\": \"my-first-plugin\",\n  \"description\": \"A greeting plugin\",\n  \"version\": \"1.0.0\",\n  \"author\": {\n    \"name\": \"Your Name\"\n  },\n  \"homepage\": \"https://example.com\",\n  \"repository\": \"https://github.com/user/repo\",\n  \"license\": \"MIT\"\n}"
+        },
+        {
+          "language": "text",
+          "content": "my-plugin/\n\u251c\u2500\u2500 .claude-plugin/\n\u2502   \u2514\u2500\u2500 plugin.json       # Manifest (name, description, version, author)\n\u251c\u2500\u2500 commands/             # Skills as Markdown files\n\u2502   \u251c\u2500\u2500 task-1.md\n\u2502   \u251c\u2500\u2500 task-2.md\n\u2502   \u2514\u2500\u2500 workflows/\n\u251c\u2500\u2500 agents/               # Custom agent definitions\n\u2502   \u251c\u2500\u2500 specialist-1.md\n\u2502   \u251c\u2500\u2500 specialist-2.md\n\u2502   \u2514\u2500\u2500 configs/\n\u251c\u2500\u2500 skills/               # Agent Skills with SKILL.md files\n\u2502   \u251c\u2500\u2500 skill-1.md\n\u2502   \u2514\u2500\u2500 skill-2.md\n\u251c\u2500\u2500 hooks/                # Event handlers in hooks.json\n\u2502   \u2514\u2500\u2500 hooks...[truncated]"
+        },
+        {
+          "language": "json",
+          "content": "{\n  \"go\": {\n    \"command\": \"gopls\",\n    \"args\": [\"serve\"],\n    \"extensionToLanguage\": {\n      \".go\": \"go\"\n    }\n  }\n}"
+        }
+      ],
+      "code_blocks_count": 45,
+      "headings_count": 84
+    },
+    {
+      "name": "08-checkpoints",
+      "path": "08-checkpoints/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "The \"Oh No\" Moment",
+        "What Are Checkpoints?",
+        "Key Concepts",
+        "Accessing Checkpoints",
+        "Checkpoint Strategy Decision Tree",
+        "Rewind Options Explained",
+        "Automatic Checkpoints",
+        "Workflow Templates",
+        "Integration with Planning Mode",
+        "Checkpoint Lifecycle"
+      ],
+      "examples": [
+        {
+          "language": "text",
+          "content": "You: Refactor the auth module to use OAuth2\n\nClaude: [Makes 47 changes across 12 files]\n\nYou: Run the tests\n\nClaude: Tests failed. 23 assertions broken.\n       Error in payment processing.\n       Database connection lost.\n\nYou: ...what just happened?"
+        },
+        {
+          "language": "text",
+          "content": "You: [Press Esc twice] Rewind to before the refactor\n\nClaude: Restored to checkpoint \"auth-oauth2-start\".\n       All files reverted. Conversation restored.\n\nYou: Let's try that again, one module at a time."
+        },
+        {
+          "language": "bash",
+          "content": "# Open rewind interface\n/rewind\n\n# Or use the alias\n/checkpoint"
+        },
+        {
+          "language": "mermaid",
+          "content": "flowchart TD\n    A[I want to make a change] --> B{Is it risky?}\n    B -->|Yes| C[Note current checkpoint ID]\n    B -->|No| D[Proceed normally]\n    \n    C --> E[Make changes]\n    D --> E\n    \n    E --> F{Did it work?}\n    F -->|Yes| G[Continue working]\n    F -->|No| H{Want to try different approach?}\n    \n    H -->|Yes| I[Press Esc+Esc]\n    H -->|No| J[Debug the issue]\n    \n    I --> K[Select earlier checkpoint]\n    K --> L{What to restore?}\n    \n    L -->|Everything| M[Restore code and conversat...[truncated]"
+        },
+        {
+          "language": "text",
+          "content": "Before: Checkpoint A (working state)\n        \u2193\n        Changes made (broken state)\n        \nAfter:  Checkpoint A restored\n        Files: Reverted\n        Messages: Reverted\n        Tool history: Reverted"
+        }
+      ],
+      "code_blocks_count": 66,
+      "headings_count": 91
+    },
+    {
+      "name": "09-advanced-features",
+      "path": "09-advanced-features/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Table of Contents",
+        "Overview",
+        "Planning Mode",
+        "Implementation Plan",
+        "Extended Thinking",
+        "Context Analysis",
+        "Approach 1: Microservices",
+        "Approach 2: Monolith",
+        "Decision Factors",
+        "Recommendation"
+      ],
+      "examples": [
+        {
+          "language": "bash",
+          "content": "/plan Implement user authentication system"
+        },
+        {
+          "language": "bash",
+          "content": "claude --permission-mode plan"
+        },
+        {
+          "language": "json",
+          "content": "{\n  \"permissions\": {\n    \"defaultMode\": \"plan\"\n  }\n}"
+        },
+        {
+          "language": "text",
+          "content": "User: /plan Add a real-time notification system\n\nClaude: I'll create a plan for implementing real-time notifications.\n\n## Implementation Plan\n\n### Phase 1: Infrastructure Setup\n1. Install WebSocket libraries (socket.io)\n2. Set up WebSocket server\n3. Configure connection management\n\n### Phase 2: Backend Implementation\n4. Create notification service\n5. Implement notification queue\n6. Add database schema for notifications\n7. Create API endpoints\n\n### Phase 3: Frontend Integration\n8. Set up WebSocke...[truncated]"
+        },
+        {
+          "language": "text",
+          "content": "User: Modify the plan - skip the queue for now, we'll add it later\n\nClaude: Updated plan:\n[Shows modified plan with queue removed]\n\nUser: Looks good, proceed\n\nClaude: [Implements modified plan]"
+        }
+      ],
+      "code_blocks_count": 86,
+      "headings_count": 193
+    },
+    {
+      "name": "10-cli",
+      "path": "10-cli/README.md",
+      "cc_version_verified": "2.1.92",
+      "last_verified": "2026-04-05",
+      "topics": [
+        "Overview",
+        "Architecture",
+        "CLI Commands",
+        "Core Flags",
+        "Model & Configuration",
+        "System Prompt Customization",
+        "Tool & Permission Management",
+        "Output & Format",
+        "Workspace & Directory",
+        "MCP Configuration"
+      ],
+      "examples": [
+        {
+          "language": "mermaid",
+          "content": "graph TD\n    A[\"User Terminal\"] -->|\"claude [options] [query]\"| B[\"Claude Code CLI\"]\n    B -->|Interactive| C[\"REPL Mode\"]\n    B -->|\"--print\"| D[\"Print Mode (SDK)\"]\n    B -->|\"--resume\"| E[\"Session Resume\"]\n    C -->|Conversation| F[\"Claude API\"]\n    D -->|Single Query| F\n    E -->|Load Context| F\n    F -->|Response| G[\"Output\"]\n    G -->|text/json/stream-json| H[\"Terminal/Pipe\"]"
+        },
+        {
+          "language": "mermaid",
+          "content": "graph LR\n    A[\"claude\"] -->|Default| B[\"Interactive REPL\"]\n    A -->|\"-p flag\"| C[\"Print Mode\"]\n    B -->|Features| D[\"Multi-turn conversation<br>Tab completion<br>History<br>Slash commands\"]\n    C -->|Features| E[\"Single query<br>Scriptable<br>Pipeable<br>JSON output\"]"
+        },
+        {
+          "language": "bash",
+          "content": "# Start interactive session\nclaude\n\n# Start with initial prompt\nclaude \"explain the authentication flow\""
+        },
+        {
+          "language": "bash",
+          "content": "# Single query, then exit\nclaude -p \"what does this function do?\"\n\n# Process file content\ncat error.log | claude -p \"explain this error\"\n\n# Chain with other tools\nclaude -p \"list todos\" | grep \"URGENT\""
+        },
+        {
+          "language": "bash",
+          "content": "# Use Opus 4.6 for complex tasks\nclaude --model opus \"design a caching strategy\"\n\n# Use Haiku 4.5 for quick tasks\nclaude --model haiku -p \"format this JSON\"\n\n# Full model name\nclaude --model claude-sonnet-4-6-20250929 \"review this code\"\n\n# With fallback for reliability\nclaude -p --model opus --fallback-model sonnet \"analyze architecture\"\n\n# Use opusplan (Opus plans, Sonnet executes)\nclaude --model opusplan \"design and implement the caching layer\""
+        }
+      ],
+      "code_blocks_count": 29,
+      "headings_count": 129
+    }
+  ]
+}

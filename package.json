@@ -1,0 +1,35 @@
+{
+  "name": "claude-code-lesson",
+  "version": "2.0.0",
+  "description": "全网最好、内容最全、最贴近实战的 Claude Code 使用教程",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "watch": "node scripts/build.js --watch",
+    "serve": "npx http-server website -p 8080 -c-1",
+    "sync": "node scripts/sync-modules.js"
+  },
+  "dependencies": {
+    "markdown-it": "^14.0.0",
+    "gray-matter": "^4.0.3",
+    "html-minifier-terser": "^7.2.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/claude-code-lesson.git"
+  },
+  "keywords": [
+    "claude-code",
+    "tutorial",
+    "anthropic",
+    "ai",
+    "developer-tools"
+  ],
+  "author": "Claude Code Community",
+  "license": "MIT"
+}
