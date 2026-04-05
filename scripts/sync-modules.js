@@ -61,7 +61,7 @@ function syncModules() {
     const articleContent = `
       <article>
         <nav class="breadcrumb">
-          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / ${module.title}
+          <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / ${module.title}
         </nav>
 
         <div class="meta">
