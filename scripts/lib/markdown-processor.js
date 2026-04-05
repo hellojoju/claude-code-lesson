@@ -135,14 +135,21 @@ class MarkdownProcessor {
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    // 步骤 8: 引用 - 合并连续的引用行为一个 blockquote
-    html = html.replace(/^(> .*\n?)+/gm, (match) => {
+    // 步骤 8: 引用 - 合并连续的引用行为一个 blockquote（包括空引用行 >）
+    html = html.replace(/^(>.*\n?)+/gm, (match) => {
       // 提取每行内容（去掉 > 前缀）
       const lines = match.trim().split('\n').map(line => {
-        return line.replace(/^> ?/, '');
+        const content = line.replace(/^> ?/, '');
+        // 空引用行转为换行
+        return content === '' ? '' : content;
       }).join('\n');
-      return `<blockquote>${lines}</blockquote>`;
+      // 清理多余换行
+      const cleanLines = lines.replace(/\n\s*\n/g, '\n').trim();
+      return `<blockquote>${cleanLines}</blockquote>`;
     });
+
+    // 处理独立的空引用行（未被上面正则匹配的）
+    html = html.replace(/^>\s*$/gm, '');
 
     // 步骤 9: 列表
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
@@ -154,6 +161,15 @@ class MarkdownProcessor {
     // 步骤 11: 恢复内联代码
     inlineCodes.forEach((code, index) => {
       html = html.split(`\x00IC${index}IC\x00`).join(`<code>${this.escapeHtml(code)}</code>`);
+    });
+
+    // 步骤 11.5: 恢复表格内联代码中的 | 占位符（在 escapeHtml 之后）
+    html = html.replace(/TABLEPIPEMARKER/g, '|');
+
+    // 步骤 11.6: 处理列表 - 将相邻的 li 包装在 ul 中（必须在段落处理之前）
+    // 使用非贪婪匹配，只匹配连续的 li 标签
+    html = html.replace(/(<li>(?:(?!<li>|<\/li>).)*<\/li>\s*)+/gs, (match) => {
+      return `<ul>${match}</ul>`;
     });
 
     // 步骤 12: 段落处理（在代码块恢复之前）
@@ -171,10 +187,6 @@ class MarkdownProcessor {
       }
       html = html.split(placeholder).join(codeHtml);
     }
-
-    // 步骤 14: 处理列表 - 将相邻的 li 包装在 ul 中
-    html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
-    html = html.replace(/<\/ul>\s*<ul>/g, '');
 
     // 步骤 15: 处理徽章行
     html = this.processBadges(html);
@@ -234,7 +246,7 @@ class MarkdownProcessor {
   }
 
   /**
-   * 处理表格
+   * 处理表格 - 保护内联代码中的 | 字符（包括转义的 \|）
    */
   processTables(html) {
     const tableRegex = /(\|.+\|[\n\r]+\|[-:| ]+\|[\n\r]+(?:\|.+\|[\n\r]*)+)/g;
@@ -243,8 +255,18 @@ class MarkdownProcessor {
       const lines = match.trim().split('\n').filter(l => l.trim());
       if (lines.length < 2) return match;
 
-      const headerCells = lines[0].split('|').filter(c => c.trim());
-      const bodyLines = lines.slice(2);
+      // 保护内联代码中的 | 字符（包括 markdown 转义的 \|）
+      const protectedLines = lines.map(line => {
+        return line.replace(/`([^`]+)`/g, (m, code) => {
+          // 先将 \| 转换为 |，再替换为占位符
+          const unescapedCode = code.replace(/\\\|/g, '|');
+          const protectedCode = unescapedCode.replace(/\|/g, 'TABLEPIPEMARKER');
+          return '`' + protectedCode + '`';
+        });
+      });
+
+      const headerCells = protectedLines[0].split('|').filter(c => c.trim());
+      const bodyLines = protectedLines.slice(2);
 
       let table = '<table>\n<thead>\n<tr>\n';
       for (const cell of headerCells) {
