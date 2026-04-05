@@ -6,7 +6,8 @@
     "build": "node scripts/build.js",
     "watch": "node scripts/build.js --watch",
     "serve": "npx http-server website -p 8080 -c-1",
-    "sync": "node scripts/sync-modules.js"
+    "sync": "node scripts/sync-modules.js",
+    "pdf": "node scripts/generate-pdf.js"
   },
   "dependencies": {
     "markdown-it": "^14.0.0",

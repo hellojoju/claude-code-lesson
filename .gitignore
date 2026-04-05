@@ -87,3 +87,5 @@ promo-video/
 *.mp4
 
 update-plan*.md
+website/pdf/
+node_modules/

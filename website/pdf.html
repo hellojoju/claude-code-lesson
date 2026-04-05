@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF 下载 - Claude Code 终极教程</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .pdf-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .pdf-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .pdf-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #1f2937;
+    }
+
+    .pdf-card .size {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+
+    .pdf-card .badge {
+      margin-bottom: 1rem;
+    }
+
+    .pdf-card a {
+      display: inline-block;
+      background: #D97706;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .pdf-card a:hover {
+      background: #b45309;
+    }
+
+    .complete-pdf {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #D97706;
+      padding: 2rem;
+      border-radius: 0.75rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .complete-pdf h2 {
+      margin: 0 0 0.5rem 0;
+      color: #92400e;
+    }
+
+    .complete-pdf p {
+      color: #78350f;
+      margin-bottom: 1rem;
+    }
+
+    .complete-pdf .download-btn {
+      display: inline-block;
+      background: #D97706;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+
+    .complete-pdf .download-btn:hover {
+      background: #b45309;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">模块</a></li>
+        <li><a href="/pdf.html">PDF 下载</a></li>
+        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <article>
+        <h1>📥 PDF 下载</h1>
+
+        <div class="complete-pdf">
+          <h2>📚 完整教程 PDF</h2>
+          <p>包含所有 13 个模块，共 22MB，适合离线阅读和打印</p>
+          <a href="/pdf/Claude-Code-终极教程.pdf" class="download-btn" download>
+            下载完整教程 (1.5 MB)
+          </a>
+        </div>
+
+        <h2>分模块下载</h2>
+        <p>选择你需要的模块单独下载：</p>
+
+        <div class="pdf-grid">
+          <div class="pdf-card">
+            <span class="badge badge-beginner">🟢 初级</span>
+            <h3>Slash Commands</h3>
+            <p class="size">1.9 MB · 30 分钟</p>
+            <a href="/pdf/01-slash-commands.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-beginner">🟢 初级</span>
+            <h3>Memory</h3>
+            <p class="size">1.8 MB · 45 分钟</p>
+            <a href="/pdf/02-memory.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-beginner">🟢 初级</span>
+            <h3>Skills</h3>
+            <p class="size">1.7 MB · 40 分钟</p>
+            <a href="/pdf/03-skills.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>Subagents</h3>
+            <p class="size">1.9 MB · 60 分钟</p>
+            <a href="/pdf/04-subagents.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>MCP</h3>
+            <p class="size">1.8 MB · 50 分钟</p>
+            <a href="/pdf/05-mcp.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>Hooks</h3>
+            <p class="size">2.4 MB · 70 分钟</p>
+            <a href="/pdf/06-hooks.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>Plugins</h3>
+            <p class="size">1.7 MB · 90 分钟</p>
+            <a href="/pdf/07-plugins.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-beginner">🟢 初级</span>
+            <h3>Checkpoints</h3>
+            <p class="size">1.8 MB · 25 分钟</p>
+            <a href="/pdf/08-checkpoints.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-advanced">🔴 高级</span>
+            <h3>Advanced Features</h3>
+            <p class="size">2.4 MB · 120 分钟</p>
+            <a href="/pdf/09-advanced-features.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-beginner">🟢 初级</span>
+            <h3>CLI</h3>
+            <p class="size">1.6 MB · 35 分钟</p>
+            <a href="/pdf/10-cli.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>多 Agent 协作</h3>
+            <p class="size">748 KB</p>
+            <a href="/pdf/11-multi-agent.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>后台任务</h3>
+            <p class="size">655 KB</p>
+            <a href="/pdf/12-background-tasks.pdf" download>下载 PDF</a>
+          </div>
+
+          <div class="pdf-card">
+            <span class="badge badge-intermediate">🟡 中级</span>
+            <h3>Channels</h3>
+            <p class="size">750 KB</p>
+            <a href="/pdf/13-channels.pdf" download>下载 PDF</a>
+          </div>
+        </div>
+
+        <div style="margin-top: 3rem; padding: 1.5rem; background: #f9fafb; border-radius: 0.5rem;">
+          <h3>💡 使用建议</h3>
+          <ul>
+            <li><strong>完整教程</strong>：适合系统学习，建议打印或使用平板阅读</li>
+            <li><strong>分模块下载</strong>：适合针对性学习特定功能</li>
+            <li><strong>离线使用</strong>：PDF 包含所有代码示例，无需联网</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code Community. 内容基于 MIT 许可发布。</p>
+      <p>
+        <a href="https://github.com/anthropics/claude-code">GitHub</a> ·
+        <a href="https://claude.ai">Claude.ai</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
