@@ -234,23 +234,35 @@
         <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#plugin-架构">Plugin 架构</a></li><li ><a href="#plugin-加载流程">Plugin 加载流程</a></li><li ><a href="#plugin-类型与分发">Plugin 类型与分发</a></li><li ><a href="#plugin-定义结构">Plugin 定义结构</a></li><li ><a href="#plugin-结构示例">Plugin 结构示例</a></li><li ><a href="#lsp-server-配置">LSP server 配置</a></li><li ><a href="#plugin-选项-v2-1-83">Plugin 选项（v2.1.83+）</a></li><li ><a href="#plugin-持久化数据-claude_plugin_data-v2-1-78">Plugin 持久化数据（`${CLAUDE_PLUGIN_DATA}`）（v2.1.78+）</a></li><li ><a href="#通过设置的内联-plugin-source-settings-v2-1-80">通过设置的内联 Plugin（`source: 'settings'`）（v2.1.80+）</a></li><li ><a href="#plugin-设置">Plugin 设置</a></li><li ><a href="#独立-vs-plugin-方案对比">独立 vs Plugin 方案对比</a></li><li ><a href="#实践示例">实践示例</a></li><li ><a href="#示例-1-pr-review-plugin">示例 1：PR Review Plugin</a></li><li ><a href="#示例-2-devops-plugin">示例 2：DevOps Plugin</a></li><li ><a href="#示例-3-documentation-plugin">示例 3：Documentation Plugin</a></li><li ><a href="#plugin-marketplace">Plugin Marketplace</a></li><li ><a href="#marketplace-配置">Marketplace 配置</a></li><li ><a href="#其他-marketplace-功能">其他 Marketplace 功能</a></li><li ><a href="#marketplace-定义-schema">Marketplace 定义 schema</a></li><li ><a href="#plugin-来源类型">Plugin 来源类型</a></li><li ><a href="#分发方式">分发方式</a></li><li ><a href="#严格模式">严格模式</a></li><li ><a href="#plugin-安装与生命周期">Plugin 安装与生命周期</a></li><li ><a href="#plugin-功能对比">Plugin 功能对比</a></li><li ><a href="#plugin-cli-命令">Plugin CLI 命令</a></li><li ><a href="#安装方法">安装方法</a></li><li ><a href="#从-marketplace">从 Marketplace</a></li><li ><a href="#启用-禁用-自动检测范围">启用 / 禁用（自动检测范围）</a></li><li ><a href="#本地-plugin-用于开发">本地 Plugin（用于开发）</a></li><li ><a href="#从-git-仓库">从 Git 仓库</a></li><li ><a href="#plugin-使用场景">Plugin 使用场景</a></li><li ><a href="#测试-plugin">测试 Plugin</a></li><li ><a href="#热重载">热重载</a></li><li ><a href="#plugin-的托管设置">Plugin 的托管设置</a></li><li ><a href="#plugin-安全">Plugin 安全</a></li><li ><a href="#发布-plugin">发布 Plugin</a></li><li ><a href="#description">Description</a></li><li ><a href="#what-s-included">What's Included</a></li><li ><a href="#installation">Installation</a></li><li ><a href="#features">Features</a></li><li ><a href="#usage">Usage</a></li><li ><a href="#requirements">Requirements</a></li><li ><a href="#plugin-vs-手动配置对比">Plugin vs 手动配置对比</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-安装-plugin">🎯 练习 1：安装 Plugin</a></li><li ><a href="#练习-2-创建简单-plugin">🎯 练习 2：创建简单 Plugin</a></li><li ><a href="#练习-3-包含多个组件的-plugin">🎯 练习 3：包含多个组件的 Plugin</a></li><li ><a href="#练习-4-与团队分享-plugin">🎯 练习 4：与团队分享 Plugin</a></li><li ><a href="#练习-5-plugin-开发工作流">🎯 练习 5：Plugin 开发工作流</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#推荐做法">推荐做法 ✅</a></li><li ><a href="#避免做法">避免做法 ❌</a></li><li ><a href="#安装说明">安装说明</a></li><li ><a href="#从-marketplace-安装">从 Marketplace 安装</a></li><li ><a href="#从本地路径安装">从本地路径安装</a></li><li ><a href="#从-github-安装">从 GitHub 安装</a></li><li ><a href="#列出已安装-plugins">列出已安装 Plugins</a></li><li ><a href="#更新-plugin">更新 Plugin</a></li><li ><a href="#禁用-启用-plugin">禁用/启用 Plugin</a></li><li ><a href="#卸载-plugin">卸载 Plugin</a></li><li ><a href="#相关概念">相关概念</a></li><li ><a href="#完整示例工作流">完整示例工作流</a></li><li ><a href="#pr-review-plugin-完整工作流">PR Review Plugin 完整工作流</a></li><li ><a href="#故障排除">故障排除</a></li><li ><a href="#plugin-无法安装">Plugin 无法安装</a></li><li ><a href="#组件无法加载">组件无法加载</a></li><li ><a href="#mcp-连接失败">MCP 连接失败</a></li><li ><a href="#安装后命令不可用">安装后命令不可用</a></li><li ><a href="#hook-执行问题">Hook 执行问题</a></li><li ><a href="#其他资源">其他资源</a></li></ul></div>
 
         <div class="content">
-          <p><picture>
+          <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
-</picture></p><blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote>
->
-<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将构建：</strong> 打包并分享 Claude Code 扩展。</p><h1>Claude Code Plugins</h1><p>本文件夹包含完整的 Plugin 示例，将多种 Claude Code 功能打包为统一、可安装的集合。</p><h2 id="概述">概述</h2><p>Claude Code Plugins 是自定义内容（slash commands、subagents、MCP servers 和 hooks）的打包集合，可通过单条命令安装。它们是最高级别的扩展机制——将多种功能组合为统一、可分享的包。</p><h2 id="plugin-架构">Plugin 架构</h2><div class="mermaid">graph TB
+</picture>
+<blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote>
+<p>></p>
+<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote>
+<strong>你将构建：</strong> 打包并分享 Claude Code 扩展。
+<h1>Claude Code Plugins</h1>
+<p>本文件夹包含完整的 Plugin 示例，将多种 Claude Code 功能打包为统一、可安装的集合。</p>
+<h2 id="概述">概述</h2>
+<p>Claude Code Plugins 是自定义内容（slash commands、subagents、MCP servers 和 hooks）的打包集合，可通过单条命令安装。它们是最高级别的扩展机制——将多种功能组合为统一、可分享的包。</p>
+<h2 id="plugin-架构">Plugin 架构</h2>
+<div class="mermaid">graph TB
     A["Plugin"]
     B["Slash Commands"]
     C["Subagents"]
     D["MCP Servers"]
     E["Hooks"]
-    F["Configuration"]</p><p>    A -->|bundles| B
+    F["Configuration"]
+
+    A -->|bundles| B
     A -->|bundles| C
     A -->|bundles| D
     A -->|bundles| E
     A -->|bundles| F
-</div><h2 id="plugin-加载流程">Plugin 加载流程</h2><div class="mermaid">sequenceDiagram
+</div>
+<h2 id="plugin-加载流程">Plugin 加载流程</h2>
+<div class="mermaid">sequenceDiagram
     participant User
     participant Claude as Claude Code
     participant Plugin as Plugin Marketplace
@@ -259,7 +271,9 @@
     participant Subagents
     participant MCPServers as MCP Servers
     participant Hooks
-    participant Tools as Configured Tools</p><p>    User->>Claude: /plugin install pr-review
+    participant Tools as Configured Tools
+
+    User->>Claude: /plugin install pr-review
     Claude->>Plugin: Download plugin manifest
     Plugin-->>Claude: Return plugin definition
     Claude->>Install: Extract components
@@ -272,7 +286,9 @@
     MCPServers-->>Tools: Ready to use
     Hooks-->>Tools: Ready to use
     Tools-->>Claude: Plugin installed ✅
-</div><h2 id="plugin-类型与分发">Plugin 类型与分发</h2><table>
+</div>
+<h2 id="plugin-类型与分发">Plugin 类型与分发</h2>
+<table>
 <thead>
 <tr>
 <th>类型</th>
@@ -313,7 +329,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="plugin-定义结构">Plugin 定义结构</h2><p>Plugin manifest 使用 <code>.claude-plugin/plugin.json</code> 中的 JSON 格式：</p><pre><code class="language-json">{
+<h2 id="plugin-定义结构">Plugin 定义结构</h2>
+<p>Plugin manifest 使用 <code>.claude-plugin/plugin.json</code> 中的 JSON 格式：</p>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;my-first-plugin&quot;,
   &quot;description&quot;: &quot;A greeting plugin&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
@@ -324,7 +342,9 @@
   &quot;repository&quot;: &quot;https://github.com/user/repo&quot;,
   &quot;license&quot;: &quot;MIT&quot;
 }
-</code></pre><h2 id="plugin-结构示例">Plugin 结构示例</h2><pre><code class="language-">my-plugin/
+</code></pre>
+<h2 id="plugin-结构示例">Plugin 结构示例</h2>
+<pre><code class="language-">my-plugin/
 ├── .claude-plugin/
 │   └── plugin.json       # Manifest（名称、描述、版本、作者）
 ├── commands/             # Skills 作为 Markdown 文件
@@ -353,9 +373,14 @@
 │   └── USAGE.md
 └── tests/
     └── plugin.test.js
-</code></pre><h3 id="lsp-server-配置">LSP server 配置</h3><p>Plugins 可以包含 Language Server Protocol（LSP）支持，提供实时代码智能。LSP servers 在你工作时提供诊断、代码导航和符号信息。</p><p><strong>配置位置</strong>：
+</code></pre>
+<h3 id="lsp-server-配置">LSP server 配置</h3>
+<p>Plugins 可以包含 Language Server Protocol（LSP）支持，提供实时代码智能。LSP servers 在你工作时提供诊断、代码导航和符号信息。</p>
+<strong>配置位置</strong>：
 <ul><li>Plugin 根目录中的 <code>.lsp.json</code> 文件</li>
-<li><code>plugin.json</code> 中的内联 <code>lsp</code> 字段</li><p>#### 字段参考</p><table>
+<li><code>plugin.json</code> 中的内联 <code>lsp</code> 字段</li>
+<p>#### 字段参考</p>
+<table>
 <thead>
 <tr>
 <th>字段</th>
@@ -426,7 +451,9 @@
 </tr>
 </tbody>
 </table>
-#### 示例配置</p><p><strong>Go (gopls)</strong>：</p><pre><code class="language-json">{
+<p>#### 示例配置</p>
+<strong>Go (gopls)</strong>：
+<pre><code class="language-json">{
   &quot;go&quot;: {
     &quot;command&quot;: &quot;gopls&quot;,
     &quot;args&quot;: [&quot;serve&quot;],
@@ -435,7 +462,9 @@
     }
   }
 }
-</code></pre><p><strong>Python (pyright)</strong>：</p><pre><code class="language-json">{
+</code></pre>
+<strong>Python (pyright)</strong>：
+<pre><code class="language-json">{
   &quot;python&quot;: {
     &quot;command&quot;: &quot;pyright-langserver&quot;,
     &quot;args&quot;: [&quot;--stdio&quot;],
@@ -445,7 +474,9 @@
     }
   }
 }
-</code></pre><p><strong>TypeScript</strong>：</p><pre><code class="language-json">{
+</code></pre>
+<strong>TypeScript</strong>：
+<pre><code class="language-json">{
   &quot;typescript&quot;: {
     &quot;command&quot;: &quot;typescript-language-server&quot;,
     &quot;args&quot;: [&quot;--stdio&quot;],
@@ -457,7 +488,10 @@
     }
   }
 }
-</code></pre><p>#### 可用 LSP plugins</p><p>官方 marketplace 包含预配置的 LSP plugins：</p><table>
+</code></pre>
+<p>#### 可用 LSP plugins</p>
+<p>官方 marketplace 包含预配置的 LSP plugins：</p>
+<table>
 <thead>
 <tr>
 <th>Plugin</th>
@@ -487,10 +521,15 @@
 </tr>
 </tbody>
 </table>
-#### LSP 能力</p><p>配置后，LSP servers 提供：</p><li><strong>即时诊断</strong> —— 编辑后立即显示错误和警告</li>
+<p>#### LSP 能力</p>
+<p>配置后，LSP servers 提供：</p>
+<li><strong>即时诊断</strong> —— 编辑后立即显示错误和警告</li>
 <li><strong>代码导航</strong> —— 跳转到定义、查找引用、实现</li>
 <li><strong>悬停信息</strong> —— 悬停时显示类型签名和文档</li>
-<li><strong>符号列表</strong> —— 浏览当前文件或工作区中的符号</li><h2 id="plugin-选项-v2-1-83">Plugin 选项（v2.1.83+）</h2><p>Plugins 可以在 manifest 中通过 <code>userConfig</code> 声明用户可配置选项。标记为 <code>sensitive: true</code> 的值存储在系统密钥链中，而非明文设置文件：</p><pre><code class="language-json">{
+<li><strong>符号列表</strong> —— 浏览当前文件或工作区中的符号</li>
+<h2 id="plugin-选项-v2-1-83">Plugin 选项（v2.1.83+）</h2>
+<p>Plugins 可以在 manifest 中通过 <code>userConfig</code> 声明用户可配置选项。标记为 <code>sensitive: true</code> 的值存储在系统密钥链中，而非明文设置文件：</p>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;my-plugin&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
   &quot;userConfig&quot;: {
@@ -504,7 +543,10 @@
     }
   }
 }
-</code></pre><h2 id="plugin-持久化数据-__inlinecode_29__-v2-1-78">Plugin 持久化数据（<code>${CLAUDE_PLUGIN_DATA}</code>）（v2.1.78+）</h2><p>Plugins 通过 <code>${CLAUDE_PLUGIN_DATA}</code> 环境变量访问持久化状态目录。此目录对每个 plugin 是唯一的，跨会话持久保存，适合用于缓存、数据库和其他持久化状态：</p><pre><code class="language-json">{
+</code></pre>
+<h2 id="plugin-持久化数据-ic29ic-v2-1-78">Plugin 持久化数据（<code>${CLAUDE_PLUGIN_DATA}</code>）（v2.1.78+）</h2>
+<p>Plugins 通过 <code>${CLAUDE_PLUGIN_DATA}</code> 环境变量访问持久化状态目录。此目录对每个 plugin 是唯一的，跨会话持久保存，适合用于缓存、数据库和其他持久化状态：</p>
+<pre><code class="language-json">{
   &quot;hooks&quot;: {
     &quot;PostToolUse&quot;: [
       {
@@ -513,7 +555,11 @@
     ]
   }
 }
-</code></pre><p>plugin 安装时自动创建此目录。存储在这里的文件在 plugin卸载前一直保留。</p><h2 id="通过设置的内联-plugin-__inlinecode_31__-v2-1-80">通过设置的内联 Plugin（<code>source: &#039;settings&#039;</code>）（v2.1.80+）</h2><p>Plugins 可以在设置文件中作为 marketplace 条目使用 <code>source: &#039;settings&#039;</code> 字段内联定义。这允许直接嵌入 plugin 定义，无需单独的仓库或 marketplace：</p><pre><code class="language-json">{
+</code></pre>
+<p>plugin 安装时自动创建此目录。存储在这里的文件在 plugin卸载前一直保留。</p>
+<h2 id="通过设置的内联-plugin-ic31ic-v2-1-80">通过设置的内联 Plugin（<code>source: &#039;settings&#039;</code>）（v2.1.80+）</h2>
+<p>Plugins 可以在设置文件中作为 marketplace 条目使用 <code>source: &#039;settings&#039;</code> 字段内联定义。这允许直接嵌入 plugin 定义，无需单独的仓库或 marketplace：</p>
+<pre><code class="language-json">{
   &quot;pluginMarketplaces&quot;: [
     {
       &quot;name&quot;: &quot;inline-tools&quot;,
@@ -527,10 +573,16 @@
     }
   ]
 }
-</code></pre><h2 id="plugin-设置">Plugin 设置</h2><p>Plugins 可以提供 <code>settings.json</code> 文件来设置默认配置。目前支持 <code>agent</code> 字段，用于设置 plugin 的主线程 agent：</p><pre><code class="language-json">{
+</code></pre>
+<h2 id="plugin-设置">Plugin 设置</h2>
+<p>Plugins 可以提供 <code>settings.json</code> 文件来设置默认配置。目前支持 <code>agent</code> 字段，用于设置 plugin 的主线程 agent：</p>
+<pre><code class="language-json">{
   &quot;agent&quot;: &quot;agents/specialist-1.md&quot;
 }
-</code></pre><p>当 plugin 包含 <code>settings.json</code> 时，其默认值在安装时应用。用户可以在自己的项目或用户配置中覆盖这些设置。</p><h2 id="独立-vs-plugin-方案对比">独立 vs Plugin 方案对比</h2><table>
+</code></pre>
+<p>当 plugin 包含 <code>settings.json</code> 时，其默认值在安装时应用。用户可以在自己的项目或用户配置中覆盖这些设置。</p>
+<h2 id="独立-vs-plugin-方案对比">独立 vs Plugin 方案对比</h2>
+<table>
 <thead>
 <tr>
 <th>方案</th>
@@ -554,7 +606,11 @@
 </tr>
 </tbody>
 </table>
-将 <strong>独立 slash commands</strong> 用于快速个人工作流。将 <strong>plugins</strong> 用于需要打包多种功能、与团队分享或发布分发的情况。</p><h2 id="实践示例">实践示例</h2><h3 id="示例-1-pr-review-plugin">示例 1：PR Review Plugin</h3><p><strong>文件：</strong> <code>.claude-plugin/plugin.json</code></p><pre><code class="language-json">{
+<p>将 <strong>独立 slash commands</strong> 用于快速个人工作流。将 <strong>plugins</strong> 用于需要打包多种功能、与团队分享或发布分发的情况。</p>
+<h2 id="实践示例">实践示例</h2>
+<h3 id="示例-1-pr-review-plugin">示例 1：PR Review Plugin</h3>
+<strong>文件：</strong> <code>.claude-plugin/plugin.json</code>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;pr-review&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
   &quot;description&quot;: &quot;Complete PR review workflow with security, testing, and docs&quot;,
@@ -564,30 +620,51 @@
   &quot;repository&quot;: &quot;https://github.com/your-org/pr-review&quot;,
   &quot;license&quot;: &quot;MIT&quot;
 }
-</code></pre><p><strong>文件：</strong> <code>commands/review-pr.md</code></p><pre><code class="language-markdown">---
+</code></pre>
+<strong>文件：</strong> <code>commands/review-pr.md</code>
+<pre><code class="language-markdown">---
 name: Review PR
 description: Start comprehensive PR review with security and testing checks
----</p><p># PR Review</p><p>This command initiates a complete pull request review including:</p><p>1. Security analysis
+---
+
+# PR Review
+
+This command initiates a complete pull request review including:
+
+1. Security analysis
 2. Test coverage verification
 3. Documentation updates
 4. Code quality checks
 5. Performance impact assessment
-</code></pre><p><strong>文件：</strong> <code>agents/security-reviewer.md</code></p><pre><code class="language-yaml">---
+</code></pre>
+<strong>文件：</strong> <code>agents/security-reviewer.md</code>
+<pre><code class="language-yaml">---
 name: security-reviewer
 description: Security-focused code review
 tools: read, grep, diff
----</p><p># Security Reviewer</p><p>Specializes in finding security vulnerabilities:
+---
+
+# Security Reviewer
+
+Specializes in finding security vulnerabilities:
 - Authentication/authorization issues
 - Data exposure
 - Injection attacks
 - Secure configuration
-</code></pre><p><strong>安装：</strong></p><pre><code class="language-bash">/plugin install pr-review</p><p># Result:
+</code></pre>
+<strong>安装：</strong>
+<pre><code class="language-bash">/plugin install pr-review
+
+# Result:
 # ✅ 3 slash commands installed
 # ✅ 3 subagents configured
 # ✅ 2 MCP servers connected
 # ✅ 4 hooks registered
 # ✅ Ready to use!
-</code></pre><h3 id="示例-2-devops-plugin">示例 2：DevOps Plugin</h3><p><strong>组件：</strong></p><pre><code class="language-">devops-automation/
+</code></pre>
+<h3 id="示例-2-devops-plugin">示例 2：DevOps Plugin</h3>
+<strong>组件：</strong>
+<pre><code class="language-">devops-automation/
 ├── commands/
 │   ├── deploy.md
 │   ├── rollback.md
@@ -609,7 +686,10 @@ tools: read, grep, diff
     ├── deploy.sh
     ├── rollback.sh
     └── health-check.sh
-</code></pre><h3 id="示例-3-documentation-plugin">示例 3：Documentation Plugin</h3><p><strong>打包组件：</strong></p><pre><code class="language-">documentation/
+</code></pre>
+<h3 id="示例-3-documentation-plugin">示例 3：Documentation Plugin</h3>
+<strong>打包组件：</strong>
+<pre><code class="language-">documentation/
 ├── commands/
 │   ├── generate-api-docs.md
 │   ├── generate-readme.md
@@ -626,23 +706,39 @@ tools: read, grep, diff
     ├── api-endpoint.md
     ├── function-docs.md
     └── adr-template.md
-</code></pre><h2 id="plugin-marketplace">Plugin Marketplace</h2><p>官方 Anthropic 管理的 plugin 目录是 <code>anthropics/claude-plugins-official</code>。企业管理员也可以创建私有 plugin marketplaces 用于内部分发。</p><div class="mermaid">graph TB
+</code></pre>
+<h2 id="plugin-marketplace">Plugin Marketplace</h2>
+<p>官方 Anthropic 管理的 plugin 目录是 <code>anthropics/claude-plugins-official</code>。企业管理员也可以创建私有 plugin marketplaces 用于内部分发。</p>
+<div class="mermaid">graph TB
     A["Plugin Marketplace"]
     B["Official<br/>anthropics/claude-plugins-official"]
     C["Community<br/>Marketplace"]
-    D["Enterprise<br/>Private Registry"]</p><p>    A --> B
+    D["Enterprise<br/>Private Registry"]
+
+    A --> B
     A --> C
-    A --> D</p><p>    B -->|Categories| B1["Development"]
+    A --> D
+
+    B -->|Categories| B1["Development"]
     B -->|Categories| B2["DevOps"]
-    B -->|Categories| B3["Documentation"]</p><p>    C -->|Search| C1["DevOps Automation"]
+    B -->|Categories| B3["Documentation"]
+
+    C -->|Search| C1["DevOps Automation"]
     C -->|Search| C2["Mobile Dev"]
-    C -->|Search| C3["Data Science"]</p><p>    D -->|Internal| D1["Company Standards"]
+    C -->|Search| C3["Data Science"]
+
+    D -->|Internal| D1["Company Standards"]
     D -->|Internal| D2["Legacy Systems"]
-    D -->|Internal| D3["Compliance"]</p><p>    style A fill:#e1f5fe,stroke:#333,color:#333
+    D -->|Internal| D3["Compliance"]
+
+    style A fill:#e1f5fe,stroke:#333,color:#333
     style B fill:#e8f5e9,stroke:#333,color:#333
     style C fill:#f3e5f5,stroke:#333,color:#333
     style D fill:#fff3e0,stroke:#333,color:#333
-</div><h3 id="marketplace-配置">Marketplace 配置</h3><p>企业和高级用户可以通过设置控制 marketplace 行为：</p><table>
+</div>
+<h3 id="marketplace-配置">Marketplace 配置</h3>
+<p>企业和高级用户可以通过设置控制 marketplace 行为：</p>
+<table>
 <thead>
 <tr>
 <th>设置</th>
@@ -664,9 +760,13 @@ tools: read, grep, diff
 </tr>
 </tbody>
 </table>
-<h3 id="其他-marketplace-功能">其他 Marketplace 功能</h3><li><strong>默认 git 超时</strong>：从 30 秒增加到 120 秒，用于大型 plugin 仓库</li>
+<h3 id="其他-marketplace-功能">其他 Marketplace 功能</h3>
+<li><strong>默认 git 超时</strong>：从 30 秒增加到 120 秒，用于大型 plugin 仓库</li>
 <li><strong>自定义 npm registries</strong>：Plugins 可以指定自定义 npm registry URL 用于依赖解析</li>
-<li><strong>版本锁定</strong>：将 plugins 锁定到特定版本，实现可复现环境</li><h3 id="marketplace-定义-schema">Marketplace 定义 schema</h3><p>Plugin marketplaces 在 <code>.claude-plugin/marketplace.json</code> 中定义：</p><pre><code class="language-json">{
+<li><strong>版本锁定</strong>：将 plugins 锁定到特定版本，实现可复现环境</li>
+<h3 id="marketplace-定义-schema">Marketplace 定义 schema</h3>
+<p>Plugin marketplaces 在 <code>.claude-plugin/marketplace.json</code> 中定义：</p>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;my-team-plugins&quot;,
   &quot;owner&quot;: &quot;my-org&quot;,
   &quot;plugins&quot;: [
@@ -688,7 +788,8 @@ tools: read, grep, diff
     }
   ]
 }
-</code></pre><table>
+</code></pre>
+<table>
 <thead>
 <tr>
 <th>字段</th>
@@ -739,7 +840,9 @@ tools: read, grep, diff
 </tr>
 </tbody>
 </table>
-<h3 id="plugin-来源类型">Plugin 来源类型</h3><p>Plugins 可以从多个位置获取：</p><table>
+<h3 id="plugin-来源类型">Plugin 来源类型</h3>
+<p>Plugins 可以从多个位置获取：</p>
+<table>
 <thead>
 <tr>
 <th>来源</th>
@@ -780,10 +883,20 @@ tools: read, grep, diff
 </tr>
 </tbody>
 </table>
-GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <code>sha</code>（提交哈希）字段用于版本锁定。</p><h3 id="分发方式">分发方式</h3><p><strong>GitHub（推荐）</strong>：</p><pre><code class="language-bash"># 用户添加你的 marketplace
+<p>GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <code>sha</code>（提交哈希）字段用于版本锁定。</p>
+<h3 id="分发方式">分发方式</h3>
+<strong>GitHub（推荐）</strong>：
+<pre><code class="language-bash"># 用户添加你的 marketplace
 /plugin marketplace add owner/repo-name
-</code></pre><p><strong>其他 git 服务</strong>（需要完整 URL）：</p><pre><code class="language-bash">/plugin marketplace add https://gitlab.com/org/marketplace-repo.git
-</code></pre><p><strong>私有仓库</strong>：通过 git credential helpers 或环境令牌支持。用户必须拥有仓库的读取权限。</p><p><strong>官方 marketplace 提交</strong>：将 plugins 提交到 Anthropic 管理的 marketplace 以获得更广泛的分发。</p><h3 id="严格模式">严格模式</h3><p>控制 marketplace 定义如何与本地 <code>plugin.json</code> 文件交互：</p><table>
+</code></pre>
+<strong>其他 git 服务</strong>（需要完整 URL）：
+<pre><code class="language-bash">/plugin marketplace add https://gitlab.com/org/marketplace-repo.git
+</code></pre>
+<strong>私有仓库</strong>：通过 git credential helpers 或环境令牌支持。用户必须拥有仓库的读取权限。
+<strong>官方 marketplace 提交</strong>：将 plugins 提交到 Anthropic 管理的 marketplace 以获得更广泛的分发。
+<h3 id="严格模式">严格模式</h3>
+<p>控制 marketplace 定义如何与本地 <code>plugin.json</code> 文件交互：</p>
+<table>
 <thead>
 <tr>
 <th>设置</th>
@@ -801,7 +914,8 @@ GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <cod
 </tr>
 </tbody>
 </table>
-<strong>使用 <code>strictKnownMarketplaces</code> 的组织限制</strong>：</p><table>
+<strong>使用 <code>strictKnownMarketplaces</code> 的组织限制</strong>：
+<table>
 <thead>
 <tr>
 <th>值</th>
@@ -829,7 +943,10 @@ GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <cod
     &quot;github.com/trusted-vendor/*&quot;
   ]
 }
-</code></pre><blockquote><strong>警告</strong>：在严格模式下使用 <code>strictKnownMarketplaces</code> 时，用户只能从允许列表中的 marketplaces 安装 plugins。这对需要受控 plugin 分发的企业环境很有用。</blockquote><h2 id="plugin-安装与生命周期">Plugin 安装与生命周期</h2><div class="mermaid">graph LR
+</code></pre>
+<blockquote><strong>警告</strong>：在严格模式下使用 <code>strictKnownMarketplaces</code> 时，用户只能从允许列表中的 marketplaces 安装 plugins。这对需要受控 plugin 分发的企业环境很有用。</blockquote>
+<h2 id="plugin-安装与生命周期">Plugin 安装与生命周期</h2>
+<div class="mermaid">graph LR
     A["Discover"] -->|Browse| B["Marketplace"]
     B -->|Select| C["Plugin Page"]
     C -->|View| D["Components"]
@@ -841,7 +958,9 @@ GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <cod
     G -->|Done| I["Disable"]
     I -->|Later| J["Enable"]
     J -->|Back| G
-</div><h2 id="plugin-功能对比">Plugin 功能对比</h2><table>
+</div>
+<h2 id="plugin-功能对比">Plugin 功能对比</h2>
+<table>
 <thead>
 <tr>
 <th>功能</th>
@@ -917,22 +1036,35 @@ GitHub 和 git 来源支持可选的 <code>ref</code>（分支/标签）和 <cod
 </tr>
 </tbody>
 </table>
-<h2 id="plugin-cli-命令">Plugin CLI 命令</h2><p>所有 plugin 操作都可用 CLI 命令：</p><pre><code class="language-bash">claude plugin install &lt;name&gt;@&lt;marketplace&gt;   # 从 marketplace 安装
+<h2 id="plugin-cli-命令">Plugin CLI 命令</h2>
+<p>所有 plugin 操作都可用 CLI 命令：</p>
+<pre><code class="language-bash">claude plugin install &lt;name&gt;@&lt;marketplace&gt;   # 从 marketplace 安装
 claude plugin uninstall &lt;name&gt;               # 移除 plugin
 claude plugin list                           # 列出已安装 plugins
 claude plugin enable &lt;name&gt;                  # 启用已禁用的 plugin
 claude plugin disable &lt;name&gt;                 # 禁用 plugin
 claude plugin validate                       # 验证 plugin 结构
-</code></pre><h2 id="安装方法">安装方法</h2><h3 id="从-marketplace">从 Marketplace</h3><pre><code class="language-bash">/plugin install plugin-name
+</code></pre>
+<h2 id="安装方法">安装方法</h2>
+<h3 id="从-marketplace">从 Marketplace</h3>
+<pre><code class="language-bash">/plugin install plugin-name
 # 或从 CLI：
 claude plugin install plugin-name@marketplace-name
-</code></pre><h3 id="启用-禁用-自动检测范围">启用 / 禁用（自动检测范围）</h3><pre><code class="language-bash">/plugin enable plugin-name
+</code></pre>
+<h3 id="启用-禁用-自动检测范围">启用 / 禁用（自动检测范围）</h3>
+<pre><code class="language-bash">/plugin enable plugin-name
 /plugin disable plugin-name
-</code></pre><h3 id="本地-plugin-用于开发">本地 Plugin（用于开发）</h3><pre><code class="language-bash"># 用于本地测试的 CLI 标志（可重复用于多个 plugins）
+</code></pre>
+<h3 id="本地-plugin-用于开发">本地 Plugin（用于开发）</h3>
+<pre><code class="language-bash"># 用于本地测试的 CLI 标志（可重复用于多个 plugins）
 claude --plugin-dir ./path/to/plugin
 claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b
-</code></pre><h3 id="从-git-仓库">从 Git 仓库</h3><pre><code class="language-bash">/plugin install github:username/repo
-</code></pre><p>##何时创建 Plugin</p><div class="mermaid">graph TD
+</code></pre>
+<h3 id="从-git-仓库">从 Git 仓库</h3>
+<pre><code class="language-bash">/plugin install github:username/repo
+</code></pre>
+<p>##何时创建 Plugin</p>
+<div class="mermaid">graph TD
     A["Should I create a plugin?"]
     A -->|Need multiple components| B{"Multiple commands<br/>or subagents<br/>or MCPs?"}
     B -->|Yes| C["✅ Create Plugin"]
@@ -943,7 +1075,9 @@ claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b
     A -->|Complex setup| G{"Needs auto<br/>configuration?"}
     G -->|Yes| C
     G -->|No| D
-</div><h3 id="plugin-使用场景">Plugin 使用场景</h3><table>
+</div>
+<h3 id="plugin-使用场景">Plugin 使用场景</h3>
+<table>
 <thead>
 <tr>
 <th>使用场景</th>
@@ -989,16 +1123,26 @@ claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b
 </tr>
 </tbody>
 </table>
-<h2 id="测试-plugin">测试 Plugin</h2><p>发布前，使用 <code>--plugin-dir</code> CLI 标志本地测试你的 plugin（可重复用于多个 plugins）：</p><pre><code class="language-bash">claude --plugin-dir ./my-plugin
+<h2 id="测试-plugin">测试 Plugin</h2>
+<p>发布前，使用 <code>--plugin-dir</code> CLI 标志本地测试你的 plugin（可重复用于多个 plugins）：</p>
+<pre><code class="language-bash">claude --plugin-dir ./my-plugin
 claude --plugin-dir ./my-plugin --plugin-dir ./another-plugin
-</code></pre><p>这会启动加载了你的 plugin 的 Claude Code，让你可以：
+</code></pre>
+<p>这会启动加载了你的 plugin 的 Claude Code，让你可以：
 <li>验证所有 slash commands 可用</li>
 <li>测试 subagents 和 agents 功能正确</li>
 <li>确认 MCP servers 正确连接</li>
 <li>验证 hook 执行</li>
 <li>检查 LSP server 配置</li>
-<li>检查任何配置错误</li><h2 id="热重载">热重载</h2><p>Plugins 在开发期间支持热重载。当你修改 plugin 文件时，Claude Code 可以自动检测变更。你也可以强制重载：</p><pre><code class="language-bash">/reload-plugins
-</code></pre><p>这会重新读取所有 plugin manifests、commands、agents、skills、hooks 和 MCP/LSP 配置，无需重启会话。</p><h2 id="plugin-的托管设置">Plugin 的托管设置</h2><p>管理员可以使用托管设置控制整个组织的 plugin 行为：</p><table>
+<li>检查任何配置错误</li></p>
+<h2 id="热重载">热重载</h2>
+<p>Plugins 在开发期间支持热重载。当你修改 plugin 文件时，Claude Code 可以自动检测变更。你也可以强制重载：</p>
+<pre><code class="language-bash">/reload-plugins
+</code></pre>
+<p>这会重新读取所有 plugin manifests、commands、agents、skills、hooks 和 MCP/LSP 配置，无需重启会话。</p>
+<h2 id="plugin-的托管设置">Plugin 的托管设置</h2>
+<p>管理员可以使用托管设置控制整个组织的 plugin 行为：</p>
+<table>
 <thead>
 <tr>
 <th>设置</th>
@@ -1028,71 +1172,132 @@ claude --plugin-dir ./my-plugin --plugin-dir ./another-plugin
 </tr>
 </tbody>
 </table>
-这些设置可以通过托管配置文件在组织级别应用，优先于用户级别设置。</p><h2 id="plugin-安全">Plugin 安全</h2><p>Plugin subagents 在受限沙箱中运行。以下 frontmatter 字段在 plugin subagent 定义中<strong>不允许</strong>：</p><li><code>hooks</code> —— Subagents 不能注册事件处理器</li>
+<p>这些设置可以通过托管配置文件在组织级别应用，优先于用户级别设置。</p>
+<h2 id="plugin-安全">Plugin 安全</h2>
+<p>Plugin subagents 在受限沙箱中运行。以下 frontmatter 字段在 plugin subagent 定义中<strong>不允许</strong>：</p>
+<li><code>hooks</code> —— Subagents 不能注册事件处理器</li>
 <li><code>mcpServers</code> —— Subagents 不能配置 MCP servers</li>
-<li><code>permissionMode</code> —— Subagents 不能覆盖权限模型</li><p>这确保 plugins 不能提升权限或修改超出其声明范围的主机环境。</p><h2 id="发布-plugin">发布 Plugin</h2><p><strong>发布步骤：</strong></p><li>创建包含所有组件的 plugin 结构</li>
+<li><code>permissionMode</code> —— Subagents 不能覆盖权限模型</li>
+<p>这确保 plugins 不能提升权限或修改超出其声明范围的主机环境。</p>
+<h2 id="发布-plugin">发布 Plugin</h2>
+<strong>发布步骤：</strong>
+<li>创建包含所有组件的 plugin 结构</li>
 <li>编写 <code>.claude-plugin/plugin.json</code> manifest</li>
 <li>创建带有文档的 <code>README.md</code></li>
 <li>使用 <code>claude --plugin-dir ./my-plugin</code> 本地测试</li>
 <li>提交到 plugin marketplace</li>
 <li>获得审核和批准</li>
 <li>在 marketplace 发布</li>
-<li>用户可用一条命令安装</li><p><strong>示例提交：</strong></p><pre><code class="language-markdown"># PR Review Plugin</p><p>## Description
-Complete PR review workflow with security, testing, and documentation checks.</p><p>## What&#039;s Included
+<li>用户可用一条命令安装</li>
+<strong>示例提交：</strong>
+<pre><code class="language-markdown"># PR Review Plugin
+
+## Description
+Complete PR review workflow with security, testing, and documentation checks.
+
+## What&#039;s Included
 - 3 slash commands for different review types
 - 3 specialized subagents
 - GitHub and CodeQL MCP integration
-- Automated security scanning hooks</p><p>## Installation
-</code></pre><p>bash
-/plugin install pr-review</p><pre><code class="language-">
+- Automated security scanning hooks
+
+## Installation
+</code></pre>
+<p>bash
+/plugin install pr-review</p>
+<pre><code class="language-">
 ## Features
 ✅ Security analysis
 ✅ Test coverage checking
 ✅ Documentation verification
 ✅ Code quality assessment
-✅ Performance impact analysis</p><p>## Usage
-</code></pre><p>bash
+✅ Performance impact analysis
+
+## Usage
+</code></pre>
+<p>bash
 /review-pr
 /check-security
-/check-tests</p><pre><code class="language-">
+/check-tests</p>
+<pre><code class="language-">
 ## Requirements
 - Claude Code 1.0+
 - GitHub access
 - CodeQL (optional)
-</code></pre><h2 id="plugin-vs-手动配置对比">Plugin vs 手动配置对比</h2><p><strong>手动设置（2+ 小时）：</strong>
+</code></pre>
+<h2 id="plugin-vs-手动配置对比">Plugin vs 手动配置对比</h2>
+<strong>手动设置（2+ 小时）：</strong>
 <li>逐个安装 slash commands</li>
 <li>分别创建 subagents</li>
 <li>单独配置 MCPs</li>
 <li>手动设置 hooks</li>
 <li>文档化所有内容</li>
-<li>与团队分享（希望他们正确配置）</li><p><strong>使用 Plugin（2 分钟）：</strong></p><pre><code class="language-bash">/plugin install pr-review
+<li>与团队分享（希望他们正确配置）</li>
+<strong>使用 Plugin（2 分钟）：</strong>
+<pre><code class="language-bash">/plugin install pr-review
 # ✅ 所有内容已安装和配置
 # ✅ 立即可用
 # ✅ 团队可复现精确设置
-</code></pre><h2 id="立即尝试">立即尝试</h2><h3 id="练习-1-安装-plugin">🎯 练习 1：安装 Plugin</h3><p>安装并测试一个 plugin：</p><pre><code class="language-bash"># 步骤 1：浏览可用 plugins
-/plugin search code-review</p><p># 步骤 2：安装 plugin
-/plugin install code-review</p><p># 步骤 3：验证安装
+</code></pre>
+<h2 id="立即尝试">立即尝试</h2>
+<h3 id="练习-1-安装-plugin">🎯 练习 1：安装 Plugin</h3>
+<p>安装并测试一个 plugin：</p>
+<pre><code class="language-bash"># 步骤 1：浏览可用 plugins
+/plugin search code-review
+
+# 步骤 2：安装 plugin
+/plugin install code-review
+
+# 步骤 3：验证安装
 /plugin list
-# 应显示：code-review (installed)</p><p># 步骤 4：测试 plugin
+# 应显示：code-review (installed)
+
+# 步骤 4：测试 plugin
 /code-review:review
 # 或仅 /review 如果无命名冲突
-</code></pre><h3 id="练习-2-创建简单-plugin">🎯 练习 2：创建简单 Plugin</h3><p>构建一个包含单个 skill 的 plugin：</p><p><strong>步骤 1：创建 plugin 目录</strong></p><pre><code class="language-bash">mkdir -p my-first-plugin
-</code></pre><p><strong>步骤 2：创建 plugin.json</strong></p><pre><code class="language-json">{
+</code></pre>
+<h3 id="练习-2-创建简单-plugin">🎯 练习 2：创建简单 Plugin</h3>
+<p>构建一个包含单个 skill 的 plugin：</p>
+<strong>步骤 1：创建 plugin 目录</strong>
+<pre><code class="language-bash">mkdir -p my-first-plugin
+</code></pre>
+<strong>步骤 2：创建 plugin.json</strong>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;my-first-plugin&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
   &quot;description&quot;: &quot;A simple example plugin&quot;,
   &quot;skills&quot;: [&quot;hello&quot;]
 }
-</code></pre><p><strong>步骤 3：创建 skill</strong></p><pre><code class="language-bash">mkdir -p my-first-plugin/skills/hello
-</code></pre><p>创建 <code>my-first-plugin/skills/hello/SKILL.md</code>：</p><pre><code class="language-markdown">---
+</code></pre>
+<strong>步骤 3：创建 skill</strong>
+<pre><code class="language-bash">mkdir -p my-first-plugin/skills/hello
+</code></pre>
+<p>创建 <code>my-first-plugin/skills/hello/SKILL.md</code>：</p>
+<pre><code class="language-markdown">---
 name: hello
 description: Greet the user
----</p><p># Hello!</p><p>Welcome to Claude Code!</p><p>Current time: !`date`
-Project: !`basename $(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)`</p><p>What would you like to work on today?
-</code></pre><p><strong>步骤 4：本地测试</strong></p><pre><code class="language-bash"># 临时加载 plugin
-/plugin load ./my-first-plugin</p><p># 测试
+---
+
+# Hello!
+
+Welcome to Claude Code!
+
+Current time: !`date`
+Project: !`basename $(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)`
+
+What would you like to work on today?
+</code></pre>
+<strong>步骤 4：本地测试</strong>
+<pre><code class="language-bash"># 临时加载 plugin
+/plugin load ./my-first-plugin
+
+# 测试
 /my-first-plugin:hello
-</code></pre><h3 id="练习-3-包含多个组件的-plugin">🎯 练习 3：包含多个组件的 Plugin</h3><p>创建一个综合 plugin：</p><p><strong>结构：</strong></p><pre><code class="language-bash">my-dev-plugin/
+</code></pre>
+<h3 id="练习-3-包含多个组件的-plugin">🎯 练习 3：包含多个组件的 Plugin</h3>
+<p>创建一个综合 plugin：</p>
+<strong>结构：</strong>
+<pre><code class="language-bash">my-dev-plugin/
 ├── plugin.json
 ├── README.md
 ├── skills/
@@ -1108,7 +1313,9 @@ Project: !`basename $(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)`</p><
 └── hooks/
     └── PostToolUse/
         └── lint.sh
-</code></pre><p><strong>plugin.json：</strong></p><pre><code class="language-json">{
+</code></pre>
+<strong>plugin.json：</strong>
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;dev-workflow&quot;,
   &quot;version&quot;: &quot;1.0.0&quot;,
   &quot;description&quot;: &quot;Development workflow helpers&quot;,
@@ -1118,24 +1325,43 @@ Project: !`basename $(git rev-parse --show-toplevel 2&gt;/dev/null || pwd)`</p><
     &quot;PostToolUse&quot;: [&quot;lint&quot;]
   }
 }
-</code></pre><h3 id="练习-4-与团队分享-plugin">🎯 练习 4：与团队分享 Plugin</h3><p>发布你的 plugin：</p><p><strong>步骤 1：创建 GitHub 仓库</strong></p><pre><code class="language-bash">git init
+</code></pre>
+<h3 id="练习-4-与团队分享-plugin">🎯 练习 4：与团队分享 Plugin</h3>
+<p>发布你的 plugin：</p>
+<strong>步骤 1：创建 GitHub 仓库</strong>
+<pre><code class="language-bash">git init
 git add .
 git commit -m &quot;Initial plugin release&quot;
 git push origin main
-</code></pre><p><strong>步骤 2：团队成员安装</strong></p><pre><code class="language-bash"># 从仓库 URL
-/plugin install https://github.com/yourname/dev-workflow-plugin</p><p># 或从 npm（如果已发布）
+</code></pre>
+<strong>步骤 2：团队成员安装</strong>
+<pre><code class="language-bash"># 从仓库 URL
+/plugin install https://github.com/yourname/dev-workflow-plugin
+
+# 或从 npm（如果已发布）
 /plugin install dev-workflow-plugin
-</code></pre><p><strong>步骤 3：验证团队采纳</strong></p><pre><code class="language-bash"># 在 Claude Code 中：
+</code></pre>
+<strong>步骤 3：验证团队采纳</strong>
+<pre><code class="language-bash"># 在 Claude Code 中：
 /plugin list
-# 应显示：dev-workflow (installed, v1.0.0)</p><p>/dev-workflow:review
-</code></pre><h3 id="练习-5-plugin-开发工作流">🎯 练习 5：Plugin 开发工作流</h3><p>测试和迭代 plugins：</p><pre><code class="language-bash"># 开发循环：
+# 应显示：dev-workflow (installed, v1.0.0)
+
+/dev-workflow:review
+</code></pre>
+<h3 id="练习-5-plugin-开发工作流">🎯 练习 5：Plugin 开发工作流</h3>
+<p>测试和迭代 plugins：</p>
+<pre><code class="language-bash"># 开发循环：
 /plugin load ./my-plugin        # 加载本地版本
 /my-plugin:test                 # 测试功能
 /plugin reload ./my-plugin      # 修改后重载
-/my-plugin:test                 # 再次测试</p><p># 满意后：
+/my-plugin:test                 # 再次测试
+
+# 满意后：
 /plugin unload my-plugin        # 移除临时加载
 /plugin install ./my-plugin     # 永久安装
-</code></pre><h2 id="最佳实践">最佳实践</h2><h3 id="推荐做法">推荐做法 ✅</h3>
+</code></pre>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="推荐做法">推荐做法 ✅</h3>
 <li>使用清晰、描述性的 plugin 名称</li>
 <li>包含全面的 README</li>
 <li>正确版本管理你的 plugin（semver）</li>
@@ -1147,7 +1373,8 @@ git push origin main
 <li>保持向后兼容</li>
 <li>保持 plugins 聚焦和内聚</li>
 <li>包含全面的测试</li>
-<li>文档化所有依赖</li><h3 id="避免做法">避免做法 ❌</h3>
+<li>文档化所有依赖</li>
+<h3 id="避免做法">避免做法 ❌</h3>
 <li>不打包不相关功能</li>
 <li>不硬编码凭据</li>
 <li>不跳过测试</li>
@@ -1155,56 +1382,93 @@ git push origin main
 <li>不创建冗余 plugins</li>
 <li>不忽略版本管理</li>
 <li>不过度复杂化组件依赖</li>
-<li>不忘记优雅处理错误</li><h2 id="安装说明">安装说明</h2><h3 id="从-marketplace-安装">从 Marketplace 安装</h3><li><strong>浏览可用 plugins：</strong></li>
-   </p><pre><code class="language-bash">   /plugin list
-   </code></pre><li><strong>查看 plugin 详情：</strong></li>
-   </p><pre><code class="language-bash">   /plugin info plugin-name
-   </code></pre><li><strong>安装 plugin：</strong></li>
-   </p><pre><code class="language-bash">   /plugin install plugin-name
-   </code></pre><h3 id="从本地路径安装">从本地路径安装</h3><pre><code class="language-bash">/plugin install ./path/to/plugin-directory
-</code></pre><h3 id="从-github-安装">从 GitHub 安装</h3><pre><code class="language-bash">/plugin install github:username/repo
-</code></pre><h3 id="列出已安装-plugins">列出已安装 Plugins</h3><pre><code class="language-bash">/plugin list --installed
-</code></pre><h3 id="更新-plugin">更新 Plugin</h3><pre><code class="language-bash">/plugin update plugin-name
-</code></pre><h3 id="禁用-启用-plugin">禁用/启用 Plugin</h3><pre><code class="language-bash"># 临时禁用
-/plugin disable plugin-name</p><p># 重新启用
+<li>不忘记优雅处理错误</li>
+<h2 id="安装说明">安装说明</h2>
+<h3 id="从-marketplace-安装">从 Marketplace 安装</h3>
+<li><strong>浏览可用 plugins：</strong></li>
+<pre><code class="language-bash">   /plugin list
+   </code></pre>
+<li><strong>查看 plugin 详情：</strong></li>
+<pre><code class="language-bash">   /plugin info plugin-name
+   </code></pre>
+<li><strong>安装 plugin：</strong></li>
+<pre><code class="language-bash">   /plugin install plugin-name
+   </code></pre>
+<h3 id="从本地路径安装">从本地路径安装</h3>
+<pre><code class="language-bash">/plugin install ./path/to/plugin-directory
+</code></pre>
+<h3 id="从-github-安装">从 GitHub 安装</h3>
+<pre><code class="language-bash">/plugin install github:username/repo
+</code></pre>
+<h3 id="列出已安装-plugins">列出已安装 Plugins</h3>
+<pre><code class="language-bash">/plugin list --installed
+</code></pre>
+<h3 id="更新-plugin">更新 Plugin</h3>
+<pre><code class="language-bash">/plugin update plugin-name
+</code></pre>
+<h3 id="禁用-启用-plugin">禁用/启用 Plugin</h3>
+<pre><code class="language-bash"># 临时禁用
+/plugin disable plugin-name
+
+# 重新启用
 /plugin enable plugin-name
-</code></pre><h3 id="卸载-plugin">卸载 Plugin</h3><pre><code class="language-bash">/plugin uninstall plugin-name
-</code></pre><h2 id="相关概念">相关概念</h2><p>以下 Claude Code 功能与 plugins 配合使用：</p><li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> — 打包在 plugins 中的单个命令</li>
+</code></pre>
+<h3 id="卸载-plugin">卸载 Plugin</h3>
+<pre><code class="language-bash">/plugin uninstall plugin-name
+</code></pre>
+<h2 id="相关概念">相关概念</h2>
+<p>以下 Claude Code 功能与 plugins 配合使用：</p>
+<li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> — 打包在 plugins 中的单个命令</li>
 <li><strong><a href="/content/02-memory.html">Memory</a></strong> — Plugins 的持久化上下文</li>
 <li><strong><a href="/content/03-skills.html">Skills</a></strong> — 可包装成 plugins 的领域专业知识</li>
 <li><strong><a href="/content/04-subagents.html">Subagents</a></strong> — 作为 plugin 组件包含的专用 agents</li>
 <li><strong><a href="/content/05-mcp.html">MCP Servers</a></strong> — 打包在 plugins 中的 Model Context Protocol 集成</li>
-<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> — 触发 plugin 工作流的事件处理器</li><h2 id="完整示例工作流">完整示例工作流</h2><h3 id="pr-review-plugin-完整工作流">PR Review Plugin 完整工作流</h3><pre><code class="language-">1. 用户：/review-pr</p><p>2. Plugin 执行：
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> — 触发 plugin 工作流的事件处理器</li>
+<h2 id="完整示例工作流">完整示例工作流</h2>
+<h3 id="pr-review-plugin-完整工作流">PR Review Plugin 完整工作流</h3>
+<pre><code class="language-">1. 用户：/review-pr
+
+2. Plugin 执行：
    ├── pre-review.js hook 验证 git 仓库
    ├── GitHub MCP 获取 PR 数据
    ├── security-reviewer subagent 分析安全
    ├── test-checker subagent 验证覆盖率
-   └── performance-analyzer subagent 检查性能</p><p>3. 结果综合并呈现：
+   └── performance-analyzer subagent 检查性能
+
+3. 结果综合并呈现：
    ✅ 安全：无关键问题
    ⚠️  测试：覆盖率 65%（建议 80%+）
    ✅ 性能：无显著影响
    📝 提供 12 条建议
-</code></pre><h2 id="故障排除">故障排除</h2><h3 id="plugin-无法安装">Plugin 无法安装</h3>
+</code></pre>
+<h2 id="故障排除">故障排除</h2>
+<h3 id="plugin-无法安装">Plugin 无法安装</h3>
 <li>检查 Claude Code 版本兼容性：<code>/version</code></li>
 <li>使用 JSON 验证器验证 <code>plugin.json</code> 语法</li>
 <li>检查网络连接（用于远程 plugins）</li>
-<li>查看权限：<code>ls -la plugin/</code></li><h3 id="组件无法加载">组件无法加载</h3>
+<li>查看权限：<code>ls -la plugin/</code></li>
+<h3 id="组件无法加载">组件无法加载</h3>
 <li>验证 <code>plugin.json</code> 中的路径匹配实际目录结构</li>
 <li>检查文件权限：<code>chmod +x scripts/</code></li>
 <li>查看组件文件语法</li>
-<li>查看日志：<code>/plugin debug plugin-name</code></li><h3 id="mcp-连接失败">MCP 连接失败</h3>
+<li>查看日志：<code>/plugin debug plugin-name</code></li>
+<h3 id="mcp-连接失败">MCP 连接失败</h3>
 <li>验证环境变量正确设置</li>
 <li>检查 MCP server 安装和健康状态</li>
 <li>使用 <code>/mcp test</code> 独立测试 MCP 连接</li>
-<li>查看 <code>mcp/</code> 目录中的 MCP 配置</li><h3 id="安装后命令不可用">安装后命令不可用</h3>
+<li>查看 <code>mcp/</code> 目录中的 MCP 配置</li>
+<h3 id="安装后命令不可用">安装后命令不可用</h3>
 <li>确保 plugin 成功安装：<code>/plugin list --installed</code></li>
 <li>检查 plugin 是否启用：<code>/plugin status plugin-name</code></li>
 <li>重启 Claude Code：<code>exit</code> 并重新打开</li>
-<li>检查与现有命令的命名冲突</li><h3 id="hook-执行问题">Hook 执行问题</h3>
+<li>检查与现有命令的命名冲突</li>
+<h3 id="hook-执行问题">Hook 执行问题</h3>
 <li>验证 hook 文件有正确权限</li>
 <li>检查 hook 语法和事件名称</li>
 <li>查看 hook 日志获取错误详情</li>
-<li>如果可能，手动测试 hooks</li><h2 id="其他资源">其他资源</h2><li><a href="https://code.claude.com/docs/en/plugins">官方 Plugins 文档</a></li>
+<li>如果可能，手动测试 hooks</li>
+<h2 id="其他资源">其他资源</h2>
+<li><a href="https://code.claude.com/docs/en/plugins">官方 Plugins 文档</a></li>
 <li><a href="https://code.claude.com/docs/en/discover-plugins">发现 Plugins</a></li>
 <li><a href="https://code.claude.com/docs/en/plugin-marketplaces">Plugin Marketplaces</a></li>
 <li><a href="https://code.claude.com/docs/en/plugins-reference">Plugins 参考</a></li>

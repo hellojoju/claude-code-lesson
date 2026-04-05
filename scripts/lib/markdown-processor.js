@@ -99,9 +99,14 @@ class MarkdownProcessor {
     // 步骤 2: 处理表格
     html = this.processTables(html);
 
-    // 步骤 3: 保护内联代码
+    // 步骤 3: 保护内联代码（排除代码块的反引号和跨越占位符的匹配）
     const inlineCodes = [];
-    html = html.replace(/`([^`]+)`/g, (match, code) => {
+    html = html.replace(/`([^`]+?)`(?!`)/g, (match, code) => {
+      // 检查是否包含代码块占位符（不应该在匹配内）
+      if (code.includes(CODEBLOCK_PREFIX) || code.includes(CODEBLOCK_SUFFIX)) {
+        // 这个匹配跨越了代码块，跳过
+        return match;
+      }
       const index = inlineCodes.length;
       inlineCodes.push(code);
       return `\x00IC${index}IC\x00`;
@@ -130,8 +135,14 @@ class MarkdownProcessor {
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
 
-    // 步骤 8: 引用
-    html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+    // 步骤 8: 引用 - 合并连续的引用行为一个 blockquote
+    html = html.replace(/^(> .*\n?)+/gm, (match) => {
+      // 提取每行内容（去掉 > 前缀）
+      const lines = match.trim().split('\n').map(line => {
+        return line.replace(/^> ?/, '');
+      }).join('\n');
+      return `<blockquote>${lines}</blockquote>`;
+    });
 
     // 步骤 9: 列表
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');

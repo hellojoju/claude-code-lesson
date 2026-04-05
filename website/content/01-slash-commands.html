@@ -234,15 +234,25 @@
         <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#内置命令参考">内置命令参考</a></li><li ><a href="#内置-skills">内置 Skills</a></li><li ><a href="#已弃用命令">已弃用命令</a></li><li ><a href="#近期更改">近期更改</a></li><li ><a href="#自定义命令-现为-skills">自定义命令（现为 Skills）</a></li><li ><a href="#迁移路径">迁移路径</a></li><li ><a href="#为什么选择-skills">为什么选择 Skills？</a></li><li ><a href="#创建自定义命令作为-skill">创建自定义命令作为 Skill</a></li><li ><a href="#frontmatter-参考">Frontmatter 参考</a></li><li ><a href="#参数">参数</a></li><li ><a href="#使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</a></li><li ><a href="#上下文">上下文</a></li><li ><a href="#你的任务">你的任务</a></li><li ><a href="#文件引用">文件引用</a></li><li ><a href="#插件命令">插件命令</a></li><li ><a href="#mcp-prompts-作为命令">MCP Prompts 作为命令</a></li><li ><a href="#mcp-权限语法">MCP 权限语法</a></li><li ><a href="#命令架构">命令架构</a></li><li ><a href="#命令生命周期">命令生命周期</a></li><li ><a href="#本文件夹中的可用命令">本文件夹中的可用命令</a></li><li ><a href="#1-optimize-代码优化">1. `/optimize` - 代码优化</a></li><li ><a href="#2-pr-pull-request-准备">2. `/pr` - Pull Request 准备</a></li><li ><a href="#3-generate-api-docs-api-文档生成器">3. `/generate-api-docs` - API 文档生成器</a></li><li ><a href="#4-commit-带上下文的-git-commit">4. `/commit` - 带上下文的 Git Commit</a></li><li ><a href="#5-push-all-暂存-提交和推送">5. `/push-all` -暂存、提交和推送</a></li><li ><a href="#6-doc-refactor-文档重构">6. `/doc-refactor` - 文档重构</a></li><li ><a href="#7-setup-ci-cd-ci-cd-管道设置">7. `/setup-ci-cd` - CI/CD 管道设置</a></li><li ><a href="#8-unit-test-expand-测试覆盖扩展">8. `/unit-test-expand` - 测试覆盖扩展</a></li><li ><a href="#安装">安装</a></li><li ><a href="#作为-skills-推荐">作为 Skills（推荐）</a></li><li ><a href="#作为旧版命令">作为旧版命令</a></li><li ><a href="#创建自己的命令">创建自己的命令</a></li><li ><a href="#skill-模板-推荐">Skill 模板（推荐）</a></li><li ><a href="#上下文">上下文</a></li><li ><a href="#指令">指令</a></li><li ><a href="#输出格式">输出格式</a></li><li ><a href="#仅用户命令-禁止自动调用">仅用户命令（禁止自动调用）</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-创建你的第一个-skill">🎯 练习 1：创建你的第一个 Skill</a></li><li ><a href="#练习-2-动态上下文-skill">🎯 练习 2：动态上下文 Skill</a></li><li ><a href="#git-状态">Git 状态</a></li><li ><a href="#依赖">依赖</a></li><li ><a href="#测试覆盖率">测试覆盖率</a></li><li ><a href="#概要">概要</a></li><li ><a href="#练习-3-命令链工作流">🎯 练习 3：命令链工作流</a></li><li ><a href="#实用工作流">实用工作流</a></li><li ><a href="#每日开发周期">每日开发周期</a></li><li ><a href="#代码审查工作流">代码审查工作流</a></li><li ><a href="#更改概要">更改概要</a></li><li ><a href="#质量检查">质量检查</a></li><li ><a href="#报告格式">报告格式</a></li><li ><a href="#建议">建议</a></li><li ><a href="#发布工作流">发布工作流</a></li><li ><a href="#版本检查">版本检查</a></li><li ><a href="#质量门控">质量门控</a></li><li ><a href="#安全扫描">安全扫描</a></li><li ><a href="#文档">文档</a></li><li ><a href="#最终报告">最终报告</a></li><li ><a href="#高级模式">高级模式</a></li><li ><a href="#模式-1-上下文继承">模式 1：上下文继承</a></li><li ><a href="#步骤">步骤</a></li><li ><a href="#模式-2-条件执行">模式 2：条件执行</a></li><li ><a href="#预检查">预检查</a></li><li ><a href="#条件逻辑">条件逻辑</a></li><li ><a href="#推送步骤">推送步骤</a></li><li ><a href="#模式-3-错误恢复">模式 3：错误恢复</a></li><li ><a href="#部署前快照">部署前快照</a></li><li ><a href="#部署步骤">部署步骤</a></li><li ><a href="#失败时回滚">失败时回滚</a></li><li ><a href="#模式-4-多文件处理">模式 4：多文件处理</a></li><li ><a href="#查找目标文件">查找目标文件</a></li><li ><a href="#对每个文件">对每个文件</a></li><li ><a href="#概要报告">概要报告</a></li><li ><a href="#模式-5-交互式提示">模式 5：交互式提示</a></li><li ><a href="#第一阶段-概览">第一阶段：概览</a></li><li ><a href="#第二阶段-深入">第二阶段：深入</a></li><li ><a href="#第三阶段-应用">第三阶段：应用</a></li><li ><a href="#性能考量">性能考量</a></li><li ><a href="#skill-加载速度">Skill 加载速度</a></li><li ><a href="#命令执行速度">命令执行速度</a></li><li ><a href="#优化示例">优化示例</a></li><li ><a href="#常见陷阱">常见陷阱</a></li><li ><a href="#陷阱-1-循环依赖">陷阱 1：循环依赖</a></li><li ><a href="#陷阱-2-权限过度">陷阱 2：权限过度</a></li><li ><a href="#陷阱-3-过于复杂的-skills">陷阱 3：过于复杂的 Skills</a></li><li ><a href="#陷阱-4-缺少错误处理">陷阱 4：缺少错误处理</a></li><li ><a href="#陷阱-5-硬编码路径">陷阱 5：硬编码路径</a></li><li ><a href="#故障排查">故障排查</a></li><li ><a href="#命令未找到">命令未找到</a></li><li ><a href="#命令未按预期执行">命令未按预期执行</a></li><li ><a href="#skill-与命令冲突">Skill 与命令冲突</a></li><li ><a href="#相关指南">相关指南</a></li><li ><a href="#更多资源">更多资源</a></li></ul></div>
 
         <div class="content">
-          <p><picture>
+          <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../resources/logos/claude-howto-logo-dark.svg">
   <img alt="Claude How To" src="../resources/logos/claude-howto-logo.svg">
-</picture></p><blockquote>🟢 <strong>初级</strong> | ⏱ 30 分钟</blockquote>
->
-<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote><p><strong>你将学到：</strong> 学习使用 slash commands 加速工作流程。</p><h1>Slash Commands</h1><h2 id="概述">概述</h2><p>Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它们分为几种类型：</p><ul><li><strong>内置命令</strong>：由 Claude Code 提供（<code>/help</code>、<code>/clear</code>、<code>/model</code>）</li>
+</picture>
+<blockquote>🟢 <strong>初级</strong> | ⏱ 30 分钟</blockquote>
+<p>></p>
+<blockquote>✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote>
+<strong>你将学到：</strong> 学习使用 slash commands 加速工作流程。
+<h1>Slash Commands</h1>
+<h2 id="概述">概述</h2>
+<p>Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它们分为几种类型：</p>
+<ul><li><strong>内置命令</strong>：由 Claude Code 提供（<code>/help</code>、<code>/clear</code>、<code>/model</code>）</li>
 <li><strong>Skills</strong>：用户定义的命令，以 <code>SKILL.md</code> 文件形式创建（<code>/optimize</code>、<code>/pr</code>）</li>
 <li><strong>插件命令</strong>：来自已安装插件的命令（<code>/frontend-design:frontend-design</code>）</li>
-<li><strong>MCP prompts</strong>：来自 MCP servers 的命令（<code>/mcp__github__list_prs</code>）</li><blockquote><strong>注意</strong>：自定义 slash commands 已合并到 skills 中。<code>.claude/commands/</code> 中的文件仍然可用，但 skills（<code>.claude/skills/</code>）现在是推荐的方式。两者都创建 <code>/command-name</code> 快捷方式。参见 <a href="/content/03-skills.html">Skills 指南</a> 获取完整参考。</blockquote><h2 id="内置命令参考">内置命令参考</h2><p>内置命令是常用操作的快捷方式。共有 <strong>55+ 个内置命令</strong> 和 <strong>5 个内置 skills</strong> 可用。在 Claude Code 中输入 <code>/</code> 可查看完整列表，或输入 <code>/</code> 后跟任意字母进行筛选。</p><table>
+<li><strong>MCP prompts</strong>：来自 MCP servers 的命令（<code>/mcp__github__list_prs</code>）</li>
+<blockquote><strong>注意</strong>：自定义 slash commands 已合并到 skills 中。<code>.claude/commands/</code> 中的文件仍然可用，但 skills（<code>.claude/skills/</code>）现在是推荐的方式。两者都创建 <code>/command-name</code> 快捷方式。参见 <a href="/content/03-skills.html">Skills 指南</a> 获取完整参考。</blockquote>
+<h2 id="内置命令参考">内置命令参考</h2>
+<p>内置命令是常用操作的快捷方式。共有 <strong>55+ 个内置命令</strong> 和 <strong>5 个内置 skills</strong> 可用。在 Claude Code 中输入 <code>/</code> 可查看完整列表，或输入 <code>/</code> 后跟任意字母进行筛选。</p>
+<table>
 <thead>
 <tr>
 <th>命令</th>
@@ -502,7 +512,9 @@
 </tr>
 </tbody>
 </table>
-<h3 id="内置-skills">内置 Skills</h3><p>这些 skills 随 Claude Code 提供，可像 slash commands 一样调用：</p><table>
+<h3 id="内置-skills">内置 Skills</h3>
+<p>这些 skills 随 Claude Code 提供，可像 slash commands 一样调用：</p>
+<table>
 <thead>
 <tr>
 <th>Skill</th>
@@ -532,7 +544,8 @@
 </tr>
 </tbody>
 </table>
-<h3 id="已弃用命令">已弃用命令</h3><table>
+<h3 id="已弃用命令">已弃用命令</h3>
+<table>
 <thead>
 <tr>
 <th>命令</th>
@@ -554,7 +567,8 @@
 </tr>
 </tbody>
 </table>
-<h3 id="近期更改">近期更改</h3><li><code>/fork</code> 重命名为 <code>/branch</code>，保留 <code>/fork</code> 作为别名（v2.1.77）</li>
+<h3 id="近期更改">近期更改</h3>
+<li><code>/fork</code> 重命名为 <code>/branch</code>，保留 <code>/fork</code> 作为别名（v2.1.77）</li>
 <li><code>/output-style</code> 弃用（v2.1.73）</li>
 <li><code>/review</code> 弃用，推荐使用 <code>code-review</code> 插件</li>
 <li>添加 <code>/effort</code> 命令，<code>max</code> 级别需要 Opus 4.6</li>
@@ -563,7 +577,10 @@
 <li>添加 <code>/color</code> 命令用于提示栏自定义</li>
 <li><code>/model</code> 选择器现在显示人类可读标签（如 "Sonnet 4.6"）而非原始模型 ID</li>
 <li><code>/resume</code> 支持 <code>/continue</code> 别名</li>
-<li>MCP prompts 可作为 <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code> 命令使用（参见 <a href="#mcp-prompts-as-commands">MCP Prompts 作为命令</a>）</li><h2 id="自定义命令-现为-skills">自定义命令（现为 Skills）</h2><p>自定义 slash commands 已<strong>合并到 skills</strong> 中。两种方式都创建可用 <code>/command-name</code> 调用的命令：</p><table>
+<li>MCP prompts 可作为 <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code> 命令使用（参见 <a href="#mcp-prompts-as-commands">MCP Prompts 作为命令</a>）</li>
+<h2 id="自定义命令-现为-skills">自定义命令（现为 Skills）</h2>
+<p>自定义 slash commands 已<strong>合并到 skills</strong> 中。两种方式都创建可用 <code>/command-name</code> 调用的命令：</p>
+<table>
 <thead>
 <tr>
 <th>方式</th>
@@ -584,20 +601,42 @@
 </tr>
 </tbody>
 </table>
-如果 skill 和命令同名，<strong>skill 优先</strong>。例如，当 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code> 同时存在时，使用 skill 版本。</p><h3 id="迁移路径">迁移路径</h3><p>现有的 <code>.claude/commands/</code> 文件无需修改即可继续工作。要迁移到 skills：</p><p><strong>迁移前（命令）：</strong></p><pre><code class="language-">.claude/commands/optimize.md
-</code></pre><p><strong>迁移后（Skill）：</strong></p><pre><code class="language-">.claude/skills/optimize/SKILL.md
-</code></pre><h3 id="为什么选择-skills">为什么选择 Skills？</h3><p>Skills 比旧版命令提供更多功能：</p><li><strong>目录结构</strong>：可打包脚本、模板和参考文件</li>
+<p>如果 skill 和命令同名，<strong>skill 优先</strong>。例如，当 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code> 同时存在时，使用 skill 版本。</p>
+<h3 id="迁移路径">迁移路径</h3>
+<p>现有的 <code>.claude/commands/</code> 文件无需修改即可继续工作。要迁移到 skills：</p>
+<strong>迁移前（命令）：</strong>
+<pre><code class="language-">.claude/commands/optimize.md
+</code></pre>
+<strong>迁移后（Skill）：</strong>
+<pre><code class="language-">.claude/skills/optimize/SKILL.md
+</code></pre>
+<h3 id="为什么选择-skills">为什么选择 Skills？</h3>
+<p>Skills 比旧版命令提供更多功能：</p>
+<li><strong>目录结构</strong>：可打包脚本、模板和参考文件</li>
 <li><strong>自动调用</strong>：Claude 可在相关时自动触发 skills</li>
 <li><strong>调用控制</strong>：选择用户、Claude 或两者是否可调用</li>
 <li><strong>子代理执行</strong>：使用 <code>context: fork</code> 在隔离上下文中运行 skills</li>
-<li><strong>渐进式披露</strong>：仅在需要时加载额外文件</li><h3 id="创建自定义命令作为-skill">创建自定义命令作为 Skill</h3><p>创建包含 <code>SKILL.md</code> 文件的目录：</p><pre><code class="language-bash">mkdir -p .claude/skills/my-command
-</code></pre><p><strong>文件：</strong> <code>.claude/skills/my-command/SKILL.md</code></p><pre><code class="language-yaml">---
+<li><strong>渐进式披露</strong>：仅在需要时加载额外文件</li>
+<h3 id="创建自定义命令作为-skill">创建自定义命令作为 Skill</h3>
+<p>创建包含 <code>SKILL.md</code> 文件的目录：</p>
+<pre><code class="language-bash">mkdir -p .claude/skills/my-command
+</code></pre>
+<strong>文件：</strong> <code>.claude/skills/my-command/SKILL.md</code>
+<pre><code class="language-yaml">---
 name: my-command
 description: 此命令的功能及何时使用
----</p><p># My Command</p><p>调用此命令时 Claude 应遵循的指令。</p><p>1. 第一步
+---
+
+# My Command
+
+调用此命令时 Claude 应遵循的指令。
+
+1. 第一步
 2. 第二步
 3. 第三步
-</code></pre><h3 id="frontmatter-参考">Frontmatter 参考</h3><table>
+</code></pre>
+<h3 id="frontmatter-参考">Frontmatter 参考</h3>
+<table>
 <thead>
 <tr>
 <th>字段</th>
@@ -658,48 +697,95 @@ description: 此命令的功能及何时使用
 </tr>
 </tbody>
 </table>
-<h3 id="参数">参数</h3><p>命令可接收参数：</p><p><strong>使用 <code>$ARGUMENTS</code> 接收所有参数：</strong></p><pre><code class="language-yaml">---
+<h3 id="参数">参数</h3>
+<p>命令可接收参数：</p>
+<strong>使用 <code>$ARGUMENTS</code> 接收所有参数：</strong>
+<pre><code class="language-yaml">---
 name: fix-issue
 description: 根据编号修复 GitHub issue
----</p><p>按照我们的编码标准修复 issue #$ARGUMENTS
-</code></pre><p>用法：<code>/fix-issue 123</code> → <code>$ARGUMENTS</code> 变为 "123"</p><p><strong>使用 <code>$0</code>、<code>$1</code> 等接收单个参数：</strong></p><pre><code class="language-yaml">---
+---
+
+按照我们的编码标准修复 issue #$ARGUMENTS
+</code></pre>
+<p>用法：<code>/fix-issue 123</code> → <code>$ARGUMENTS</code> 变为 "123"</p>
+<strong>使用 <code>$0</code>、<code>$1</code> 等接收单个参数：</strong>
+<pre><code class="language-yaml">---
 name: review-pr
 description: 以指定优先级审查 PR
----</p><p>以优先级 $1 审查 PR #$0
-</code></pre><p>用法：<code>/review-pr 456 high</code> → <code>$0</code>="456", <code>$1</code>="high"</p><h3 id="使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</h3><p>使用 <code>!</code>command`<code> 在提示前执行 bash 命令：</p><pre><code class="language-yaml">---
+---
+
+以优先级 $1 审查 PR #$0
+</code></pre>
+<p>用法：<code>/review-pr 456 high</code> → <code>$0</code>="456", <code>$1</code>="high"</p>
+<h3 id="使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</h3>
+<p>使用 <code>!</code>command`` 在提示前执行 bash 命令：</p>
+<pre><code class="language-yaml">---
 name: commit
 description: 创建包含上下文的 git commit
 allowed-tools: Bash(git *)
----</p><p>## 上下文</p><p>- 当前 git 状态：!`git status`
+---
+
+## 上下文
+
+- 当前 git 状态：!`git status`
 - 当前 git diff：!`git diff HEAD`
 - 当前分支：!`git branch --show-current`
-- 最近提交：!`git log --oneline -5`</p><p>## 你的任务</p><p>基于以上更改，创建一个 git commit。
-</code></pre><p>### 文件引用</p><p>使用 </code>@<code> 包含文件内容：</p><pre><code class="language-markdown">审查 @src/utils/helpers.js 中的实现
+- 最近提交：!`git log --oneline -5`
+
+## 你的任务
+
+基于以上更改，创建一个 git commit。
+</code></pre>
+<h3 id="文件引用">文件引用</h3>
+<p>使用 `@` 包含文件内容：</p>
+<pre><code class="language-markdown">审查 @src/utils/helpers.js 中的实现
 比较 @src/old-version.js 和 @src/new-version.js
-</code></pre><p>## 插件命令</p><p>插件可提供自定义命令：</p><pre><code class="language-">/plugin-name:command-name
-</code></pre><p>或当无命名冲突时直接使用 </code>/command-name<code>。</p><p>**示例：**</p><pre><code class="language-bash">/frontend-design:frontend-design
+</code></pre>
+<h2 id="插件命令">插件命令</h2>
+<p>插件可提供自定义命令：</p>
+<pre><code class="language-">/plugin-name:command-name
+</code></pre>
+<p>或当无命名冲突时直接使用 `/command-name`。</p>
+<strong>示例：</strong>
+<pre><code class="language-bash">/frontend-design:frontend-design
 /commit-commands:commit
-</code></pre><p>## MCP Prompts 作为命令</p><p>MCP servers 可将 prompts 暴露为 slash commands：</p><pre><code class="language-">/mcp__&lt;server-name&gt;__&lt;prompt-name&gt; [arguments]
-</code></pre><p>**示例：**</p><pre><code class="language-bash">/mcp__github__list_prs
+</code></pre>
+<h2 id="mcp-prompts-作为命令">MCP Prompts 作为命令</h2>
+<p>MCP servers 可将 prompts 暴露为 slash commands：</p>
+<pre><code class="language-">/mcp__&lt;server-name&gt;__&lt;prompt-name&gt; [arguments]
+</code></pre>
+<strong>示例：</strong>
+<pre><code class="language-bash">/mcp__github__list_prs
 /mcp__github__pr_review 456
 /mcp__jira__create_issue &quot;Bug 标题&quot; high
-</code></pre><p>### MCP 权限语法</p><p>在权限中控制 MCP server 访问：</p><p>- </code>mcp__github<code> - 访问整个 GitHub MCP server
-- </code>mcp__github__<em><code> - 通配符访问所有工具
-- </code>mcp__github__get_issue<code> - 特定工具访问</p><p>## 命令架构</p><div class="mermaid">graph TD
+</code></pre>
+<h3 id="mcp-权限语法">MCP 权限语法</h3>
+<p>在权限中控制 MCP server 访问：</p>
+<li>`mcp__github<code> - 访问整个 GitHub MCP server
+- </code>mcp__github__*<code> - 通配符访问所有工具
+- </code>mcp__github__get_issue` - 特定工具访问</li>
+<h2 id="命令架构">命令架构</h2>
+<div class="mermaid">graph TD
     A["用户输入：/command-name"] --> B{"命令类型？"}
     B -->|内置| C["执行内置命令"]
     B -->|Skill| D["加载 SKILL.md"]
     B -->|插件| E["加载插件命令"]
-    B -->|MCP| F["执行 MCP Prompt"]</p><p>    D --> G["解析 Frontmatter"]
+    B -->|MCP| F["执行 MCP Prompt"]
+
+    D --> G["解析 Frontmatter"]
     G --> H["替换变量"]
     H --> I["执行 Shell 命令"]
     I --> J["发送到 Claude"]
     J --> K["返回结果"]
-</div><p>## 命令生命周期</p><div class="mermaid">sequenceDiagram
+</div>
+<h2 id="命令生命周期">命令生命周期</h2>
+<div class="mermaid">sequenceDiagram
     participant User as 用户
     participant Claude as Claude Code
     participant FS as 文件系统
-    participant CLI as Shell/Bash</p><p>    User->>Claude: 输入 /optimize
+    participant CLI as Shell/Bash
+
+    User->>Claude: 输入 /optimize
     Claude->>FS: 搜索 .claude/skills/ 和 .claude/commands/
     FS-->>Claude: 返回 optimize/SKILL.md
     Claude->>Claude: 解析 frontmatter
@@ -708,64 +794,138 @@ allowed-tools: Bash(git *)
     Claude->>Claude: 替换 $ARGUMENTS
     Claude->>User: 处理提示
     Claude->>User: 返回结果
-</div><p>## 本文件夹中的可用命令</p><p>这些示例命令可作为 skills 或旧版命令安装。</p><p>### 1. </code>/optimize<code> - 代码优化</p><p>分析代码的性能问题、内存泄漏和优化机会。</p><p>**用法：**</p><pre><code class="language-">/optimize
+</div>
+<h2 id="本文件夹中的可用命令">本文件夹中的可用命令</h2>
+<p>这些示例命令可作为 skills 或旧版命令安装。</p>
+<h3 id="1-optimize-代码优化">1. `/optimize` - 代码优化</h3>
+<p>分析代码的性能问题、内存泄漏和优化机会。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/optimize
 [粘贴你的代码]
-</code></pre><p>### 2. </code>/pr<code> - Pull Request 准备</p><p>引导完成 PR 准备检查清单，包括 linting、测试和提交格式化。</p><p>**用法：**</p><pre><code class="language-">/pr
-</code></pre><p>**截图：**
-![/pr](pr-slash-command.png)</p><p>### 3. </code>/generate-api-docs<code> - API 文档生成器</p><p>从源代码生成全面的 API 文档。</p><p>**用法：**</p><pre><code class="language-">/generate-api-docs
-</code></pre><p>### 4. </code>/commit<code> - 带上下文的 Git Commit</p><p>创建包含仓库动态上下文的 git commit。</p><p>**用法：**</p><pre><code class="language-">/commit [可选消息]
-</code></pre><p>### 5. </code>/push-all<code> -暂存、提交和推送</p><p>暂存所有更改、创建 commit 并推送到远程，附带安全检查。</p><p>**用法：**</p><pre><code class="language-">/push-all
-</code></pre><p>**安全检查：**
-- 密钥：</code>.env</em><code>、</code><em>.key<code>、</code></em>.pem<code>、</code>credentials.json<code>
+</code></pre>
+<h3 id="2-pr-pull-request-准备">2. `/pr` - Pull Request 准备</h3>
+<p>引导完成 PR 准备检查清单，包括 linting、测试和提交格式化。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/pr
+</code></pre>
+<strong>截图：</strong>
+!<a href="pr-slash-command.png">/pr</a>
+<h3 id="3-generate-api-docs-api-文档生成器">3. `/generate-api-docs` - API 文档生成器</h3>
+<p>从源代码生成全面的 API 文档。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/generate-api-docs
+</code></pre>
+<h3 id="4-commit-带上下文的-git-commit">4. `/commit` - 带上下文的 Git Commit</h3>
+<p>创建包含仓库动态上下文的 git commit。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/commit [可选消息]
+</code></pre>
+<h3 id="5-push-all-暂存-提交和推送">5. `/push-all` -暂存、提交和推送</h3>
+<p>暂存所有更改、创建 commit 并推送到远程，附带安全检查。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/push-all
+</code></pre>
+<strong>安全检查：</strong>
+<li>密钥：`.env<em><code>、</code></em>.key<code>、</code>*.pem<code>、</code>credentials.json<code>
 - API 密钥：检测真实密钥与占位符
 - 大文件：</code>>10MB<code> 无 Git LFS
-- 构建产物：</code>node_modules/<code>、</code>dist/<code>、</code>__pycache__/<code></p><p>### 6. </code>/doc-refactor<code> - 文档重构</p><p>重构项目文档以提高清晰度和可访问性。</p><p>**用法：**</p><pre><code class="language-">/doc-refactor
-</code></pre><p>### 7. </code>/setup-ci-cd<code> - CI/CD 管道设置</p><p>实现 pre-commit hooks 和 GitHub Actions 用于质量保证。</p><p>**用法：**</p><pre><code class="language-">/setup-ci-cd
-</code></pre><p>### 8. </code>/unit-test-expand<code> - 测试覆盖扩展</p><p>通过针对未测试分支和边缘情况提高测试覆盖率。</p><p>**用法：**</p><pre><code class="language-">/unit-test-expand
-</code></pre><p>## 安装</p><p>### 作为 Skills（推荐）</p><p>复制到你的 skills 目录：</p><pre><code class="language-bash"># 创建 skills 目录
-mkdir -p .claude/skills</p><p># 为每个命令文件创建 skill 目录
+- 构建产物：</code>node_modules/<code>、</code>dist/<code>、</code>__pycache__/<code>
+<p>### 6. </code>/doc-refactor` - 文档重构</li></p>
+<p>重构项目文档以提高清晰度和可访问性。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/doc-refactor
+</code></pre>
+<h3 id="7-setup-ci-cd-ci-cd-管道设置">7. `/setup-ci-cd` - CI/CD 管道设置</h3>
+<p>实现 pre-commit hooks 和 GitHub Actions 用于质量保证。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/setup-ci-cd
+</code></pre>
+<h3 id="8-unit-test-expand-测试覆盖扩展">8. `/unit-test-expand` - 测试覆盖扩展</h3>
+<p>通过针对未测试分支和边缘情况提高测试覆盖率。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/unit-test-expand
+</code></pre>
+<h2 id="安装">安装</h2>
+<h3 id="作为-skills-推荐">作为 Skills（推荐）</h3>
+<p>复制到你的 skills 目录：</p>
+<pre><code class="language-bash"># 创建 skills 目录
+mkdir -p .claude/skills
+
+# 为每个命令文件创建 skill 目录
 for cmd in optimize pr commit; do
   mkdir -p .claude/skills/$cmd
   cp 01-slash-commands/$cmd.md .claude/skills/$cmd/SKILL.md
 done
-</code></pre><p>### 作为旧版命令</p><p>复制到你的 commands 目录：</p><pre><code class="language-bash"># 项目级（团队共享）
+</code></pre>
+<h3 id="作为旧版命令">作为旧版命令</h3>
+<p>复制到你的 commands 目录：</p>
+<pre><code class="language-bash"># 项目级（团队共享）
 mkdir -p .claude/commands
-cp 01-slash-commands/*.md .claude/commands/</p><p># 个人使用
+cp 01-slash-commands/*.md .claude/commands/
+
+# 个人使用
 mkdir -p ~/.claude/commands
 cp 01-slash-commands/*.md ~/.claude/commands/
-</code></pre><p>## 创建自己的命令</p><p>### Skill 模板（推荐）</p><p>创建 </code>.claude/skills/my-command/SKILL.md<code>：</p><pre><code class="language-yaml">---
+</code></pre>
+<h2 id="创建自己的命令">创建自己的命令</h2>
+<h3 id="skill-模板-推荐">Skill 模板（推荐）</h3>
+<p>创建 `.claude/skills/my-command/SKILL.md`：</p>
+<pre><code class="language-yaml">---
 name: my-command
 description: 此命令的功能。当 [触发条件] 时使用。
 argument-hint: [可选参数]
 allowed-tools: Bash(npm *), Read, Grep
----</p><p># 命令标题</p><p>## 上下文</p><p>- 当前分支：!`git branch --show-current`
-- 相关文件：@package.json</p><p>## 指令</p><p>1. 第一步
+---
+
+# 命令标题
+
+## 上下文
+
+- 当前分支：!`git branch --show-current`
+- 相关文件：@package.json
+
+## 指令
+
+1. 第一步
 2. 使用参数的第二步：$ARGUMENTS
-3. 第三步</p><p>## 输出格式</p><p>- 如何格式化响应
+3. 第三步
+
+## 输出格式
+
+- 如何格式化响应
 - 包含什么内容
-</code></pre><p>### 仅用户命令（禁止自动调用）</p><p>对于有副作用且 Claude 不应自动触发的命令：</p><pre><code class="language-yaml">---
+</code></pre>
+<h3 id="仅用户命令-禁止自动调用">仅用户命令（禁止自动调用）</h3>
+<p>对于有副作用且 Claude 不应自动触发的命令：</p>
+<pre><code class="language-yaml">---
 name: deploy
 description: 部署到生产环境
 disable-model-invocation: true
 allowed-tools: Bash(npm *), Bash(git *)
----</p><p>将应用部署到生产环境：</p><p>1. 运行测试
+---
+
+将应用部署到生产环境：
+
+1. 运行测试
 2. 构建应用
 3. 推送到部署目标
 4. 验证部署
-</code></pre><p>## 最佳实践</p><p>&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;应该&lt;/th&gt;
-&lt;th&gt;不应该&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;使用清晰、行动导向的名称&lt;/td&gt;
-&lt;td&gt;为一次性任务创建命令&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;包含带触发条件的 </code>description<code>&lt;/td&gt;
+</code></pre>
+<h2 id="最佳实践">最佳实践</h2>
+<table>
+<thead>
+<tr>
+<th>应该</th>
+<th>不应该</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使用清晰、行动导向的名称</td>
+<td>为一次性任务创建命令</td>
+</tr>
+<tr>
+<td>包含带触发条件的 `description<code>&lt;/td&gt;
 &lt;td&gt;在命令中构建复杂逻辑&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -786,36 +946,90 @@ allowed-tools: Bash(npm *), Bash(git *)
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-## 立即尝试</p><p>### 🎯 练习 1：创建你的第一个 Skill</p><p>创建一个简单的 </code>/hello<code> skill 来问候你：</p><pre><code class="language-bash">mkdir -p .claude/skills/hello
-</code></pre><p>创建 </code>.claude/skills/hello/SKILL.md<code>：</p><pre><code class="language-yaml">---
+## 立即尝试
+
+### 🎯 练习 1：创建你的第一个 Skill
+
+创建一个简单的 </code>/hello` skill 来问候你：
+
+<pre><code class="language-bash">mkdir -p .claude/skills/hello
+</code></pre>
+
+创建 `.claude/skills/hello/SKILL.md`：
+
+<pre><code class="language-yaml">---
 name: hello
 description: 问候用户。当用户打招呼或开始会话时使用。
----</p><p># Hello Skill</p><p>热情问候用户，询问他们今天想做什么。</p><p>包含：
+---
+
+# Hello Skill
+
+热情问候用户，询问他们今天想做什么。
+
+包含：
 1. 当前时间和日期
 2. 项目快速状态（git 分支、最近活动）
 3. 根据最近更改建议做什么
-</code></pre><p>测试：</code>/hello<code></p><p>### 🎯 练习 2：动态上下文 Skill</p><p>创建一个 </code>/status<code> skill 显示项目状态：</p><pre><code class="language-yaml">---
+</code></pre>
+
+测试：`/hello<code>
+
+### 🎯 练习 2：动态上下文 Skill
+
+创建一个 </code>/status` skill 显示项目状态：
+
+<pre><code class="language-yaml">---
 name: status
 description: 显示全面的项目状态。当用户询问项目状态时使用。
 allowed-tools: Bash(git *), Bash(npm *), Read
----</p><p># 项目状态报告</p><p>## Git 状态
+---
+
+# 项目状态报告
+
+## Git 状态
 - 当前分支：!`git branch --show-current`
 - 未提交更改：!`git status --short`
-- 最近提交：!`git log --oneline -5`</p><p>## 依赖
+- 最近提交：!`git log --oneline -5`
+
+## 依赖
 - Package.json：@package.json
-- 过期包：!`npm outdated --json 2&gt;/dev/null || echo &quot;无过期包&quot;`</p><p>## 测试覆盖率
-- 最近测试运行：!`npm test -- --coverage --silent 2&gt;&amp;1 | tail -20 || echo &quot;测试未配置&quot;`</p><p>## 概要</p><p>简要总结：
+- 过期包：!`npm outdated --json 2&gt;/dev/null || echo &quot;无过期包&quot;`
+
+## 测试覆盖率
+- 最近测试运行：!`npm test -- --coverage --silent 2&gt;&amp;1 | tail -20 || echo &quot;测试未配置&quot;`
+
+## 概要
+
+简要总结：
 1. 需要关注的内容（未提交更改、失败的测试）
 2. 准备好可发布的
 3. 建议的下一步
-</code></pre><p>测试：</code>/status<code></p><p>### 🎯 练习 3：命令链工作流</p><p>组合多个命令完成工作流：</p><pre><code class="language-bash"># 早晨例行
+</code></pre>
+
+测试：`/status`
+
+<h3 id="练习-3-命令链工作流">🎯 练习 3：命令链工作流</h3>
+
+组合多个命令完成工作流：
+
+<pre><code class="language-bash"># 早晨例行
 /status          # 检查项目健康
 /diff            # 回顾昨天的更改
-/memory          # 添加今天的聚焦上下文</p><p># 提交前例行  
+/memory          # 添加今天的聚焦上下文
+
+# 提交前例行  
 /optimize        # 检查优化机会  
-/commit          # 创建上下文提交</p><p># PR 准备
+/commit          # 创建上下文提交
+
+# PR 准备
 /pr              # 完整 PR 检查清单
-</code></pre><p>## 实用工作流</p><p>### 每日开发周期</p><div class="mermaid">graph LR
+</code></pre>
+
+<h2 id="实用工作流">实用工作流</h2>
+
+<h3 id="每日开发周期">每日开发周期</h3>
+
+<div class="mermaid">graph LR
     A[/status] --> B[/diff]
     B --> C[编写代码]
     C --> D[/optimize]
@@ -823,120 +1037,257 @@ allowed-tools: Bash(git *), Bash(npm *), Read
     E --> F{/测试通过？}
     F -->|是| G[/pr]
     F -->|否| C
-</div><p>**早晨启动：**</p><pre><code class="language-bash">/status           # 项目健康检查
+</div>
+
+<strong>早晨启动：</strong>
+<pre><code class="language-bash">/status           # 项目健康检查
 /compact focus:bugs  # 聚焦 bug 修复
-</code></pre><p>**完成工作后：**</p><pre><code class="language-bash">/optimize         # 性能审查
+</code></pre>
+
+<strong>完成工作后：</strong>
+<pre><code class="language-bash">/optimize         # 性能审查
 /test             # 运行测试
 /commit           # 上下文提交
-</code></pre><p>### 代码审查工作流</p><p>创建一个 </code>/review-branch<code> skill 用于全面审查：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="代码审查工作流">代码审查工作流</h3>
+
+创建一个 `/review-branch` skill 用于全面审查：
+
+<pre><code class="language-yaml">---
 name: review-branch
 description: 审查分支的质量、安全和性能。合并 PR 前使用。
 argument-hint: branch-name
 allowed-tools: Bash(git *), Read, Grep, Glob
----</p><p># 分支审查：$ARGUMENTS</p><p>## 更改概要
+---
+
+# 分支审查：$ARGUMENTS
+
+## 更改概要
 - 更改的文件：!`git diff main...$ARGUMENTS --stat`
-- 包含的提交：!`git log main..$ARGUMENTS --oneline`</p><p>## 质量检查
-对于每个更改的文件：</p><p>1. **代码风格**
+- 包含的提交：!`git log main..$ARGUMENTS --oneline`
+
+## 质量检查
+对于每个更改的文件：
+
+1. **代码风格**
    - 函数 &lt; 50 行
    - 文件 &lt; 800 行
-   - 无深层嵌套（&gt;4 层）</p><p>2. **安全**
+   - 无深层嵌套（&gt;4 层）
+
+2. **安全**
    - 无硬编码密钥
    - 存在输入验证
-   - 正确的错误处理</p><p>3. **性能**
+   - 正确的错误处理
+
+3. **性能**
    - 无 N+1 查询
    - 高效算法
-   - 无内存泄漏</p><p>## 报告格式</p><p>| 文件 | 质量 | 安全 | 性能 | 问题 |
-|------|---------|----------|-------------|--------|</p><p>## 建议</p><p>提供合并建议：
+   - 无内存泄漏
+
+## 报告格式
+
+| 文件 | 质量 | 安全 | 性能 | 问题 |
+|------|---------|----------|-------------|--------|
+
+## 建议
+
+提供合并建议：
 - 阻塞问题（必须修复）
 - 警告（应该修复）
 - 建议（可选）
-</code></pre><p>### 发布工作流</p><p>创建一个 </code>/release-check<code> skill：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="发布工作流">发布工作流</h3>
+
+创建一个 `/release-check` skill：
+
+<pre><code class="language-yaml">---
 name: release-check
 description: 发布前验证检查清单。发布前使用。
 allowed-tools: Bash(npm *), Bash(git *), Read
----</p><p># 发布检查清单</p><p>## 版本检查
+---
+
+# 发布检查清单
+
+## 版本检查
 - 当前版本：!`node -e &quot;console.log(require(&#039;./package.json&#039;).version)&quot;`
-- 变更日志已更新：检查 CHANGELOG.md 是否有当前版本条目</p><p>## 质量门控
+- 变更日志已更新：检查 CHANGELOG.md 是否有当前版本条目
+
+## 质量门控
 - 所有测试通过：!`npm test 2&gt;&amp;1 | tail -5`
 - 无 TypeScript 错误：!`npx tsc --noEmit 2&gt;&amp;1 || echo &quot;无 TS 错误&quot;`
-- Lint 清洁：!`npm run lint 2&gt;&amp;1 | tail -5 || echo &quot;Lint 通过&quot;`</p><p>## 安全扫描
+- Lint 清洁：!`npm run lint 2&gt;&amp;1 | tail -5 || echo &quot;Lint 通过&quot;`
+
+## 安全扫描
 - 代码中无密钥：!`grep -r &quot;api_key\|password\|secret&quot; --include=&quot;*.js&quot; --include=&quot;*.ts&quot; src/ || echo &quot;清洁&quot;`
-- 依赖已审计：!`npm audit 2&gt;&amp;1 || echo &quot;审计通过&quot;`</p><p>## 文档
+- 依赖已审计：!`npm audit 2&gt;&amp;1 || echo &quot;审计通过&quot;`
+
+## 文档
 - README 已更新
 - API 文档当前
-- 如有破坏性更改需迁移指南</p><p>## 最终报告</p><p>提供：
+- 如有破坏性更改需迁移指南
+
+## 最终报告
+
+提供：
 1. ✅ 通过的检查
 2. ❌ 失败的检查（阻塞）
 3. ⚠️ 警告（非阻塞）
 4. 发布建议
-</code></pre><p>## 高级模式</p><p>### 模式 1：上下文继承</p><p>Skills 可引用其他 skills 或记忆：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h2 id="高级模式">高级模式</h2>
+
+<h3 id="模式-1-上下文继承">模式 1：上下文继承</h3>
+
+Skills 可引用其他 skills 或记忆：
+
+<pre><code class="language-yaml">---
 name: smart-commit
 description: 使用项目记忆的智能提交
----</p><p># Smart Commit</p><p>使用来自以下的上下文：
+---
+
+# Smart Commit
+
+使用来自以下的上下文：
 - @CLAUDE.md 用于项目约定
-- 最近记忆用于当前聚焦</p><p>## 步骤</p><p>1. 对照 CLAUDE.md 约定审查更改
+- 最近记忆用于当前聚焦
+
+## 步骤
+
+1. 对照 CLAUDE.md 约定审查更改
 2. 检查记忆中的进行中工作
 3. 创建符合项目风格的提交消息
 4. 如有协作需包含共同作者信息
-</code></pre><p>### 模式 2：条件执行</p><p>使用 shell 条件实现智能行为：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="模式-2-条件执行">模式 2：条件执行</h3>
+
+使用 shell 条件实现智能行为：
+
+<pre><code class="language-yaml">---
 name: safe-push
 description: 自动检查的安全推送
 allowed-tools: Bash(git *), Bash(npm *)
----</p><p># Safe Push</p><p>## 预检查
+---
+
+# Safe Push
+
+## 预检查
 - 测试通过：!`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; echo &quot;PASS&quot; || echo &quot;FAIL&quot;`
-- 分支清洁：!`git status --porcelain | wc -l | xargs`</p><p>## 条件逻辑
+- 分支清洁：!`git status --porcelain | wc -l | xargs`
+
+## 条件逻辑
 - 若测试 FAIL：&quot;无法推送 - 测试失败。先运行 /test-fix&quot;
 - 若分支有未提交更改：&quot;无法推送 - 有未提交更改。先运行 /commit&quot;
-- 若全 PASS：继续推送</p><p>## 推送步骤
+- 若全 PASS：继续推送
+
+## 推送步骤
 !`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; git push || echo &quot;阻塞：测试失败&quot;`
-</code></pre><p>### 模式 3：错误恢复</p><p>优雅处理错误：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="模式-3-错误恢复">模式 3：错误恢复</h3>
+
+优雅处理错误：
+
+<pre><code class="language-yaml">---
 name: robust-deploy
 description: 带回滚能力的部署
 allowed-tools: Bash(npm *), Bash(git *)
----</p><p># Robust Deploy</p><p>## 部署前快照
+---
+
+# Robust Deploy
+
+## 部署前快照
 - 当前提交：!`git rev-parse HEAD`
-- 当前分支：!`git branch --show-current`</p><p>## 部署步骤
+- 当前分支：!`git branch --show-current`
+
+## 部署步骤
 1. 构建：!`npm run build 2&gt;&amp;1 | tail -10`
 2. 部署：!`npm run deploy 2&gt;&amp;1 | tail -10`
-3. 验证：!`curl -s https://app.example.com/health || echo &quot;FAILED&quot;`</p><p>## 失败时回滚
+3. 验证：!`curl -s https://app.example.com/health || echo &quot;FAILED&quot;`
+
+## 失败时回滚
 若任何步骤失败：
-</code></pre><p>bash
-git checkout !</code>git rev-parse HEAD<code>  # 返回快照
-npm run rollback  # 自定义回滚命令</p><pre><code class="language-">
+</code></pre>bash
+git checkout !`git rev-parse HEAD`  # 返回快照
+npm run rollback  # 自定义回滚命令
+<pre><code class="language-">
 报告成功或回滚原因。
-</code></pre><p>### 模式 4：多文件处理</p><p>高效处理多个文件：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="模式-4-多文件处理">模式 4：多文件处理</h3>
+
+高效处理多个文件：
+
+<pre><code class="language-yaml">---
 name: batch-optimize
 description: 并行优化多个文件
 allowed-tools: Read, Edit, Glob, Bash
----</p><p># 批量优化</p><p>## 查找目标文件
-!`find src -name &quot;*.ts&quot; -type f | head -20`</p><p>## 对每个文件
+---
+
+# 批量优化
+
+## 查找目标文件
+!`find src -name &quot;*.ts&quot; -type f | head -20`
+
+## 对每个文件
 1. 读取文件
 2. 分析：
    - 未使用的导入
    - 死代码
    - 优化机会
 3. 应用优化
-4. 跟踪更改</p><p>## 概要报告
+4. 跟踪更改
+
+## 概要报告
 - 处理文件数：$FILES_COUNT
 - 应用优化数：$OPTIMIZATIONS_COUNT
 - 减少行数：$LINES_SAVED
-</code></pre><p>### 模式 5：交互式提示</p><p>Skills 可提示用户输入：</p><pre><code class="language-yaml">---
+</code></pre>
+
+<h3 id="模式-5-交互式提示">模式 5：交互式提示</h3>
+
+Skills 可提示用户输入：
+
+<pre><code class="language-yaml">---
 name: interactive-review
 description: 带用户引导的交互式代码审查
----</p><p># Interactive Review</p><p>## 第一阶段：概览
+---
+
+# Interactive Review
+
+## 第一阶段：概览
 显示更改摘要并询问：
 - &quot;聚焦特定领域？（安全、性能、风格）&quot;
-- 等待用户响应</p><p>## 第二阶段：深入
+- 等待用户响应
+
+## 第二阶段：深入
 基于用户聚焦领域：
 - 显示相关问题
-- 对每个问题请求决策</p><p>## 第三阶段：应用
+- 对每个问题请求决策
+
+## 第三阶段：应用
 - &quot;应用所有批准的更改？&quot;
 - 若是：进行编辑
 - 若否：列出供人工审查
-</code></pre><p>## 性能考量</p><p>### Skill 加载速度</p><p>以下情况 Skills 加载更快：</p><p>1. **精简 frontmatter**：仅包含必要字段
-2. **高效 shell 命令**：使用 </code>--quiet<code>、</code>--silent<code>，管道到 </code>head<code>
+</code></pre>
+
+<h2 id="性能考量">性能考量</h2>
+
+<h3 id="skill-加载速度">Skill 加载速度</h3>
+
+以下情况 Skills 加载更快：
+
+<li><strong>精简 frontmatter</strong>：仅包含必要字段</li>
+<li><strong>高效 shell 命令</strong>：使用 `--quiet<code>、</code>--silent<code>，管道到 </code>head<code>
 3. **优先文件引用而非读取**：</code>@file<code> 有缓存，</code>Read<code> 为最新
-4. **惰性加载**：不包含所有文件，使用 </code>!<code> 命令按需获取</p><p>### 命令执行速度</p><p>&lt;table&gt;
+4. **惰性加载**：不包含所有文件，使用 </code>!<code> 命令按需获取
+
+### 命令执行速度
+
+&lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;方式&lt;/th&gt;
@@ -961,62 +1312,106 @@ description: 带用户引导的交互式代码审查
 &lt;td&gt;测试结果、构建输出&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;</code>@file<code> 引用&lt;/td&gt;
-&lt;td&gt;中等&lt;/td&gt;
-&lt;td&gt;大文件、模板&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;内联 Read 工具&lt;/td&gt;
-&lt;td&gt;最慢&lt;/td&gt;
-&lt;td&gt;实时文件检查&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-### 优化示例</p><p>**慢 skill：**</p><pre><code class="language-yaml"># 每次读取所有文件
+&lt;td&gt;</code>@file` 引用</td></li>
+<td>中等</td>
+<td>大文件、模板</td>
+</tr>
+<tr>
+<td>内联 Read 工具</td>
+<td>最慢</td>
+<td>实时文件检查</td>
+</tr>
+</tbody>
+</table>
+<h3 id="优化示例">优化示例</h3>
+<strong>慢 skill：</strong>
+<pre><code class="language-yaml"># 每次读取所有文件
 检查所有这些文件：
 - @src/index.ts
 - @src/utils.ts
 - @src/config.ts
 - @src/app.ts
-</code></pre><p>**快 skill：**</p><pre><code class="language-yaml"># 惰性加载仅所需内容
+</code></pre>
+<strong>快 skill：</strong>
+<pre><code class="language-yaml"># 惰性加载仅所需内容
 检查匹配模式的文件：
-!`find src -name &quot;*.ts&quot; | head -5`</p><p>然后选择性读取：
+!`find src -name &quot;*.ts&quot; | head -5`
+
+然后选择性读取：
 &quot;哪些文件需要详细审查？&quot;
-</code></pre><p>## 常见陷阱</p><p>### 陷阱 1：循环依赖</p><p>**问题：** Skill A 引用 Skill B，Skill B 又引用 Skill A。</p><p>**解决方案：** 使用记忆（CLAUDE.md）作为共享上下文，而非 skill 链。</p><p>### 陷阱 2：权限过度</p><p>**问题：** Skill 请求它不需要的工具。</p><pre><code class="language-yaml"># 不好：请求所有权限
+</code></pre>
+<h2 id="常见陷阱">常见陷阱</h2>
+<h3 id="陷阱-1-循环依赖">陷阱 1：循环依赖</h3>
+<strong>问题：</strong> Skill A 引用 Skill B，Skill B 又引用 Skill A。
+<strong>解决方案：</strong> 使用记忆（CLAUDE.md）作为共享上下文，而非 skill 链。
+<h3 id="陷阱-2-权限过度">陷阱 2：权限过度</h3>
+<strong>问题：</strong> Skill 请求它不需要的工具。
+<pre><code class="language-yaml"># 不好：请求所有权限
 allowed-tools: Bash(*), Read(*), Write(*)
-</code></pre><p>**解决方案：** 仅请求必要工具：</p><pre><code class="language-yaml"># 好：特定权限
+</code></pre>
+<strong>解决方案：</strong> 仅请求必要工具：
+<pre><code class="language-yaml"># 好：特定权限
 allowed-tools: Bash(git status), Bash(git log), Read
-</code></pre><p>### 陷阱 3：过于复杂的 Skills</p><p>**问题：** 一个 skill 做太多事情。</p><p>**解决方案：** 分解为聚焦的 skills：</p><pre><code class="language-yaml"># 代替 /full-review，创建：
+</code></pre>
+<h3 id="陷阱-3-过于复杂的-skills">陷阱 3：过于复杂的 Skills</h3>
+<strong>问题：</strong> 一个 skill 做太多事情。
+<strong>解决方案：</strong> 分解为聚焦的 skills：
+<pre><code class="language-yaml"># 代替 /full-review，创建：
 /review-security  # 聚焦安全
 /review-performance  # 聚焦性能  
 /review-style  # 聚焦风格
-</code></pre><p>### 陷阱 4：缺少错误处理</p><p>**问题：** Skill 失败但无指导。</p><pre><code class="language-yaml"># 不好：无回退
+</code></pre>
+<h3 id="陷阱-4-缺少错误处理">陷阱 4：缺少错误处理</h3>
+<strong>问题：</strong> Skill 失败但无指导。
+<pre><code class="language-yaml"># 不好：无回退
 运行测试：!`npm test`
-</code></pre><p>**解决方案：** 包含错误指导：</p><pre><code class="language-yaml"># 好：错误处理
-运行测试：!`npm test 2&gt;&amp;1 || echo &quot;测试失败 - 查看上方输出&quot;`</p><p>若测试失败：
+</code></pre>
+<strong>解决方案：</strong> 包含错误指导：
+<pre><code class="language-yaml"># 好：错误处理
+运行测试：!`npm test 2&gt;&amp;1 || echo &quot;测试失败 - 查看上方输出&quot;`
+
+若测试失败：
 1. 显示测试输出
 2. 建议运行 /debug-tests
 3. 不要继续依赖步骤
-</code></pre><p>### 陷阱 5：硬编码路径</p><p>**问题：** Skill 仅在特定项目中工作。</p><pre><code class="language-yaml"># 不好：硬编码
+</code></pre>
+<h3 id="陷阱-5-硬编码路径">陷阱 5：硬编码路径</h3>
+<strong>问题：</strong> Skill 仅在特定项目中工作。
+<pre><code class="language-yaml"># 不好：硬编码
 检查：@/Users/dev/my-project/src/app.ts
-</code></pre><p>**解决方案：** 使用相对路径和发现：</p><pre><code class="language-yaml"># 好：可移植
+</code></pre>
+<strong>解决方案：</strong> 使用相对路径和发现：
+<pre><code class="language-yaml"># 好：可移植
 检查：@src/app.ts
 或发现：!`find . -name &quot;app.ts&quot; -type f`
-</code></pre><p>## 故障排查</p><p>### 命令未找到</p><p>**解决方案：**
-- 检查文件是否在 </code>.claude/skills/<name>/SKILL.md<code> 或 </code>.claude/commands/<name>.md<code>
+</code></pre>
+<h2 id="故障排查">故障排查</h2>
+<h3 id="命令未找到">命令未找到</h3>
+<strong>解决方案：</strong>
+<li>检查文件是否在 `.claude/skills/<name>/SKILL.md<code> 或 </code>.claude/commands/<name>.md<code>
 - 验证 frontmatter 中的 </code>name<code> 字段是否匹配预期命令名
 - 重启 Claude Code 会话
-- 运行 </code>/help<code> 查看可用命令</p><p>### 命令未按预期执行</p><p>**解决方案：**
+- 运行 </code>/help<code> 查看可用命令
+<p>### 命令未按预期执行</p>
+<p>**解决方案：**
 - 添加更具体的指令
 - 在 skill 文件中包含示例
-- 若使用 bash 命令，检查 </code>allowed-tools`
-<li>先用简单输入测试</li><h3 id="skill-与命令冲突">Skill 与命令冲突</h3><p>若两者同名，<strong>skill 优先</strong>。移除其中一个或重命名。</p><h2 id="相关指南">相关指南</h2><li><strong><a href="/content/03-skills.html">Skills</a></strong> - skills 完整参考（自动调用能力）</li>
+- 若使用 bash 命令，检查 </code>allowed-tools`</li>
+<li>先用简单输入测试</li></p>
+<h3 id="skill-与命令冲突">Skill 与命令冲突</h3>
+<p>若两者同名，<strong>skill 优先</strong>。移除其中一个或重命名。</p>
+<h2 id="相关指南">相关指南</h2>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> - skills 完整参考（自动调用能力）</li>
 <li><strong><a href="/content/02-memory.html">Memory</a></strong> - CLAUDE.md 持久上下文</li>
 <li><strong><a href="/content/04-subagents.html">Subagents</a></strong> - 委托 AI 代理</li>
 <li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包命令集合</li>
-<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动自动化</li><h2 id="更多资源">更多资源</h2><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a> - 内置命令参考</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动自动化</li>
+<h2 id="更多资源">更多资源</h2>
+<li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a> - 内置命令参考</li>
 <li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a> - 完整 skills 参考</li>
-<li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - 命令行选项</li></ul><hr><p><em>属于 <a href="../">Claude How To</a> 指南系列</em></p>
+<li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - 命令行选项</li></ul>
+<hr>
+<em>属于 <a href="../">Claude How To</a> 指南系列</em>
         </div>
 
         
