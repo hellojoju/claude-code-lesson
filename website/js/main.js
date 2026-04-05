@@ -180,6 +180,14 @@ function getMockDirectoryData() {
                 files: [
                     { name: 'README.md', title: 'Channels 指南', status: '已翻译' }
                 ]
+            },
+            {
+                id: '14-powerup-buddy',
+                title: '14 - Powerup 与 Buddy',
+                description: '🆕 交互式学习和虚拟伙伴',
+                files: [
+                    { name: 'README.md', title: 'Powerup 与 Buddy 指南', status: '已翻译' }
+                ]
             }
         ]
     };
@@ -190,7 +198,7 @@ function generateDirectoryHTML(data) {
         <div class="directory-header">
             <h3><i class="fas fa-folder-open"></i> ${data.title}</h3>
             <p class="directory-stats">
-                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 已翻译: 13 个模块</span>
+                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 已翻译: 14 个模块</span>
             </p>
             <p class="directory-hint"><i class="fas fa-info-circle"></i> 点击章节标题展开/折叠，点击文件名查看教程</p>
         </div>
