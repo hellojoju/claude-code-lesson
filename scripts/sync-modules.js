@@ -9,26 +9,31 @@ const path = require('path');
 const MarkdownProcessor = require('./lib/markdown-processor');
 
 const MODULES = [
-  // 入门阶段
-  { id: '01-cli', title: 'CLI 参考手册', difficulty: 'beginner', prev: null, next: '02-slash-commands' },
-  { id: '02-slash-commands', title: 'Slash Commands', difficulty: 'beginner', prev: '01-cli', next: '03-memory' },
-  { id: '03-memory', title: 'Memory', difficulty: 'beginner', prev: '02-slash-commands', next: '04-skills' },
-  { id: '04-skills', title: 'Skills', difficulty: 'beginner', prev: '03-memory', next: '05-checkpoints' },
-  { id: '05-checkpoints', title: 'Checkpoints', difficulty: 'beginner', prev: '04-skills', next: '06-powerup-buddy' },
-  { id: '06-powerup-buddy', title: 'PowerUp 与 Buddy', difficulty: 'beginner', prev: '05-checkpoints', next: '07-subagents' },
-  // 进阶阶段
-  { id: '07-subagents', title: 'Subagents', difficulty: 'intermediate', prev: '06-powerup-buddy', next: '08-mcp' },
-  { id: '08-mcp', title: 'MCP', difficulty: 'intermediate', prev: '07-subagents', next: '09-hooks' },
-  { id: '09-hooks', title: 'Hooks', difficulty: 'intermediate', prev: '08-mcp', next: '10-plugins' },
-  { id: '10-plugins', title: 'Plugins', difficulty: 'intermediate', prev: '09-hooks', next: '11-multi-agent' },
-  { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'intermediate', prev: '10-plugins', next: '12-background-tasks' },
-  { id: '12-background-tasks', title: '后台任务', difficulty: 'intermediate', prev: '11-multi-agent', next: '13-channels' },
-  { id: '13-channels', title: 'Channels', difficulty: 'intermediate', prev: '12-background-tasks', next: '14-advanced-features' },
-  { id: '14-advanced-features', title: '高级功能', difficulty: 'advanced', prev: '13-channels', next: '15-enterprise' },
-  // 精通阶段
-  { id: '15-enterprise', title: '企业级应用', difficulty: 'advanced', prev: '14-advanced-features', next: '16-advanced-capabilities' },
-  { id: '16-advanced-capabilities', title: '高级能力', difficulty: 'advanced', prev: '15-enterprise', next: '17-boris-tips' },
-  { id: '17-boris-tips', title: 'Boris 使用技巧', difficulty: 'intermediate', prev: '16-advanced-capabilities', next: null }
+  // 阶段一：上手
+  { id: '01-quick-start', title: '快速开始', difficulty: 'beginner', prev: null, next: '02-interaction' },
+  { id: '02-interaction', title: '交互与对话', difficulty: 'beginner', prev: '01-quick-start', next: '03-slash-commands' },
+  { id: '03-slash-commands', title: 'Slash 命令', difficulty: 'beginner', prev: '02-interaction', next: '04-memory' },
+
+  // 阶段二：定制
+  { id: '04-memory', title: 'Memory 与上下文', difficulty: 'beginner', prev: '03-slash-commands', next: '05-skills' },
+  { id: '05-skills', title: 'Skills 技能', difficulty: 'intermediate', prev: '04-memory', next: '06-subagents' },
+  { id: '06-subagents', title: 'Subagents 代理', difficulty: 'intermediate', prev: '05-skills', next: '07-mcp' },
+  { id: '07-mcp', title: 'MCP 扩展', difficulty: 'intermediate', prev: '06-subagents', next: '08-hooks' },
+
+  // 阶段三：自动化
+  { id: '08-hooks', title: 'Hooks 自动化', difficulty: 'intermediate', prev: '07-mcp', next: '09-checkpoints' },
+  { id: '09-checkpoints', title: 'Checkpoints 快照', difficulty: 'beginner', prev: '08-hooks', next: '10-plugins' },
+  { id: '10-plugins', title: 'Plugins 插件', difficulty: 'intermediate', prev: '09-checkpoints', next: '11-multi-agent' },
+
+  // 阶段四：精通
+  { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'advanced', prev: '10-plugins', next: '12-background-channels' },
+  { id: '12-background-channels', title: '后台任务与通道', difficulty: 'intermediate', prev: '11-multi-agent', next: '13-advanced-features' },
+  { id: '13-advanced-features', title: '高级功能', difficulty: 'advanced', prev: '12-background-channels', next: '14-enterprise' },
+  { id: '14-enterprise', title: '企业应用', difficulty: 'advanced', prev: '13-advanced-features', next: 'appendix-boris-tips' },
+
+  // 附录
+  { id: 'appendix-boris-tips', title: 'Boris 实战技巧', difficulty: 'intermediate', prev: '14-enterprise', next: '18-source-code-analysis' },
+  { id: '18-source-code-analysis', title: '源码解读', difficulty: 'advanced', prev: 'appendix-boris-tips', next: null }
 ];
 
 const REPO_ROOT = path.join(__dirname, '..');
