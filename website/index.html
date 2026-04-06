@@ -20,9 +20,8 @@
             <ul class="nav-menu">
                 <li><a href="index.html" class="active"><i class="fas fa-home"></i> 首页</a></li>
                 <li><a href="content/modules.html"><i class="fas fa-book"></i> 教程目录</a></li>
+                <li><a href="content/18-source-code-analysis.html"><i class="fas fa-code"></i> 源码解读</a></li>
                 <li><a href="pdf.html"><i class="fas fa-file-pdf"></i> PDF下载</a></li>
-                <li><a href="#resources"><i class="fas fa-folder-open"></i> 资源</a></li>
-                <li><a href="#about"><i class="fas fa-info-circle"></i> 关于</a></li>
                 <li class="search-box">
                     <input type="text" id="searchInput" placeholder="搜索教程...">
                     <button id="searchBtn"><i class="fas fa-search"></i></button>
@@ -34,15 +33,15 @@
     <main class="container">
         <section id="welcome">
             <h2><i class="fas fa-hand-wave"></i> 欢迎来到 Claude Code 学习中心</h2>
-            <p>本网站提供完整的 Claude Code 使用教程，内容翻译自 <a href="https://github.com/luongnv89/claude-howto" target="_blank">claude-howto</a> 项目。</p>
+            <p>本网站提供完整的 Claude Code 使用教程，内容源于网络。</p>
             <div class="stats">
                 <div class="stat-card">
-                    <h3><i class="fas fa-file-alt"></i> 14</h3>
-                    <p>核心模块</p>
+                    <h3><i class="fas fa-file-alt"></i> 17</h3>
+                    <p>教程模块</p>
                 </div>
                 <div class="stat-card">
-                    <h3><i class="fas fa-folder"></i> 100+</h3>
-                    <p>教程页面</p>
+                    <h3><i class="fas fa-microscope"></i> 1</h3>
+                    <p>源码解读</p>
                 </div>
                 <div class="stat-card">
                     <h3><i class="fas fa-language"></i> 中文</h3>
@@ -67,19 +66,29 @@
             <h2><i class="fas fa-rocket"></i> 快速开始</h2>
             <div class="cards">
                 <div class="card">
+                    <h3><i class="fas fa-terminal"></i> CLI 参考手册</h3>
+                    <p>命令行界面完整指南，学习 Claude Code 的第一步。</p>
+                    <a href="content/01-cli.html" class="btn">开始学习</a>
+                </div>
+                <div class="card">
                     <h3><i class="fas fa-slash"></i> Slash Commands</h3>
-                    <p>学习使用 Claude Code 的斜杠命令来提高工作效率。</p>
-                    <a href="content/01-slash-commands.html" class="btn">开始学习</a>
+                    <p>55+ 内置命令快速调用，加速工作流程。</p>
+                    <a href="content/02-slash-commands.html" class="btn">开始学习</a>
                 </div>
                 <div class="card">
                     <h3><i class="fas fa-brain"></i> Memory 系统</h3>
-                    <p>了解 Claude Code 的记忆和上下文管理机制。</p>
-                    <a href="content/02-memory.html" class="btn">开始学习</a>
+                    <p>上下文管理和 CLAUDE.md 配置系统。</p>
+                    <a href="content/03-memory.html" class="btn">开始学习</a>
                 </div>
                 <div class="card">
-                    <h3><i class="fas fa-gamepad"></i> Powerup 与 Buddy</h3>
-                    <p>🆕 交互式学习课程，动画演示功能，还有虚拟伙伴陪你写代码。</p>
-                    <a href="content/14-powerup-buddy.html" class="btn">开始学习</a>
+                    <h3><i class="fas fa-gamepad"></i> PowerUp 与 Buddy</h3>
+                    <p>交互式学习课程，虚拟伙伴陪你写代码。</p>
+                    <a href="content/06-powerup-buddy.html" class="btn">开始学习</a>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-building"></i> 企业级应用</h3>
+                    <p>企业部署、远程控制、监控、CI/CD 集成。</p>
+                    <a href="content/15-enterprise.html" class="btn">开始学习</a>
                 </div>
             </div>
         </section>
@@ -88,7 +97,6 @@
             <h2><i class="fas fa-download"></i> 资源下载</h2>
             <ul class="resource-list">
                 <li><i class="fas fa-file-pdf"></i> <a href="pdf.html">完整教程 PDF</a>（可下载）</li>
-                <li><i class="fas fa-code"></i> <a href="https://github.com/luongnv89/claude-howto" target="_blank">原项目GitHub</a></li>
                 <li><i class="fas fa-book"></i> <a href="https://code.claude.com" target="_blank">Claude Code 官方文档</a></li>
                 <li><i class="fas fa-users"></i> <a href="#">中文学习社区</a>（建设中）</li>
             </ul>
@@ -96,20 +104,13 @@
 
         <section id="about">
             <h2><i class="fas fa-info-circle"></i> 关于本项目</h2>
-            <p>本项目旨在将优秀的 Claude Code 教程资源翻译成中文，帮助中文开发者更好地学习和使用 Claude Code。</p>
-            <p><strong>项目状态：</strong>翻译进行中，预计完成时间：2026年4月</p>
-            <p><strong>贡献：</strong>欢迎提交翻译建议和修改！</p>
+            <p>本项目旨在收集优秀的 Claude Code 教程并将之翻译成中文，帮助开发者更好地学习和使用 Claude Code。</p>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 Claude Code 中文教程 | 基于 <a href="https://github.com/luongnv89/claude-howto" target="_blank">claude-howto</a> 项目</p>
-            <p class="footer-links">
-                <a href="#"><i class="fab fa-github"></i> GitHub</a> |
-                <a href="#"><i class="fas fa-bug"></i> 报告问题</a> |
-                <a href="#"><i class="fas fa-handshake"></i> 贡献指南</a>
-            </p>
+            <p>&copy; 2026 Claude Code 中文教程</p>
         </div>
     </footer>
 

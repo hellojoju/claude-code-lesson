@@ -1,5 +1,8 @@
 // 主 JavaScript 文件 - Claude Code 中文教程网站
 
+// 搜索索引缓存
+let searchIndex = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化网站
     initWebsite();
@@ -22,11 +25,16 @@ function initWebsite() {
     }
 }
 
-function setupSearch() {
+// ==================== 搜索功能 ====================
+
+async function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
 
     if (!searchInput || !searchBtn) return;
+
+    // 预加载搜索索引
+    await loadSearchIndex();
 
     // 搜索按钮点击事件
     searchBtn.addEventListener('click', performSearch);
@@ -37,6 +45,37 @@ function setupSearch() {
             performSearch();
         }
     });
+
+    // 实时搜索（输入时显示建议）
+    searchInput.addEventListener('input', debounce(function() {
+        const query = searchInput.value.trim();
+        if (query.length >= 2) {
+            showSearchSuggestions(query);
+        } else {
+            hideSearchSuggestions();
+        }
+    }, 300));
+
+    // 点击外部关闭建议
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-box') && !e.target.closest('.search-suggestions')) {
+            hideSearchSuggestions();
+        }
+    });
+}
+
+async function loadSearchIndex() {
+    if (searchIndex) return searchIndex;
+
+    try {
+        const response = await fetch('/search-index.json');
+        searchIndex = await response.json();
+        console.log(`搜索索引已加载: ${searchIndex.length} 条目`);
+        return searchIndex;
+    } catch (error) {
+        console.error('加载搜索索引失败:', error);
+        return [];
+    }
 }
 
 function performSearch() {
@@ -48,12 +87,80 @@ function performSearch() {
         return;
     }
 
-    // 简单搜索功能 - 实际应连接后端API
-    alert(`搜索功能开发中...\n搜索关键词: "${query}"\n\n在完整版中，这里将显示包含"${query}"的教程列表。`);
-
-    // 清空搜索框
-    searchInput.value = '';
+    // 执行搜索并跳转到搜索结果页
+    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
 }
+
+function showSearchSuggestions(query) {
+    if (!searchIndex) return;
+
+    const results = searchIndex.filter(item => {
+        const searchText = `${item.title} ${item.content || ''} ${item.keywords?.join(' ') || ''}`.toLowerCase();
+        return searchText.includes(query.toLowerCase());
+    }).slice(0, 5);
+
+    if (results.length === 0) {
+        hideSearchSuggestions();
+        return;
+    }
+
+    // 创建或获取建议容器
+    let container = document.querySelector('.search-suggestions');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'search-suggestions';
+        document.querySelector('.search-box').appendChild(container);
+    }
+
+    // 生成建议HTML
+    let html = '';
+    results.forEach(item => {
+        const icon = item.type === 'module' ? '📚' : '📄';
+        const subtitle = item.type === 'module' ? item.id : `${item.moduleTitle} > ${item.title}`;
+        html += `
+            <a href="${item.url}" class="suggestion-item">
+                <span class="suggestion-icon">${icon}</span>
+                <div class="suggestion-content">
+                    <div class="suggestion-title">${highlightText(item.title, query)}</div>
+                    <div class="suggestion-subtitle">${subtitle}</div>
+                </div>
+            </a>
+        `;
+    });
+
+    container.innerHTML = html;
+    container.style.display = 'block';
+}
+
+function hideSearchSuggestions() {
+    const container = document.querySelector('.search-suggestions');
+    if (container) {
+        container.style.display = 'none';
+    }
+}
+
+function highlightText(text, query) {
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// ==================== 目录功能 ====================
 
 function loadDirectoryStructure() {
     const directoryTree = document.getElementById('directoryTree');
@@ -73,232 +180,71 @@ function loadDirectoryStructure() {
 }
 
 function getMockDirectoryData() {
-    // 模块数据 - 对应实际存在的模块页面
+    // 模块数据 - 按新的学习路径编排
     return {
         title: 'Claude Code 教程目录',
         items: [
-            {
-                id: '01-slash-commands',
-                title: '01 - Slash Commands',
-                description: '学习使用 Claude Code 的斜杠命令',
-                files: [
-                    { name: 'README.md', title: '斜杠命令完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '02-memory',
-                title: '02 - Memory',
-                description: '掌握 Claude Code 的记忆功能',
-                files: [
-                    { name: 'README.md', title: 'Memory 系统完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '03-skills',
-                title: '03 - Skills',
-                description: '学习创建和使用技能',
-                files: [
-                    { name: 'README.md', title: 'Skills 系统完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '04-subagents',
-                title: '04 - Subagents',
-                description: '使用专业子代理',
-                files: [
-                    { name: 'README.md', title: 'Subagents 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '05-mcp',
-                title: '05 - MCP',
-                description: '集成 Model Context Protocol',
-                files: [
-                    { name: 'README.md', title: 'MCP 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '06-hooks',
-                title: '06 - Hooks',
-                description: '使用钩子扩展功能',
-                files: [
-                    { name: 'README.md', title: 'Hooks 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '07-plugins',
-                title: '07 - Plugins',
-                description: '开发和使用插件',
-                files: [
-                    { name: 'README.md', title: 'Plugins 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '08-checkpoints',
-                title: '08 - Checkpoints',
-                description: '会话快照与回滚',
-                files: [
-                    { name: 'README.md', title: 'Checkpoints 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '09-advanced-features',
-                title: '09 - Advanced Features',
-                description: '高级功能详解',
-                files: [
-                    { name: 'README.md', title: '高级功能完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '10-cli',
-                title: '10 - CLI',
-                description: '命令行界面',
-                files: [
-                    { name: 'README.md', title: 'CLI 完整指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '11-multi-agent',
-                title: '11 - 多 Agent 协作',
-                description: '多 Agent 协作模式',
-                files: [
-                    { name: 'README.md', title: '多 Agent 协作指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '12-background-tasks',
-                title: '12 - 后台任务',
-                description: '后台任务执行机制',
-                files: [
-                    { name: 'README.md', title: '后台任务指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '13-channels',
-                title: '13 - Channels',
-                description: 'MCP 消息推送',
-                files: [
-                    { name: 'README.md', title: 'Channels 指南', status: '已翻译' }
-                ]
-            },
-            {
-                id: '14-powerup-buddy',
-                title: '14 - Powerup 与 Buddy',
-                description: '🆕 交互式学习和虚拟伙伴',
-                files: [
-                    { name: 'README.md', title: 'Powerup 与 Buddy 指南', status: '已翻译' }
-                ]
-            }
+            // 入门阶段
+            { id: '01-cli', title: '01 - CLI 参考手册', description: '命令行界面完整指南，学习的第一步', difficulty: 'beginner' },
+            { id: '02-slash-commands', title: '02 - Slash Commands', description: '55+ 内置命令快速调用', difficulty: 'beginner' },
+            { id: '03-memory', title: '03 - Memory', description: '上下文管理和 CLAUDE.md 配置', difficulty: 'beginner' },
+            { id: '04-skills', title: '04 - Skills', description: '创建可复用的任务模板', difficulty: 'beginner' },
+            { id: '05-checkpoints', title: '05 - Checkpoints', description: '会话快照与安全回滚', difficulty: 'beginner' },
+            { id: '06-powerup-buddy', title: '06 - PowerUp 与 Buddy', description: '交互式学习和虚拟伙伴', difficulty: 'beginner' },
+            // 进阶阶段
+            { id: '07-subagents', title: '07 - Subagents', description: '委托专业智能体', difficulty: 'intermediate' },
+            { id: '08-mcp', title: '08 - MCP', description: '模型上下文协议', difficulty: 'intermediate' },
+            { id: '09-hooks', title: '09 - Hooks', description: '事件驱动自动化', difficulty: 'intermediate' },
+            { id: '10-plugins', title: '10 - Plugins', description: '扩展包系统', difficulty: 'intermediate' },
+            { id: '11-multi-agent', title: '11 - 多 Agent 协作', description: '多智能体协作模式', difficulty: 'intermediate' },
+            { id: '12-background-tasks', title: '12 - 后台任务', description: '长时间运行任务', difficulty: 'intermediate' },
+            { id: '13-channels', title: '13 - Channels', description: '消息通道', difficulty: 'intermediate' },
+            { id: '14-advanced-features', title: '14 - 高级功能', description: '扩展思考、权限模式', difficulty: 'advanced' },
+            // 精通阶段
+            { id: '15-enterprise', title: '15 - 企业级应用', description: '企业部署与 CI/CD', difficulty: 'advanced' },
+            { id: '16-advanced-capabilities', title: '16 - 高级能力', description: 'Computer Use、Voice Mode', difficulty: 'advanced' },
+            { id: '17-boris-tips', title: '17 - Boris 使用技巧', description: '产品负责人的实战心得', difficulty: 'intermediate' }
         ]
     };
 }
 
 function generateDirectoryHTML(data) {
+    const difficultyLabels = {
+        'beginner': '🟢 入门',
+        'intermediate': '🟡 进阶',
+        'advanced': '🔴 高级'
+    };
+
     let html = `
         <div class="directory-header">
             <h3><i class="fas fa-folder-open"></i> ${data.title}</h3>
             <p class="directory-stats">
-                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 已翻译: 14 个模块</span>
+                <span class="stat-item"><i class="fas fa-check-circle" style="color: #38a169;"></i> 17 个教程模块</span>
             </p>
-            <p class="directory-hint"><i class="fas fa-info-circle"></i> 点击章节标题展开/折叠，点击文件名查看教程</p>
         </div>
         <div class="directory-content">
     `;
 
-    data.items.forEach((section, index) => {
+    data.items.forEach((item) => {
+        const badge = difficultyLabels[item.difficulty] || '';
         html += `
-            <div class="directory-section" data-section="${section.id}">
-                <div class="section-header">
+            <div class="directory-section" data-section="${item.id}">
+                <div class="section-header clickable" onclick="window.location.href='content/${item.id}.html'">
                     <h4>
-                        <i class="fas fa-folder-open"></i>
-                        ${section.title}
-                        <span class="section-badge">${section.files.length}个文件</span>
+                        <i class="fas fa-book"></i>
+                        ${item.title}
+                        <span class="section-badge">${badge}</span>
                     </h4>
-                    <p class="section-description">${section.description}</p>
-                </div>
-                <div class="section-files">
-        `;
-
-        section.files.forEach(file => {
-            let statusIcon = '';
-            let statusClass = '';
-
-            switch(file.status) {
-                case '已翻译':
-                    statusIcon = 'fa-check-circle';
-                    statusClass = 'status-translated';
-                    break;
-                case '翻译中':
-                    statusIcon = 'fa-sync-alt';
-                    statusClass = 'status-translating';
-                    break;
-                case '未开始':
-                    statusIcon = 'fa-clock';
-                    statusClass = 'status-pending';
-                    break;
-            }
-
-            html += `
-                <div class="file-item ${statusClass}" data-file="${file.name}">
-                    <i class="fas fa-file-alt"></i>
-                    <span class="file-title">${file.title}</span>
-                    <span class="file-status">
-                        <i class="fas ${statusIcon}"></i> ${file.status}
-                    </span>
-                </div>
-            `;
-        });
-
-        html += `
+                    <p class="section-description">${item.description}</p>
                 </div>
             </div>
         `;
     });
 
     html += `</div>`;
-
     return html;
 }
 
 function setupDirectoryClickEvents() {
-    console.log('设置目录点击事件...');
-    
-    // 章节点击事件
-    const sectionHeaders = document.querySelectorAll('.section-header');
-    console.log('找到章节标题数量:', sectionHeaders.length);
-    
-    sectionHeaders.forEach(header => {
-        header.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const section = this.closest('.directory-section');
-            const files = section.querySelector('.section-files');
-            files.classList.toggle('collapsed');
-
-            const icon = this.querySelector('.fa-folder, .fa-folder-open');
-            if (files.classList.contains('collapsed')) {
-                icon.classList.remove('fa-folder-open');
-                icon.classList.add('fa-folder');
-            } else {
-                icon.classList.remove('fa-folder');
-                icon.classList.add('fa-folder-open');
-            }
-        });
-    });
-
-    // 文件点击事件 - 跳转到实际教程页面
-    const fileItems = document.querySelectorAll('.file-item');
-    console.log('找到文件项数量:', fileItems.length);
-
-    fileItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-
-            const section = this.closest('.directory-section');
-            const sectionId = section.getAttribute('data-section');
-
-            // 直接跳转到对应的模块页面
-            const targetUrl = `content/${sectionId}.html`;
-            window.location.href = targetUrl;
-        });
-    });
+    // 点击事件已在HTML中内联处理
 }

@@ -466,11 +466,21 @@ section h2 {
     background: #f9f9f9;
     padding: 15px 20px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
 }
 
 .section-header:hover {
     background: #f0f0f0;
+    transform: translateX(5px);
+}
+
+.section-header.clickable {
+    border-left: 4px solid #667eea;
+}
+
+.section-header.clickable:hover {
+    background: #e8e8ff;
+    border-left-color: #5a67d8;
 }
 
 .section-header h4 {
@@ -1071,4 +1081,73 @@ table tr:hover {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+/* 搜索建议样式 */
+.search-box {
+    position: relative;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+    margin-top: 0.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #1f2937;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.15s;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: #f9fafb;
+}
+
+.suggestion-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.suggestion-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.suggestion-title {
+    font-weight: 500;
+    margin-bottom: 0.125rem;
+}
+
+.suggestion-title mark {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0 0.125rem;
+    font-weight: 600;
+}
+
+.suggestion-subtitle {
+    font-size: 0.75rem;
+    color: #6b7280;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

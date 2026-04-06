@@ -40,14 +40,25 @@ class MarkdownProcessor {
    */
   process(content) {
     const { frontmatter, body } = this.parseFrontmatter(content);
-    const html = this.toHtml(body);
-    const toc = this.generateToc(body);
+    // 移除内容中的目录部分（## 目录 及其后续列表）
+    const cleanBody = this.removeTocSection(body);
+    const html = this.toHtml(cleanBody);
+    const toc = this.generateToc(body); // TOC 生成仍用原始内容以获取完整标题列表
 
     return {
       frontmatter,
       body: html,
       toc
     };
+  }
+
+  /**
+   * 移除内容中的目录部分
+   * 格式：## 目录 后跟一个编号列表，通常以 --- 结束
+   */
+  removeTocSection(body) {
+    // 匹配 "## 目录" 后的编号列表直到遇到 --- 或下一个 ## 标题
+    return body.replace(/^## 目录\s*\n((?:\d+\.\s*\[.+?\]\(#.+?\)\s*\n)+)\s*---\s*\n/gm, '');
   }
 
   /**
@@ -85,6 +96,14 @@ class MarkdownProcessor {
   toHtml(markdown) {
     let html = markdown;
 
+    // 步骤 0: 移除 Claude How To logo 图片部分
+    html = html.replace(/<picture>[\s\S]*?<\/picture>/g, '');
+
+    // 步骤 0.5: 移除底部的 Claude How To 指南系列声明
+    html = html.replace(/\*属于\s*\[?Claude How To\]?\(?[^)]*\)?\s*指南系列\*/g, '');
+    html = html.replace(/\*\[Claude How To\]\([^)]+\)\s*指南系列的一部分\*/g, '');
+    html = html.replace(/\*_?\[?Claude How To\]?\(?[^)]*\)?_?\s*指南系列[^*]*\*/g, '');
+
     // 步骤 1: 提取并保护所有代码块
     const codeBlocks = [];
     const CODEBLOCK_PREFIX = '\x00CB';
@@ -113,6 +132,11 @@ class MarkdownProcessor {
     });
 
     // 步骤 4: 处理标题（带 id）
+    html = html.replace(/^#### (.+)$/gm, (m, text) => {
+      const cleanText = text.replace(/\*\*/g, '');
+      const id = this.slugify(cleanText);
+      return `<h4 id="${id}">${text}</h4>`;
+    });
     html = html.replace(/^### (.+)$/gm, (m, text) => {
       const cleanText = text.replace(/\*\*/g, '');
       const id = this.slugify(cleanText);
@@ -349,16 +373,24 @@ class MarkdownProcessor {
   }
 
   /**
-   * 生成目录
+   * 生成目录 - 排除代码块内的标题和"目录"标题本身
    */
   generateToc(body) {
     const headings = [];
-    const regex = /^#{2,3}\s+(.+)$/gm;
+
+    // 先移除代码块，避免解析其中的标题
+    let cleanBody = body;
+    cleanBody = cleanBody.replace(/```[\w]*\n[\s\S]*?```/g, '');
+
+    const regex = /^(#{2,4})\s+(.+)$/gm;
     let match;
 
-    while ((match = regex.exec(body)) !== null) {
-      const level = match[0].startsWith('##') ? 2 : 3;
-      const text = match[1].replace(/\*\*/g, '');
+    while ((match = regex.exec(cleanBody)) !== null) {
+      const hashes = match[1];
+      const level = hashes.length; // ## = 2, ### = 3, #### = 4
+      const text = match[2].replace(/\*\*/g, '');
+      // 跳过"目录"标题本身
+      if (text === '目录') continue;
       headings.push({
         level,
         text,

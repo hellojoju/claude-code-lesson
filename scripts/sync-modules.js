@@ -9,20 +9,26 @@ const path = require('path');
 const MarkdownProcessor = require('./lib/markdown-processor');
 
 const MODULES = [
-  { id: '01-slash-commands', title: 'Slash Commands', difficulty: 'beginner', prev: null, next: '02-memory' },
-  { id: '02-memory', title: 'Memory', difficulty: 'beginner', prev: '01-slash-commands', next: '03-skills' },
-  { id: '03-skills', title: 'Skills', difficulty: 'beginner', prev: '02-memory', next: '04-subagents' },
-  { id: '04-subagents', title: 'Subagents', difficulty: 'intermediate', prev: '03-skills', next: '05-mcp' },
-  { id: '05-mcp', title: 'MCP', difficulty: 'intermediate', prev: '04-subagents', next: '06-hooks' },
-  { id: '06-hooks', title: 'Hooks', difficulty: 'intermediate', prev: '05-mcp', next: '07-plugins' },
-  { id: '07-plugins', title: 'Plugins', difficulty: 'intermediate', prev: '06-hooks', next: '08-checkpoints' },
-  { id: '08-checkpoints', title: 'Checkpoints', difficulty: 'beginner', prev: '07-plugins', next: '09-advanced-features' },
-  { id: '09-advanced-features', title: 'Advanced Features', difficulty: 'advanced', prev: '08-checkpoints', next: '10-cli' },
-  { id: '10-cli', title: 'CLI', difficulty: 'beginner', prev: '09-advanced-features', next: '11-multi-agent' },
-  { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'intermediate', prev: '10-cli', next: '12-background-tasks' },
+  // 入门阶段
+  { id: '01-cli', title: 'CLI 参考手册', difficulty: 'beginner', prev: null, next: '02-slash-commands' },
+  { id: '02-slash-commands', title: 'Slash Commands', difficulty: 'beginner', prev: '01-cli', next: '03-memory' },
+  { id: '03-memory', title: 'Memory', difficulty: 'beginner', prev: '02-slash-commands', next: '04-skills' },
+  { id: '04-skills', title: 'Skills', difficulty: 'beginner', prev: '03-memory', next: '05-checkpoints' },
+  { id: '05-checkpoints', title: 'Checkpoints', difficulty: 'beginner', prev: '04-skills', next: '06-powerup-buddy' },
+  { id: '06-powerup-buddy', title: 'PowerUp 与 Buddy', difficulty: 'beginner', prev: '05-checkpoints', next: '07-subagents' },
+  // 进阶阶段
+  { id: '07-subagents', title: 'Subagents', difficulty: 'intermediate', prev: '06-powerup-buddy', next: '08-mcp' },
+  { id: '08-mcp', title: 'MCP', difficulty: 'intermediate', prev: '07-subagents', next: '09-hooks' },
+  { id: '09-hooks', title: 'Hooks', difficulty: 'intermediate', prev: '08-mcp', next: '10-plugins' },
+  { id: '10-plugins', title: 'Plugins', difficulty: 'intermediate', prev: '09-hooks', next: '11-multi-agent' },
+  { id: '11-multi-agent', title: '多 Agent 协作', difficulty: 'intermediate', prev: '10-plugins', next: '12-background-tasks' },
   { id: '12-background-tasks', title: '后台任务', difficulty: 'intermediate', prev: '11-multi-agent', next: '13-channels' },
-  { id: '13-channels', title: 'Channels', difficulty: 'intermediate', prev: '12-background-tasks', next: '14-powerup-buddy' },
-  { id: '14-powerup-buddy', title: 'Powerup 与 Buddy', difficulty: 'beginner', prev: '13-channels', next: null }
+  { id: '13-channels', title: 'Channels', difficulty: 'intermediate', prev: '12-background-tasks', next: '14-advanced-features' },
+  { id: '14-advanced-features', title: '高级功能', difficulty: 'advanced', prev: '13-channels', next: '15-enterprise' },
+  // 精通阶段
+  { id: '15-enterprise', title: '企业级应用', difficulty: 'advanced', prev: '14-advanced-features', next: '16-advanced-capabilities' },
+  { id: '16-advanced-capabilities', title: '高级能力', difficulty: 'advanced', prev: '15-enterprise', next: '17-boris-tips' },
+  { id: '17-boris-tips', title: 'Boris 使用技巧', difficulty: 'intermediate', prev: '16-advanced-capabilities', next: null }
 ];
 
 const REPO_ROOT = path.join(__dirname, '..');
@@ -57,28 +63,40 @@ function syncModules() {
     // 生成目录
     const tocHtml = generateTocHtml(toc);
 
-    // 组装完整 HTML
+    // 组装完整 HTML - 左右布局
+    const tocSidebar = toc.length > 0 ? `
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          ${generateTocHtml(toc)}
+        </div>
+      </aside>
+    ` : '';
+
     const articleContent = `
-      <article>
-        <nav class="breadcrumb">
-          <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / ${module.title}
-        </nav>
+      <div class="layout-wrapper">
+        ${tocSidebar}
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / ${module.title}
+            </nav>
 
-        <div class="meta">
-          <span class="badge badge-${module.difficulty}">
-            ${module.difficulty === 'beginner' ? '🟢 初级' : module.difficulty === 'intermediate' ? '🟡 中级' : '🔴 高级'}
-          </span>
-          ${frontmatter.cc_version_verified ? `<span class="badge">✅ Claude Code v${frontmatter.cc_version_verified}</span>` : ''}
+            <div class="meta">
+              <span class="badge badge-${module.difficulty}">
+                ${module.difficulty === 'beginner' ? '🟢 初级' : module.difficulty === 'intermediate' ? '🟡 中级' : '🔴 高级'}
+              </span>
+              ${frontmatter.cc_version_verified ? `<span class="badge">✅ Claude Code v${frontmatter.cc_version_verified}</span>` : ''}
+            </div>
+
+            <div class="content">
+              ${body}
+            </div>
+
+            ${navButtons}
+          </article>
         </div>
-
-        ${toc.length > 0 ? `<div class="toc"><h3>目录</h3>${tocHtml}</div>` : ''}
-
-        <div class="content">
-          ${body}
-        </div>
-
-        ${navButtons}
-      </article>
+      </div>
     `;
 
     // 应用模板
@@ -98,10 +116,16 @@ function syncModules() {
 function generateTocHtml(toc) {
   if (toc.length === 0) return '';
 
-  let html = '<ul>';
+  let html = '<ul class="toc-list">';
   for (const heading of toc) {
-    const indent = heading.level === 3 ? 'style="margin-left: 1rem;"' : '';
-    html += `<li ${indent}><a href="#${heading.id}">${heading.text}</a></li>`;
+    const levelClass = `toc-h${heading.level}`;
+    if (heading.level === 2) {
+      html += `<li class="toc-item ${levelClass}"><a href="#${heading.id}">${heading.text}</a></li>`;
+    } else if (heading.level === 3) {
+      html += `<li class="toc-item ${levelClass}"><a href="#${heading.id}">${heading.text}</a></li>`;
+    } else if (heading.level === 4) {
+      html += `<li class="toc-item ${levelClass}"><a href="#${heading.id}">${heading.text}</a></li>`;
+    }
   }
   html += '</ul>';
   return html;

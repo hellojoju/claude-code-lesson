@@ -10,12 +10,13 @@
     "pdf": "node scripts/generate-pdf.js"
   },
   "dependencies": {
-    "markdown-it": "^14.0.0",
     "gray-matter": "^4.0.3",
-    "html-minifier-terser": "^7.2.0"
+    "html-minifier-terser": "^7.2.0",
+    "markdown-it": "^14.0.0"
   },
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "puppeteer": "^24.40.0"
   },
   "engines": {
     "node": ">=18.0.0"
