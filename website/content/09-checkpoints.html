@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkpoints 快照 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Checkpoints 快照 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#checkpoint-是什么">Checkpoint 是什么？</a></li><li class="toc-item toc-h3"><a href="#关键术语">关键术语</a></li><li class="toc-item toc-h3"><a href="#自动创建机制">自动创建机制</a></li><li class="toc-item toc-h2"><a href="#场景-1-重要改动前创建快照">场景 1：重要改动前创建快照</a></li><li class="toc-item toc-h3"><a href="#问题场景">问题场景</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#操作步骤">操作步骤</a></li><li class="toc-item toc-h3"><a href="#最佳实践-危险操作清单">最佳实践：危险操作清单</a></li><li class="toc-item toc-h2"><a href="#场景-2-回退到之前的状态">场景 2：回退到之前的状态</a></li><li class="toc-item toc-h3"><a href="#问题场景">问题场景</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#访问方式">访问方式</a></li><li class="toc-item toc-h3"><a href="#五种恢复选项">五种恢复选项</a></li><li class="toc-item toc-h4"><a href="#选项-1-恢复代码和会话">选项 1：恢复代码和会话</a></li><li class="toc-item toc-h4"><a href="#选项-2-仅恢复会话">选项 2：仅恢复会话</a></li><li class="toc-item toc-h4"><a href="#选项-3-仅恢复代码">选项 3：仅恢复代码</a></li><li class="toc-item toc-h4"><a href="#选项-4-从此处开始摘要">选项 4：从此处开始摘要</a></li><li class="toc-item toc-h4"><a href="#选项-5-没关系">选项 5：没关系</a></li><li class="toc-item toc-h3"><a href="#实战演示">实战演示</a></li><li class="toc-item toc-h2"><a href="#场景-3-比较不同版本">场景 3：比较不同版本</a></li><li class="toc-item toc-h3"><a href="#问题场景">问题场景</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#工作流程">工作流程</a></li><li class="toc-item toc-h3"><a href="#实战演示">实战演示</a></li><li class="toc-item toc-h3"><a href="#适用场景">适用场景</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-基本回滚体验">练习 1：基本回滚体验</a></li><li class="toc-item toc-h3"><a href="#练习-2-分支探索">练习 2：分支探索</a></li><li class="toc-item toc-h3"><a href="#练习-3-checkpoint-探索器">练习 3：Checkpoint 探索器</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q1-checkpoint-能保存多久">Q1: Checkpoint 能保存多久？</a></li><li class="toc-item toc-h3"><a href="#q2-bash-命令的更改会被跟踪吗">Q2: Bash 命令的更改会被跟踪吗？</a></li><li class="toc-item toc-h3"><a href="#q3-checkpoint-能替代-git-吗">Q3: Checkpoint 能替代 Git 吗？</a></li><li class="toc-item toc-h3"><a href="#q4-为什么找不到之前的-checkpoint">Q4: 为什么找不到之前的 checkpoint？</a></li><li class="toc-item toc-h3"><a href="#q5-回滚后测试还是失败怎么办">Q5: 回滚后测试还是失败怎么办？</a></li><li class="toc-item toc-h3"><a href="#q6-从此处开始摘要-会丢失信息吗">Q6: "从此处开始摘要" 会丢失信息吗？</a></li><li class="toc-item toc-h2"><a href="#上下文窗口与-checkpoint-策略">上下文窗口与 Checkpoint 策略</a></li><li class="toc-item toc-h3"><a href="#为什么这很重要">为什么这很重要？</a></li><li class="toc-item toc-h3"><a href="#上下文窗口基础">上下文窗口基础</a></li><li class="toc-item toc-h3"><a href="#漂移症状">漂移症状</a></li><li class="toc-item toc-h3"><a href="#黄金法则-50-时准备切换">黄金法则：50% 时准备切换</a></li><li class="toc-item toc-h3"><a href="#使用-cc-context-stats-工具">使用 cc-context-stats 工具</a></li><li class="toc-item toc-h2"><a href="#checkpoint-反模式">Checkpoint 反模式</a></li><li class="toc-item toc-h3"><a href="#反模式-1-checkpoint-作为唯一备份">反模式 1：Checkpoint 作为唯一备份</a></li><li class="toc-item toc-h3"><a href="#反模式-2-无限回滚循环">反模式 2：无限回滚循环</a></li><li class="toc-item toc-h3"><a href="#反模式-3-忽视外部更改">反模式 3：忽视外部更改</a></li><li class="toc-item toc-h2"><a href="#快速参考">快速参考</a></li><li class="toc-item toc-h3"><a href="#键盘快捷键">键盘快捷键</a></li><li class="toc-item toc-h3"><a href="#恢复选项速查">恢复选项速查</a></li><li class="toc-item toc-h3"><a href="#最佳实践清单">最佳实践清单</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Checkpoints 快照
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-beginner">
+                🟢 初级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟢 <strong>初级</strong> | ⏱ 30 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-06</blockquote>
+<strong>你将学会：</strong> 保存和恢复会话状态，从"糟糕"时刻瞬间恢复。
+<h1>Checkpoints（检查点）与回滚</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>"我在做重要的改动，能不能随时保存进度？"</p>
+<p>这是每个 Claude Code 用户都会遇到的问题：</p>
+<pre><code class="language-">场景：重构认证模块
+
+你: 重构认证模块以使用 OAuth2
+
+Claude: [跨 12 个文件进行了 47 处更改]
+
+你: 运行测试
+
+Claude: 测试失败。23 个断言被破坏。
+       支付处理出错。
+       数据库连接丢失。
+
+你: ...刚才发生了什么？怎么回到正常状态？
+</code></pre>
+<p>没有 Checkpoints，你可能要花几个小时调试，或者不得不撤销一切重新开始，丢失所有混在错误中的正确更改。</p>
+<strong>有了 Checkpoints：</strong>
+<pre><code class="language-">你: [按两次 Esc] 回滚到重构前
+
+Claude: 已恢复到 checkpoint &quot;auth-oauth2-start&quot;。
+       所有文件已还原。会话已恢复。
+
+你: 让我们再试一次，一次一个模块。
+</code></pre>
+<p>这就是 Checkpoints 的威力 —— 一键从任何"糟糕"时刻恢复。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="checkpoint-是什么">Checkpoint 是什么？</h3>
+<p>Checkpoint 是会话状态的完整快照：</p>
+<table>
+<thead>
+<tr>
+<th>组成部分</th>
+<th>捕获内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>消息</strong></td>
+<td>交换的所有用户和助手消息</td>
+</tr>
+<tr>
+<td><strong>文件</strong></td>
+<td>会话期间进行的所有文件修改</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>完整的工具调用历史</td>
+</tr>
+<tr>
+<td><strong>上下文</strong></td>
+<td>会话元数据和状态</td>
+</tr>
+</tbody>
+</table>
+<p>把 Checkpoints 想象成游戏中的"存档点"——在任何时刻，你都可以加载之前的存档并尝试不同的路径。</p>
+<h3 id="关键术语">关键术语</h3>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Checkpoint</strong></td>
+<td>会话状态快照（自动创建）</td>
+</tr>
+<tr>
+<td><strong>Rewind（回滚）</strong></td>
+<td>返回到之前的 checkpoint</td>
+</tr>
+<tr>
+<td><strong>Branch Point</strong></td>
+<td>从该 checkpoint 探索多种方法的节点</td>
+</tr>
+<tr>
+<td><strong>Recovery Point</strong></td>
+<td>在危险操作前创建的安全点</td>
+</tr>
+</tbody>
+</table>
+<h3 id="自动创建机制">自动创建机制</h3>
+<p>Claude Code 自动为你创建 Checkpoints：</p>
+<table>
+<thead>
+<tr>
+<th>触发条件</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每个用户提示</td>
+<td>自动创建新 checkpoint</td>
+</tr>
+<tr>
+<td>会话持久化</td>
+<td>checkpoints 跨会话保存</td>
+</tr>
+<tr>
+<td>自动清理</td>
+<td>超过 30 天的 checkpoints 被删除</td>
+</tr>
+</tbody>
+</table>
+<p>这意味着你<strong>始终可以回滚</strong>到会话中的任何先前时刻。</p>
+<hr>
+<h2 id="场景-1-重要改动前创建快照">场景 1：重要改动前创建快照</h2>
+<h3 id="问题场景">问题场景</h3>
+<p>你即将进行一个可能有风险的操作——重构数据库层、修改核心配置、或尝试一个新的架构方案。你想确保如果出了问题，能快速恢复。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>虽然 Checkpoints 是自动创建的，但养成<strong>记录当前 checkpoint</strong> 的习惯能让你更快定位：</p>
+<pre><code class="language-">你: 我要在 checkpoint &quot;pre-db-refactor&quot; 开始数据库重构
+    当前状态：所有测试通过，准备修改连接池配置
+
+Claude: 已记录你的起始点。
+       Checkpoint ID: pre-db-refactor
+       时间: 2026-04-06 14:30
+       
+       现在可以安全地进行更改。
+</code></pre>
+<h3 id="操作步骤">操作步骤</h3>
+<ul><li><strong>确认当前状态良好</strong></li>
+   </ul>
+<pre><code class="language-">   你: 运行测试，确认一切正常
+   
+   Claude: 所有 127 个测试通过。
+   </code></pre>
+<ul><li><strong>记录 checkpoint（心理标记）</strong></li>
+   </ul>
+<p>- 在你的消息中描述当前状态
+   - Claude 会自动创建 checkpoint
+   - 记住这个时刻的描述</p>
+<ul><li><strong>进行风险操作</strong></li>
+   </ul>
+<pre><code class="language-">   你: 重构数据库连接池，增加最大连接数到 50
+   
+   Claude: [修改配置文件]
+           已更新 database.yml
+           已修改 connection_pool.rb
+   </code></pre>
+<ul><li><strong>验证结果</strong></li>
+   </ul>
+<pre><code class="language-">   你: 运行测试
+   
+   Claude: 3 个测试失败 —— 连接超时错误
+   </code></pre>
+<ul><li><strong>如需恢复，快速定位</strong></li>
+   </ul>
+<p>- 按 <code>Esc</code> + <code>Esc</code> 打开 checkpoint 浏览器
+   - 找到"pre-db-refactor"时刻的 checkpoint
+   - 选择恢复选项</p>
+<h3 id="最佳实践-危险操作清单">最佳实践：危险操作清单</h3>
+<p>在以下操作前特别留意：</p>
+<table>
+<thead>
+<tr>
+<th>操作类型</th>
+<th>风险级别</th>
+<th>建议描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据库迁移</td>
+<td>高</td>
+<td>"pre-db-migration"</td>
+</tr>
+<tr>
+<td>大规模重构</td>
+<td>高</td>
+<td>"pre-refactor-[模块名]"</td>
+</tr>
+<tr>
+<td>删除代码</td>
+<td>高</td>
+<td>"pre-delete-[区域]"</td>
+</tr>
+<tr>
+<td>添加依赖</td>
+<td>中</td>
+<td>"pre-add-[包名]"</td>
+</tr>
+<tr>
+<td>配置更改</td>
+<td>中</td>
+<td>"pre-config-[服务]"</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-2-回退到之前的状态">场景 2：回退到之前的状态</h2>
+<h3 id="问题场景">问题场景</h3>
+<p>你刚刚做了一些更改，结果出问题了——测试失败、功能破坏、或者代码走向了错误的方向。你需要快速回到之前的状态。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>使用 Rewind 功能回滚到之前的 checkpoint。</p>
+<h3 id="访问方式">访问方式</h3>
+<strong>键盘快捷键：</strong> 按两次 <code>Esc</code>（<code>Esc</code> + <code>Esc</code>）
+<strong>Slash 命令：</strong> <code>/rewind</code> 或 <code>/checkpoint</code>
+<pre><code class="language-">你: /rewind
+
+Claude: [显示 checkpoint 列表]
+       
+       ┌─────────────────────────────────────┐
+       │ 可用 Checkpoints                     │
+       ├─────────────────────────────────────┤
+       │ 14:35 - &quot;数据库重构完成&quot;             │
+       │ 14:30 - &quot;pre-db-refactor&quot; ← 起点     │
+       │ 14:15 - &quot;添加用户认证&quot;               │
+       │ 14:00 - &quot;会话开始&quot;                   │
+       └─────────────────────────────────────┘
+       
+       选择要回滚的 checkpoint...
+</code></pre>
+<h3 id="五种恢复选项">五种恢复选项</h3>
+<p>当你选择一个 checkpoint 后，会看到五种恢复选项：</p>
+<h4 id="选项-1-恢复代码和会话">选项 1：恢复代码和会话</h4>
+<strong>使用场景：</strong> 完全重置到一个已知良好的状态。
+<pre><code class="language-">效果：
+├── 文件：已还原到 checkpoint 状态
+├── 消息：已还原
+├── 工具历史：已还原
+└── 结果：干净的起点，可以重新开始
+</code></pre>
+<p>这是你的"核选项"——完全回滚到保存点。</p>
+<h4 id="选项-2-仅恢复会话">选项 2：仅恢复会话</h4>
+<strong>使用场景：</strong> 文件更改是对的，但会话变得混乱或走向了错误方向。
+<pre><code class="language-">效果：
+├── 文件：保持当前状态
+├── 会话：重置到 checkpoint
+└── 结果：干净的上下文，可以重新解释需求
+</code></pre>
+<h4 id="选项-3-仅恢复代码">选项 3：仅恢复代码</h4>
+<strong>使用场景：</strong> 会话有帮助（比如推理过程），但代码更改破坏了某些东西。
+<pre><code class="language-">效果：
+├── 文件：还原到 checkpoint 状态
+├── 会话：保持当前历史
+└── 结果：可以回顾之前的推理过程
+</code></pre>
+<h4 id="选项-4-从此处开始摘要">选项 4：从此处开始摘要</h4>
+<strong>使用场景：</strong> 会话太长，上下文臃肿，但不想丢失一切。
+<pre><code class="language-">效果：
+├── Claude 生成会话摘要
+├── 摘要替换从 checkpoint 开始的消息
+├── 原始消息保留在转录中
+└── 上下文窗口释放
+</code></pre>
+<p>可以提供聚焦指令：</p>
+<pre><code class="language-">你: 从此处开始摘要，聚焦于 API 设计决策
+</code></pre>
+<h4 id="选项-5-没关系">选项 5：没关系</h4>
+<strong>使用场景：</strong> 不小心打开了菜单或改变了主意。
+<pre><code class="language-">效果：返回当前状态，不做任何更改
+</code></pre>
+<h3 id="实战演示">实战演示</h3>
+<pre><code class="language-">场景：重构导致测试失败
+
+你: [按 Esc+Esc]
+
+Claude: 显示 checkpoint 浏览器
+
+你: 选择 &quot;pre-db-refactor&quot; checkpoint
+
+Claude: 此 checkpoint 详情：
+       - 时间：14:30
+       - 修改文件：0（安全点）
+       - 测试状态：全部通过
+
+你: 选择 &quot;恢复代码和会话&quot;
+
+Claude: 已恢复！
+       - 所有文件已还原
+       - 会话重置到重构前
+       - 准备重新开始
+
+你: 运行测试确认
+
+Claude: 所有 127 个测试通过。状态正常。
+</code></pre>
+<hr>
+<h2 id="场景-3-比较不同版本">场景 3：比较不同版本</h2>
+<h3 id="问题场景">问题场景</h3>
+<p>你有两种可能的实现方案，想比较它们的效果——比如比较 Redis 缓存 vs 内存缓存，或者比较两种不同的 API 设计。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>使用 Checkpoints 的"分支探索"模式，在同一起点尝试多种方案。</p>
+<h3 id="工作流程">工作流程</h3>
+<div class="mermaid">flowchart LR
+    A[记录起点] --> B[实现方案 A]
+    B --> C[记录结果 A]
+    C --> D[回滚到起点]
+    D --> E[实现方案 B]
+    E --> F[记录结果 B]
+    F --> G[比较选择]
+</div>
+<h3 id="实战演示">实战演示</h3>
+<strong>步骤 1：记录起点</strong>
+<pre><code class="language-">你: 我要比较两种缓存策略。
+    当前 checkpoint 作为基线：&quot;cache-comparison-base&quot;
+
+Claude: 已记录基线。
+       当前状态已保存。
+</code></pre>
+<strong>步骤 2：实现方案 A</strong>
+<pre><code class="language-">你: 用 Redis 实现缓存
+
+Claude: [实现 Redis 缓存]
+       - 添加 redis gem
+       - 创建 cache_service.rb
+       - 配置连接参数
+
+你: 运行性能基准测试
+
+Claude: 平均响应时间：45ms
+       内存占用：+15MB
+</code></pre>
+<strong>步骤 3：记录方案 A 的结果</strong>
+<pre><code class="language-">你: 方案 A（Redis）结果：
+    - 响应时间：45ms
+    - 内存：+15MB
+    - 复杂度：低
+
+Claude: 已记录。Checkpoint: &quot;redis-cache-complete&quot;
+</code></pre>
+<strong>步骤 4：回滚到起点</strong>
+<pre><code class="language-">你: [按 Esc+Esc]
+    选择 &quot;cache-comparison-base&quot;
+    选择 &quot;恢复代码和会话&quot;
+
+Claude: 已恢复到基线。
+       Redis 实现已清除。
+</code></pre>
+<strong>步骤 5：实现方案 B</strong>
+<pre><code class="language-">你: 用内存缓存实现
+
+Claude: [实现内存缓存]
+       - 创建 in_memory_cache.rb
+       - 使用 LRU 算法
+
+你: 运行相同的性能基准测试
+
+Claude: 平均响应时间：12ms
+       内存占用：+8MB
+</code></pre>
+<strong>步骤 6：比较并选择</strong>
+<pre><code class="language-">你: 方案 B（内存缓存）结果：
+    - 响应时间：12ms（快 3 倍）
+    - 内存：+8MB（更低）
+    - 复杂度：中
+
+决策：选择方案 B —— 性能更好，资源占用更低
+
+Claude: 确认选择方案 B。
+       Checkpoint: &quot;memory-cache-final&quot;
+</code></pre>
+<h3 id="适用场景">适用场景</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>比较内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>性能优化</td>
+<td>不同算法/策略的性能指标</td>
+</tr>
+<tr>
+<td>架构决策</td>
+<td>不同架构方案的优劣</td>
+</tr>
+<tr>
+<td>UI 设计</td>
+<td>不同组件样式的视觉效果</td>
+</tr>
+<tr>
+<td>技术选型</td>
+<td>不同库/框架的功能对比</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-基本回滚体验">练习 1：基本回滚体验</h3>
+<strong>目标：</strong> 亲身体验 checkpoint 工作流。
+<ul><li>做一个可逆更改：</li>
+   </ul>
+<pre><code class="language-">   你: 在 README.md 顶部添加一行注释：&quot;临时测试标记&quot;
+   </code></pre>
+<ul><li>验证更改：</li>
+   </ul>
+<pre><code class="language-">   你: 读取 README.md 的前 5 行
+   
+   Claude: 第一行是：&quot;临时测试标记&quot;
+   </code></pre>
+<ul><li>打开 checkpoint 浏览器：</li>
+   </ul>
+<pre><code class="language-">   按 Esc + Esc（或输入 /rewind）
+   </code></pre>
+<ul><li>选择添加注释之前的 checkpoint</li>
+
+<li>选择 "恢复代码和会话"</li>
+
+<li>再次验证：</li>
+   </ul>
+<pre><code class="language-">   你: 读取 README.md 的前 5 行
+   
+   Claude: 注释已消失，原始内容恢复
+   </code></pre>
+<strong>预期结果：</strong> 注释被完全清除，文件回到修改前状态。
+<h3 id="练习-2-分支探索">练习 2：分支探索</h3>
+<strong>目标：</strong> 比较两种按钮样式。
+<ul><li>记录起点：</li>
+   </ul>
+<pre><code class="language-">   你: 我要比较两种按钮样式
+       当前 checkpoint：&quot;button-style-base&quot;
+   </code></pre>
+<ul><li>实现样式 A：</li>
+   </ul>
+<pre><code class="language-">   你: 用渐变背景样式化按钮
+   
+   Claude: [添加渐变 CSS]
+   </code></pre>
+<ul><li>记录并回滚：</li>
+   </ul>
+<pre><code class="language-">   你: 样式 A：渐变背景
+   
+   [按 Esc+Esc，回滚到 &quot;button-style-base&quot;]
+   </code></pre>
+<ul><li>实现样式 B：</li>
+   </ul>
+<pre><code class="language-">   你: 用实色和阴影样式化按钮
+   
+   Claude: [添加实色 CSS]
+   </code></pre>
+<ul><li>选择喜欢的样式并保留</li>
+
+</ul>
+<strong>预期结果：</strong> 两种样式都尝试过，最终选择一个满意的方案。
+<h3 id="练习-3-checkpoint-探索器">练习 3：Checkpoint 探索器</h3>
+<strong>目标：</strong> 熟悉 checkpoint 界面。
+<ul><li>打开浏览器：</li>
+   </ul>
+<pre><code class="language-">   按 Esc + Esc
+   </code></pre>
+<ul><li>浏览 checkpoint 列表：</li>
+   </ul>
+<p>- 注意每个 checkpoint 的时间戳
+   - 查看修改的文件数量
+   - 了解每个时刻发生了什么</p>
+<ul><li>选择任意 checkpoint 查看详情（不恢复）</li>
+
+<li>选择 "没关系" 返回</li>
+
+</ul>
+<strong>预期结果：</strong> 了解可用的恢复点，建立使用肌肉记忆。
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q1-checkpoint-能保存多久">Q1: Checkpoint 能保存多久？</h3>
+<strong>A:</strong> Checkpoints 默认保留 30 天，之后自动清理。重要更改应提交到 Git 进行永久保存。
+<h3 id="q2-bash-命令的更改会被跟踪吗">Q2: Bash 命令的更改会被跟踪吗？</h3>
+<strong>A:</strong> 不会。<code>rm</code>、<code>mv</code>、<code>cp</code> 等文件系统操作不被 checkpoint 跟踪。回滚后需手动验证这些更改。
+<pre><code class="language-">不被捕获：
+├── Bash 的 rm、mv、cp 命令
+├── 外部编辑器的修改
+├── Git 操作
+└── 环境变量更改
+</code></pre>
+<h3 id="q3-checkpoint-能替代-git-吗">Q3: Checkpoint 能替代 Git 吗？</h3>
+<strong>A:</strong> 不能。它们是互补的：
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>Git</th>
+<th>Checkpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>持久性</td>
+<td>永久</td>
+<td>30 天</td>
+</tr>
+<tr>
+<td>速度</td>
+<td>较慢</td>
+<td>即时</td>
+</tr>
+<tr>
+<td>协作</td>
+<td>支持</td>
+<td>单用户</td>
+</tr>
+<tr>
+<td>粒度</td>
+<td>提交级别</td>
+<td>任意时刻</td>
+</tr>
+</tbody>
+</table>
+<strong>推荐模式：</strong> Checkpoint 试错 → 成功后 Git commit
+<h3 id="q4-为什么找不到之前的-checkpoint">Q4: 为什么找不到之前的 checkpoint？</h3>
+<strong>A:</strong> 可能原因：
+<ul><li>Checkpoints 超过 30 天被清理</li>
+<li>开启了新会话（checkpoint 仅在当前会话有效）</li>
+<li><code>autoCheckpoint</code> 设置被关闭</li>
+
+</ul>
+<p>检查设置：</p>
+<pre><code class="language-json">{
+  &quot;autoCheckpoint&quot;: true  // 确保已启用
+}
+</code></pre>
+<h3 id="q5-回滚后测试还是失败怎么办">Q5: 回滚后测试还是失败怎么办？</h3>
+<strong>A:</strong> 可能选择了错误的 checkpoint 或根本原因未解决：
+<ul><li>选择更早的 checkpoint 尝试</li>
+<li>回滚后运行测试验证状态</li>
+<li>分析根本原因再继续</li>
+
+</ul>
+<h3 id="q6-从此处开始摘要-会丢失信息吗">Q6: "从此处开始摘要" 会丢失信息吗？</h3>
+<strong>A:</strong> 不会。原始消息保留在转录中，只是被压缩的摘要替换在主会话中。你可以导出完整转录查看细节。
+<hr>
+<h2 id="上下文窗口与-checkpoint-策略">上下文窗口与 Checkpoint 策略</h2>
+<h3 id="为什么这很重要">为什么这很重要？</h3>
+<p>理解上下文窗口能帮助你制定有效的 checkpoint 策略。</p>
+<h3 id="上下文窗口基础">上下文窗口基础</h3>
+<p>每个 Claude 会话在<strong>上下文窗口</strong>内运行——模型可以同时持有的信息总量。</p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>范围</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plan</strong></td>
+<td>0-50%</td>
+<td>安全进行复杂规划</td>
+</tr>
+<tr>
+<td><strong>Code</strong></td>
+<td>50-80%</td>
+<td>避免开始新的长任务</td>
+</tr>
+<tr>
+<td><strong>Dump</strong></td>
+<td>80-100%</td>
+<td>立即完成，准备切换</td>
+</tr>
+</tbody>
+</table>
+<h3 id="漂移症状">漂移症状</h3>
+<p>当上下文接近饱和时会出现<strong>漂移</strong>：</p>
+<pre><code class="language-">警告信号：
+├── Claude 重复提问相同信息
+├── &quot;忘记&quot;之前的约束
+├── 提出与已做决策矛盾的方案
+└── 输出质量明显下降
+</code></pre>
+<h3 id="黄金法则-50-时准备切换">黄金法则：50% 时准备切换</h3>
+<p>经验丰富的用户遵循：当上下文达到 <strong>40-50%</strong> 时，准备 checkpoint 并切换新会话。</p>
+<h3 id="使用-cc-context-stats-工具">使用 cc-context-stats 工具</h3>
+<p>实时监控上下文使用：</p>
+<pre><code class="language-bash">npm install -g cc-context-stats
+</code></pre>
+<p>状态栏显示当前区域（绿色 Plan / 黄色 Code / 橙色 Dump），帮助你决定何时 checkpoint。</p>
+<hr>
+<h2 id="checkpoint-反模式">Checkpoint 反模式</h2>
+<p>识别并避免这些常见错误：</p>
+<h3 id="反模式-1-checkpoint-作为唯一备份">反模式 1：Checkpoint 作为唯一备份</h3>
+<pre><code class="language-">错误：仅依赖 checkpoint 保存代码
+风险：30 天后永久丢失
+正确：重要更改必须 Git commit
+</code></pre>
+<h3 id="反模式-2-无限回滚循环">反模式 2：无限回滚循环</h3>
+<pre><code class="language-">错误：尝试方法 A → 失败 → 回滚 → 方法 B → 失败 → 回滚 → 方法 C → ...
+诊断：起点本身可能有问题，或约束不完整
+正确：最多 3 种方法，都失败则分析根本原因
+</code></pre>
+<h3 id="反模式-3-忽视外部更改">反模式 3：忽视外部更改</h3>
+<pre><code class="language-">错误：回滚后直接继续工作
+风险：Bash 命令的更改仍然存在，可能状态不一致
+正确：回滚 → 全面验证 → 检查外部更改状态
+</code></pre>
+<hr>
+<h2 id="快速参考">快速参考</h2>
+<h3 id="键盘快捷键">键盘快捷键</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Esc</code> + <code>Esc</code></td>
+<td>打开 checkpoint 浏览器</td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>Slash 命令访问</td>
+</tr>
+<tr>
+<td><code>/checkpoint</code></td>
+<td><code>/rewind</code> 的别名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="恢复选项速查">恢复选项速查</h3>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>恢复内容</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>代码 + 会话</td>
+<td>全部</td>
+<td>完全重置</td>
+</tr>
+<tr>
+<td>仅会话</td>
+<td>上下文</td>
+<td>文件正确，会话混乱</td>
+</tr>
+<tr>
+<td>仅代码</td>
+<td>文件</td>
+<td>代码有错，推理有用</td>
+</tr>
+<tr>
+<td>摘要</td>
+<td>压缩历史</td>
+<td>上下文太长</td>
+</tr>
+<tr>
+<td>没关系</td>
+<td>无</td>
+<td>取消操作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最佳实践清单">最佳实践清单</h3>
+<ul><li>[ ] 重要操作前记录 checkpoint 描述</li>
+<li>[ ] 里程碑完成后验证并记录</li>
+<li>[ ] 回滚后运行测试验证</li>
+<li>[ ] 成功状态提交 Git</li>
+<li>[ ] 上下文 > 50% 时准备切换</li>
+
+</ul>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote>"我想把这些能力打包分享给团队"</blockquote>
+<p>你已经学会了：</p>
+<ul><li>用 Checkpoints 保护重要改动</li>
+<li>从失败状态快速恢复</li>
+<li>比较不同实现方案</li>
+
+</ul>
+<p>但这些能力目前只在你的本地环境中可用。如何将这些配置、命令、hooks 打包成可复用的扩展包，分享给整个团队？</p>
+<strong>下一章：<a href="/content/07-plugins.html">Plugins（插件）</a></strong> —— 将你的 Claude Code 能力打包、分发、分享。
+<hr>
+<h2 id="相关资源">相关资源</h2>
+<ul><li><strong><a href="/content/09-advanced-features.html">高级功能</a></strong> - 规划模式与 Checkpoints 配合</li>
+<li><strong><a href="/content/02-memory.html">内存管理</a></strong> - CLAUDE.md 配置系统</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动自动化</li>
+<li><a href="https://code.claude.com/docs/en/checkpointing">官方 Checkpointing 文档</a></li>
+<li><a href="https://github.com/luongnv89/cc-context-stats">cc-context-stats 工具</a></li>
+
+</ul>
+<hr>
+<em>Checkpoints：因为当你需要探索多种可能时，"撤销"是不够的。</em>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/08-hooks.html">← Hooks 自动化</a>
+      <a href="/content/10-plugins.html">Plugins 插件 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

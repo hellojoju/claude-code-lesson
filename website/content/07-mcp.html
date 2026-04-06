@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP 扩展 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code MCP 扩展 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#mcp-是什么">MCP 是什么？</a></li><li class="toc-item toc-h3"><a href="#mcp-架构">MCP 架构</a></li><li class="toc-item toc-h3"><a href="#mcp-vs-memory">MCP vs Memory</a></li><li class="toc-item toc-h3"><a href="#mcp-传输方式">MCP 传输方式</a></li><li class="toc-item toc-h3"><a href="#mcp-作用域">MCP 作用域</a></li><li class="toc-item toc-h2"><a href="#场景-1-连接-github">场景 1：连接 GitHub</a></li><li class="toc-item toc-h3"><a href="#为什么选择-github-mcp">为什么选择 GitHub MCP？</a></li><li class="toc-item toc-h3"><a href="#配置步骤">配置步骤</a></li><li class="toc-item toc-h3"><a href="#可用-tools">可用 Tools</a></li><li class="toc-item toc-h3"><a href="#实际使用示例">实际使用示例</a></li><li class="toc-item toc-h3"><a href="#进阶技巧-pr-完整工作流">进阶技巧：PR 完整工作流</a></li><li class="toc-item toc-h2"><a href="#场景-2-连接数据库">场景 2：连接数据库</a></li><li class="toc-item toc-h3"><a href="#为什么连接数据库">为什么连接数据库？</a></li><li class="toc-item toc-h3"><a href="#配置步骤">配置步骤</a></li><li class="toc-item toc-h3"><a href="#实际使用示例">实际使用示例</a></li><li class="toc-item toc-h3"><a href="#安全提示">安全提示</a></li><li class="toc-item toc-h2"><a href="#场景-3-创建自定义-mcp-server">场景 3：创建自定义 MCP Server</a></li><li class="toc-item toc-h3"><a href="#什么时候需要自定义-mcp">什么时候需要自定义 MCP？</a></li><li class="toc-item toc-h3"><a href="#开发流程">开发流程</a></li><li class="toc-item toc-h3"><a href="#mcp-server-组件">MCP Server 组件</a></li><li class="toc-item toc-h3"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-添加第一个-mcp">练习 1: 添加第一个 MCP</a></li><li class="toc-item toc-h3"><a href="#练习-2-使用-mcp-prompts">练习 2: 使用 MCP Prompts</a></li><li class="toc-item toc-h3"><a href="#练习-3-mcp-resources-引用">练习 3: MCP Resources 引用</a></li><li class="toc-item toc-h3"><a href="#练习-4-多-mcp-工作流">练习 4: 多 MCP 工作流</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q-mcp-server-无法连接">Q: MCP Server 无法连接?</a></li><li class="toc-item toc-h3"><a href="#q-token-权限不足">Q: Token 权限不足?</a></li><li class="toc-item toc-h3"><a href="#q-tool-输出过大">Q: Tool 输出过大?</a></li><li class="toc-item toc-h3"><a href="#q-oauth-认证卡住">Q: OAuth 认证卡住?</a></li><li class="toc-item toc-h3"><a href="#q-配置文件格式错误">Q: 配置文件格式错误?</a></li><li class="toc-item toc-h3"><a href="#q-windows-特殊问题">Q: Windows 特殊问题?</a></li><li class="toc-item toc-h2"><a href="#进阶主题">进阶主题</a></li><li class="toc-item toc-h3"><a href="#oauth-2-0-认证">OAuth 2.0 认证</a></li><li class="toc-item toc-h3"><a href="#claude-ai-mcp-connectors">Claude.ai MCP Connectors</a></li><li class="toc-item toc-h3"><a href="#tool-搜索优化">Tool 搜索优化</a></li><li class="toc-item toc-h3"><a href="#code-execution-解决上下文膨胀">Code Execution 解决上下文膨胀</a></li><li class="toc-item toc-h3"><a href="#企业托管-mcp">企业托管 MCP</a></li><li class="toc-item toc-h2"><a href="#mcp-生态系统速查">MCP 生态系统速查</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#更多资源">更多资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / MCP 扩展
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 50 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证: 2026-04-06</blockquote>
+<strong>你将构建:</strong> 将 Claude 连接到外部工具和实时数据源。
+<h1>MCP (Model Context Protocol)</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<blockquote>"我想让 Claude 访问外部数据和工具"</blockquote>
+<p>你正在开发一个项目，需要：</p>
+<ul><li>查看当前的 GitHub PR 状态</li>
+<li>从数据库查询最新的用户数据</li>
+<li>读取 Notion 中的项目规格文档</li>
+
+</ul>
+<p>每次都要手动复制粘贴？太繁琐了。</p>
+<p>MCP (Model Context Protocol) 解决这个问题 —— 让 Claude <strong>直接访问</strong>外部服务和实时数据，无需你手动搬运信息。</p>
+<div class="mermaid">graph LR
+    A["你的请求"] --> B["Claude"]
+    B -->|MCP| C["GitHub"]
+    B -->|MCP| D["数据库"]
+    B -->|MCP| E["Notion"]
+    C -->|"PR 数据"| B
+    D -->|"用户列表"| B
+    E -->|"规格文档"| B
+    B -->|"整合后的答案"| A
+
+    style A fill:#fff3e0,stroke:#333,color:#333
+    style B fill:#e1f5fe,stroke:#333,color:#333
+    style C fill:#f3e5f5,stroke:#333,color:#333
+    style D fill:#f3e5f5,stroke:#333,color:#333
+    style E fill:#f3e5f5,stroke:#333,color:#333
+</div>
+<strong>一句话理解:</strong> MCP 是 Claude 的 "外部世界接口"，就像 USB 接口让电脑连接打印机、键盘一样。
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="mcp-是什么">MCP 是什么？</h3>
+<strong>Model Context Protocol (MCP)</strong> 是 Claude Code 访问外部工具、API 和实时数据源的标准化协议。
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>实时访问</strong></td>
+<td>获取当前数据，不是缓存</td>
+</tr>
+<tr>
+<td><strong>双向交互</strong></td>
+<td>读取数据 + 执行操作</td>
+</tr>
+<tr>
+<td><strong>安全认证</strong></td>
+<td>OAuth、Token 等标准认证</td>
+</tr>
+<tr>
+<td><strong>可扩展</strong></td>
+<td>支持自定义 MCP Server</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mcp-架构">MCP 架构</h3>
+<div class="mermaid">graph TB
+    A["Claude Code"]
+    B["MCP Server<br/>(翻译层)"]
+    C["External Service<br/>(数据源)"]
+
+    A -->|"Tool 请求"| B
+    B -->|"API 调用"| C
+    C -->|"原始数据"| B
+    B -->|"格式化结果"| A
+
+    style A fill:#e1f5fe,stroke:#333,color:#333
+    style B fill:#f3e5f5,stroke:#333,color:#333
+    style C fill:#e8f5e9,stroke:#333,color:#333
+</div>
+<strong>MCP Server</strong> 是关键组件 —— 它充当 Claude 和外部服务之间的 "翻译官"：
+<ul><li>将 Claude 的请求转换为外部 API 调用</li>
+<li>将外部数据转换为 Claude 可理解的格式</li>
+
+</ul>
+<h3 id="mcp-vs-memory">MCP vs Memory</h3>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>MCP</th>
+<th>Memory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>数据类型</strong></td>
+<td>实时变化的数据</td>
+<td>持久不变的偏好</td>
+</tr>
+<tr>
+<td><strong>数据来源</strong></td>
+<td>外部服务、API</td>
+<td>用户设定、学习历史</td>
+</tr>
+<tr>
+<td><strong>访问方式</strong></td>
+<td>Tool 调用</td>
+<td>自动加载</td>
+</tr>
+<tr>
+<td><strong>典型内容</strong></td>
+<td>GitHub PR、数据库查询</td>
+<td>代码风格偏好、项目约定</td>
+</tr>
+</tbody>
+</table>
+<strong>决策图:</strong>
+<div class="mermaid">graph TD
+    A["需要外部数据?"]
+    A -->|"是"| B["数据会变化?"]
+    A -->|"否"| C["用 Memory"]
+    B -->|"经常变化"| D["用 MCP"]
+    B -->|"很少变化"| C
+
+    D -->|"示例"| E["GitHub issues<br/>数据库记录<br/>实时状态"]
+    C -->|"示例"| F["编码风格<br/>项目偏好<br/>团队约定"]
+
+    style A fill:#fff3e0,stroke:#333,color:#333
+    style D fill:#f3e5f5,stroke:#333,color:#333
+    style C fill:#e1f5fe,stroke:#333,color:#333
+</div>
+<h3 id="mcp-传输方式">MCP 传输方式</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HTTP</strong></td>
+<td>云端服务</td>
+<td>GitHub API、Notion</td>
+</tr>
+<tr>
+<td><strong>Stdio</strong></td>
+<td>本地服务</td>
+<td>本地数据库、文件系统</td>
+</tr>
+<tr>
+<td><strong>WebSocket</strong></td>
+<td>实时双向</td>
+<td>实时协作服务</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mcp-作用域">MCP 作用域</h3>
+<p>配置可以存储在不同位置：</p>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>位置</th>
+<th>共享对象</th>
+<th>需要批准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local</strong></td>
+<td><code>~/.claude.json</code> (project 路径下)</td>
+<td>仅你</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td><code>.mcp.json</code></td>
+<td>团队成员</td>
+<td>首次使用时</td>
+</tr>
+<tr>
+<td><strong>User</strong></td>
+<td><code>~/.claude.json</code></td>
+<td>仅你（跨项目）</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-连接-github">场景 1：连接 GitHub</h2>
+<blockquote>"我想让 Claude 查看仓库状态、管理 PR"</blockquote>
+<h3 id="为什么选择-github-mcp">为什么选择 GitHub MCP？</h3>
+<p>日常工作流中，你需要：</p>
+<ul><li>查看待审查的 PR</li>
+<li>创建 Issue 报告 bug</li>
+<li>合并已通过的 PR</li>
+
+</ul>
+<p>手动打开浏览器、导航到仓库、查找 PR... 每次重复这些步骤。</p>
+<strong>GitHub MCP 让 Claude 直接操作 GitHub</strong> —— 一个命令搞定。
+<h3 id="配置步骤">配置步骤</h3>
+<strong>步骤 1: 获取 GitHub Token</strong>
+<ul><li>访问 GitHub Settings → Developer settings → Personal access tokens</li>
+<li>Generate new token (classic)</li>
+<li>选择权限：<code>repo</code>（完整仓库）、<code>pull_requests</code>、<code>issues</code></li>
+<li>复制生成的 Token</li>
+
+</ul>
+<strong>步骤 2: 添加 GitHub MCP</strong>
+<pre><code class="language-bash"># 设置环境变量
+export GITHUB_TOKEN=&quot;ghp_your_token_here&quot;
+
+# 添加 MCP Server
+claude mcp add --transport stdio github -- npx @modelcontextprotocol/server-github
+</code></pre>
+<p>或使用 <code>.mcp.json</code> 配置文件（推荐团队共享）:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;github&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@modelcontextprotocol/server-github&quot;],
+      &quot;env&quot;: {
+        &quot;GITHUB_TOKEN&quot;: &quot;${GITHUB_TOKEN}&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<strong>步骤 3: 测试连接</strong>
+<pre><code class="language-bash">claude mcp list
+# 输出应显示: github ✓ connected
+</code></pre>
+<h3 id="可用-tools">可用 Tools</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>功能</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_prs</code></td>
+<td>列出所有 PR</td>
+<td>查看待审查 PR</td>
+</tr>
+<tr>
+<td><code>get_pr</code></td>
+<td>获取 PR 详情</td>
+<td>深入了解某个 PR</td>
+</tr>
+<tr>
+<td><code>create_pr</code></td>
+<td>创建新 PR</td>
+<td>提交代码变更</td>
+</tr>
+<tr>
+<td><code>merge_pr</code></td>
+<td>合并 PR</td>
+<td>完成代码审查</td>
+</tr>
+<tr>
+<td><code>list_issues</code></td>
+<td>列出 Issues</td>
+<td>查看 bug 报告</td>
+</tr>
+<tr>
+<td><code>create_issue</code></td>
+<td>创建 Issue</td>
+<td>报告新问题</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实际使用示例">实际使用示例</h3>
+<strong>查看待审查的 PR:</strong>
+<pre><code class="language-bash"># 在 Claude Code 中输入:
+&quot;显示当前仓库所有待审查的 PR，按创建时间排序&quot;
+
+# Claude 会:
+# → 调用 github MCP 的 list_prs tool
+# → 返回格式化的 PR 列表
+</code></pre>
+<strong>审查特定 PR:</strong>
+<pre><code class="language-bash">&quot;审查 PR #123，总结主要变更和潜在问题&quot;
+
+# Claude 会:
+# → 调用 get_pr tool 获取详情和 diff
+# → 分析代码变更
+# → 给出审查意见
+</code></pre>
+<strong>创建 Issue:</strong>
+<pre><code class="language-bash">&quot;为新发现的 bug 创建 Issue：
+标题: &#039;登录页面加载缓慢&#039;
+描述: 用户反馈登录页面加载超过 5 秒...&quot;
+
+# Claude 会:
+# → 调用 create_issue tool
+# → 自动创建 Issue
+# → 返回 Issue URL
+</code></pre>
+<h3 id="进阶技巧-pr-完整工作流">进阶技巧：PR 完整工作流</h3>
+<pre><code class="language-bash"># 完整的 PR 审查流程
+&quot;我完成了 feature/auth 分支的开发。
+1. 查看这个分支和 main 的差异
+2. 创建 PR 到 main
+3. PR 标题: &#039;Auth: JWT token refresh&#039;
+4. 在描述中总结这次会话的所有变更
+5. 添加 reviewer: @alice, @bob&quot;
+
+# Claude 会依次执行:
+# → 获取分支差异
+# → 创建 PR
+# → 设置 reviewer
+# → 返回 PR URL
+</code></pre>
+<hr>
+<h2 id="场景-2-连接数据库">场景 2：连接数据库</h2>
+<blockquote>"我想让 Claude 直接查询数据库"</blockquote>
+<h3 id="为什么连接数据库">为什么连接数据库？</h3>
+<p>开发时常见需求：</p>
+<ul><li>查询用户数据验证功能</li>
+<li>分析数据趋势</li>
+<li>检查数据完整性</li>
+
+</ul>
+<p>每次都要打开数据库客户端、写 SQL、复制结果... MCP 直接连接数据库，Claude 执行查询并解释结果。</p>
+<h3 id="配置步骤">配置步骤</h3>
+<strong>步骤 1: 设置数据库连接</strong>
+<pre><code class="language-bash"># PostgreSQL 示例
+export DATABASE_URL=&quot;postgresql://user:password@localhost/mydb&quot;
+
+# MySQL 示例
+export DATABASE_URL=&quot;mysql://user:password@localhost/mydb&quot;
+</code></pre>
+<strong>步骤 2: 添加 Database MCP</strong>
+<pre><code class="language-bash">claude mcp add --transport stdio database -- npx @modelcontextprotocol/server-database
+</code></pre>
+<p>或 <code>.mcp.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;database&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@modelcontextprotocol/server-database&quot;],
+      &quot;env&quot;: {
+        &quot;DATABASE_URL&quot;: &quot;${DATABASE_URL}&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="实际使用示例">实际使用示例</h3>
+<strong>查询数据:</strong>
+<pre><code class="language-bash"># 自然语言请求
+&quot;查询订单超过 10 个的所有用户，按订单数降序排列&quot;
+
+# Claude 会生成并执行:
+SELECT u.name, u.email, COUNT(o.id) as order_count
+FROM users u
+LEFT JOIN orders o ON u.id = o.user_id
+GROUP BY u.id
+HAVING COUNT(o.id) &gt; 10
+ORDER BY order_count DESC;
+
+# 返回格式化结果:
+# - Alice: 15 orders
+# - Bob: 12 orders
+# - Charlie: 11 orders
+</code></pre>
+<strong>数据分析:</strong>
+<pre><code class="language-bash">&quot;分析过去 7 天的销售数据，给出趋势摘要&quot;
+
+# Claude 会:
+# → 执行查询获取数据
+# → 计算趋势指标
+# → 给出业务解读
+</code></pre>
+<strong>数据验证:</strong>
+<pre><code class="language-bash">&quot;检查 users 表中是否有重复的邮箱地址&quot;
+
+# Claude 会生成:
+SELECT email, COUNT(*) as count
+FROM users
+GROUP BY email
+HAVING COUNT(*) &gt; 1;
+
+# 并解释结果含义
+</code></pre>
+<h3 id="安全提示">安全提示</h3>
+<p>数据库 MCP 涉及敏感数据：</p>
+<ul><li>使用只读连接用于查询分析</li>
+<li>写入操作需要额外审批</li>
+<li>生产数据库建议只读权限</li>
+
+</ul>
+<hr>
+<h2 id="场景-3-创建自定义-mcp-server">场景 3：创建自定义 MCP Server</h2>
+<blockquote>"我的项目有特殊需求，现有 MCP 不够用"</blockquote>
+<h3 id="什么时候需要自定义-mcp">什么时候需要自定义 MCP？</h3>
+<p>现有 MCP Server 涵盖常见服务，但你的项目可能需要：</p>
+<ul><li>公司内部的 API</li>
+<li>特定业务逻辑的工具</li>
+<li>自定义数据处理</li>
+
+</ul>
+<strong>自定义 MCP Server 让你扩展 Claude 的能力</strong>。
+<h3 id="开发流程">开发流程</h3>
+<strong>步骤 1: 创建项目</strong>
+<pre><code class="language-bash">mkdir my-mcp-server
+cd my-mcp-server
+npm init -y
+npm install @modelcontextprotocol/sdk
+</code></pre>
+<strong>步骤 2: 实现 MCP Server</strong>
+<pre><code class="language-typescript">// src/index.ts
+import { Server } from &#039;@modelcontextprotocol/sdk/server/index.js&#039;;
+import { StdioServerTransport } from &#039;@modelcontextprotocol/sdk/server/stdio.js&#039;;
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from &#039;@modelcontextprotocol/sdk/types.js&#039;;
+
+const server = new Server(
+  { name: &#039;my-custom-server&#039;, version: &#039;1.0.0&#039; },
+  { capabilities: { tools: {} } }
+);
+
+// 定义你的 Tools
+server.setRequestHandler(ListToolsRequestSchema, async () =&gt; ({
+  tools: [
+    {
+      name: &#039;get_project_stats&#039;,
+      description: &#039;获取项目统计：文件数、代码行数&#039;,
+      inputSchema: {
+        type: &#039;object&#039;,
+        properties: {
+          path: { type: &#039;string&#039;, description: &#039;项目路径&#039; }
+        },
+        required: [&#039;path&#039;]
+      }
+    }
+  ]
+}));
+
+// 处理 Tool 调用
+server.setRequestHandler(CallToolRequestSchema, async (request) =&gt; {
+  const { name, arguments: args } = request.params;
+
+  if (name === &#039;get_project_stats&#039;) {
+    // 实现你的逻辑
+    const stats = await calculateStats(args.path);
+    return {
+      content: [{ type: &#039;text&#039;, text: JSON.stringify(stats, null, 2) }]
+    };
+  }
+
+  throw new Error(`Unknown tool: ${name}`);
+});
+
+// 启动 Server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
+
+main().catch(console.error);
+</code></pre>
+<strong>步骤 3: 编译和测试</strong>
+<pre><code class="language-bash">npx tsc
+node dist/index.js  # 本地测试
+</code></pre>
+<strong>步骤 4: 配置到 Claude Code</strong>
+<pre><code class="language-bash">claude mcp add --transport stdio my-custom -- node /path/to/dist/index.js
+</code></pre>
+<strong>步骤 5: 使用自定义 Tool</strong>
+<pre><code class="language-bash"># 在 Claude Code 中:
+/mcp__my-custom__get_project_stats path=&quot;/home/user/my-project&quot;
+</code></pre>
+<h3 id="mcp-server-组件">MCP Server 组件</h3>
+<p>一个完整的 MCP Server 可以包含：</p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>功能</th>
+<th>必需?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tools</strong></td>
+<td>执行操作、返回结果</td>
+<td>推荐</td>
+</tr>
+<tr>
+<td><strong>Resources</strong></td>
+<td>提供数据源</td>
+<td>可选</td>
+</tr>
+<tr>
+<td><strong>Prompts</strong></td>
+<td>预定义的 prompt 模板</td>
+<td>可选</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最佳实践">最佳实践</h3>
+<strong>Tool 命名:</strong>
+<ul><li>使用 <code>snake_case</code></li>
+<li>名称反映功能：<code>get_user_stats</code>、<code>validate_config</code></li>
+
+</ul>
+<strong>描述要详细:</strong>
+<pre><code class="language-typescript">{
+  name: &#039;validate_config&#039;,
+  description: &#039;验证项目配置文件格式和内容&#039;,
+  inputSchema: {
+    // 清晰的参数定义
+  }
+}
+</code></pre>
+<strong>错误处理:</strong>
+<pre><code class="language-typescript">if (name === &#039;get_stats&#039;) {
+  try {
+    const stats = await calculateStats(args.path);
+    return { content: [{ type: &#039;text&#039;, text: JSON.stringify(stats) }] };
+  } catch (error) {
+    return {
+      content: [{ type: &#039;text&#039;, text: `Error: ${error.message}` }],
+      isError: true
+    };
+  }
+}
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-添加第一个-mcp">练习 1: 添加第一个 MCP</h3>
+<p>5 分钟快速上手：</p>
+<pre><code class="language-bash"># 1. 设置 Token（如果有 GitHub Token）
+export GITHUB_TOKEN=&quot;your_token&quot;
+
+# 2. 添加 GitHub MCP
+claude mcp add --transport stdio github -- npx @modelcontextprotocol/server-github
+
+# 3. 验证连接
+claude mcp list
+
+# 4. 在 Claude Code 中测试
+&quot;显示当前仓库的最近 5 个 PR&quot;
+</code></pre>
+<h3 id="练习-2-使用-mcp-prompts">练习 2: 使用 MCP Prompts</h3>
+<p>MCP Server 可以暴露 Prompts 作为 slash 命令：</p>
+<pre><code class="language-bash"># GitHub MCP 的 prompt 命令
+/mcp__github__create_pr title=&quot;Add feature&quot; body=&quot;...&quot;
+
+# 格式: /mcp__&lt;server&gt;__&lt;prompt&gt;
+</code></pre>
+<h3 id="练习-3-mcp-resources-引用">练习 3: MCP Resources 引用</h3>
+<p>使用 <code>@</code> 引用 MCP Resources：</p>
+<pre><code class="language-bash"># 引用数据库资源
+@database:postgres://mydb/users
+
+# 引用特定数据
+@github:repo://anthropics/claude-code/issues
+</code></pre>
+<h3 id="练习-4-多-mcp-工作流">练习 4: 多 MCP 工作流</h3>
+<p>组合多个 MCP 完成复杂任务：</p>
+<pre><code class="language-bash"># 在 Claude Code 中:
+&quot;从 GitHub 获取本周完成的 PR 数量，
+从数据库查询本周销售额，
+生成报告发送到 Slack #reports 频道&quot;
+
+# Claude 会:
+# → GitHub MCP: 获取 PR 数据
+# → Database MCP: 查询销售数据
+# → Slack MCP: 发送报告
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q-mcp-server-无法连接">Q: MCP Server 无法连接?</h3>
+<strong>症状:</strong> <code>claude mcp list</code> 显示 server 未连接
+<strong>解决方案:</strong>
+<pre><code class="language-bash"># 1. 检查环境变量
+echo $GITHUB_TOKEN
+
+# 2. 手动测试 MCP Server
+npx @modelcontextprotocol/server-github
+
+# 3. 查看日志
+cat ~/.claude/logs/mcp-github.log
+
+# 4. 重置连接
+claude mcp remove github
+claude mcp add --transport stdio github -- npx @modelcontextprotocol/server-github
+</code></pre>
+<h3 id="q-token-权限不足">Q: Token 权限不足?</h3>
+<strong>症状:</strong> Tool 调用返回权限错误
+<strong>解决方案:</strong>
+<pre><code class="language-bash"># GitHub: 检查 token scopes
+curl -H &quot;Authorization: token $GITHUB_TOKEN&quot; https://api.github.com/user
+
+# 确保 token 包含必要权限:
+# - repo (仓库访问)
+# - pull_requests (PR 管理)
+# - issues (Issue 管理)
+</code></pre>
+<h3 id="q-tool-输出过大">Q: Tool 输出过大?</h3>
+<strong>症状:</strong> Claude 显示 "Tool output exceeds 10,000 tokens"
+<strong>解决方案:</strong>
+<pre><code class="language-bash"># 增加输出限制
+export MAX_MCP_OUTPUT_TOKENS=50000
+
+# 或请求精简输出
+&quot;获取 PR 列表，但只返回前 5 条的摘要&quot;
+</code></pre>
+<h3 id="q-oauth-认证卡住">Q: OAuth 认证卡住?</h3>
+<strong>症状:</strong> OAuth 流程不完成
+<strong>解决方案:</strong>
+<pre><code class="language-bash"># 手动复制 URL 到浏览器
+# 检查回调端口是否被占用
+
+# 尝试不同端口
+claude mcp add --transport http notion https://mcp.notion.com/mcp \
+  --callback-port 8081
+</code></pre>
+<h3 id="q-配置文件格式错误">Q: 配置文件格式错误?</h3>
+<strong>症状:</strong> MCP 配置不生效
+<strong>检查步骤:</strong>
+<pre><code class="language-bash"># 1. 验证 JSON 格式
+cat .mcp.json | jq .
+
+# 2. 检查环境变量引用
+echo &quot;GITHUB_TOKEN: $GITHUB_TOKEN&quot;
+
+# 3. 常见错误:
+# - JSON 缺少逗号
+# - 环境变量未设置
+# - command 路径错误
+</code></pre>
+<h3 id="q-windows-特殊问题">Q: Windows 特殊问题?</h3>
+<p>Windows 上使用 npx 需要 <code>cmd /c</code>:</p>
+<pre><code class="language-bash">claude mcp add --transport stdio my-server -- cmd /c npx -y @some/package
+</code></pre>
+<hr>
+<h2 id="进阶主题">进阶主题</h2>
+<h3 id="oauth-2-0-认证">OAuth 2.0 认证</h3>
+<p>对于需要 OAuth 的服务（Notion、Google）:</p>
+<pre><code class="language-bash"># 交互式添加（推荐）
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+# 按提示完成浏览器认证
+
+# 预配置 OAuth
+claude mcp add --transport http notion https://mcp.notion.com/mcp \
+  --client-id &quot;your-client-id&quot; \
+  --client-secret &quot;your-client-secret&quot;
+</code></pre>
+<h3 id="claude-ai-mcp-connectors">Claude.ai MCP Connectors</h3>
+<p>在 Claude.ai 网页界面配置的 MCP 会自动在 Claude Code 可用:</p>
+<pre><code class="language-bash"># 禁用 Claude.ai MCP（如果需要）
+ENABLE_CLAUDEAI_MCP_SERVERS=false claude
+</code></pre>
+<h3 id="tool-搜索优化">Tool 搜索优化</h3>
+<p>当 MCP Tools 过多时，启用自动搜索:</p>
+<pre><code class="language-bash"># 自动启用（超过 10% 上下文时）
+ENABLE_TOOL_SEARCH=auto
+
+# 始终启用
+ENABLE_TOOL_SEARCH=true
+</code></pre>
+<h3 id="code-execution-解决上下文膨胀">Code Execution 解决上下文膨胀</h3>
+<p>大规模 MCP 应用可能遇到上下文膨胀问题。解决方案：使用 Code Execution 让 MCP Tools 作为 API 调用，数据不通过模型上下文。</p>
+<p>参考 Anthropic Engineering Blog: <a href="https://www.anthropic.com/engineering/code-execution-with-mcp">Code Execution with MCP</a></p>
+<h3 id="企业托管-mcp">企业托管 MCP</h3>
+<p>企业环境可通过 <code>managed-mcp.json</code> 控制 MCP 策略:</p>
+<pre><code class="language-json">{
+  &quot;allowedMcpServers&quot;: [
+    { &quot;serverName&quot;: &quot;github&quot;, &quot;serverUrl&quot;: &quot;https://api.github.com/mcp&quot; }
+  ],
+  &quot;deniedMcpServers&quot;: [
+    { &quot;serverName&quot;: &quot;untrusted-*&quot; }
+  ]
+}
+</code></pre>
+<hr>
+<h2 id="mcp-生态系统速查">MCP 生态系统速查</h2>
+<table>
+<thead>
+<tr>
+<th>MCP Server</th>
+<th>用途</th>
+<th>认证</th>
+<th>常用 Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub</strong></td>
+<td>仓库管理</td>
+<td>Token</td>
+<td>list_prs, create_issue</td>
+</tr>
+<tr>
+<td><strong>Notion</strong></td>
+<td>项目文档</td>
+<td>OAuth</td>
+<td>list_pages, get_page</td>
+</tr>
+<tr>
+<td><strong>Slack</strong></td>
+<td>团队沟通</td>
+<td>Token</td>
+<td>send_message</td>
+</tr>
+<tr>
+<td><strong>Database</strong></td>
+<td>SQL 查询</td>
+<td>URL</td>
+<td>query</td>
+</tr>
+<tr>
+<td><strong>Filesystem</strong></td>
+<td>文件操作</td>
+<td>OS</td>
+<td>read, write</td>
+</tr>
+<tr>
+<td><strong>Google Workspace</strong></td>
+<td>文档协作</td>
+<td>OAuth</td>
+<td>docs_read, gmail_send</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote>"我希望某些操作能自动执行"</blockquote>
+<p>MCP 让 Claude <strong>访问</strong>外部工具。但有些操作你希望 <strong>自动触发</strong>：</p>
+<ul><li>每次保存文件时自动格式化</li>
+<li>提交代码前自动运行检查</li>
+<li>检测到敏感信息时自动警告</li>
+
+</ul>
+<p>下一章 <strong>08-hooks</strong> 介绍事件驱动的自动化系统，让 Claude Code 在特定事件发生时自动执行操作。</p>
+<hr>
+<h2 id="更多资源">更多资源</h2>
+<ul><li><a href="https://code.claude.com/docs/en/mcp">Official MCP Documentation</a></li>
+<li><a href="https://modelcontextprotocol.io/specification">MCP Protocol Specification</a></li>
+<li><a href="https://github.com/modelcontextprotocol/servers">MCP Server Collection</a></li>
+<li><a href="https://github.com/steipete/mcporter">MCPorter</a> — MCP 调用运行时</li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/06-subagents.html">← Subagents 代理</a>
+      <a href="/content/08-hooks.html">Hooks 自动化 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

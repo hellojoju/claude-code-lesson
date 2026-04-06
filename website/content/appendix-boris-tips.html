@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boris 实战技巧 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Boris 实战技巧 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#设计哲学-产品就是模型">设计哲学：产品就是模型</a></li><li class="toc-item toc-h3"><a href="#核心原则">核心原则</a></li><li class="toc-item toc-h3"><a href="#设计决策背后的理念">设计决策背后的理念</a></li><li class="toc-item toc-h2"><a href="#anthropic-内部实践-生产力数据">Anthropic 内部实践：生产力数据</a></li><li class="toc-item toc-h3"><a href="#关键指标-2026-年初">关键指标（2026 年初）</a></li><li class="toc-item toc-h3"><a href="#boris-的个人工作流">Boris 的个人工作流</a></li><li class="toc-item toc-h2"><a href="#模型选择策略-不降低能力">模型选择策略：不降低能力</a></li><li class="toc-item toc-h3"><a href="#boris-的模型选择原则">Boris 的模型选择原则</a></li><li class="toc-item toc-h3"><a href="#模型能力-vs-token-成本关系">模型能力 vs Token 成本关系</a></li><li class="toc-item toc-h3"><a href="#模型选择指南">模型选择指南</a></li><li class="toc-item toc-h2"><a href="#规划作为核心实践">规划作为核心实践</a></li><li class="toc-item toc-h3"><a href="#plan-mode-使用频率">Plan Mode 使用频率</a></li><li class="toc-item toc-h3"><a href="#为什么规划决定结果">为什么规划决定结果</a></li><li class="toc-item toc-h3"><a href="#规划的纪律">规划的纪律</a></li><li class="toc-item toc-h2"><a href="#提示词纪律-输入决定输出">提示词纪律：输入决定输出</a></li><li class="toc-item toc-h3"><a href="#核心诊断问题">核心诊断问题</a></li><li class="toc-item toc-h3"><a href="#规格充分-vs-规格不足">规格充分 vs 规格不足</a></li><li class="toc-item toc-h3"><a href="#显式优于隐式">显式优于隐式</a></li><li class="toc-item toc-h2"><a href="#逐功能构建方法论">逐功能构建方法论</a></li><li class="toc-item toc-h3"><a href="#增量开发的理由">增量开发的理由</a></li><li class="toc-item toc-h3"><a href="#构建周期">构建周期</a></li><li class="toc-item toc-h3"><a href="#构建顺序原则">构建顺序原则</a></li><li class="toc-item toc-h2"><a href="#并行代理工作流">并行代理工作流</a></li><li class="toc-item toc-h3"><a href="#多会话并行策略">多会话并行策略</a></li><li class="toc-item toc-h3"><a href="#git-worktree-配合">Git Worktree 配合</a></li><li class="toc-item toc-h3"><a href="#并行会话示例">并行会话示例</a></li><li class="toc-item toc-h2"><a href="#上下文窗口管理">上下文窗口管理</a></li><li class="toc-item toc-h3"><a href="#50-实践">50% 实践</a></li><li class="toc-item toc-h3"><a href="#跨会话连续性">跨会话连续性</a></li><li class="toc-item toc-h2"><a href="#anthropic-安全实践">Anthropic 安全实践</a></li><li class="toc-item toc-h3"><a href="#发布前验证">发布前验证</a></li><li class="toc-item toc-h3"><a href="#机制可解释性">机制可解释性</a></li><li class="toc-item toc-h3"><a href="#安全优先的架构">安全优先的架构</a></li><li class="toc-item toc-h2"><a href="#当前前沿与未来方向">当前前沿与未来方向</a></li><li class="toc-item toc-h3"><a href="#主动任务生成">主动任务生成</a></li><li class="toc-item toc-h3"><a href="#超越软件开发">超越软件开发</a></li><li class="toc-item toc-h3"><a href="#为六个月后的模型构建">为六个月后的模型构建</a></li><li class="toc-item toc-h2"><a href="#hands-on-实践">Hands-on 实践</a></li><li class="toc-item toc-h3"><a href="#实践-1-规划模式体验">实践 1：规划模式体验</a></li><li class="toc-item toc-h3"><a href="#实践-2-并行会话">实践 2：并行会话</a></li><li class="toc-item toc-h3"><a href="#实践-3-规格充分性测试">实践 3：规格充分性测试</a></li><li class="toc-item toc-h2"><a href="#最佳实践总结">最佳实践总结</a></li><li class="toc-item toc-h3"><a href="#boris-的十条心得">Boris 的十条心得</a></li><li class="toc-item toc-h3"><a href="#反模式警示">反模式警示</a></li><li class="toc-item toc-h2"><a href="#进阶资源">进阶资源</a></li><li class="toc-item toc-h3"><a href="#原始资料">原始资料</a></li><li class="toc-item toc-h3"><a href="#相关模块">相关模块</a></li><li class="toc-item toc-h3"><a href="#推荐阅读">推荐阅读</a></li><li class="toc-item toc-h2"><a href="#附录-boris-cherny-语录精选">附录：Boris Cherny 语录精选</a></li><li class="toc-item toc-h3"><a href="#关于编程乐趣">关于编程乐趣</a></li><li class="toc-item toc-h3"><a href="#关于-claude-code-的愿景">关于 Claude Code 的愿景</a></li><li class="toc-item toc-h3"><a href="#关于模型选择">关于模型选择</a></li><li class="toc-item toc-h3"><a href="#关于优化">关于优化</a></li><li class="toc-item toc-h3"><a href="#关于编码的未来">关于编码的未来</a></li><li class="toc-item toc-h3"><a href="#关于未来规划">关于未来规划</a></li><li class="toc-item toc-h2"><a href="#检查清单">检查清单</a></li><li class="toc-item toc-h3"><a href="#claude-code-使用检查清单">Claude Code 使用检查清单</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Boris 实战技巧
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟
+> ✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-06</blockquote>
+<strong>你将学到：</strong> Claude Code 设计哲学与 Anthropic 内部最佳实践。
+<h1>Boris Tips — Claude Code 负责人的实战心得</h1>
+<blockquote>"我从未像今天这样享受编程——因为我不再需要处理那些琐碎的事情。"
+— <strong>Boris Cherny</strong>，Claude Code 负责人，Anthropic</blockquote>
+<p>本模块从 Boris Cherny（Claude Code 产品负责人）的公开访谈和 freeCodeCamp Handbook 中提取核心见解，揭示 Anthropic 内部如何使用 Claude Code 达到 <strong>10-30 个 PR/天/工程师</strong> 的生产力。</p>
+<hr>
+<h2 id="设计哲学-产品就是模型">设计哲学：产品就是模型</h2>
+<h3 id="核心原则">核心原则</h3>
+<p>大多数 AI 开发工具通过<strong>约束模型</strong>来构建：定义僵化的工作流、控制模型能看到什么、精确指定工具使用顺序。这以牺牲灵活性和能力为代价创造了可预测性。</p>
+<p>Claude Code 的架构<strong>颠倒了这一点</strong>。</p>
+<p>正如 Boris Cherny 所描述：</p>
+<blockquote><strong>"产品就是模型。"</strong></blockquote>
+<p>方法是尽可能直接地暴露模型，使用最小的工具集和最小的脚手架，并允许模型确定给定任务的最佳方法。</p>
+<h3 id="设计决策背后的理念">设计决策背后的理念</h3>
+<div class="mermaid">flowchart LR
+    A[传统 AI 工具] --> B[约束模型]
+    B --> C[僵化工作流]
+    C --> D[可预测但能力受限]
+    
+    E[Claude Code] --> F[暴露模型]
+    F --> G[最小脚手架]
+    G --> H[灵活且能力最大化]
+    
+    style E fill:#e8f5e9
+    style H fill:#c8e6c9
+    style D fill:#ffcdd2
+</div>
+<strong>为什么这样设计？</strong>
+<table>
+<thead>
+<tr>
+<th>传统约束方法</th>
+<th>Claude Code 方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>预定义工作流步骤</td>
+<td>模型自主决定步骤</td>
+</tr>
+<tr>
+<td>限制可见信息</td>
+<td>按需读取文件</td>
+</tr>
+<tr>
+<td>控制工具顺序</td>
+<td>模型选择工具组合</td>
+</tr>
+<tr>
+<td>预设错误处理</td>
+<td>模型判断并修正</td>
+</tr>
+<tr>
+<td>可预测的输出</td>
+<td>更准确的输出</td>
+</tr>
+</tbody>
+</table>
+<strong>核心洞察：</strong> 一个能力较弱的模型需要更多 token 完成同样任务。使用更便宜的模型实际上更便宜并不明显。通常，最强大的模型更便宜且消耗更少 token，因为它以更少的修正周期完成任务。
+<hr>
+<h2 id="anthropic-内部实践-生产力数据">Anthropic 内部实践：生产力数据</h2>
+<h3 id="关键指标-2026-年初">关键指标（2026 年初）</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub 全球提交占比</td>
+<td><strong>4%</strong></td>
+<td>Claude Code 生成</td>
+</tr>
+<tr>
+<td>预计年底提交占比</td>
+<td><strong>20%</strong></td>
+<td>持续增长</td>
+</tr>
+<tr>
+<td>Anthropic PR 产出</td>
+<td><strong>10-30 个/天/工程师</strong></td>
+<td>每位工程师</td>
+</tr>
+<tr>
+<td>Claude 审查覆盖率</td>
+<td><strong>100%</strong></td>
+<td>人工审查前先由 Claude 审查</td>
+</tr>
+<tr>
+<td>生产力提升</td>
+<td><strong>200%</strong></td>
+<td>自 Claude Code 采用后</td>
+</tr>
+<tr>
+<td>日活用户增长</td>
+<td><strong>翻倍</strong></td>
+<td>上个月内</td>
+</tr>
+</tbody>
+</table>
+<blockquote>"Spotify 的工程师自 12 月以来就没有手动编写过代码。"</blockquote>
+<h3 id="boris-的个人工作流">Boris 的个人工作流</h3>
+<strong>并行会话策略：</strong>
+<blockquote>"我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</blockquote>
+<p>Boris 通常同时运行 <strong>5 个或更多并行会话</strong>：</p>
+<ul><li>一个构建认证系统</li>
+<li>一个构建数据可视化层</li>
+<li>一个编写测试</li>
+<li>一个处理文档</li>
+<li>一个监控 PR</li>
+
+</ul>
+<strong>权限管理：</strong>
+<blockquote>"一旦计划看起来不错，我就让模型执行。之后我自动接受编辑。用 Opus 4.6，它几乎每次都一次性正确完成。"</blockquote>
+<hr>
+<h2 id="模型选择策略-不降低能力">模型选择策略：不降低能力</h2>
+<h3 id="boris-的模型选择原则">Boris 的模型选择原则</h3>
+<p>Boris Cherny <strong>专门使用 Opus 4.6</strong>，启用最大努力，<strong>从不降低能力来节省 token</strong>。</p>
+<p>他的推理很精确：</p>
+<blockquote>"因为一个能力较弱的模型不那么智能，它需要更多的 token 来完成同样的任务。使用更便宜的模型实际上更便宜并不明显。通常，最强大的模型更便宜且消耗更少的 token，因为它以更少的修正周期完成任务更快。"</blockquote>
+<h3 id="模型能力-vs-token-成本关系">模型能力 vs Token 成本关系</h3>
+<div class="mermaid">graph TD
+    A[选择模型] --> B{选择什么？}
+    B -->|弱模型| C[需要更多修正周期]
+    C --> D[更多 token 消耗]
+    D --> E[总成本更高]
+    
+    B -->|强模型| F[更少修正周期]
+    F --> G[更少 token 消耗]
+    G --> H[总成本更低]
+    
+    style E fill:#ffcdd2
+    style H fill:#c8e6c9
+</div>
+<h3 id="模型选择指南">模型选择指南</h3>
+<table>
+<thead>
+<tr>
+<th>任务特征</th>
+<th>推荐模型</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初始探索、学习 Claude Code</td>
+<td>Sonnet 4.6</td>
+<td>平衡成本和能力</td>
+</tr>
+<tr>
+<td>中等复杂度开发工作</td>
+<td>Sonnet 4.6</td>
+<td>足够应对大多数任务</td>
+</tr>
+<tr>
+<td>复杂架构决策</td>
+<td><strong>Opus 4.6</strong></td>
+<td>最深推理能力</td>
+</tr>
+<tr>
+<td>扩展自主会话</td>
+<td><strong>Opus 4.6</strong></td>
+<td>减少 context drift</td>
+</tr>
+<tr>
+<td>多代理并行工作流</td>
+<td><strong>Opus 4.6</strong></td>
+<td>确保每个会话质量</td>
+</tr>
+<tr>
+<td>简单查询、琐碎问题</td>
+<td>Haiku</td>
+<td>成本敏感场景</td>
+</tr>
+</tbody>
+</table>
+<strong>Boris 的建议：</strong>
+<blockquote>"不要试图过早优化。给工程师他们需要的所有 token。在某些东西被证明并正在扩展时，再优化。不是之前。"</blockquote>
+<hr>
+<h2 id="规划作为核心实践">规划作为核心实践</h2>
+<h3 id="plan-mode-使用频率">Plan Mode 使用频率</h3>
+<p>Boris 在大约 <strong>80%</strong> 的会话中使用计划模式。</p>
+<p>机制本身出奇地简单：注入模型上下文的一句话：</p>
+<blockquote><em>"请先不要编写任何代码。"</em></blockquote>
+<h3 id="为什么规划决定结果">为什么规划决定结果</h3>
+<p>一个经过审查和批准的完善计划，在编写任何代码之前，产生三个效果：</p>
+<ul><li>Claude 将其推理投入到正确的问题上</li>
+<li>意图和方法之间的不一致在嵌入代码之前被捕获</li>
+<li>结果实现是连贯的，因为它遵循连贯的设计</li>
+
+</ul>
+<strong>时间投资回报：</strong>
+<p>三十分钟的结构化规划经常将十小时的构建减少到三小时。</p>
+<div class="mermaid">flowchart LR
+    A[30分钟规划] --> B[3小时构建]
+    C[0分钟规划] --> D[10小时构建<br/>+多次返工]
+    
+    style A fill:#c8e6c9
+    style B fill:#c8e6c9
+    style D fill:#ffcdd2
+</div>
+<h3 id="规划的纪律">规划的纪律</h3>
+<blockquote>"实际阅读 Claude 产生的计划。不要反射性地批准它。计划是你可以以最小成本干预的点。"</blockquote>
+<strong>审查计划时检查：</strong>
+<ul><li>是否与设计意图一致？</li>
+<li>是否会影响不应该触及的文件？</li>
+<li>数据流是否正确？</li>
+<li>边缘情况是否被处理？</li>
+
+</ul>
+<hr>
+<h2 id="提示词纪律-输入决定输出">提示词纪律：输入决定输出</h2>
+<h3 id="核心诊断问题">核心诊断问题</h3>
+<p>Claude Code 产生的糟糕结果几乎从来不能归因于模型能力不足。</p>
+<p>正确的诊断问题是：</p>
+<blockquote><em>我的规格是否足以产生我想要的东西？</em></blockquote>
+<p>在大多数情况下，答案是：<strong>不是</strong>。</p>
+<h3 id="规格充分-vs-规格不足">规格充分 vs 规格不足</h3>
+<strong>规格不足：</strong>
+<pre><code class="language-">构建一个任务管理应用。
+</code></pre>
+<strong>规格充分：</strong>
+<pre><code class="language-">为一个三人团队构建一个任务管理应用程序。要求：
+
+1. 任务有标题、可选描述、截止日期和优先级（低、中、高）
+2. 每个任务可以分配给三个硬编码用户之一：Alice、Bob 或 Carol
+3. 任务可以标记为完成，记录完成时间戳
+4. 任务列表可以按受托人或优先级过滤
+5. 所有数据持久化在 localStorage 中——不需要后端
+6. 界面：干净、浅色主题；没有外部 CSS 框架
+
+技术：仅 HTML、CSS、纯 JavaScript。
+</code></pre>
+<p>第二个版本关闭了 Claude 否则会通过假设解决的所有重要决策点。</p>
+<h3 id="显式优于隐式">显式优于隐式</h3>
+<blockquote>"即使看起来明显，也要说明你想让 Claude 做什么。"</blockquote>
+<strong>必须显式声明的：</strong>
+<ul><li>检查文档 → 在编写代码之前</li>
+<li>特定库版本 → 指定它们</li>
+<li>不更改现有文件 → 明确说明</li>
+<li>特定文件结构 → 描述它</li>
+
+</ul>
+<p>隐式期望是经常不满足的期望。显式指令是一致遵循的指令。</p>
+<hr>
+<h2 id="逐功能构建方法论">逐功能构建方法论</h2>
+<h3 id="增量开发的理由">增量开发的理由</h3>
+<p>每个实现的功能都是可以独立验证的行为单元。如果功能 2 建立在功能 1 之上而没有验证功能 1，缺陷就会复合。</p>
+<p>基础中的缺陷向上传播，嵌入到建立在其上的所有东西中。</p>
+<p>每个验证过的功能也是一个稳定的平台，可以在其上自信地构建下一个功能。</p>
+<h3 id="构建周期">构建周期</h3>
+<div class="mermaid">flowchart TD
+    A[详细指定功能] --> B[进入计划模式]
+    B --> C[审查计划]
+    C --> D{计划合理？}
+    D -->|否| E[修改计划]
+    E --> B
+    D -->|是| F[批准并实现]
+    F --> G[测试功能]
+    G --> H{正确工作？}
+    H -->|否| I[解决差异]
+    I --> F
+    H -->|是| J[确认并前进]
+    J --> A
+    
+    style J fill:#c8e6c9
+    style I fill:#fff9c4
+</div>
+<h3 id="构建顺序原则">构建顺序原则</h3>
+<strong>项目进度示例：</strong>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>功能</th>
+<th>验证标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>用户认证</td>
+<td>登录/登出正常工作</td>
+</tr>
+<tr>
+<td>2</td>
+<td>任务创建</td>
+<td>CRUD 操作完成</td>
+</tr>
+<tr>
+<td>3</td>
+<td>任务过滤</td>
+<td>按状态/优先级筛选</td>
+</tr>
+<tr>
+<td>4</td>
+<td>电子邮件通知</td>
+<td>发送成功</td>
+</tr>
+<tr>
+<td>5</td>
+<td>团队管理</td>
+<td>角色分配正确</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="并行代理工作流">并行代理工作流</h2>
+<h3 id="多会话并行策略">多会话并行策略</h3>
+<p>多个 Claude Code 会话，每个分配特定范围，复制小团队的并行能力。</p>
+<strong>Boris 的工作流：</strong>
+<blockquote>"我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</blockquote>
+<h3 id="git-worktree-配合">Git Worktree 配合</h3>
+<p>使用 <strong>Git 工作树</strong>隔离并行开发：</p>
+<pre><code class="language-bash"># 从 main 分支的仓库根目录
+git worktree add ../my-project-auth feature/authentication
+git worktree add ../my-project-notifications feature/notifications
+</code></pre>
+<p>每个工作树有自己的磁盘文件集，可以独立开发。</p>
+<p>完成后合并：</p>
+<pre><code class="language-bash">cd my-project
+git merge feature/authentication
+git merge feature/notifications
+</code></pre>
+<h3 id="并行会话示例">并行会话示例</h3>
+<strong>窗口 1：前端会话</strong>
+<pre><code class="language-">我们正在为笔记应用程序构建前端。后端 REST API
+已经在端口 3001 上运行。你在这个会话中的范围只是 client/ 目录。
+
+不要触及 server/ 目录中的任何文件。
+
+首先进入计划模式。在写任何东西之前向我展示你的实现计划。
+</code></pre>
+<strong>窗口 2：测试会话</strong>
+<pre><code class="language-">我们正在为笔记应用程序 REST API 编写集成测试。你在这个会话中的范围
+是 server/tests/ 目录。
+
+不要修改 server/tests/ 之外的任何文件。
+</code></pre>
+<hr>
+<h2 id="上下文窗口管理">上下文窗口管理</h2>
+<h3 id="50-实践">50% 实践</h3>
+<p>有经验的 Claude Code 用户中的工作惯例：</p>
+<blockquote>当上下文使用达到 <strong>40-50%</strong> 时，开始新会话。</blockquote>
+<p>上下文饱和的症状是 <strong>漂移</strong>：Claude 开始做出与它在会话早期建立的约束不一致的决策。</p>
+<h3 id="跨会话连续性">跨会话连续性</h3>
+<p>四个连续性文档：</p>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>项目约定和架构上下文（自动读取）</td>
+</tr>
+<tr>
+<td><code>PRD.md</code></td>
+<td>正在构建什么</td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>当前实现状态</td>
+</tr>
+<tr>
+<td><code>progress.md</code></td>
+<td>会话级笔记和决策</td>
+</tr>
+</tbody>
+</table>
+<p>新会话开始时：</p>
+<pre><code class="language-">新会话。按顺序读取以下文件：
+1. CLAUDE.md
+2. PRD.md
+3. README.md（特别是实现状态部分）
+4. progress.md
+
+确认你对项目状态的理解并告诉我我们停在哪里。
+</code></pre>
+<hr>
+<h2 id="anthropic-安全实践">Anthropic 安全实践</h2>
+<h3 id="发布前验证">发布前验证</h3>
+<p>在公开发布之前，Claude Code 在 Anthropic 内部运行了 <strong>四到五个月</strong>，在任何外部发布前都仔细研究了其行为。</p>
+<h3 id="机制可解释性">机制可解释性</h3>
+<p>最深层的安全研究是<strong>机制可解释性</strong>：理解模型内部在单个计算组件层面实际发生了什么。</p>
+<blockquote>"我们可以识别一个与欺骗相关的神经元。我们开始能够监控它并理解它正在激活。"</blockquote>
+<h3 id="安全优先的架构">安全优先的架构</h3>
+<p>Claude Code 的设计从一开始就考虑安全：</p>
+<ul><li>权限请求机制</li>
+<li>PreToolUse hooks 验证</li>
+<li>PostToolUse 安全扫描</li>
+<li>完整的审计日志</li>
+
+</ul>
+<hr>
+<h2 id="当前前沿与未来方向">当前前沿与未来方向</h2>
+<h3 id="主动任务生成">主动任务生成</h3>
+<p>Claude Code 开始基于观察到的项目信号生成可操作建议。</p>
+<blockquote>"Claude 读取 Slack 反馈线程，检查 GitHub 问题跟踪器，审查遥测数据，并提出带有相关 PR 的建议：'这里有一些我可以做的事情。我已经提了几个 PR。想看看吗？'"</blockquote>
+<h3 id="超越软件开发">超越软件开发</h3>
+<p>Boris 对当前状态的评估：</p>
+<blockquote>"编码基本上已解决——至少是我做的那种编码。"</blockquote>
+<p>前沿正在扩展到相邻领域。</p>
+<h3 id="为六个月后的模型构建">为六个月后的模型构建</h3>
+<p>Boris 最可操作的战略指导：</p>
+<blockquote><strong>"为六个月后的模型构建，而不是为今天的模型。"</strong></blockquote>
+<strong>含义：</strong>
+<table>
+<thead>
+<tr>
+<th>今天假设</th>
+<th>六个月后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>需要详细规格</td>
+<td>模型理解意图</td>
+</tr>
+<tr>
+<td>需要逐步指导</td>
+<td>模型自主规划</td>
+</tr>
+<tr>
+<td>需要人工验证</td>
+<td>模型自我验证</td>
+</tr>
+<tr>
+<td>需要多个会话</td>
+<td>单次会话完成</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="hands-on-实践">Hands-on 实践</h2>
+<h3 id="实践-1-规划模式体验">实践 1：规划模式体验</h3>
+<strong>任务：</strong> 使用 Boris 的规划纪律完成一个功能。
+<pre><code class="language-bash"># 1. 启动 Claude Code
+claude
+
+# 2. 激活计划模式
+# 终端：按 Shift+Tab 两次
+# VS Code：点击计划模式按钮
+
+# 3. 描述任务
+构建一个简单的待办事项应用。要求：
+- 添加、删除、标记完成任务
+- 数据存储在 localStorage
+- 单页面 HTML/CSS/JS
+
+请先不要编写任何代码。展示实现计划。
+
+# 4. 阅读并审查计划
+# 不要反射性批准！
+
+# 5. 检查：
+# - 是否有不必要的文件？
+# - 数据流是否正确？
+# - 是否处理了边缘情况？
+
+# 6. 批准后才实现
+</code></pre>
+<h3 id="实践-2-并行会话">实践 2：并行会话</h3>
+<strong>任务：</strong> 运行两个并行 Claude Code 会话。
+<pre><code class="language-bash"># 窗口 1：VS Code 打开项目
+# 启动 Claude Code 扩展
+# 范围：client/ 目录
+
+# 窗口 2：终端
+claude
+# 范围：server/tests/ 目录
+
+# 使用 Git worktree 避免冲突
+git worktree add ../project-client feature/frontend
+git worktree add ../project-tests feature/tests
+</code></pre>
+<h3 id="实践-3-规格充分性测试">实践 3：规格充分性测试</h3>
+<strong>任务：</strong> 对比规格不足和规格充分的输出差异。
+<pre><code class="language-bash"># 测试 A：规格不足
+claude
+&gt; 构建一个登录页面
+
+# 测试 B：规格充分
+claude
+&gt; 构建一个登录页面。要求：
+&gt; - 用户名和密码输入框
+&gt; - 登录按钮和&quot;忘记密码&quot;链接
+&gt; - 错误提示区域
+&gt; - 深色主题，响应式设计
+&gt; - 仅使用 HTML/CSS，无框架
+&gt; - 表单验证：用户名至少3字符，密码至少8字符
+
+# 对比两次输出的差异
+</code></pre>
+<hr>
+<h2 id="最佳实践总结">最佳实践总结</h2>
+<h3 id="boris-的十条心得">Boris 的十条心得</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>心得</th>
+<th>应用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>产品就是模型</strong></td>
+<td>信任模型判断，减少约束</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>用最强的模型</strong></td>
+<td>Opus 4.6 减少总成本</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>80% 会话用计划模式</strong></td>
+<td>规划后再实现</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>阅读计划再批准</strong></td>
+<td>不要反射性批准</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>显式优于隐式</strong></td>
+<td>说明所有期望</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>逐功能构建</strong></td>
+<td>每个功能验证后继续</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>并行会话工作</strong></td>
+<td>5+ 会话同时运行</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>40-50% 上下文换会话</strong></td>
+<td>避免 drift</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>连续性文档</strong></td>
+<td>CLAUDE.md + PRD.md + README.md</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>为六个月后构建</strong></td>
+<td>超越当前限制</td>
+</tr>
+</tbody>
+</table>
+<h3 id="反模式警示">反模式警示</h3>
+<table>
+<thead>
+<tr>
+<th>反模式</th>
+<th>Boris 的观点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用弱模型省钱</td>
+<td>"实际上更贵"</td>
+</tr>
+<tr>
+<td>不读计划就批准</td>
+<td>"最小成本干预点"</td>
+</tr>
+<tr>
+<td>隐式期望</td>
+<td>"经常不满足"</td>
+</tr>
+<tr>
+<td>一次性构建大功能</td>
+<td>"缺陷复合"</td>
+</tr>
+<tr>
+<td>单会话串行</td>
+<td>"喝咖啡的时间"</td>
+</tr>
+<tr>
+<td>填满上下文窗口</td>
+<td>"漂移"</td>
+</tr>
+<tr>
+<td>为今天优化</td>
+<td>"六个月后过时"</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="进阶资源">进阶资源</h2>
+<h3 id="原始资料">原始资料</h3>
+<ul><li><strong><a href="https://www.freecodecamp.org/news/claude-code-handbook/">freeCodeCamp Claude Code Handbook</a></strong> — Boris Cherny 完整访谈</li>
+<li><strong><a href="https://code.claude.ai">Claude Code 官方文档</a></strong> — 安装和配置指南</li>
+
+</ul>
+<h3 id="相关模块">相关模块</h3>
+<ul><li><strong><a href="/content/03-skills.html">03-skills</a></strong> — 可复用任务模板</li>
+<li><strong><a href="/content/04-subagents.html">04-subagents</a></strong> — 专业智能体</li>
+<li><strong><a href="/content/05-mcp.html">05-mcp</a></strong> — 模型上下文协议</li>
+<li><strong><a href="/content/06-hooks.html">06-hooks</a></strong> — 事件驱动自动化</li>
+<li><strong><a href="/content/09-advanced-features.html">09-advanced-features</a></strong> — 高级功能详解</li>
+
+</ul>
+<h3 id="推荐阅读">推荐阅读</h3>
+<table>
+<thead>
+<tr>
+<th>文章</th>
+<th>作者</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html">The Bitter Lesson</a></td>
+<td>Rich Sutton</td>
+<td>为什么通用方法最终胜出</td>
+</tr>
+<tr>
+<td><a href="https://www.goodreads.com/book/show/39996759-a-philosophy-of-software-design">A Philosophy of Software Design</a></td>
+<td>John Ousterhout</td>
+<td>软件设计原则</td>
+</tr>
+<tr>
+<td><a href="https://fundamentalsofsoftwarearchitecture.com/">Fundamentals of Software Architecture</a></td>
+<td>Mark Richards & Neal Ford</td>
+<td>架构基础</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="附录-boris-cherny-语录精选">附录：Boris Cherny 语录精选</h2>
+<h3 id="关于编程乐趣">关于编程乐趣</h3>
+<blockquote>"我从未像今天这样享受编程——因为我不再需要处理那些琐碎的事情。"</blockquote>
+<h3 id="关于-claude-code-的愿景">关于 Claude Code 的愿景</h3>
+<blockquote>"我想象一个每个人都能编程的世界。任何人都可以随时构建软件。"</blockquote>
+<h3 id="关于模型选择">关于模型选择</h3>
+<blockquote>"使用更便宜的模型实际上更便宜并不明显。通常，最强大的模型更便宜且消耗更少的 token。"</blockquote>
+<h3 id="关于优化">关于优化</h3>
+<blockquote>"不要试图过早优化。给工程师他们需要的所有 token。在某些东西被证明并正在扩展时，再优化。不是之前。"</blockquote>
+<h3 id="关于编码的未来">关于编码的未来</h3>
+<blockquote>"编码基本上已解决——至少是我做的那种编码。"</blockquote>
+<h3 id="关于未来规划">关于未来规划</h3>
+<blockquote>"为六个月后的模型构建，而不是为今天的模型。"</blockquote>
+<hr>
+<h2 id="检查清单">检查清单</h2>
+<h3 id="claude-code-使用检查清单">Claude Code 使用检查清单</h3>
+<ul><li>[ ] 是否使用计划模式（80% 会话）</li>
+<li>[ ] 是否阅读并审查计划</li>
+<li>[ ] 是否使用显式、充分的规格</li>
+<li>[ ] 是否逐功能构建并验证</li>
+<li>[ ] 是否考虑并行会话</li>
+<li>[ ] 是否监控上下文使用（<50%）</li>
+<li>[ ] 是否维护连续性文档</li>
+<li>[ ] 是否选择合适的模型（Opus for 复杂任务）</li>
+<li>[ ] 是否为未来模型设计工作流</li>
+
+</ul>
+<hr>
+<strong>学完本模块后，你将理解：</strong>
+<ul><li>Claude Code "产品就是模型" 的设计哲学</li>
+<li>Anthropic 内部如何达到 10-30 PR/天/工程师</li>
+<li>Boris Cherny 的模型选择、规划、并行工作流策略</li>
+<li>如何为六个月后的模型构建而非今天的</li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/14-enterprise.html">← 企业应用</a>
+      <a href="/content/18-source-code-analysis.html">源码解读 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

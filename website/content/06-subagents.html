@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subagents 代理 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Subagents 代理 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#什么是-subagent">什么是 Subagent？</a></li><li class="toc-item toc-h3"><a href="#关键特性">关键特性</a></li><li class="toc-item toc-h3"><a href="#与其他功能的区别">与其他功能的区别</a></li><li class="toc-item toc-h2"><a href="#场景-1-使用内置-subagents">场景 1：使用内置 Subagents</a></li><li class="toc-item toc-h3"><a href="#内置-subagents一览">内置 Subagents一览</a></li><li class="toc-item toc-h3"><a href="#实战示例-代码库探索">实战示例：代码库探索</a></li><li class="toc-item toc-h3"><a href="#explore-的详尽度级别">Explore 的详尽度级别</a></li><li class="toc-item toc-h3"><a href="#实战示例-实现规划">实战示例：实现规划</a></li><li class="toc-item toc-h3"><a href="#如何触发内置-subagent">如何触发内置 Subagent</a></li><li class="toc-item toc-h2"><a href="#场景-2-创建自定义-subagent">场景 2：创建自定义 Subagent</a></li><li class="toc-item toc-h3"><a href="#为什么创建自定义-subagent">为什么创建自定义 Subagent？</a></li><li class="toc-item toc-h3"><a href="#实战-创建代码审查助手">实战：创建代码审查助手</a></li><li class="toc-item toc-h4"><a href="#方法-1-使用-agents-命令-推荐">方法 1：使用 `/agents` 命令（推荐）</a></li><li class="toc-item toc-h4"><a href="#方法-2-手动创建配置文件">方法 2：手动创建配置文件</a></li><li class="toc-item toc-h3"><a href="#配置字段说明">配置字段说明</a></li><li class="toc-item toc-h3"><a href="#文件位置与作用域">文件位置与作用域</a></li><li class="toc-item toc-h3"><a href="#测试自定义-subagent">测试自定义 Subagent</a></li><li class="toc-item toc-h2"><a href="#场景-3-组合多个-subagents">场景 3：组合多个 Subagents</a></li><li class="toc-item toc-h3"><a href="#并行执行模式">并行执行模式</a></li><li class="toc-item toc-h3"><a href="#顺序执行模式-链式委托">顺序执行模式（链式委托）</a></li><li class="toc-item toc-h3"><a href="#多视角分析模式">多视角分析模式</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-体验内置-explore-agent">练习 1：体验内置 Explore Agent</a></li><li class="toc-item toc-h3"><a href="#练习-2-创建你的第一个自定义-agent">练习 2：创建你的第一个自定义 Agent</a></li><li class="toc-item toc-h3"><a href="#练习-3-并行分析体验">练习 3：并行分析体验</a></li><li class="toc-item toc-h3"><a href="#练习-4-上下文隔离测试">练习 4：上下文隔离测试</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q-subagent-和-skill-有什么区别">Q: Subagent 和 Skill 有什么区别？</a></li><li class="toc-item toc-h3"><a href="#q-subagent-什么时候会被自动调用">Q: Subagent 什么时候会被自动调用？</a></li><li class="toc-item toc-h3"><a href="#q-如何限制-subagent-的权限">Q: 如何限制 Subagent 的权限？</a></li><li class="toc-item toc-h3"><a href="#q-subagent-结果会污染主对话上下文吗">Q: Subagent 结果会污染主对话上下文吗？</a></li><li class="toc-item toc-h3"><a href="#q-如何调试-subagent">Q: 如何调试 Subagent？</a></li><li class="toc-item toc-h3"><a href="#q-可以让-subagent-生成其他-subagent-吗">Q: 可以让 Subagent 生成其他 Subagent 吗？</a></li><li class="toc-item toc-h3"><a href="#q-subagent-会占用更多-token-吗">Q: Subagent 会占用更多 token 吗？</a></li><li class="toc-item toc-h2"><a href="#进阶用法">进阶用法</a></li><li class="toc-item toc-h3"><a href="#持久化内存">持久化内存</a></li><li class="toc-item toc-h3"><a href="#git-worktree-隔离">Git Worktree 隔离</a></li><li class="toc-item toc-h3"><a href="#后台执行">后台执行</a></li><li class="toc-item toc-h2"><a href="#示例-subagents">示例 Subagents</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#快速参考">快速参考</a></li><li class="toc-item toc-h3"><a href="#常用命令">常用命令</a></li><li class="toc-item toc-h3"><a href="#配置模板">配置模板</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Subagents 代理
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 60 分钟
+✅ 已验证于 Claude Code <strong>v2.1.92</strong> · 最后验证日期：2026-04-06</blockquote>
+<strong>你将学会：</strong> 将专业任务委托给 AI 专家助手，实现隔离执行和并行协作。
+<h1>Subagents - 专业 AI 助手系统</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>有些任务太专业了。</p>
+<p>你正在开发一个复杂的功能，突然意识到需要：</p>
+<ul><li><strong>安全审查</strong> — 检查认证代码有没有漏洞</li>
+<li><strong>性能优化</strong> — 分析数据库查询瓶颈</li>
+<li><strong>文档生成</strong> — 为新增 API 编写文档</li>
+
+</ul>
+<p>如果让同一个 Claude 做所有这些，会发生什么？</p>
+<ul><li>上下文越来越臃肿，讨论认证时还想着文档</li>
+<li>专业判断受上下文污染，"之前讨论的内容可能影响分析"</li>
+<li>复杂任务挤压在一起，难以专注</li>
+
+</ul>
+<div class="mermaid">graph LR
+    A["你: 实现认证功能"] --> B["Claude: 开始工作..."]
+    B --> C["上下文膨胀<br/>认证代码 + 安全分析 + 文档"]
+    C --> D["结果不理想<br/>每件事都做了<br/>但都不够深入"]
+    
+    style A fill:#e1f5fe,stroke:#333,color:#333
+    style D fill:#ffebee,stroke:#333,color:#333
+</div>
+<strong>Subagents 解决这个问题</strong>。
+<p>它让 Claude 把专业任务委托给专门的 AI 助手，每个助手：</p>
+<ul><li>拥有独立上下文窗口，不受主对话污染</li>
+<li>预加载专业指令，专注特定领域</li>
+<li>可以并行执行，互不干扰</li>
+
+</ul>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="什么是-subagent">什么是 Subagent？</h3>
+<p>Subagent 是 Claude Code 可以委托任务的专业 AI 助手。</p>
+<div class="mermaid">graph TB
+    User["你"] -->|"实现认证功能"| Main["主 Claude<br/>协调者"]
+    Main -->|"委托安全审查"| S1["Security Agent<br/>独立上下文"]
+    Main -->|"委托性能分析"| S2["Performance Agent<br/>独立上下文"]
+    Main -->|"委托文档生成"| S3["Doc Agent<br/>独立上下文"]
+    
+    S1 -->|"安全报告"| Main
+    S2 -->|"性能建议"| Main
+    S3 -->|"API 文档"| Main
+    
+    Main -->|"整合结果"| User
+    
+    style Main fill:#e1f5fe,stroke:#333,color:#333
+    style S1 fill:#fff9c4,stroke:#333,color:#333
+    style S2 fill:#fff9c4,stroke:#333,color:#333
+    style S3 fill:#fff9c4,stroke:#333,color:#333
+</div>
+<h3 id="关键特性">关键特性</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>隔离上下文</strong></td>
+<td>每个 subagent 有独立上下文窗口，从干净状态开始</td>
+</tr>
+<tr>
+<td><strong>专业指令</strong></td>
+<td>可预加载领域特定的系统提示</td>
+</tr>
+<tr>
+<td><strong>工具限制</strong></td>
+<td>可配置允许使用的工具，实现权限控制</td>
+</tr>
+<tr>
+<td><strong>结果提炼</strong></td>
+<td>只返回结果摘要，不污染主对话上下文</td>
+</tr>
+</tbody>
+</table>
+<h3 id="与其他功能的区别">与其他功能的区别</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>上下文</th>
+<th>调用方式</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Slash Commands</strong></td>
+<td>共享</td>
+<td>手动 <code>/command</code></td>
+<td>快捷操作</td>
+</tr>
+<tr>
+<td><strong>Skills</strong></td>
+<td>共享</td>
+<td>自动/手动</td>
+<td>标准化流程</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong></td>
+<td><strong>隔离</strong></td>
+<td>自动/手动</td>
+<td>专业复杂任务</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>共享</td>
+<td>自动</td>
+<td>实时外部数据</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-使用内置-subagents">场景 1：使用内置 Subagents</h2>
+<p>Claude Code 提供几个内置的专业助手，无需配置即可使用。</p>
+<h3 id="内置-subagents一览">内置 Subagents一览</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>用途</th>
+<th>模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Explore</strong></td>
+<td>代码库探索（只读）</td>
+<td>Haiku（快速）</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>实现规划研究</td>
+<td>继承</td>
+</tr>
+<tr>
+<td><strong>general-purpose</strong></td>
+<td>复杂多步骤任务</td>
+<td>继承</td>
+</tr>
+<tr>
+<td><strong>Bash</strong></td>
+<td>终端命令执行</td>
+<td>继承</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实战示例-代码库探索">实战示例：代码库探索</h3>
+<strong>问题</strong>：你想理解项目的认证机制，但不希望 Claude 花时间读完所有文件后才告诉你。
+<pre><code class="language-bash">你: I need to understand how authentication works in this codebase.
+    Use the Explore agent with &quot;medium&quot; thoroughness.
+</code></pre>
+<strong>Claude 的行为</strong>：
+<pre><code class="language-">Claude: 启动 Explore agent 进行代码库探索...
+
+[Explore Agent 在独立上下文中运行]
+- 搜索 auth 相关文件
+- 分析认证流程
+- 提炼关键发现
+
+[返回结果]
+认证机制分析：
+
+1. **主要入口**：`src/auth/login.ts`
+   - JWT token 生成
+   - 密码验证（bcrypt）
+
+2. **中间件**：`src/middleware/auth.ts`
+   - Token 验证
+   - 权限检查
+
+3. **配置**：`src/config/auth.ts`
+   - Token 过期时间：7天
+   - 密钥轮换策略
+
+建议：查看 login.ts 第 45-67 行了解核心流程。
+</code></pre>
+<h3 id="explore-的详尽度级别">Explore 的详尽度级别</h3>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;quick&quot;</code></td>
+<td>快速搜索</td>
+<td>查找特定模式</td>
+</tr>
+<tr>
+<td><code>&quot;medium&quot;</code></td>
+<td>平衡探索</td>
+<td>默认，理解模块结构</td>
+</tr>
+<tr>
+<td><code>&quot;very thorough&quot;</code></td>
+<td>全面分析</td>
+<td>跨多个位置的深度搜索</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实战示例-实现规划">实战示例：实现规划</h3>
+<strong>问题</strong>：你想实现用户通知功能，但需要先了解现有架构才能设计。
+<pre><code class="language-bash">你: Plan the implementation of a user notification system.
+</code></pre>
+<strong>Claude 的行为</strong>：
+<pre><code class="language-">Claude: 启动 Plan agent 进行研究...
+
+[Plan Agent 分析]
+- 检查现有通知相关代码
+- 分析数据库 schema
+- 研究消息队列配置
+
+[生成实现计划]
+用户通知系统实现计划：
+
+Phase 1：基础设施
+- 创建 notifications 表
+- 配置消息队列（Redis）
+
+Phase 2：API 设计
+- POST /notifications（创建）
+- GET /notifications（列表）
+- PUT /notifications/:id/read（标记已读）
+
+Phase 3：推送机制
+- WebSocket 实时推送
+- 邮件通知（可选）
+
+预计时间：4-6 小时
+风险点：消息队列性能需要测试
+</code></pre>
+<h3 id="如何触发内置-subagent">如何触发内置 Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自然描述</strong></td>
+<td><code>&quot;Plan the implementation of...&quot;</code></td>
+</tr>
+<tr>
+<td><strong>显式请求</strong></td>
+<td><code>&quot;Use the Explore agent to...&quot;</code></td>
+</tr>
+<tr>
+<td><strong>@-提及</strong></td>
+<td><code>@&quot;Explore (agent)&quot; search for auth</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-2-创建自定义-subagent">场景 2：创建自定义 Subagent</h2>
+<p>内置的 Subagents 很有用，但你的项目可能需要更专业的助手。</p>
+<h3 id="为什么创建自定义-subagent">为什么创建自定义 Subagent？</h3>
+<p>你的团队有特定的工作流程：</p>
+<ul><li><strong>代码审查标准</strong> — 公司的代码规范与通用不同</li>
+<li><strong>测试策略</strong> — 特定的测试框架和覆盖率要求</li>
+<li><strong>安全审计</strong> — 关注的漏洞类型与项目相关</li>
+
+</ul>
+<p>自定义 Subagent 可以预加载这些专业指令。</p>
+<h3 id="实战-创建代码审查助手">实战：创建代码审查助手</h3>
+<strong>目标</strong>：创建一个懂你们公司代码规范的审查助手。
+<h4 id="方法-1-使用-ic7ic-命令-推荐">方法 1：使用 <code>/agents</code> 命令（推荐）</h4>
+<pre><code class="language-bash">你: /agents
+
+Claude: 显示 Subagent 管理界面...
+
+[选择 Create New Agent]
+
+你: 创建一个 &quot;code-reviewer&quot; agent，专门做代码审查，
+    关注我们公司的规范：函数不超过50行，
+    必须有错误处理，禁止硬编码密钥。
+
+Claude: 创建 code-reviewer.md...
+
+请选择工具权限：
+- Read: 必需（读取代码）
+- Grep: 必需（搜索模式）
+- Glob: 必需（查找文件）
+- Bash: 可选（运行测试）
+- Write: 不需要（只审查不修改）
+
+[保存]
+✓ code-reviewer 已创建在 .claude/agents/
+</code></pre>
+<h4 id="方法-2-手动创建配置文件">方法 2：手动创建配置文件</h4>
+<p>创建 <code>.claude/agents/code-reviewer.md</code>：</p>
+<pre><code class="language-markdown">---
+name: code-reviewer
+description: Expert code reviewer. Use PROACTIVELY after writing or modifying code.
+tools: Read, Grep, Glob, Bash
+---
+
+# Code Reviewer Agent
+
+你是一名资深代码审查专家，专注于代码质量和安全。
+
+## 审查标准（按优先级）
+
+1. **安全问题**
+   - 硬编码密钥、密码、token
+   - SQL 注入风险
+   - XSS 漏洞
+
+2. **代码质量**
+   - 函数不超过 50 行
+   - 无深层嵌套（&gt;4 层）
+   - 错误处理完整
+
+3. **最佳实践**
+   - 无 console.log 调试语句
+   - 命名清晰有意义
+   - 注释恰当不过度
+
+## 工作流程
+
+当被调用时：
+1. 运行 `git diff` 查看最近更改
+2. 专注于修改的文件
+3. 立即开始审查
+
+## 输出格式
+
+对每个问题：
+- **严重级别**：CRITICAL / HIGH / MEDIUM / LOW
+- **类别**：Security / Quality / Best Practice
+- **位置**：文件路径和行号
+- **描述**：问题说明
+- **修复建议**：具体修复方法
+</code></pre>
+<h3 id="配置字段说明">配置字段说明</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>✓</td>
+<td>唯一标识符（小写字母和连字符）</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>✓</td>
+<td>自然语言描述，包含 "PROACTIVELY" 会自动调用</td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>可选</td>
+<td>允许的工具列表，省略则继承所有</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>可选</td>
+<td>指定模型：sonnet/opus/haiku/inherit</td>
+</tr>
+<tr>
+<td><code>maxTurns</code></td>
+<td>可选</td>
+<td>最大执行步数限制</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td>可选</td>
+<td>持久化内存作用域：user/project/local</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文件位置与作用域">文件位置与作用域</h3>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>作用域</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.claude/agents/</code></td>
+<td>当前项目</td>
+<td>项目特定助手</td>
+</tr>
+<tr>
+<td><code>~/.claude/agents/</code></td>
+<td>所有项目</td>
+<td>个人通用助手</td>
+</tr>
+<tr>
+<td>CLI <code>--agents</code></td>
+<td>仅当前会话</td>
+<td>临时测试助手</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试自定义-subagent">测试自定义 Subagent</h3>
+<pre><code class="language-bash">你: Use the code-reviewer agent to review my recent changes.
+
+Claude: 启动 code-reviewer...
+
+[code-reviewer 在独立上下文中分析]
+检查 git diff...
+分析 src/auth/login.ts...
+
+[审查结果]
+发现 3 个问题：
+
+**HIGH - Security**
+位置：src/auth/login.ts:23
+描述：硬编码 JWT 密钥
+修复：使用环境变量 JWT_SECRET
+
+**MEDIUM - Quality**
+位置：src/utils/validation.ts:15
+描述：validate() 函数 68 行，过长
+修复：拆分为 validateEmail() 和 validatePassword()
+
+**LOW - Best Practice**
+位置：src/auth/login.ts:45
+描述：console.log 调试语句
+修复：使用 logger.info() 替代
+</code></pre>
+<hr>
+<h2 id="场景-3-组合多个-subagents">场景 3：组合多个 Subagents</h2>
+<p>复杂任务往往需要多个专业视角。</p>
+<h3 id="并行执行模式">并行执行模式</h3>
+<p>让多个 Subagents 同时分析不同方面：</p>
+<pre><code class="language-bash">你: I need a comprehensive analysis of the authentication module.
+    Run these agents in parallel:
+    1. Security reviewer - check vulnerabilities
+    2. Performance analyzer - find bottlenecks
+    3. Code reviewer - check quality and style
+    
+    After all complete, synthesize the findings.
+</code></pre>
+<strong>Claude 的行为</strong>：
+<pre><code class="language-">Claude: 启动 3 个 Subagents 并行执行...
+
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Security Agent  │ │ Performance     │ │ Code Reviewer   │
+│ 独立上下文      │ │ Agent           │ │ 独立上下文      │
+│                 │ │ 独立上下文      │ │                 │
+│ 分析认证漏洞    │ │ 分析查询性能    │ │ 检查代码质量    │
+└─────────────────┘ └─────────────────┘ └─────────────────┘
+        │                  │                  │
+        └────── 结果合并 ──┴──────────────────┘
+                              │
+                     [综合报告]
+
+认证模块综合分析：
+
+**安全问题（CRITICAL）**
+- JWT 密钥硬编码 → 必须修复
+
+**性能问题（HIGH）**
+- 密码验证每次查库 → 建议缓存
+
+**质量问题（MEDIUM）**
+- 3 个函数超过 50 行 → 建议拆分
+
+优先修复顺序：安全问题 → 性能问题 → 质量问题
+</code></pre>
+<h3 id="顺序执行模式-链式委托">顺序执行模式（链式委托）</h3>
+<p>一个 agent 的结果传递给下一个：</p>
+<pre><code class="language-bash">你: First use the code-analyzer agent to find issues,
+    then use the fixer agent to implement fixes for CRITICAL issues only.
+
+Claude: 链式执行...
+
+[code-analyzer]
+分析代码...
+发现问题：
+- CRITICAL: JWT 密钥硬编码
+- HIGH: 密码验证性能问题
+
+[将 CRITICAL 问题传递给 fixer agent]
+
+[fixer]
+修复 JWT 密钥问题...
+创建 .env.example...
+更新 login.ts 使用环境变量...
+
+✓ CRITICAL 问题已修复
+</code></pre>
+<h3 id="多视角分析模式">多视角分析模式</h3>
+<p>用不同角色审视同一个决策：</p>
+<pre><code class="language-bash">你: Analyze whether we should migrate from REST to GraphQL.
+    Use split-role subagents:
+    - Factual reviewer: Check technical facts
+    - Senior engineer: Evaluate architecture impact  
+    - Security expert: Assess security implications
+    - Consistency reviewer: Check alignment with existing patterns
+    
+    Provide a synthesized recommendation.
+</code></pre>
+<strong>预期输出</strong>：
+<pre><code class="language-">REST → GraphQL 迁移决策分析：
+
+**事实审查**
+- GraphQL 减少网络请求：正确
+- 学习曲线：约 2-4 周
+- 现有工具支持：成熟
+
+**架构影响**
+- 需重构 API 层（中等工作量）
+- 缓存策略需调整（复杂度增加）
+- 团队技能差距（需培训）
+
+**安全考虑**
+- 查询深度限制需要实现
+- introspection 可能泄露 schema
+- 现有认证可复用
+
+**一致性检查**
+- 与现有微服务架构契合度：中等
+- 前端团队偏好：倾向 GraphQL
+
+**综合建议**
+迁移收益：高（减少 60% API 请求）
+迁移成本：中等（4-6 周工作量）
+风险：可控（安全措施可实施）
+
+建议：渐进式迁移，先试点用户模块
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-体验内置-explore-agent">练习 1：体验内置 Explore Agent</h3>
+<pre><code class="language-bash"># 在 Claude Code 中执行：
+
+&quot;I need to understand the project structure. Use the Explore agent 
+with &#039;medium&#039; thoroughness to find the main entry points and 
+key modules.&quot;
+</code></pre>
+<h3 id="练习-2-创建你的第一个自定义-agent">练习 2：创建你的第一个自定义 Agent</h3>
+<p>使用 <code>/agents</code> 命令创建一个 "test-runner" agent：</p>
+<pre><code class="language-bash">你: /agents
+
+# 选择 Create New Agent
+# 描述：专门运行测试并修复失败的测试
+# 工具：Read, Write, Edit, Bash
+# 不需要 Write（先观察测试结果）
+</code></pre>
+<p>或者手动创建：</p>
+<pre><code class="language-bash">mkdir -p .claude/agents
+
+cat &gt; .claude/agents/test-runner.md &lt;&lt; &#039;EOF&#039;
+---
+name: test-runner
+description: Test automation expert. Use PROACTIVELY when tests fail.
+tools: Read, Edit, Bash, Grep
+---
+
+你是测试自动化专家。当看到测试失败时：
+
+1. 运行测试获取失败信息
+2. 分析失败原因（实现问题还是测试问题）
+3. 修复实现，保持测试意图不变
+4. 重新运行确认通过
+
+原则：宁可修复实现，不修改测试（除非测试本身有 bug）
+EOF
+</code></pre>
+<h3 id="练习-3-并行分析体验">练习 3：并行分析体验</h3>
+<pre><code class="language-bash">&quot;Review the codebase. Run 3 agents in parallel:
+1. Explore agent - find test coverage gaps  
+2. Code reviewer - check code quality
+3. Security reviewer - find potential vulnerabilities
+
+Summarize all findings in one report.&quot;
+</code></pre>
+<h3 id="练习-4-上下文隔离测试">练习 4：上下文隔离测试</h3>
+<pre><code class="language-bash"># 步骤 1：在主对话中加载大量上下文
+&quot;Read all files in src/ and explain the architecture&quot;
+
+# 步骤 2：运行 subagent（观察它从干净状态开始）
+&quot;Now use the code-reviewer agent to review just src/api/users.ts&quot;
+
+# 观察：code-reviewer 不会有整个 src/ 的上下文
+# 它专注审查这一个文件
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q-subagent-和-skill-有什么区别">Q: Subagent 和 Skill 有什么区别？</h3>
+<strong>Subagent</strong> 适合：
+<ul><li>需要独立上下文的复杂分析</li>
+<li>需要专业判断的探索性任务</li>
+<li>可以并行执行的独立任务</li>
+
+</ul>
+<strong>Skill</strong> 适合：
+<ul><li>标准化、重复性的流程</li>
+<li>需要快速执行的简单任务</li>
+<li>需要共享主会话上下文</li>
+
+</ul>
+<div class="mermaid">graph LR
+    A["任务复杂？"] -->|是| B["Subagent"]
+    A -->|否| C["需要共享上下文？"]
+    C -->|是| D["Skill"]
+    C -->|否| E["简单命令<br/>直接执行"]
+</div>
+<h3 id="q-subagent-什么时候会被自动调用">Q: Subagent 什么时候会被自动调用？</h3>
+<p>当 <code>description</code> 字段包含 "use PROACTIVELY" 或 "MUST BE USED" 时，Claude 会根据任务描述主动判断是否调用。</p>
+<p>例如：</p>
+<pre><code class="language-yaml">description: Expert code reviewer. Use PROACTIVELY after writing code.
+</code></pre>
+<p>当你写完代码后，Claude 会自动触发 code-reviewer。</p>
+<h3 id="q-如何限制-subagent-的权限">Q: 如何限制 Subagent 的权限？</h3>
+<p>通过 <code>tools</code> 字段限制：</p>
+<pre><code class="language-yaml"># 只能读取，不能修改
+tools: Read, Grep, Glob
+
+# 可以读取和执行测试
+tools: Read, Bash(npm:test, npm:lint)
+
+# 继承所有工具（默认）
+# 留空 tools 字段
+</code></pre>
+<h3 id="q-subagent-结果会污染主对话上下文吗">Q: Subagent 结果会污染主对话上下文吗？</h3>
+<p>不会。Subagent 只返回提炼后的结果摘要，不会把整个分析过程塞进主对话。</p>
+<p>这是 Subagent 的核心价值：</p>
+<ul><li>探索过程在独立上下文完成</li>
+<li>主对话只收到关键发现</li>
+<li>长期对话不受单次任务污染</li>
+
+</ul>
+<h3 id="q-如何调试-subagent">Q: 如何调试 Subagent？</h3>
+<p>Subagent 的执行记录存储在：</p>
+<pre><code class="language-">~/.claude/projects/{project}/{sessionId}/subagents/agent-{agentId}.jsonl
+</code></pre>
+<p>查看日志了解 subagent 的执行过程。</p>
+<h3 id="q-可以让-subagent-生成其他-subagent-吗">Q: 可以让 Subagent 生成其他 Subagent 吗？</h3>
+<p>默认不能嵌套生成。但可以通过 <code>tools</code> 字段指定允许生成的 subagents：</p>
+<pre><code class="language-yaml">tools: Agent(worker, researcher), Read, Bash
+</code></pre>
+<p>这样 coordinator agent 只能生成 worker 和 researcher。</p>
+<h3 id="q-subagent-会占用更多-token-吗">Q: Subagent 会占用更多 token 吗？</h3>
+<p>是的，每个 subagent 有独立上下文，但：</p>
+<ul><li>主对话上下文被保护，不会快速膨胀</li>
+<li>subagent 完成后上下文释放</li>
+<li>长期看，使用 subagent 反而更省 token</li>
+
+</ul>
+<p>Boris Cherny（Claude Code 负责人）的观点：</p>
+<blockquote><em>"使用更便宜的模型实际上更便宜并不明显。最强大的模型以更少的修正完成任务更快，总体更省。"</em></blockquote>
+<hr>
+<h2 id="进阶用法">进阶用法</h2>
+<h3 id="持久化内存">持久化内存</h3>
+<p>让 Subagent 跨会话积累知识：</p>
+<pre><code class="language-yaml">---
+name: researcher
+memory: user  # 跨项目持久化
+---
+
+检查你的 MEMORY.md 文件，了解之前的研究发现。
+将新发现追加到内存中。
+</code></pre>
+<p>内存位置：</p>
+<ul><li><code>user</code>: <code>~/.claude/agent-memory/&lt;name&gt;/</code></li>
+<li><code>project</code>: <code>.claude/agent-memory/&lt;name&gt;/</code></li>
+
+</ul>
+<h3 id="git-worktree-隔离">Git Worktree 隔离</h3>
+<p>让 Subagent 在独立 git 分支工作：</p>
+<pre><code class="language-yaml">---
+name: feature-builder
+isolation: worktree
+---
+
+在独立 worktree 中实现功能，完成后返回分支名供合并。
+</code></pre>
+<h3 id="后台执行">后台执行</h3>
+<p>长时间任务可以后台运行：</p>
+<pre><code class="language-yaml">---
+name: long-analysis
+background: true
+---
+
+执行长时间分析，完成后通知。
+</code></pre>
+<p>快捷键：<code>Ctrl+B</code> 将当前任务放入后台。</p>
+<hr>
+<h2 id="示例-subagents">示例 Subagents</h2>
+<p>本文件夹包含即用型示例：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code-reviewer.md</code></td>
+<td>代码质量和安全审查</td>
+</tr>
+<tr>
+<td><code>test-engineer.md</code></td>
+<td>测试生成和覆盖率分析</td>
+</tr>
+<tr>
+<td><code>documentation-writer.md</code></td>
+<td>API 和模块文档生成</td>
+</tr>
+<tr>
+<td><code>secure-reviewer.md</code></td>
+<td>只读安全审计</td>
+</tr>
+<tr>
+<td><code>debugger.md</code></td>
+<td>错误调试和根因分析</td>
+</tr>
+<tr>
+<td><code>implementation-agent.md</code></td>
+<td>功能实现</td>
+</tr>
+</tbody>
+</table>
+<p>安装方法：</p>
+<pre><code class="language-bash"># 复制到项目
+mkdir -p .claude/agents
+cp *.md .claude/agents/
+
+# 或使用 /agents 命令查看
+/agents
+</code></pre>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote><strong>我想让 Claude 访问我的数据库/API</strong></blockquote>
+<p>Subagents 提供了专业任务委托，但它们仍然在 Claude Code 的内部环境中工作。</p>
+<p>如果你需要：</p>
+<ul><li>查询 PostgreSQL 数据库</li>
+<li>调用公司内部 API</li>
+<li>读取 Jira 任务信息</li>
+<li>操作 AWS S3 文件</li>
+
+</ul>
+<p>这是 <strong>MCP（Model Context Protocol）</strong> 的领域。</p>
+<p>下一章我们学习如何让 Claude Code 连接真实的外部世界。</p>
+<p>👉 继续阅读：<a href="../07-mcp/">07-mcp - 外部数据访问</a></p>
+<hr>
+<h2 id="快速参考">快速参考</h2>
+<h3 id="常用命令">常用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/agents</code></td>
+<td>管理 Subagents（创建、查看、编辑）</td>
+</tr>
+<tr>
+<td><code>claude agents</code></td>
+<td>CLI 列出所有 agents</td>
+</tr>
+<tr>
+<td><code>claude --agent &lt;name&gt;</code></td>
+<td>用特定 agent 启动会话</td>
+</tr>
+<tr>
+<td><code>@&quot;&lt;name&gt; (agent)&quot;</code></td>
+<td>强制调用特定 agent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="配置模板">配置模板</h3>
+<pre><code class="language-yaml">---
+name: my-agent
+description: Description with &quot;PROACTIVELY&quot; for auto-invoke
+tools: Read, Grep, Glob  # Optional: limit tools
+model: sonnet  # Optional: sonnet/opus/haiku/inherit
+maxTurns: 20  # Optional: limit execution steps
+memory: user  # Optional: persistent memory
+---
+
+# System prompt here
+Define role, priorities, workflow, output format.
+</code></pre>
+<hr>
+<em>最后更新：2026 年 4 月</em>
+<em>本指南涵盖 Subagent 的核心概念、实战场景和最佳实践。</em>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/05-skills.html">← Skills 技能</a>
+      <a href="/content/07-mcp.html">MCP 扩展 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

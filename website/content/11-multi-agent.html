@@ -398,7 +398,7 @@
       <aside class="sidebar-toc">
         <div class="sidebar-toc-inner">
           <h3>📑 目录</h3>
-          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#概述">概述</a></li><li class="toc-item toc-h3"><a href="#从单-agent-到多-agent">从单 Agent 到多 Agent</a></li><li class="toc-item toc-h3"><a href="#anthropic-内部团队的用法">Anthropic 内部团队的用法</a></li><li class="toc-item toc-h2"><a href="#基础设施-git-worktrees">基础设施：Git Worktrees</a></li><li class="toc-item toc-h3"><a href="#什么是-git-worktree">什么是 Git Worktree？</a></li><li class="toc-item toc-h3"><a href="#worktree-与多-agent-的关系">Worktree 与多 Agent 的关系</a></li><li class="toc-item toc-h3"><a href="#创建-worktree">创建 Worktree</a></li><li class="toc-item toc-h3"><a href="#合并-worktree">合并 Worktree</a></li><li class="toc-item toc-h3"><a href="#使用-enterworktree-工具">使用 EnterWorktree 工具</a></li><li class="toc-item toc-h2"><a href="#协作模式">协作模式</a></li><li class="toc-item toc-h3"><a href="#1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</a></li><li class="toc-item toc-h3"><a href="#2-并行执行模式">2. 并行执行模式</a></li><li class="toc-item toc-h3"><a href="#3-层级管理模式">3. 层级管理模式</a></li><li class="toc-item toc-h3"><a href="#4-流水线模式">4. 流水线模式</a></li><li class="toc-item toc-h3"><a href="#5-点对点协作模式">5. 点对点协作模式</a></li><li class="toc-item toc-h2"><a href="#agent-工具详解">Agent 工具详解</a></li><li class="toc-item toc-h3"><a href="#基本用法">基本用法</a></li><li class="toc-item toc-h3"><a href="#可用代理类型">可用代理类型</a></li><li class="toc-item toc-h3"><a href="#并行调度技巧">并行调度技巧</a></li><li class="toc-item toc-h2"><a href="#agent-teams-配置指南">Agent Teams 配置指南</a></li><li class="toc-item toc-h3"><a href="#什么是-agent-teams">什么是 Agent Teams？</a></li><li class="toc-item toc-h3"><a href="#writer-reviewer-模式">Writer/Reviewer 模式</a></li><li class="toc-item toc-h3"><a href="#测试驱动模式-tdd">测试驱动模式（TDD）</a></li><li class="toc-item toc-h3"><a href="#并行会话结构示例">并行会话结构示例</a></li><li class="toc-item toc-h4"><a href="#窗口-1-前端会话">窗口 1：前端会话</a></li><li class="toc-item toc-h4"><a href="#窗口-2-测试套件会话">窗口 2：测试套件会话</a></li><li class="toc-item toc-h3"><a href="#tmux-多窗口管理">Tmux 多窗口管理</a></li><li class="toc-item toc-h2"><a href="#coordinator-mode-使用方法">Coordinator Mode 使用方法</a></li><li class="toc-item toc-h3"><a href="#四阶段协调模式">四阶段协调模式</a></li><li class="toc-item toc-h3"><a href="#各阶段详解">各阶段详解</a></li><li class="toc-item toc-h4"><a href="#第一阶段-research-调研">第一阶段：Research（调研）</a></li><li class="toc-item toc-h4"><a href="#第二阶段-synthesis-综合">第二阶段：Synthesis（综合）</a></li><li class="toc-item toc-h4"><a href="#第三阶段-implementation-实现">第三阶段：Implementation（实现）</a></li><li class="toc-item toc-h4"><a href="#第四阶段-verification-验证">第四阶段：Verification（验证）</a></li><li class="toc-item toc-h3"><a href="#coordinator-mode-激活">Coordinator Mode 激活</a></li><li class="toc-item toc-h2"><a href="#实战案例">实战案例</a></li><li class="toc-item toc-h3"><a href="#案例-1-完整功能开发">案例 1：完整功能开发</a></li><li class="toc-item toc-h3"><a href="#案例-2-大型功能开发-完整流程">案例 2：大型功能开发（完整流程）</a></li><li class="toc-item toc-h3"><a href="#案例-3-代码审查流水线">案例 3：代码审查流水线</a></li><li class="toc-item toc-h3"><a href="#案例-4-探索与研究">案例 4：探索与研究</a></li><li class="toc-item toc-h3"><a href="#案例-5-tdd-模式开发">案例 5：TDD 模式开发</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#何时使用多-agent">何时使用多 Agent</a></li><li class="toc-item toc-h3"><a href="#性能优化">性能优化</a></li><li class="toc-item toc-h3"><a href="#异步工作心智转变">异步工作心智转变</a></li><li class="toc-item toc-h2"><a href="#协作反模式">协作反模式</a></li><li class="toc-item toc-h3"><a href="#需要避免的模式">需要避免的模式</a></li><li class="toc-item toc-h3"><a href="#合理分配任务原则">合理分配任务原则</a></li><li class="toc-item toc-h2"><a href="#高级命令支持">高级命令支持</a></li><li class="toc-item toc-h3"><a href="#batch-批量处理">/batch 批量处理</a></li><li class="toc-item toc-h3"><a href="#loop-长时间运行任务">/loop 长时间运行任务</a></li><li class="toc-item toc-h3"><a href="#schedule-云端定时任务">/schedule 云端定时任务</a></li><li class="toc-item toc-h3"><a href="#非交互模式-p-标志">非交互模式 (-p 标志)</a></li><li class="toc-item toc-h2"><a href="#立即尝试">立即尝试</a></li><li class="toc-item toc-h3"><a href="#练习-1-并行代码审查">🎯 练习 1：并行代码审查</a></li><li class="toc-item toc-h3"><a href="#练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</a></li><li class="toc-item toc-h3"><a href="#练习-3-探索模式">🎯 练习 3：探索模式</a></li><li class="toc-item toc-h3"><a href="#练习-4-worktree-并行开发">🎯 练习 4：Worktree 并行开发</a></li><li class="toc-item toc-h3"><a href="#练习-5-coordinator-mode">🎯 练习 5：Coordinator Mode</a></li><li class="toc-item toc-h3"><a href="#练习-6-writer-reviewer-模式">🎯 练习 6：Writer/Reviewer 模式</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li></ul>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#什么是多-agent-协作">什么是多 Agent 协作？</a></li><li class="toc-item toc-h3"><a href="#git-worktrees-协作的物理基础">Git Worktrees：协作的物理基础</a></li><li class="toc-item toc-h3"><a href="#协作模式概览">协作模式概览</a></li><li class="toc-item toc-h2"><a href="#场景-1-设计多-agent-系统">场景 1：设计多 Agent 系统</a></li><li class="toc-item toc-h3"><a href="#任务背景">任务背景</a></li><li class="toc-item toc-h3"><a href="#step-1-分析任务结构">Step 1：分析任务结构</a></li><li class="toc-item toc-h3"><a href="#step-2-创建-worktrees">Step 2：创建 Worktrees</a></li><li class="toc-item toc-h3"><a href="#step-3-设计-agent-分配方案">Step 3：设计 Agent 分配方案</a></li><li class="toc-item toc-h3"><a href="#step-4-定义-agent-通信协议">Step 4：定义 Agent 通信协议</a></li><li class="toc-item toc-h2"><a href="#场景-2-实现协作流程">场景 2：实现协作流程</a></li><li class="toc-item toc-h3"><a href="#任务背景">任务背景</a></li><li class="toc-item toc-h3"><a href="#step-1-启动-phase-1-agent">Step 1：启动 Phase 1 Agent</a></li><li class="toc-item toc-h3"><a href="#step-2-并行启动-phase-2-agents">Step 2：并行启动 Phase 2 Agents</a></li><li class="toc-item toc-h3"><a href="#step-3-监控-agent-状态">Step 3：监控 Agent 状态</a></li><li class="toc-item toc-h3"><a href="#step-4-使用-coordinator-mode-协调">Step 4：使用 Coordinator Mode 协调</a></li><li class="toc-item toc-h3"><a href="#step-5-处理-agent-输出">Step 5：处理 Agent 输出</a></li><li class="toc-item toc-h2"><a href="#场景-3-监控和调试">场景 3：监控和调试</a></li><li class="toc-item toc-h3"><a href="#任务背景">任务背景</a></li><li class="toc-item toc-h3"><a href="#step-1-实时监控-agent-状态">Step 1：实时监控 Agent 状态</a></li><li class="toc-item toc-h3"><a href="#step-2-处理-agent-失败">Step 2：处理 Agent 失败</a></li><li class="toc-item toc-h3"><a href="#step-3-解决合并冲突">Step 3：解决合并冲突</a></li><li class="toc-item toc-h3"><a href="#step-4-验证整体系统">Step 4：验证整体系统</a></li><li class="toc-item toc-h3"><a href="#step-5-清理-worktrees">Step 5：清理 Worktrees</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-并行代码审查">练习 1：并行代码审查</a></li><li class="toc-item toc-h3"><a href="#练习-2-worktree-并行开发">练习 2：Worktree 并行开发</a></li><li class="toc-item toc-h3"><a href="#练习-3-coordinator-mode">练习 3：Coordinator Mode</a></li><li class="toc-item toc-h3"><a href="#练习-4-writer-reviewer-模式">练习 4：Writer/Reviewer 模式</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q1-最多可以并行多少个-agent">Q1：最多可以并行多少个 Agent？</a></li><li class="toc-item toc-h3"><a href="#q2-如何避免-agent-修改同一个文件">Q2：如何避免 Agent 修改同一个文件？</a></li><li class="toc-item toc-h3"><a href="#q3-agent-失败怎么办">Q3：Agent 失败怎么办？</a></li><li class="toc-item toc-h3"><a href="#q4-单个-subagent-vs-多-agent-teams-有什么区别">Q4：单个 SubAgent vs 多 Agent Teams 有什么区别？</a></li><li class="toc-item toc-h3"><a href="#q5-如何判断任务是否需要多-agent">Q5：如何判断任务是否需要多 Agent？</a></li><li class="toc-item toc-h3"><a href="#q6-后台任务如何管理">Q6：后台任务如何管理？</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#任务分配原则">任务分配原则</a></li><li class="toc-item toc-h3"><a href="#协作反模式">协作反模式</a></li><li class="toc-item toc-h3"><a href="#异步工作心智转变">异步工作心智转变</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li></ul>
         </div>
       </aside>
     
@@ -409,344 +409,259 @@
             </nav>
 
             <div class="meta">
-              <span class="badge badge-intermediate">
-                🟡 中级
+              <span class="badge badge-advanced">
+                🔴 高级
               </span>
               <span class="badge">✅ Claude Code v2.1.92</span>
             </div>
 
             <div class="content">
-              <blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote>
+              <blockquote>🔴 <strong>高级</strong> | ⏱ 90 分钟</blockquote>
 <h1>多 Agent 协作</h1>
-<h2 id="概述">概述</h2>
-<p>多 Agent 协作是 Claude Code 最强大的能力之一。当你的熟练程度提高后，自然的扩展是<strong>并行操作</strong>：多个 Claude 会话同时运行，每个处理不同的工作流。</p>
-<h3 id="从单-agent-到多-agent">从单 Agent 到多 Agent</h3>
-<pre><code class="language-">单 Agent 工作方式：
-你 → Claude → 做任务 A → 做任务 B → 做任务 C
-时间：线性增长
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>你的项目越来越复杂，单个 Agent 处理不过来了。</p>
+<p>"我需要同时开发前端、后端、还要写测试、更新文档..."</p>
+<p>"一个大功能涉及多个模块，单线程开发太慢..."</p>
+<p>"团队项目需要分工协作，一个人盯不过来..."</p>
+<p>这些场景都需要<strong>多 Agent 协作</strong>。</p>
+<p>想象一下：你早上启动 5 个 Agent，分别处理不同模块；你去喝杯咖啡，回来发现前端 UI 完成了、API 写好了、测试通过了、文档也更新了。这不是魔法，而是 Claude Code 多 Agent 协作的真实工作方式。</p>
+<pre><code class="language-">传统方式（单线程）：
+你 → Claude → 任务 A → 任务 B → 任务 C → 任务 D
+时间：线性叠加，一个做完才能做下一个
 
-多 Agent 工作方式：
-你 → Claude → Agent 1（任务 A）
-              → Agent 2（任务 B）
-              → Agent 3（任务 C）
-时间：并行，大幅缩短
+多 Agent 方式（并行）：
+你 → Claude → Agent 1（前端 UI）
+              → Agent 2（后端 API）
+              → Agent 3（单元测试）
+              → Agent 4（API 文档）
+              → Agent 5（性能优化）
+时间：并行执行，大幅缩短
 </code></pre>
-<h3 id="anthropic-内部团队的用法">Anthropic 内部团队的用法</h3>
-<p>Boris Cherny（Claude Code 产品负责人）的日常：</p>
-<pre><code class="language-">同时运行：
-- 5 个本地 SubAgent（处理不同模块）
-- 5-10 个云端 Agent（运行测试、构建、部署）
-→ 一个人干一个团队的活
-</code></pre>
-<blockquote><em>"我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</em>
-— Boris Cherny</blockquote>
 <hr>
-<h2 id="基础设施-git-worktrees">基础设施：Git Worktrees</h2>
-<h3 id="什么是-git-worktree">什么是 Git Worktree？</h3>
-<p>Git Worktree 允许你从同一个仓库创建多个工作目录，每个目录可以同时签出不同的分支。</p>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="什么是多-agent-协作">什么是多 Agent 协作？</h3>
+<p>多 Agent 协作是 Claude Code 最强大的能力之一。当你的熟练程度提高后，自然的扩展是<strong>并行操作</strong>：多个 Claude 会话同时运行，每个处理不同的工作流。</p>
+<pre><code class="language-">单个 SubAgent：
+主 Agent → SubAgent → 返回结果
+一对一关系，主从结构
+
+多 Agent Teams：
+Writer Agent ←→ Reviewer Agent ←→ Tester Agent
+多对多关系，互相通信协调
+</code></pre>
+<h3 id="git-worktrees-协作的物理基础">Git Worktrees：协作的物理基础</h3>
+<p>Git Worktree 是多 Agent 协作的物理基础设施。它允许你从同一个仓库创建多个工作目录，每个目录可以同时签出不同的分支。</p>
 <pre><code class="language-">传统方式（一个目录）：
 my-project/  ← 只能在 main 分支
 → 要切换分支就要 stash 或 commit
 
 Worktree 方式（多个目录）：
 my-project/           ← main 分支
-my-project-feature-a/ ← feature-a 分支
-my-project-feature-b/ ← feature-b 分支
+.claude/worktrees/auth/    ← feature/auth 分支
+.claude/worktrees/api/     ← feature/api 分支
+.claude/worktrees/ui/      ← feature/ui 分支
 → 同时在不同分支工作，互不干扰
 </code></pre>
-<h3 id="worktree-与多-agent-的关系">Worktree 与多 Agent 的关系</h3>
-<div class="mermaid">graph LR
-    A[主仓库 main] --> B[Worktree 1]
-    A --> C[Worktree 2]
-    A --> D[Worktree 3]
-    
-    B --> E[Agent 1: 认证模块]
-    C --> F[Agent 2: 数据层]
-    D --> G[Agent 3: 前端 UI]
-    
-    E --> H[合并到 main]
-    F --> H
-    G --> H
-</div>
-<p>每个 Agent 在独立的 worktree 中工作，不会互相冲突，完成后合并分支即可。</p>
-<h3 id="创建-worktree">创建 Worktree</h3>
-<pre><code class="language-bash"># 手动创建
-git worktree add ../my-project-auth feature/authentication
-git worktree add ../my-project-notifications feature/notifications
-
-# Claude Code 自动管理
-claude --worktree
-# Claude 会：
-# 1. 在 .claude/worktrees/ 下创建新的 worktree
-# 2. 基于当前 HEAD 创建新分支
-# 3. 将工作目录切换到新的 worktree
-# 4. 完成后可以选择保留或删除
-</code></pre>
-<h3 id="合并-worktree">合并 Worktree</h3>
-<pre><code class="language-bash">cd my-project
-git merge feature/authentication
-git merge feature/notifications
-
-# 清理已合并的 worktree
-git worktree remove ../my-project-auth
-</code></pre>
-<h3 id="使用-enterworktree-工具">使用 EnterWorktree 工具</h3>
-<p>Claude Code 提供 <code>EnterWorktree</code> 工具来管理 worktree 会话：</p>
-<pre><code class="language-markdown"># 工具参数
-- name: worktree 名称（可选，自动生成）
-
-# 行为
-- 在 git 仓库中创建新 worktree
-- 切换当前会话到新 worktree
-- 完成后使用 ExitWorktree 返回
-
-# 何时使用
-- 用户明确要求&quot;worktree&quot;
-- 需要在不同分支并行工作
-</code></pre>
-<hr>
-<h2 id="协作模式">协作模式</h2>
-<h3 id="1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</h3>
-<p>中央协调器将任务分发给专业工作者：</p>
-<div class="mermaid">graph TD
-    A[Orchestrator] --> B[Worker 1: 代码审查]
-    A --> C[Worker 2: 测试]
-    A --> D[Worker 3: 文档]
-    B --> E[结果合并]
-    C --> E
-    D --> E
-</div>
-<strong>使用场景：</strong> 复杂功能开发、大规模重构
-<strong>实现方式：</strong>
-<pre><code class="language-bash"># 在 Claude Code 中使用 Agent 工具
-Claude 会自动调度多个子代理并行处理任务
-</code></pre>
-<h3 id="2-并行执行模式">2. 并行执行模式</h3>
-<p>多个 Agent 同时处理独立子任务：</p>
-<pre><code class="language-bash"># 在 Claude Code 中请求并行执行
-&quot;同时运行 3 个子任务：
-1. 安全审查 - 检查认证模块
-2. 性能分析 - 检查数据库查询
-3. 代码质量 - 检查代码风格
-
-完成后汇总报告。&quot;
-</code></pre>
-<strong>使用场景：</strong> 代码审查、测试执行、文档更新
-<h3 id="3-层级管理模式">3. 层级管理模式</h3>
-<p>多层管理结构处理大型项目：</p>
-<div class="mermaid">graph TD
-    M[Manager Agent] --> F[Frontend Lead]
-    M --> B[Backend Lead]
-    F --> C1[Component Writer]
-    F --> S[Style Specialist]
-    B --> A[API Developer]
-    B --> D[Database Expert]
-</div>
-<strong>使用场景：</strong> 大型团队项目、复杂系统重构
-<h3 id="4-流水线模式">4. 流水线模式</h3>
-<p>顺序处理带依赖的任务：</p>
-<pre><code class="language-bash">&quot;按顺序执行：
-1. 设计 API 结构（等待完成）
-2. 实现端点（等待完成）
-3. 编写测试（等待完成）
-4. 生成文档&quot;
-</code></pre>
-<strong>使用场景：</strong> 有严格依赖关系的开发流程
-<h3 id="5-点对点协作模式">5. 点对点协作模式</h3>
-<p>平等的 Agent 共享上下文协作：</p>
-<pre><code class="language-bash">&quot;启动两个协作 Agent：
-- Agent A: 实现功能
-- Agent B: 同时编写测试
-
-它们共享代码变更，实时同步。&quot;
-</code></pre>
-<strong>使用场景：</strong> 功能开发与测试同步进行
-<h2 id="agent-工具详解">Agent 工具详解</h2>
-<h3 id="基本用法">基本用法</h3>
-<p>Claude Code 使用 Agent 工具来调度子代理：</p>
-<pre><code class="language-">Agent 工具参数：
-- subagent_type: 代理类型（如 general-purpose, Explore, Plan）
-- prompt: 任务描述
-- description: 简短任务摘要（3-5词）
-- isolation: 是否隔离运行（worktree 模式）
-- run_in_background: 是否后台运行
-</code></pre>
-<h3 id="可用代理类型">可用代理类型</h3>
+<h3 id="协作模式概览">协作模式概览</h3>
 <table>
 <thead>
 <tr>
-<th>代理类型</th>
-<th>用途</th>
+<th>模式</th>
+<th>结构</th>
 <th>适用场景</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>general-purpose</td>
-<td>通用任务</td>
-<td>搜索代码、执行多步任务</td>
+<td>Orchestrator-Workers</td>
+<td>中央协调器分发任务给专业工作者</td>
+<td>复杂功能开发、大规模重构</td>
 </tr>
 <tr>
-<td>Explore</td>
-<td>快速探索</td>
-<td>文件搜索、关键词查找</td>
+<td>并行执行</td>
+<td>多个 Agent 同时处理独立子任务</td>
+<td>代码审查、测试执行</td>
 </tr>
 <tr>
-<td>Plan</td>
-<td>实现规划</td>
-<td>设计实现策略</td>
+<td>层级管理</td>
+<td>多层管理结构处理大型项目</td>
+<td>大型团队项目</td>
 </tr>
 <tr>
-<td>code-reviewer</td>
-<td>代码审查</td>
-<td>所有代码变更</td>
+<td>流水线</td>
+<td>顺序处理带依赖的任务</td>
+<td>有严格依赖的开发流程</td>
 </tr>
 <tr>
-<td>security-reviewer</td>
-<td>安全分析</td>
-<td>安全敏感代码</td>
-</tr>
-<tr>
-<td>build-error-resolver</td>
-<td>构建修复</td>
-<td>构建失败时</td>
-</tr>
-<tr>
-<td>tdd-guide</td>
-<td>TDD 指导</td>
-<td>新功能、bug 修复</td>
-</tr>
-<tr>
-<td>architect</td>
-<td>架构设计</td>
-<td>架构决策</td>
+<td>Writer/Reviewer</td>
+<td>代码编写与审查协作</td>
+<td>功能开发与测试同步</td>
 </tr>
 </tbody>
 </table>
-<h3 id="并行调度技巧">并行调度技巧</h3>
-<p>在一条消息中发送多个 Agent 调用：</p>
-<pre><code class="language-markdown"># 正确：并行执行
-同时启动 3 个 Agent：
-1. security-reviewer 分析认证模块
-2. performance-optimizer 分析数据库查询
-3. code-reviewer 检查代码风格
+<hr>
+<h2 id="场景-1-设计多-agent-系统">场景 1：设计多 Agent 系统</h2>
+<h3 id="任务背景">任务背景</h3>
+<p>你接到一个大型功能开发需求：为电商平台添加商品推荐系统。涉及：</p>
+<ul><li>推荐算法引擎（数据科学）</li>
+<li>API 端点开发（后端）</li>
+<li>前端 UI 组件（前端）</li>
+<li>单元测试和集成测试（QA）</li>
+<li>API 文档（文档）</li>
 
-# 错误：不必要的顺序
-先 Agent 1，等完成，再 Agent 2
+</ul>
+<p>单 Agent 处理这种复杂任务效率很低，你需要设计多 Agent 协作方案。</p>
+<h3 id="step-1-分析任务结构">Step 1：分析任务结构</h3>
+<p>首先，分析任务的依赖关系：</p>
+<div class="mermaid">graph TD
+    A[推荐算法] --> B[API 端点]
+    A --> C[前端 UI]
+    B --> D[API 测试]
+    C --> E[UI 测试]
+    B --> F[API 文档]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#bfb,stroke:#333
+</div>
+<p>识别出：</p>
+<ul><li><strong>推荐算法</strong>是基础，其他模块依赖它</li>
+<li><strong>API 和前端</strong>可以并行开发（定义好接口后）</li>
+<li><strong>测试</strong>依赖对应模块完成</li>
+<li><strong>文档</strong>依赖 API 完成</li>
+
+</ul>
+<h3 id="step-2-创建-worktrees">Step 2：创建 Worktrees</h3>
+<p>使用 Claude Code 的 EnterWorktree 工具创建隔离的工作环境：</p>
+<pre><code class="language-bash"># 在 Claude Code 中请求创建 worktrees
+&quot;为推荐系统功能创建 3 个 worktree：
+1. recommendation-engine（推荐算法）
+2. api-endpoints（API 端点）
+3. frontend-ui（前端组件）&quot;
+</code></pre>
+<p>Claude 会自动：</p>
+<ul><li>在 <code>.claude/worktrees/</code> 下创建新目录</li>
+<li>基于当前 HEAD 创建新分支</li>
+<li>将工作目录切换到新 worktree</li>
+
+</ul>
+<h3 id="step-3-设计-agent-分配方案">Step 3：设计 Agent 分配方案</h3>
+<p>基于任务分析，设计 Agent 分配：</p>
+<pre><code class="language-markdown"># 多 Agent 协作方案
+
+## Phase 1：基础建设（顺序执行）
+Agent 1（recommendation-engine worktree）:
+- 类型：architect + Plan
+- 任务：设计推荐算法架构，实现协同过滤算法
+- 预计时间：60 分钟
+
+## Phase 2：并行开发（同时启动）
+Agent 2（api-endpoints worktree）:
+- 类型：backend-patterns
+- 任务：创建推荐 API 端点
+- 输入：推荐算法接口定义
+- 预计时间：30 分钟
+
+Agent 3（frontend-ui worktree）:
+- 类型：frontend-patterns
+- 任务：创建推荐组件
+- 输入：推荐 API 文档
+- 预计时间：30 分钟
+
+## Phase 3：验证和文档（顺序执行）
+Agent 4（主仓库）:
+- 类型：tdd-guide
+- 任务：编写集成测试
+- 输入：完成的代码
+- 预计时间：20 分钟
+
+Agent 5:
+- 类型：doc-updater
+- 任务：更新 API 文档
+- 输入：API 端点定义
+- 预计时间：10 分钟
+</code></pre>
+<h3 id="step-4-定义-agent-通信协议">Step 4：定义 Agent 通信协议</h3>
+<p>Agent 之间需要共享信息，定义通信协议：</p>
+<pre><code class="language-markdown"># Agent 通信协议
+
+## 共享上下文
+每个 Agent 都应该读取：
+1. CLAUDE.md（项目规则）
+2. PRD.md（功能需求）
+3. ARCHITECTURE.md（系统架构）
+
+## 输出格式
+每个 Agent 完成后输出：
+1. 完成报告（做了什么）
+2. 接口定义（其他 Agent 需要知道）
+3. 测试清单（QA Agent 需要验证）
+4. 文档更新（Doc Agent 需要同步）
+
+## 决策点
+关键决策需要用户确认：
+- 算法选择（协同过滤 vs 内容推荐）
+- API 设计变更
+- UI 设计方案
 </code></pre>
 <hr>
-<h2 id="agent-teams-配置指南">Agent Teams 配置指南</h2>
-<h3 id="什么是-agent-teams">什么是 Agent Teams？</h3>
-<p>Agent Teams 是多个 Claude Code 会话互相通信和协调的工作模式。与单个 SubAgent 的主从关系不同，Agent Teams 是多对多关系，可以互相通信协调。</p>
-<pre><code class="language-">单个 SubAgent：
-主 Agent → SubAgent → 返回结果
-一对一关系
+<h2 id="场景-2-实现协作流程">场景 2：实现协作流程</h2>
+<h3 id="任务背景">任务背景</h3>
+<p>你已经设计好了多 Agent 方案，现在要实际启动并协调这些 Agent。</p>
+<h3 id="step-1-启动-phase-1-agent">Step 1：启动 Phase 1 Agent</h3>
+<p>首先启动基础建设 Agent（推荐算法）：</p>
+<pre><code class="language-bash"># 在 Claude Code 中启动第一个 Agent
+&quot;启动 Plan Agent 在 recommendation-engine worktree：
+1. 先阅读 CLAUDE.md 和 PRD.md
+2. 设计协同过滤推荐算法架构
+3. 实现算法核心逻辑
+4. 定义输出接口供其他 Agent 使用
 
-Agent Teams：
-Writer Agent ←→ Reviewer Agent ←→ Tester Agent
-多对多关系，互相通信协调
+完成后输出接口定义。&quot;
 </code></pre>
-<h3 id="writer-reviewer-模式">Writer/Reviewer 模式</h3>
-<p>最常用的协作模式，适合功能开发：</p>
-<pre><code class="language-">Writer Agent（写代码）:
-→ 编写功能代码
-→ 发送给 Reviewer
+<p>Claude 会：</p>
+<ul><li>使用 EnterWorktree 切换到指定 worktree</li>
+<li>启动 Plan Agent 执行任务</li>
+<li>完成后返回接口定义</li>
 
-Reviewer Agent（审代码）:
-→ 审查代码质量
-→ 提出修改建议
-→ 发回给 Writer
+</ul>
+<h3 id="step-2-并行启动-phase-2-agents">Step 2：并行启动 Phase 2 Agents</h3>
+<p>基础完成后，同时启动并行 Agent：</p>
+<pre><code class="language-bash"># 在一条消息中请求并行执行
+&quot;推荐算法接口已定义，现在并行启动两个 Agent：
 
-Writer Agent:
-→ 根据建议修改
-→ 再次发送给 Reviewer
+Agent A（api-endpoints worktree）:
+创建推荐 API 端点：
+- GET /api/recommendations/:userId
+- POST /api/recommendations/feedback
+接口定义见上一 Agent 输出
 
-Reviewer Agent:
-→ 确认通过
-→ 发送给 Tester
+Agent B（frontend-ui worktree）:
+创建推荐组件：
+- RecommendationCard（单个推荐卡片）
+- RecommendationList（推荐列表）
+- DislikeButton（不感兴趣按钮）
+接口定义见上一 Agent 输出
 
-Tester Agent（测代码）:
-→ 编写测试用例
-→ 运行测试
-→ 如果失败，反馈给 Writer
-
-→ 循环直到所有测试通过
+完成后各自输出测试清单。&quot;
 </code></pre>
-<h3 id="测试驱动模式-tdd">测试驱动模式（TDD）</h3>
-<p>质量优先的开发模式：</p>
-<pre><code class="language-">Tester Agent:
-→ 先写测试用例（测试先行）
-
-Writer Agent:
-→ 实现代码让测试通过
-
-Reviewer Agent:
-→ 审查实现质量
-
-Tester Agent:
-→ 运行所有测试确认通过
-
-→ 代码质量更高，因为有测试保障
-</code></pre>
-<h3 id="并行会话结构示例">并行会话结构示例</h3>
-<h4 id="窗口-1-前端会话">窗口 1：前端会话</h4>
-<pre><code class="language-">我们正在为笔记应用程序构建前端。后端 REST API
-已经在端口 3001 上运行。你在这个会话中的范围只是 client/ 目录。
-
-首先读取 CLAUDE.md 和 PRD.md。然后实现 PRD 中描述的三面板前端布局：
-- 带有笔记列表的侧边栏（从 GET /api/notes 读取）
-- 活动笔记的编辑器面板（带有按键防抖自动保存）
-- 未选择笔记时的空状态
-
-不要触及 server/ 目录中的任何文件。
-
-首先进入计划模式。在写任何东西之前向我展示你的实现计划。
-</code></pre>
-<h4 id="窗口-2-测试套件会话">窗口 2：测试套件会话</h4>
-<pre><code class="language-">我们正在为笔记应用程序 REST API 编写集成测试。你在这个会话中的范围
-是 server/tests/ 目录（如果不存在则创建它）。
-
-读取 CLAUDE.md 和 server/routes/notes.js 文件。编写覆盖以下内容的集成测试：
-1. GET /api/notes — 返回数组，当没有笔记存在时返回空数组
-2. POST /api/notes — 创建笔记，返回带 id 的笔记，拒绝缺少标题的请求
-3. PUT /api/notes/:id — 更新笔记，对不存在的 id 返回 404
-4. DELETE /api/notes/:id — 删除笔记，返回 204，如果未找到返回 404
-
-使用 jest + supertest 技术栈。创建 server/tests/notes.test.js。
-
-不要修改 server/tests/ 之外的任何文件。
-</code></pre>
-<h3 id="tmux-多窗口管理">Tmux 多窗口管理</h3>
-<p>使用 Tmux 在一个终端窗口中管理多个 Claude 会话：</p>
-<pre><code class="language-">Tmux 窗口布局：
+<strong>关键技巧</strong>：在一条消息中同时请求多个 Agent，Claude 会自动并行调度。
+<h3 id="step-3-监控-agent-状态">Step 3：监控 Agent 状态</h3>
+<p>使用 Tmux 或多个终端窗口监控 Agent：</p>
+<pre><code class="language-bash"># Tmux 窗口布局
 ┌─────────────┬─────────────┐
 │  Agent 1    │  Agent 2    │
-│  (Pane 1)   │  (Pane 2)   │
+│  (API)      │  (Frontend) │
 ├─────────────┼─────────────┤
-│  Agent 3    │  Agent 4    │
-│  (Pane 3)   │  (Pane 4)   │
+│  Agent 3    │  Monitor    │
+│  (Tests)    │  (状态监控) │
 └─────────────┴─────────────┘
 
-每个 Pane 运行一个独立的 Claude 会话
-Ctrl+B + 方向键 切换 Pane
+# Ctrl+B + 方向键切换 Pane
 </code></pre>
-<pre><code class="language-bash"># 创建 Tmux Session
-tmux new -s work
-
-# 在不同 Pane 中启动 Claude
-Pane 1: cd worktree-1 &amp;&amp; claude
-Pane 2: cd worktree-2 &amp;&amp; claude
-Pane 3: cd worktree-3 &amp;&amp; claude
-
-# 分配任务
-Pane 1: &quot;重构认证模块&quot;
-Pane 2: &quot;添加支付功能&quot;
-Pane 3: &quot;修复搜索 bug&quot;
-</code></pre>
-<hr>
-<h2 id="coordinator-mode-使用方法">Coordinator Mode 使用方法</h2>
-<h3 id="四阶段协调模式">四阶段协调模式</h3>
-<p>Coordinator Mode 是 Claude Code 的高级协调模式，将复杂任务分为四个阶段：</p>
+<p>每个 Pane 运行一个独立的 Claude 会话。</p>
+<h3 id="step-4-使用-coordinator-mode-协调">Step 4：使用 Coordinator Mode 协调</h3>
+<p>对于复杂任务，使用 Coordinator Mode 四阶段模式：</p>
 <div class="mermaid">graph TD
     A[Research 调研] --> B[Synthesis 综合]
     B --> C[Implementation 实现]
@@ -757,176 +672,241 @@ Pane 3: &quot;修复搜索 bug&quot;
     C --> |"编写代码、处理意外"| C
     D --> |"运行测试、确认正确"| D
 </div>
-<h3 id="各阶段详解">各阶段详解</h3>
-<h4 id="第一阶段-research-调研">第一阶段：Research（调研）</h4>
-<p>Claude 自动执行：</p>
-<ul><li>搜索相关代码和文档</li>
-<li>理解现有架构</li>
-<li>识别依赖关系</li>
-<li>分析可能的方案</li>
-
-</ul>
-<strong>输出：调研报告</strong>
-<h4 id="第二阶段-synthesis-综合">第二阶段：Synthesis（综合）</h4>
-<p>Claude 基于调研结果：</p>
-<ul><li>设计实现方案</li>
-<li>评估各方案的优劣</li>
-<li>选择最优方案</li>
-<li>制定详细计划</li>
-
-</ul>
-<strong>输出：实现计划</strong>
-<h4 id="第三阶段-implementation-实现">第三阶段：Implementation（实现）</h4>
-<p>Claude 按计划执行：</p>
-<ul><li>编写/修改代码</li>
-<li>运行中间验证</li>
-<li>处理意外情况</li>
-
-</ul>
-<strong>输出：代码变更</strong>
-<h4 id="第四阶段-verification-验证">第四阶段：Verification（验证）</h4>
-<p>Claude 验证实现：</p>
-<ul><li>运行测试</li>
-<li>检查类型错误</li>
-<li>验证功能正确性</li>
-<li>确认没有副作用</li>
-
-</ul>
-<strong>输出：验证报告</strong>
-<h3 id="coordinator-mode-激活">Coordinator Mode 激活</h3>
-<pre><code class="language-bash"># 在请求中使用四阶段结构
-&quot;使用 Coordinator Mode 处理这个任务：
-1. Research: 先调研现有代码结构
+<p>激活 Coordinator Mode：</p>
+<pre><code class="language-bash">&quot;使用 Coordinator Mode 协调推荐系统开发：
+1. Research: 调研现有代码结构
 2. Synthesis: 设计最优实现方案
 3. Implementation: 按计划执行
 4. Verification: 验证结果正确性
 
-每阶段完成后汇报进展。&quot;
+每阶段完成后汇报进展，遇到决策点暂停等待我确认。&quot;
 </code></pre>
-<h2 id="实战案例">实战案例</h2>
-<h3 id="案例-1-完整功能开发">案例 1：完整功能开发</h3>
-<pre><code class="language-bash"># 使用 Orchestrator 模式开发新功能
-&quot;我需要实现用户认证功能。使用多 Agent 协作：
+<h3 id="step-5-处理-agent-输出">Step 5：处理 Agent 输出</h3>
+<p>每个 Agent 完成后审查输出：</p>
+<pre><code class="language-markdown"># Agent 输出审查清单
 
-1. Plan Agent：设计认证架构
-2. TypeScript Agent：实现前端登录 UI
-3. Python Agent：实现后端 API
-4. tdd-guide Agent：编写测试用例
-5. doc-updater Agent：更新文档
+## 功能完整性
+- [ ] 是否完成所有任务
+- [ ] 是否遵循接口定义
+- [ ] 是否处理边界情况
 
-协调这些 Agent 完成任务。&quot;
+## 代码质量
+- [ ] 是否符合项目规范
+- [ ] 是否有安全漏洞
+- [ ] 是否有性能问题
+
+## 集成准备
+- [ ] 是否有冲突文件
+- [ ] 是否有依赖缺失
+- [ ] 是否有文档更新
 </code></pre>
-<h3 id="案例-2-大型功能开发-完整流程">案例 2：大型功能开发（完整流程）</h3>
-<p>目标：为电商平台添加商品推荐功能</p>
-<pre><code class="language-">Step 1: 创建 Worktrees
-$ claude --worktree name=recommendation-engine
-$ claude --worktree name=api-endpoints
-$ claude --worktree name=frontend-ui
+<hr>
+<h2 id="场景-3-监控和调试">场景 3：监控和调试</h2>
+<h3 id="任务背景">任务背景</h3>
+<p>多 Agent 协作启动后，你需要监控进度、处理问题、合并结果。</p>
+<h3 id="step-1-实时监控-agent-状态">Step 1：实时监控 Agent 状态</h3>
+<p>使用 <code>/loop</code> 命令持续监控：</p>
+<pre><code class="language-bash"># 每隔一段时间检查进度
+/loop 每 10 分钟检查所有 worktree 的进度
 
-Step 2: 启动多个 Agent
-Agent 1（recommendation-engine worktree）:
-&quot;实现基于协同过滤的推荐算法&quot;
-
-Agent 2（api-endpoints worktree）:
-&quot;创建推荐 API 端点，
-包括 GET /api/recommendations 和
-POST /api/recommendations/feedback&quot;
-
-Agent 3（frontend-ui worktree）:
-&quot;创建推荐组件，包括推荐卡片、
-推荐列表和&#039;不感兴趣&#039;按钮&quot;
-
-Step 3: 使用 /loop 持续测试
-/loop 每 15 分钟运行所有测试
-
-Step 4: 等待 Agent 完成
-[去做其他工作...]
-
-Step 5: 审查和合并
-→ 检查每个 Agent 的输出
-→ 运行集成测试
-→ 合并分支
-→ 部署
+Claude 会：
+→ 检查每个 Agent 的当前状态
+→ 运行相关测试确认代码质量
+→ 报告进度百分比
+→ 发现问题时通知你
 </code></pre>
-<h3 id="案例-3-代码审查流水线">案例 3：代码审查流水线</h3>
-<pre><code class="language-bash">&quot;对当前变更执行多 Agent 审查：
+<h3 id="step-2-处理-agent-失败">Step 2：处理 Agent 失败</h3>
+<p>当 Agent 遇到问题时：</p>
+<pre><code class="language-bash"># Agent 报告：推荐算法测试失败
 
-并行启动：
-- security-reviewer：检查漏洞
+你的响应：
+&quot;使用 build-error-resolver Agent 分析推荐算法测试失败：
+1. 查看测试输出
+2. 分析失败原因
+3. 提供修复方案
+
+修复后重新运行测试确认。&quot;
+</code></pre>
+<p>Claude 会：</p>
+<ul><li>启动 build-error-resolver Agent</li>
+<li>分析错误日志</li>
+<li>提供修复建议</li>
+<li>自动修复（如果允许）</li>
+
+</ul>
+<h3 id="step-3-解决合并冲突">Step 3：解决合并冲突</h3>
+<p>多个 Agent 可能产生文件冲突：</p>
+<pre><code class="language-bash"># 检查潜在冲突
+&quot;检查所有 worktree 与 main 分支的文件差异，
+识别可能的合并冲突。&quot;
+
+Claude 会：
+→ 运行 git diff 比较各分支
+→ 列出冲突文件
+→ 提供解决方案
+</code></pre>
+<p>解决冲突策略：</p>
+<pre><code class="language-markdown"># 合并冲突解决策略
+
+## 预防优先
+- 使用 worktree 隔离不同模块
+- 每个 Agent 只修改自己的目录
+- 定义清晰的模块边界
+
+## 冲突类型处理
+| 类型 | 处理方式 |
+|------|----------|
+| 代码逻辑冲突 | 手动审查，选择正确逻辑 |
+| 格式冲突 | 使用统一 formatter |
+| 导入冲突 | 合并导入，去重排序 |
+| 配置冲突 | 手动合并，保留必要配置 |
+
+## 冲突解决流程
+1. 运行 git merge --no-commit 预览冲突
+2. 使用 git mergetool 或手动编辑
+3. 运行测试验证
+4. 提交合并
+</code></pre>
+<h3 id="step-4-验证整体系统">Step 4：验证整体系统</h3>
+<p>所有 Agent 完成后，验证整体系统：</p>
+<pre><code class="language-bash">&quot;所有 Agent 已完成，运行整体验证：
+1. 合并所有分支到 main
+2. 运行完整测试套件
+3. 运行 E2E 测试
+4. 检查 API 文档完整性
+5. 验证前端 UI 可用性
+
+生成验证报告。&quot;
+</code></pre>
+<h3 id="step-5-清理-worktrees">Step 5：清理 Worktrees</h3>
+<p>完成后清理：</p>
+<pre><code class="language-bash">&quot;使用 ExitWorktree 关闭所有 worktree：
+1. recommendation-engine → 已合并，删除
+2. api-endpoints → 已合并，删除
+3. frontend-ui → 已合并，删除
+
+返回主仓库。&quot;
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-并行代码审查">练习 1：并行代码审查</h3>
+<pre><code class="language-bash"># 在 Claude Code 中输入：
+&quot;对 src/ 目录执行并行 Agent 审查：
+同时启动：
+- security-reviewer：检查安全漏洞
 - performance-optimizer：检查性能问题
 - code-reviewer：检查代码风格
 
-完成后生成综合报告。&quot;
+完成后生成合并报告。&quot;
 </code></pre>
-<h3 id="案例-4-探索与研究">案例 4：探索与研究</h3>
-<pre><code class="language-bash">&quot;使用 Explore Agent：
-- 探索代码库中的认证相关代码
-- 搜索关键词 &#039;auth&#039; 和 &#039;login&#039;
-- 回答：认证流程是如何实现的？&quot;
+<h3 id="练习-2-worktree-并行开发">练习 2：Worktree 并行开发</h3>
+<pre><code class="language-bash"># 步骤 1：创建 worktree
+&quot;使用 EnterWorktree 创建名为 &#039;feature-auth&#039; 的 worktree&quot;
+
+# 步骤 2：在新 worktree 中开发
+&quot;实现用户认证功能，使用 JWT&quot;
+
+# 步骤 3：完成后返回
+&quot;使用 ExitWorktree 返回主仓库&quot;
 </code></pre>
-<h3 id="案例-5-tdd-模式开发">案例 5：TDD 模式开发</h3>
-<pre><code class="language-bash"># 测试驱动的多 Agent 协作
-&quot;使用 TDD 模式开发支付功能：
+<h3 id="练习-3-coordinator-mode">练习 3：Coordinator Mode</h3>
+<pre><code class="language-bash">&quot;使用 Coordinator Mode 处理重构任务：
+1. Research: 分析当前代码结构
+2. Synthesis: 设计重构方案
+3. Implementation: 执行重构
+4. Verification: 运行测试验证
 
-1. Tester Agent：先编写支付测试用例
-   - 测试支付成功场景
-   - 测试支付失败场景
-   - 测试退款流程
-
-2. Writer Agent：实现支付逻辑
-   - 接收测试用例
-   - 编写代码让测试通过
-
-3. Reviewer Agent：审查代码质量
-   - 检查安全最佳实践
-   - 检查错误处理
-
-循环：Tester 运行测试 → 反馈给 Writer → Writer 修复 → 直到全部通过&quot;
+每阶段完成后汇报进展。&quot;
 </code></pre>
-<h2 id="最佳实践">最佳实践</h2>
-<h3 id="何时使用多-agent">何时使用多 Agent</h3>
+<h3 id="练习-4-writer-reviewer-模式">练习 4：Writer/Reviewer 模式</h3>
+<p>在两个终端窗口中分别运行 Claude：</p>
+<pre><code class="language-bash"># 窗口 1（Writer）：
+&quot;你是 Writer Agent。实现用户搜索功能，
+完成后通知 Reviewer（窗口 2）审查。&quot;
+
+# 窗口 2（Reviewer）：
+&quot;你是 Reviewer Agent。等待 Writer 完成代码，
+审查代码质量并提出修改建议。&quot;
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q1-最多可以并行多少个-agent">Q1：最多可以并行多少个 Agent？</h3>
+<strong>推荐 5-10 个并行 Agent</strong>。太少效率不够，太多消耗资源过大。Anthropic 内部团队通常同时运行 5-15 个 Agent。
+<h3 id="q2-如何避免-agent-修改同一个文件">Q2：如何避免 Agent 修改同一个文件？</h3>
+<p>使用 <strong>Worktree 隔离</strong>。每个 Agent 在独立的 worktree 工作，修改不同分支的文件，避免冲突。</p>
+<pre><code class="language-markdown">✅ 好的分配：
+Agent 1: client/ 目录（前端）
+Agent 2: server/routes/ 目录（API）
+Agent 3: server/tests/ 目录（测试）
+
+❌ 坏的分配：
+Agent 1: 实现用户登录
+Agent 2: 也实现用户登录（冲突）
+</code></pre>
+<h3 id="q3-agent-失败怎么办">Q3：Agent 失败怎么办？</h3>
+<p>Claude Code 会自动处理大部分失败：</p>
+<ul><li>使用 build-error-resolver Agent 分析错误</li>
+<li>提供修复建议</li>
+<li>自动修复并重试（如果允许）</li>
+
+</ul>
+<p>关键决策点会暂停等待你确认。</p>
+<h3 id="q4-单个-subagent-vs-多-agent-teams-有什么区别">Q4：单个 SubAgent vs 多 Agent Teams 有什么区别？</h3>
+<pre><code class="language-">单个 SubAgent：
+主 Agent → SubAgent → 返回结果
+一对一关系，主从结构
+
+多 Agent Teams：
+Writer ←→ Reviewer ←→ Tester
+多对多关系，互相通信协调
+</code></pre>
+<p>SubAgent 适合简单任务，Agent Teams 适合复杂协作。</p>
+<h3 id="q5-如何判断任务是否需要多-agent">Q5：如何判断任务是否需要多 Agent？</h3>
 <table>
 <thead>
 <tr>
-<th>场景</th>
-<th>推荐模式</th>
-<th>代理类型</th>
+<th>任务类型</th>
+<th>推荐方式</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>复杂功能开发</td>
-<td>Orchestrator-Workers</td>
-<td>Plan + 专业代理</td>
+<td>单文件编辑</td>
+<td>单 Agent</td>
 </tr>
 <tr>
-<td>并行审查</td>
-<td>并行执行</td>
-<td>reviewer 类代理</td>
+<td>独立工具创建</td>
+<td>单 Agent</td>
 </tr>
 <tr>
-<td>大型重构</td>
-<td>层级管理</td>
-<td>architect + planner</td>
+<td>文档更新</td>
+<td>单 Agent</td>
 </tr>
 <tr>
-<td>有依赖的任务</td>
-<td>流水线</td>
-<td>顺序调度</td>
+<td>跨多模块功能</td>
+<td>多 Agent</td>
 </tr>
 <tr>
-<td>创意头脑风暴</td>
-<td>点对点协作</td>
-<td>general-purpose</td>
+<td>大规模重构</td>
+<td>多 Agent</td>
 </tr>
 <tr>
-<td>TDD 开发</td>
-<td>Writer/Reviewer</td>
-<td>Tester 先行</td>
+<td>复杂系统调试</td>
+<td>多 Agent</td>
 </tr>
 </tbody>
 </table>
-<h3 id="性能优化">性能优化</h3>
+<h3 id="q6-后台任务如何管理">Q6：后台任务如何管理？</h3>
+<p>使用 <code>/loop</code> 和 <code>/schedule</code> 管理：</p>
+<pre><code class="language-bash"># 本地长时间运行（最多 3 天）
+/loop 每 5 分钟运行测试，失败时自动修复
+
+# 云端定时任务
+/schedule 每天 02:00 运行安全扫描
+</code></pre>
+<hr>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="任务分配原则">任务分配原则</h3>
 <ul><li><strong>限制并行数量</strong>：建议 ≤ 5 个并行 Agent</li>
 <li><strong>使用 worktree 隔离</strong>：避免文件冲突</li>
 <li><strong>共享只读上下文</strong>：减少重复读取</li>
@@ -934,8 +914,18 @@ Step 5: 审查和合并
 <li><strong>设置合理超时</strong>：防止 Agent 无限运行</li>
 
 </ul>
+<h3 id="协作反模式">协作反模式</h3>
+<pre><code class="language-markdown"># 不要做
+
+❌ 让多个 Agent 修改同一个文件
+❌ 分配过于复杂的任务（单个任务应有明确边界）
+❌ 忽略 Agent 的输出（完成后一定要审查）
+❌ 创建过多并行 Agent（消耗过多资源）
+❌ 在简单任务上使用多 Agent（有协调开销）
+❌ 让 Agent 相互等待不必要（尽量设计独立任务）
+❌ 在主会话中执行长任务（使用后台运行）
+</code></pre>
 <h3 id="异步工作心智转变">异步工作心智转变</h3>
-<p>从同步到异步是使用多 Agent 的关键思维转变：</p>
 <table>
 <thead>
 <tr>
@@ -960,181 +950,17 @@ Step 5: 审查和合并
 <td>Claude 是一个助手</td>
 <td>Claude 是一个开发团队</td>
 </tr>
-<tr>
-<td>失败了要立即处理</td>
-<td>让 Agent 自动修复并重试</td>
-</tr>
 </tbody>
 </table>
-<pre><code class="language-">新的工作方式：
-早上到公司：
-1. 分配任务给多个 Agent
-2. 让它们并行工作
-3. 你做高层次的架构设计、需求分析
-4. 下午检查 Agent 的结果
-5. 合并、审查、部署
-
-你不是在&quot;用工具&quot;，而是在&quot;管理团队&quot;
-</code></pre>
 <hr>
-<h2 id="协作反模式">协作反模式</h2>
-<h3 id="需要避免的模式">需要避免的模式</h3>
-<pre><code class="language-markdown"># 不要做
-
-❌ 让多个 Agent 修改同一个文件
-   → 这会导致合并冲突
-   → 使用 Worktree 隔离
-
-❌ 分配过于复杂的任务
-   → 单个 Agent 的任务应该有明确边界
-   → 复杂任务先分解再分配
-
-❌ 忽略 Agent 的输出
-   → Agent 完成后一定要审查结果
-   → 不要盲目合并代码
-
-❌ 创建过多并行 Agent
-   → 5-10 个通常是合理的范围
-   → 太多会消耗过多资源
-
-❌ 在简单任务上使用多 Agent
-   → 简单任务单 Agent 更高效
-   → 多 Agent 有协调开销
-
-❌ 让 Agent 相互等待不必要
-   → 尽量设计独立任务
-   → 有依赖的用流水线模式
-
-❌ 在主会话中执行长任务
-   → 使用后台运行
-   → 避免 blocking 主会话
-
-❌ 硬闯阻塞
-   → 遇到问题停下来问用户
-   → 不要盲目继续
-</code></pre>
-<h3 id="合理分配任务原则">合理分配任务原则</h3>
-<pre><code class="language-">确保每个 Agent 的任务是独立的
-避免两个 Agent 修改同一个文件
-
-✅ 好的分配：
-Agent 1: client/ 目录（前端）
-Agent 2: server/routes/ 目录（API）
-Agent 3: server/tests/ 目录（测试）
-
-❌ 坏的分配：
-Agent 1: 实现用户登录
-Agent 2: 也实现用户登录（冲突）
-</code></pre>
+<h2 id="下一章预告">下一章预告</h2>
+<p>有些任务要跑很长时间...</p>
+<p>测试套件要跑几小时，构建过程很漫长，数据迁移要过夜。</p>
+<p>下一章 <strong><a href="../12-background-channels/">后台通道</a></strong> 将介绍如何管理这些长时间运行的任务，让 Claude Code 持续工作而你不用盯着屏幕。</p>
 <hr>
-<h2 id="高级命令支持">高级命令支持</h2>
-<h3 id="batch-批量处理">/batch 批量处理</h3>
-<code>/batch</code> 让你一次性将多个任务发送给 Claude Code，逐个自动处理：
-<pre><code class="language-">场景：处理 10 个 GitHub Issue
-
-你: /batch
-Claude: 请提供要处理的任务列表
-
-你:
-1. 修复 #101 登录超时问题
-2. 修复 #102 搜索结果排序错误
-3. 实现 #103 导出 CSV 功能
-4. 修复 #104 移动端布局问题
-
-Claude:
-→ 开始批量处理
-→ Task 1/4: 修复登录超时... ✓
-→ Task 2/4: 修复排序错误... ✓
-→ Task 3/4: 实现导出 CSV... ✓
-→ Task 4/4: 修复布局问题... ✓
-
-✅ 全部完成！
-</code></pre>
-<h3 id="loop-长时间运行任务">/loop 长时间运行任务</h3>
-<code>/loop</code> 让 Claude Code 在本地长时间运行一个任务，最多支持 <strong>3 天</strong>无人值守：
-<pre><code class="language-bash"># 持续监控测试
-/loop 每 5 分钟运行测试，失败时自动修复
-
-# 持续优化性能
-/loop 每小时运行性能测试，生成报告
-</code></pre>
-<h3 id="schedule-云端定时任务">/schedule 云端定时任务</h3>
-<code>/schedule</code> 让你在云端设置定时任务：
-<pre><code class="language-bash"># 每天凌晨运行安全扫描
-/schedule 每天 02:00 运行 npm audit 并报告漏洞
-
-# 每周一早上生成周报
-/schedule 每周一 09:00 总结上周的 git commit 统计
-</code></pre>
-<h3 id="非交互模式-p-标志">非交互模式 (-p 标志)</h3>
-<code>-p</code> 标志让 Claude Code 以非交互方式运行，适合脚本化操作：
-<pre><code class="language-bash"># 基本用法
-claude -p &quot;帮我检查这个文件有没有语法错误&quot; &lt; file.js
-
-# 输出到文件
-claude -p &quot;生成 API 文档&quot; &gt; api-docs.md
-
-# CI/CD 集成
-claude -p &quot;检查代码是否符合规范&quot;
-</code></pre>
-<h2 id="立即尝试">立即尝试</h2>
-<h3 id="练习-1-并行代码审查">🎯 练习 1：并行代码审查</h3>
-<pre><code class="language-bash"># 在 Claude Code 中输入：
-&quot;使用并行 Agent 审查 src/ 目录：
-1. security-reviewer 检查安全
-2. performance-optimizer 检查性能  
-3. code-reviewer 检查风格
-
-生成合并报告。&quot;
-</code></pre>
-<h3 id="练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</h3>
-<pre><code class="language-bash">&quot;使用流水线模式：
-1. Plan 设计数据模型
-2. TypeScript 实现 CRUD API
-3. tdd-guide 编写单元测试
-4. doc-updater 生成 API 文档
-
-每步等待前一步完成。&quot;
-</code></pre>
-<h3 id="练习-3-探索模式">🎯 练习 3：探索模式</h3>
-<pre><code class="language-bash">&quot;使用 Explore Agent：
-- 查找所有 API 端点
-- 搜索错误处理模式
-- 回答：API 层的架构是什么？&quot;
-</code></pre>
-<h3 id="练习-4-worktree-并行开发">🎯 练习 4：Worktree 并行开发</h3>
-<pre><code class="language-bash"># 步骤 1：请求 Claude 创建 worktree
-&quot;使用 EnterWorktree 创建一个名为 &#039;feature-auth&#039; 的 worktree&quot;
-
-# 步骤 2：在新 worktree 中开发
-&quot;实现用户认证功能，使用 JWT&quot;
-
-# 步骤 3：完成后返回
-&quot;使用 ExitWorktree 返回主仓库&quot;
-</code></pre>
-<h3 id="练习-5-coordinator-mode">🎯 练习 5：Coordinator Mode</h3>
-<pre><code class="language-bash">&quot;使用 Coordinator Mode 处理重构任务：
-1. Research: 分析当前代码结构
-2. Synthesis: 设计重构方案
-3. Implementation: 执行重构
-4. Verification: 运行测试验证
-
-每阶段完成后汇报进展。&quot;
-</code></pre>
-<h3 id="练习-6-writer-reviewer-模式">🎯 练习 6：Writer/Reviewer 模式</h3>
-<pre><code class="language-bash"># 在两个终端窗口中分别运行 Claude
-
-# 窗口 1（Writer）：
-&quot;你是 Writer Agent。实现用户搜索功能，
-完成后通知 Reviewer（窗口 2）审查。&quot;
-
-# 窗口 2（Reviewer）：
-&quot;你是 Reviewer Agent。等待 Writer 完成代码，
-审查代码质量并提出修改建议。&quot;
-</code></pre>
 <h2 id="相关资源">相关资源</h2>
 <ul><li><a href="/content/04-subagents.html">Subagents 参考</a></li>
-<li><a href="/content/12-background-tasks.html">后台任务</a></li>
+<li><a href="../12-background-channels/">后台通道</a></li>
 <li><a href="/content/10-cli.html">CLI 命令</a></li>
 <li><a href="https://git-scm.com/docs/git-worktree">Git Worktree 指南</a></li>
 <li><a href="https://github.com/tmux/tmux/wiki">Tmux 使用教程</a></li>
@@ -1142,13 +968,13 @@ claude -p &quot;检查代码是否符合规范&quot;
 
 </ul>
 <hr>
-<blockquote><strong>要点回顾</strong>：多 Agent 协作是 Claude Code 的高级能力，通过 Git Worktrees 实现安全并行开发，使用 Agent Teams 和 Coordinator Mode 进行复杂任务的协调。关键是合理分配任务、避免冲突、定期审查 Agent 输出。</blockquote>
+<blockquote><strong>要点回顾</strong>：多 Agent 协作是 Claude Code 的高级能力，核心是（1）Git Worktrees 实现物理隔离，（2）Agent Teams 实现逻辑协调，（3）Coordinator Mode 实现流程控制。关键是合理分配任务、避免冲突、定期审查 Agent 输出。</blockquote>
             </div>
 
             
     <div class="nav-buttons">
-      <a href="/content/10-plugins.html">← Plugins</a>
-      <a href="/content/12-background-tasks.html">后台任务 →</a>
+      <a href="/content/10-plugins.html">← Plugins 插件</a>
+      <a href="/content/12-background-channels.html">后台任务与通道 →</a>
     </div>
   
           </article>

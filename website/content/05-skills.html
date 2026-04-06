@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills 技能 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Skills 技能 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#skills-是什么">Skills 是什么？</a></li><li class="toc-item toc-h3"><a href="#渐进式披露架构">渐进式披露架构</a></li><li class="toc-item toc-h3"><a href="#skill-类型与位置">Skill 类型与位置</a></li><li class="toc-item toc-h2"><a href="#场景-1-使用内置-skills">场景 1：使用内置 Skills</a></li><li class="toc-item toc-h3"><a href="#查看可用-skills">查看可用 Skills</a></li><li class="toc-item toc-h3"><a href="#内置-skills一览">内置 Skills一览</a></li><li class="toc-item toc-h3"><a href="#实战演练">实战演练</a></li><li class="toc-item toc-h2"><a href="#场景-2-创建简单-skill">场景 2：创建简单 Skill</a></li><li class="toc-item toc-h3"><a href="#基础目录结构">基础目录结构</a></li><li class="toc-item toc-h3"><a href="#skill-md-格式">SKILL.md 格式</a></li><li class="toc-item toc-h3"><a href="#必填字段">必填字段</a></li><li class="toc-item toc-h3"><a href="#实战演练">实战演练</a></li><li class="toc-item toc-h3"><a href="#关键语法-动态上下文注入">关键语法：动态上下文注入</a></li><li class="toc-item toc-h2"><a href="#场景-3-创建带模板的-skill">场景 3：创建带模板的 Skill</a></li><li class="toc-item toc-h3"><a href="#完整-skill-目录结构">完整 Skill 目录结构</a></li><li class="toc-item toc-h3"><a href="#实战演练">实战演练</a></li><li class="toc-item toc-h3"><a href="#支持文件指南">支持文件指南</a></li><li class="toc-item toc-h2"><a href="#控制-skill-调用">控制 Skill 调用</a></li><li class="toc-item toc-h3"><a href="#仅用户调用-防止意外执行">仅用户调用（防止意外执行）</a></li><li class="toc-item toc-h3"><a href="#仅-claude-调用-后台知识">仅 Claude 调用（后台知识）</a></li><li class="toc-item toc-h2"><a href="#在子智能体中运行-skills">在子智能体中运行 Skills</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-创建你的第一个-skill">练习 1：创建你的第一个 Skill</a></li><li class="toc-item toc-h3"><a href="#练习-2-带参数的-skill">练习 2：带参数的 Skill</a></li><li class="toc-item toc-h3"><a href="#练习-3-多文件-skill">练习 3：多文件 Skill</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#claude-不使用我的-skill">Claude 不使用我的 Skill</a></li><li class="toc-item toc-h3"><a href="#skill-触发太频繁">Skill 触发太频繁</a></li><li class="toc-item toc-h3"><a href="#claude-看不到所有-skills">Claude 看不到所有 Skills</a></li><li class="toc-item toc-h3"><a href="#yaml-解析错误">YAML 解析错误</a></li><li class="toc-item toc-h3"><a href="#skills-冲突">Skills 冲突</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#描述要具体">描述要具体</a></li><li class="toc-item toc-h3"><a href="#一个-skill-一个能力">一个 Skill 一个能力</a></li><li class="toc-item toc-h3"><a href="#包含触发词">包含触发词</a></li><li class="toc-item toc-h3"><a href="#保持-skill-md-简洁">保持 SKILL.md 简洁</a></li><li class="toc-item toc-h3"><a href="#引用支持文件">引用支持文件</a></li><li class="toc-item toc-h2"><a href="#安全考虑">安全考虑</a></li><li class="toc-item toc-h2"><a href="#skills-与其他功能对比">Skills 与其他功能对比</a></li><li class="toc-item toc-h2"><a href="#可选-frontmatter-字段完整列表">可选 Frontmatter 字段完整列表</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#更多资源">更多资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Skills 技能
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 50 分钟
+✅ 已验证适用于 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-06</blockquote>
+<strong>你将构建：</strong> 为 Claude 创建可复用、自动调用的能力模板。
+<hr>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<blockquote>"有些任务我经常重复做，能不能保存成模板？"</blockquote>
+<p>你有没有遇到过这些场景：</p>
+<ul><li>每次写新功能都要提醒 Claude "先写测试"</li>
+<li>每次代码审查都要输入一堆检查清单</li>
+<li>每次部署都要手动检查测试、构建、推送...</li>
+<li>团队每个人都有一套自己的"习惯"，无法标准化</li>
+
+</ul>
+<strong>Skills 就是答案。</strong>
+<p>Skills 是基于文件系统的可复用能力模板。把你的工作流程、最佳实践、领域知识打包成 Skill，Claude 就能在需要时自动调用——<strong>一次创建，跨对话复用</strong>。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="skills-是什么">Skills 是什么？</h3>
+<strong>Skills</strong> 是模块化能力，可将通用智能体转变为专家。与提示词（用于一次性任务的对话级指令）不同，Skills 按需加载，无需在多个对话中重复提供相同的指导。
+<div class="mermaid">graph LR
+    subgraph "传统方式"
+        A1[每次对话] --> A2[重复输入指令]
+        A2 --> A3[容易遗漏]
+    end
+    subgraph "Skills 方式"
+        B1[创建 Skill] --> B2[自动发现]
+        B2 --> B3[按需加载]
+        B3 --> B4[跨对话复用]
+    end
+</div>
+<h3 id="渐进式披露架构">渐进式披露架构</h3>
+<p>Skills 采用<strong>渐进式披露</strong>架构——Claude 按需分阶段加载信息，而非预先占用上下文：</p>
+<div class="mermaid">graph TB
+    subgraph "Level 1: Metadata (始终加载)"
+        A["YAML Frontmatter"]
+        A1["~100 tokens 每个 Skill"]
+        A2["name + description"]
+    end
+
+    subgraph "Level 2: Instructions (触发时加载)"
+        B["SKILL.md 正文"]
+        B1["低于 5k tokens"]
+        B2["工作流程和指导"]
+    end
+
+    subgraph "Level 3: Resources (按需加载)"
+        C["捆绑文件"]
+        C1["实际无限制"]
+        C2["脚本、模板、文档"]
+    end
+
+    A --> B
+    B --> C
+</div>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>加载时机</th>
+<th>Token 成本</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Level 1: Metadata</strong></td>
+<td>始终（启动时）</td>
+<td>每个 Skill 约 100 tokens</td>
+<td>YAML frontmatter 中的 <code>name</code> 和 <code>description</code></td>
+</tr>
+<tr>
+<td><strong>Level 2: Instructions</strong></td>
+<td>Skill 被触发时</td>
+<td>低于 5k tokens</td>
+<td>SKILL.md 正文，包含指令和指导</td>
+</tr>
+<tr>
+<td><strong>Level 3+: Resources</strong></td>
+<td>按需加载</td>
+<td>实际无限制</td>
+<td>通过 bash 执行的捆绑文件，内容不加载到上下文中</td>
+</tr>
+</tbody>
+</table>
+<p>这意味着你可以安装多个 Skills 而不会产生上下文惩罚——Claude 只知道每个 Skill 存在以及何时使用它，直到实际触发时才加载更多。</p>
+<h3 id="skill-类型与位置">Skill 类型与位置</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>位置</th>
+<th>范围</th>
+<th>共享</th>
+<th>最适用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>Managed settings</td>
+<td>所有组织用户</td>
+<td>是</td>
+<td>组织级标准</td>
+</tr>
+<tr>
+<td><strong>Personal</strong></td>
+<td><code>~/.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td>个人</td>
+<td>否</td>
+<td>个人工作流程</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td><code>.claude/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td>团队</td>
+<td>是（通过 git）</td>
+<td>团队标准</td>
+</tr>
+<tr>
+<td><strong>Plugin</strong></td>
+<td><code>&lt;plugin&gt;/skills/&lt;skill-name&gt;/SKILL.md</code></td>
+<td>启用范围</td>
+<td>取决于插件</td>
+<td>与插件捆绑</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-使用内置-skills">场景 1：使用内置 Skills</h2>
+<p>Claude Code 附带多个内置 Skills，无需安装即可使用：</p>
+<h3 id="查看可用-skills">查看可用 Skills</h3>
+<p>直接询问 Claude：</p>
+<pre><code class="language-">What Skills are available?
+</code></pre>
+<p>或检查文件系统：</p>
+<pre><code class="language-bash"># 列出个人 Skills
+ls ~/.claude/skills/
+
+# 列出项目 Skills
+ls .claude/skills/
+</code></pre>
+<h3 id="内置-skills一览">内置 Skills一览</h3>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/simplify</code></td>
+<td>审查变更文件的复用、质量和效率；启动 3 个并行审查智能体</td>
+</tr>
+<tr>
+<td><code>/batch &lt;instruction&gt;</code></td>
+<td>使用 git worktrees 在代码库中编排大规模并行变更</td>
+</tr>
+<tr>
+<td><code>/debug [description]</code></td>
+<td>通过读取 debug 日志排查当前会话</td>
+</tr>
+<tr>
+<td><code>/loop [interval] &lt;prompt&gt;</code></td>
+<td>按间隔重复运行提示词（如 <code>/loop 5m check the deploy</code>）</td>
+</tr>
+<tr>
+<td><code>/claude-api</code></td>
+<td>加载 Claude API/SDK 参考；在 <code>anthropic</code>/<code>@anthropic-ai/sdk</code> 导入时自动激活</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实战演练">实战演练</h3>
+<strong>场景：你的项目引入了 Anthropic SDK，想快速了解 API 使用方法。</strong>
+<pre><code class="language-bash"># 步骤 1：直接开始使用
+# Claude 会自动检测 anthropic 导入并激活 claude-api skill
+
+# 步骤 2：提问
+# &quot;帮我用 Anthropic SDK 实现一个聊天功能&quot;
+
+# Claude 自动加载 claude-api skill，提供准确的 API 用法指导
+</code></pre>
+<strong>场景：你修改了几个文件，想检查代码质量。</strong>
+<pre><code class="language-bash"># 步骤 1：调用 simplify skill
+/simplify
+
+# Claude 会启动 3 个并行审查智能体，检查：
+# - 复用机会
+# - 代码质量
+# - 效率问题
+</code></pre>
+<hr>
+<h2 id="场景-2-创建简单-skill">场景 2：创建简单 Skill</h2>
+<h3 id="基础目录结构">基础目录结构</h3>
+<p>一个 Skill 最少只需要一个 <code>SKILL.md</code> 文件：</p>
+<pre><code class="language-">my-skill/
+└── SKILL.md           # 主要指令（必需）
+</code></pre>
+<h3 id="skill-md-格式">SKILL.md 格式</h3>
+<pre><code class="language-yaml">---
+name: your-skill-name
+description: Brief description of what this Skill does and when to use it
+---
+
+# Your Skill Name
+
+## Instructions
+Provide clear, step-by-step guidance for Claude.
+
+## Examples
+Show concrete examples of using this Skill.
+</code></pre>
+<h3 id="必填字段">必填字段</h3>
+<ul><li><strong>name</strong>：仅限小写字母、数字、连字符（最多 64 字符）。不能包含 "anthropic" 或 "claude"。</li>
+<li><strong>description</strong>：Skill 的功能以及何时使用（最多 1024 字符）。这对 Claude 知道何时激活 skill 至关重要。</li>
+
+</ul>
+<h3 id="实战演练">实战演练</h3>
+<strong>场景：你希望每次开始工作时，Claude 能快速给你一个项目状态摘要。</strong>
+<strong>步骤 1：创建 Skill 目录</strong>
+<pre><code class="language-bash">mkdir -p .claude/skills/status
+</code></pre>
+<strong>步骤 2：创建 SKILL.md</strong>
+<pre><code class="language-markdown">---
+name: status
+description: Show comprehensive project status. Use when user asks about project health, status, or starts a session.
+allowed-tools: Bash(git *), Bash(npm *), Read
+---
+
+# Project Status
+
+## Git Context
+- Branch: !`git branch --show-current`
+- Changes: !`git status --short | head -10`
+- Recent: !`git log --oneline -5`
+
+## Package Info
+- Version: !`node -e &quot;console.log(require(&#039;./package.json&#039;).version)&quot; 2&gt;/dev/null || echo &quot;N/A&quot;`
+- Dependencies: !`npm ls --depth=0 2&gt;/dev/null | head -15 || echo &quot;Run npm install first&quot;`
+
+## Summary
+Provide a brief health report with recommendations.
+</code></pre>
+<strong>步骤 3：测试</strong>
+<pre><code class="language-bash"># 方式 1：直接调用
+/status
+
+# 方式 2：自然语言触发
+# 输入 &quot;项目状态怎么样&quot;
+# Claude 会自动识别并调用 status skill
+</code></pre>
+<h3 id="关键语法-动态上下文注入">关键语法：动态上下文注入</h3>
+<code>!</code>command`` 语法在 skill 内容发送给 Claude 之前运行 shell 命令：
+<pre><code class="language-yaml">---
+name: pr-summary
+description: Summarize changes in a pull request
+---
+
+## Pull request context
+- PR diff: !`gh pr diff`
+- PR comments: !`gh pr view --comments`
+- Changed files: !`gh pr diff --name-only`
+
+## Your task
+Summarize this pull request...
+</code></pre>
+<p>命令立即执行；Claude 只看到最终输出。</p>
+<hr>
+<h2 id="场景-3-创建带模板的-skill">场景 3：创建带模板的 Skill</h2>
+<h3 id="完整-skill-目录结构">完整 Skill 目录结构</h3>
+<p>当 Skill 需要更多资源时，可以添加支持文件：</p>
+<pre><code class="language-">my-skill/
+├── SKILL.md              # 主要指令（必需，保持在 500 行以下）
+├── templates/            # Claude 填写的模板
+│   └ output-format.md
+├── examples/             # 示例输出，展示预期格式
+│   └ sample-output.md
+├── references/           # 领域知识和规范
+│   └ api-spec.md
+└── scripts/              # Claude 可执行的脚本
+    └ validate.sh
+</code></pre>
+<h3 id="实战演练">实战演练</h3>
+<strong>场景：你希望每次代码审查都遵循统一的标准和输出格式。</strong>
+<strong>步骤 1：创建目录结构</strong>
+<pre><code class="language-bash">mkdir -p .claude/skills/review/templates
+mkdir -p .claude/skills/review/scripts
+</code></pre>
+<strong>步骤 2：创建 SKILL.md</strong>
+<pre><code class="language-markdown">---
+name: review
+description: Comprehensive code review. Use before commits or PRs, when user asks to review code.
+allowed-tools: Read, Grep, Glob, Bash(git *)
+---
+
+# Code Review
+
+## Current Changes
+!`git diff HEAD`
+
+## Review Process
+1. Load each changed file
+2. Check against checklist (see templates/checklist.md)
+3. Note issues by severity (CRITICAL, HIGH, MEDIUM, LOW)
+4. Provide actionable recommendations
+
+## Output Template
+Use format from templates/report.md
+
+## Additional Resources
+- For security checklist, see templates/security-checklist.md
+- For quality checklist, see templates/quality-checklist.md
+</code></pre>
+<strong>步骤 3：创建模板文件</strong>
+<p>`templates/checklist.md`:</p>
+<pre><code class="language-markdown"># Review Checklist
+
+## Security
+- [ ] No hardcoded secrets
+- [ ] Input validation present
+- [ ] Proper error handling
+- [ ] No SQL injection risks
+
+## Quality
+- [ ] Functions &lt; 50 lines
+- [ ] Files &lt; 800 lines
+- [ ] No deep nesting (&gt;4 levels)
+- [ ] Clear naming
+
+## Performance
+- [ ] No N+1 queries
+- [ ] Efficient algorithms
+- [ ] No memory leaks
+
+## Testing
+- [ ] Tests for new code
+- [ ] Edge cases covered
+- [ ] Mocks properly configured
+</code></pre>
+<p>`templates/report.md`:</p>
+<pre><code class="language-markdown"># Review Report
+
+## Files Reviewed
+- List each file with severity summary
+
+## Issues Found
+
+| Severity | File | Line | Issue | Fix |
+|----------|------|------|-------|-----|
+
+## Summary
+- Critical issues: X (must fix)
+- High issues: Y (should fix)
+- Medium issues: Z (consider)
+- Low issues: W (optional)
+
+## Recommendation
+[Approve / Block / Warn]
+</code></pre>
+<strong>步骤 4：测试</strong>
+<pre><code class="language-bash"># 方式 1：直接调用
+/review
+
+# 方式 2：自然语言触发
+# 输入 &quot;帮我审查代码&quot;
+# Claude 会自动调用 review skill
+
+# Claude 会：
+# 1. 获取当前变更
+# 2. 按需加载 checklist.md
+# 3. 按模板格式输出审查报告
+</code></pre>
+<h3 id="支持文件指南">支持文件指南</h3>
+<ul><li>保持 `SKILL.md<code> 在 **500 行以下**。将详细参考材料移到单独文件。
+- 从 </code>SKILL.md<code> 使用**相对路径**引用其他文件。
+- 支持文件在 Level 3（按需）加载，不预先占用上下文。
+
+---
+
+## 控制 Skill 调用
+
+默认情况下，你和 Claude 都可以调用任何 skill。两个 frontmatter 字段控制三种调用模式：
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Frontmatter&lt;/th&gt;
+&lt;th&gt;你可调用&lt;/th&gt;
+&lt;th&gt;Claude 可调用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;（默认）&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>disable-model-invocation: true<code>&lt;/td&gt;
+&lt;td&gt;是&lt;/td&gt;
+&lt;td&gt;否&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>user-invocable: false`</td></li>
+</ul>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h3 id="仅用户调用-防止意外执行">仅用户调用（防止意外执行）</h3>
+<strong>场景：部署操作有副作用，你不希望 Claude 自动触发。</strong>
+<pre><code class="language-yaml">---
+name: deploy
+description: Deploy to production. Only invoke when user explicitly requests deploy.
+disable-model-invocation: true
+allowed-tools: Bash(npm *), Bash(git *)
+---
+
+# Deploy to Production
+
+## Pre-flight Checks
+1. Tests passing: !`npm test 2&gt;&amp;1 | tail -5`
+2. Build succeeds: !`npm run build 2&gt;&amp;1 | tail -5`
+3. No uncommitted changes: !`git status --short`
+
+## Deploy Steps
+1. Tag release
+2. Push tag
+3. Trigger CI
+</code></pre>
+<strong>使用：</strong>
+<pre><code class="language-bash">/deploy
+
+# Claude 不会自动调用此 skill，即使你说 &quot;let&#039;s deploy&quot;
+# 它需要显式的 /deploy 命令
+</code></pre>
+<h3 id="仅-claude-调用-后台知识">仅 Claude 调用（后台知识）</h3>
+<strong>场景：品牌语调规范是后台知识，不需要用户手动调用。</strong>
+<pre><code class="language-yaml">---
+name: brand-voice
+description: Ensure all communication matches brand voice guidelines. Use when creating marketing copy.
+user-invocable: false
+---
+
+## Tone of Voice
+- Friendly but professional
+- Clear and concise
+- Confident but empathetic
+
+## Writing Guidelines
+- Use &quot;you&quot; when addressing readers
+- Use active voice
+- Keep sentences under 20 words
+</code></pre>
+<hr>
+<h2 id="在子智能体中运行-skills">在子智能体中运行 Skills</h2>
+<p>添加 `context: fork` 在隔离的子智能体上下文中运行 skill：</p>
+<pre><code class="language-yaml">---
+name: deep-research
+description: Research a topic thoroughly
+context: fork
+agent: Explore
+---
+
+Research $ARGUMENTS thoroughly:
+1. Find relevant files using Glob and Grep
+2. Read and analyze the code
+3. Summarize findings with specific file references
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>智能体类型</th>
+<th>最适用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>`Explore<code>&lt;/td&gt;
+&lt;td&gt;只读研究、代码库分析&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>Plan<code>&lt;/td&gt;
+&lt;td&gt;创建实现计划&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>general-purpose<code>&lt;/td&gt;
+&lt;td&gt;需要所有工具的广泛任务&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+
+## 🎯 Try It Now
+
+### 练习 1：创建你的第一个 Skill
+
+构建一个 </code>/hello` skill 用于问候：
+
+<pre><code class="language-bash"># 步骤 1：创建目录
+mkdir -p .claude/skills/hello
+
+# 步骤 2：创建 SKILL.md（内容如下）
+</code></pre>
+
+<pre><code class="language-markdown">---
+name: hello
+description: Greet team members. Use when user says hello or starts a session.
+---
+
+# Hello Skill
+
+Greet the user with:
+1. Current date and time
+2. Quick project status (branch, recent commits)
+3. Ask what they&#039;d like to work on
+
+Be warm but concise.
+</code></pre>
+
+<pre><code class="language-bash"># 步骤 3：测试
+/hello
+
+# 或直接输入 &quot;hello&quot;
+</code></pre>
+
+<h3 id="练习-2-带参数的-skill">练习 2：带参数的 Skill</h3>
+
+创建 `/fix-issue` skill：
+
+<pre><code class="language-markdown">---
+name: fix-issue
+description: Fix a GitHub issue by number. Use when user mentions fixing an issue.
+argument-hint: issue-number
+allowed-tools: Bash(git *), Bash(gh *), Read, Edit, Write
+---
+
+# Fix Issue #$ARGUMENTS
+
+## Steps
+1. Fetch Issue Details from GitHub
+2. Analyze Codebase
+3. Implement Fix (minimal, focused changes)
+4. Add/update tests
+5. Verify tests pass
+6. Commit with issue reference
+
+## Output Format
+Report: issue title, changes made, tests added, verification results
+</code></pre>
+
+<pre><code class="language-bash"># 测试
+/fix-issue 123
+</code></pre>
+
+<h3 id="练习-3-多文件-skill">练习 3：多文件 Skill</h3>
+
+创建完整的 `/review` skill（见场景 3 的完整示例）。
+
+<hr>
+
+<h2 id="常见问题">常见问题</h2>
+
+<h3 id="claude-不使用我的-skill">Claude 不使用我的 Skill</h3>
+
+<strong>原因：</strong> 描述不够具体，缺少触发词。
+
+<strong>解决：</strong>
+
+<pre><code class="language-yaml"># 差（模糊）
+description: Helps with documents
+
+# 好（具体）
+description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when user mentions PDFs, forms, or document extraction.
+</code></pre>
+
+<h3 id="skill-触发太频繁">Skill 触发太频繁</h3>
+
+<strong>原因：</strong> 描述过于宽泛。
+
+<strong>解决：</strong>
+
+<ul><li>让描述更具体</li>
+<li>添加 `disable-model-invocation: true<code> 仅限手动调用
+
+### Claude 看不到所有 Skills
+
+**原因：** Skill 描述加载上限为上下文窗口的 2%（后备值：16,000 字符）。
+
+**解决：** 运行 </code>/context` 查看警告。可通过环境变量覆盖：</li>
+
+</ul><pre><code class="language-bash">export SLASH_COMMAND_TOOL_CHAR_BUDGET=20000
+</code></pre>
+
+<h3 id="yaml-解析错误">YAML 解析错误</h3>
+
+<strong>解决：</strong>
+
+<ul><li>检查 `---<code> 标记是否正确
+2. 确保缩进使用空格，不用制表符
+3. 验证路径：</code>~/.claude/skills/name/SKILL.md<code>
+
+### Skills 冲突
+
+**解决：**
+
+1. 在描述中使用不同的触发词
+2. 高优先级位置优先：**enterprise &gt; personal &gt; project**
+3. Plugin skills 使用 </code>plugin-name:skill-name` 命名空间，不会冲突</li>
+
+</ul><hr>
+
+<h2 id="最佳实践">最佳实践</h2>
+
+<h3 id="描述要具体">描述要具体</h3>
+
+<pre><code class="language-yaml"># 差
+description: Helps with documents
+
+# 好
+description: Extract text and tables from PDF files. Use when working with PDFs, forms, or document extraction.
+</code></pre>
+
+<h3 id="一个-skill-一个能力">一个 Skill 一个能力</h3>
+
+<ul><li>✅ "PDF form filling"</li>
+<li>❌ "Document processing"（太宽泛）</li>
+
+</ul><h3 id="包含触发词">包含触发词</h3>
+
+<pre><code class="language-yaml">description: Analyze Excel spreadsheets, generate pivot tables. Use when working with Excel files, spreadsheets, or .xlsx files.
+</code></pre>
+
+<h3 id="保持-skill-md-简洁">保持 SKILL.md 简洁</h3>
+
+保持在 500 行以下，详细内容移到支持文件。
+
+<h3 id="引用支持文件">引用支持文件</h3>
+
+<pre><code class="language-markdown">## Additional resources
+- For API details, see [reference.md](reference.md)
+- For examples, see [examples.md](examples.md)
+</code></pre>
+
+<hr>
+
+<h2 id="安全考虑">安全考虑</h2>
+
+<strong>仅使用来自可信来源的 Skills。</strong> Skills 可引导 Claude 调用工具或执行代码——恶意 Skill 有安全风险。
+
+关键原则：
+
+<ul><li>彻底审计 Skill 目录中的所有文件</li>
+<li>外部来源有风险，可能被篡改</li>
+<li>像安装软件一样对待 Skills</li>
+
+</ul><hr>
+
+<h2 id="skills-与其他功能对比">Skills 与其他功能对比</h2>
+
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>调用方式</th>
+<th>最适用于</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skills</strong></td>
+<td>自动或 `/name<code>&lt;/td&gt;
+&lt;td&gt;可复用专业知识、工作流程&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Slash Commands**&lt;/td&gt;
+&lt;td&gt;用户发起 </code>/name<code>&lt;/td&gt;
+&lt;td&gt;快捷方式（已合并到 skills）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Subagents**&lt;/td&gt;
+&lt;td&gt;自动委托&lt;/td&gt;
+&lt;td&gt;隔离任务执行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Memory (CLAUDE.md)**&lt;/td&gt;
+&lt;td&gt;始终加载&lt;/td&gt;
+&lt;td&gt;持久项目上下文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**MCP**&lt;/td&gt;
+&lt;td&gt;实时&lt;/td&gt;
+&lt;td&gt;外部数据/服务访问&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;**Hooks**&lt;/td&gt;
+&lt;td&gt;事件驱动&lt;/td&gt;
+&lt;td&gt;自动化副作用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+---
+
+## 可选 Frontmatter 字段完整列表
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;字段&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>name<code>&lt;/td&gt;
+&lt;td&gt;仅限小写字母、数字、连字符（最多 64 字符）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>description<code>&lt;/td&gt;
+&lt;td&gt;Skill 的功能以及何时使用（最多 1024 字符）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>argument-hint<code>&lt;/td&gt;
+&lt;td&gt;</code>/<code> 自动补全菜单中显示的提示&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>disable-model-invocation<code>&lt;/td&gt;
+&lt;td&gt;</code>true<code> = 仅用户可调用&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>user-invocable<code>&lt;/td&gt;
+&lt;td&gt;</code>false<code> = 从 </code>/<code> 菜单隐藏&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>allowed-tools<code>&lt;/td&gt;
+&lt;td&gt;Skill 可使用的工具列表&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>model<code>&lt;/td&gt;
+&lt;td&gt;Skill 激活时的模型覆盖（如 </code>opus<code>、</code>sonnet<code>）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>effort<code>&lt;/td&gt;
+&lt;td&gt;Effort 级别覆盖：</code>low<code>、</code>medium<code>、</code>high<code>、</code>max<code>&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>context<code>&lt;/td&gt;
+&lt;td&gt;</code>fork<code> 在隔离子智能体中运行&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>agent<code>&lt;/td&gt;
+&lt;td&gt;子智能体类型（配合 </code>context: fork<code>）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>shell<code>&lt;/td&gt;
+&lt;td&gt;Shell 类型：</code>bash<code>（默认）或 </code>powershell<code>&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>hooks`</td>
+<td>Skill 范围的 hooks</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote>"有些任务太专业了，能不能请专家？"</blockquote>
+<p>Skills 让你保存模板，但有些任务需要<strong>专业智能体</strong>来处理——比如安全审查、代码重构、系统调试。</p>
+<p>下一章 <a href="/content/04-subagents.html">Subagents</a> 将介绍如何委托专业智能体处理复杂任务。</p>
+<hr>
+<h2 id="更多资源">更多资源</h2>
+<ul><li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a></li>
+<li><a href="https://claude.com/blog/equipping-agents-for-the-real-world-with-agent-skills">Agent Skills 架构博客</a></li>
+<li><a href="https://github.com/luongnv89/skills">Skills 仓库</a> - 即用 skills 收集</li>
+<li><a href="/content/01-slash-commands.html">Slash Commands 指南</a> - 用户发起的快捷方式</li>
+<li><a href="/content/04-subagents.html">Subagents 指南</a> - 委托 AI 智能体</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> - 持久上下文</li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/04-memory.html">← Memory 与上下文</a>
+      <a href="/content/06-subagents.html">Subagents 代理 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

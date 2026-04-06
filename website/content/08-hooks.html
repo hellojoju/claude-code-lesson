@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hooks 自动化 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Hooks 自动化 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#事件驱动模型">事件驱动模型</a></li><li class="toc-item toc-h3"><a href="#hook-类型">Hook 类型</a></li><li class="toc-item toc-h3"><a href="#退出码含义">退出码含义</a></li><li class="toc-item toc-h2"><a href="#场景-1-保存后自动格式化">场景 1：保存后自动格式化</a></li><li class="toc-item toc-h3"><a href="#创建-hook-脚本">创建 Hook 脚本</a></li><li class="toc-item toc-h3"><a href="#配置-hook">配置 Hook</a></li><li class="toc-item toc-h3"><a href="#验证效果">验证效果</a></li><li class="toc-item toc-h2"><a href="#场景-2-提交前自动检查">场景 2：提交前自动检查</a></li><li class="toc-item toc-h3"><a href="#创建安全验证-hook">创建安全验证 Hook</a></li><li class="toc-item toc-h3"><a href="#配置-hook">配置 Hook</a></li><li class="toc-item toc-h3"><a href="#验证效果">验证效果</a></li><li class="toc-item toc-h2"><a href="#场景-3-会话结束时自动通知">场景 3：会话结束时自动通知</a></li><li class="toc-item toc-h3"><a href="#创建通知-hook">创建通知 Hook</a></li><li class="toc-item toc-h3"><a href="#配置-hook">配置 Hook</a></li><li class="toc-item toc-h3"><a href="#验证效果">验证效果</a></li><li class="toc-item toc-h2"><a href="#完整-hook-事件列表">完整 Hook 事件列表</a></li><li class="toc-item toc-h2"><a href="#hook-输入输出格式">Hook 输入输出格式</a></li><li class="toc-item toc-h3"><a href="#json-输入-通过-stdin">JSON 输入（通过 stdin）</a></li><li class="toc-item toc-h3"><a href="#json-输出-stdout">JSON 输出（stdout）</a></li><li class="toc-item toc-h2"><a href="#配置位置">配置位置</a></li><li class="toc-item toc-h2"><a href="#完整配置示例">完整配置示例</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#hook-没有触发">Hook 没有触发？</a></li><li class="toc-item toc-h3"><a href="#hook-意外拦截">Hook 意外拦截？</a></li><li class="toc-item toc-h3"><a href="#json-解析失败">JSON 解析失败？</a></li><li class="toc-item toc-h3"><a href="#hook-执行太慢">Hook 执行太慢？</a></li><li class="toc-item toc-h3"><a href="#如何调试-hook">如何调试 Hook？</a></li><li class="toc-item toc-h2"><a href="#安全注意事项">安全注意事项</a></li><li class="toc-item toc-h3"><a href="#使用风险">使用风险</a></li><li class="toc-item toc-h3"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h2"><a href="#进阶模式">进阶模式</a></li><li class="toc-item toc-h3"><a href="#模式-1-hook-链式执行">模式 1：Hook 链式执行</a></li><li class="toc-item toc-h3"><a href="#模式-2-基于提示的-hook">模式 2：基于提示的 Hook</a></li><li class="toc-item toc-h3"><a href="#模式-3-组件范围-hooks">模式 3：组件范围 Hooks</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Hooks 自动化
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 70 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-06</blockquote>
+<strong>你将构建：</strong> 通过事件驱动脚本自动化工作流，让重复操作不再占用你的心智带宽。
+<hr>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>"我希望某些操作能自动执行"</p>
+<p>这是每个开发者的心声。你刚写完代码，忘了格式化，提交后 CI 红了。你刚保存了文件，忘了运行 lint，20 分钟后才发现问题。你刚结束一个会话，想通知队友进度，却忘了发消息。</p>
+<p>这些"忘了"不是你的错——人类不该记住这些机械操作。Hooks 就是解决方案：它们在你思考时默默执行，在你忘记时自动补救，在你忙碌时代替你发送通知。</p>
+<strong>没有 Hooks 的痛苦循环：</strong>
+<pre><code class="language-">编写代码 → 提交 → 推送 → CI 启动 → 5 分钟安装 → 10 分钟构建 → 5 分钟测试 → 失败 → 修复 → 重复
+</code></pre>
+<strong>有了 Hooks：</strong>
+<pre><code class="language-">编写代码 → Hook 运行 → 2 秒 → 立即修复 → 提交干净代码 → CI 通过
+</code></pre>
+<p>Hooks 将验证从"事后"转变为"你还在思考时"。它们在提交前捕获密钥，在切换文件前格式化代码，在执行危险命令前拦截。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<p>Hooks 是事件驱动的自动化脚本。当 Claude Code 中发生特定事件时，Hook 自动执行并响应。</p>
+<h3 id="事件驱动模型">事件驱动模型</h3>
+<div class="mermaid">flowchart LR
+    A[事件触发] --> B[Hook 执行]
+    B --> C{决策}
+    C -->|允许| D[继续]
+    C -->|拦截| E[停止]
+    C -->|反馈| F[提供上下文]
+    
+    style A fill:#e1f5fe
+    style E fill:#ffcdd2
+    style F fill:#fff9c4
+</div>
+<strong>四个关键要素：</strong>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>事件</strong></td>
+<td>什么时候触发（保存文件、执行命令、结束会话）</td>
+</tr>
+<tr>
+<td><strong>匹配器</strong></td>
+<td>匹配哪些操作（Write、Edit、Bash）</td>
+</tr>
+<tr>
+<td><strong>Hook 类型</strong></td>
+<td>怎么执行（命令、提示、HTTP、智能体）</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>做什么（允许、拦截、提供反馈）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hook-类型">Hook 类型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>command</strong></td>
+<td>Shell 命令执行</td>
+<td>格式化、lint、安全扫描</td>
+</tr>
+<tr>
+<td><strong>prompt</strong></td>
+<td>LLM 评估</td>
+<td>任务完成检查、质量评估</td>
+</tr>
+<tr>
+<td><strong>http</strong></td>
+<td>Webhook 调用</td>
+<td>外部系统集成</td>
+</tr>
+<tr>
+<td><strong>agent</strong></td>
+<td>子智能体验证</td>
+<td>复杂条件评估</td>
+</tr>
+</tbody>
+</table>
+<h3 id="退出码含义">退出码含义</h3>
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>含义</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>成功</td>
+<td>继续执行，解析 JSON 输出</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>拦截</td>
+<td>停止操作，显示错误信息</td>
+</tr>
+<tr>
+<td><strong>其他</strong></td>
+<td>错误</td>
+<td>继续执行，仅在详细模式显示警告</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-保存后自动格式化">场景 1：保存后自动格式化</h2>
+<strong>问题：</strong> 你写完代码忘记格式化，提交后 CI 报错，浪费 20 分钟等待反馈。
+<strong>目标：</strong> 每次保存文件时自动运行格式化工具，确保代码风格一致。
+<h3 id="创建-hook-脚本">创建 Hook 脚本</h3>
+<strong>步骤 1：创建 hooks 目录</strong>
+<pre><code class="language-bash">mkdir -p .claude/hooks
+</code></pre>
+<strong>步骤 2：创建自动格式化脚本</strong>
+<code>.claude/hooks/auto-format.sh</code>：
+<pre><code class="language-bash">#!/bin/bash
+# auto-format.sh - 保存后自动格式化代码
+# Hook: PostToolUse (Write|Edit)
+# 从 stdin 接收 JSON 输入
+
+set -euo pipefail
+
+INPUT=$(cat)
+FILE_PATH=$(echo &quot;$INPUT&quot; | jq -r &#039;.tool_input.file_path // empty&#039;)
+TOOL_NAME=$(echo &quot;$INPUT&quot; | jq -r &#039;.tool_name // empty&#039;)
+
+# 只处理 Write 和 Edit 工具
+if [[ &quot;$TOOL_NAME&quot; != &quot;Write&quot; &amp;&amp; &quot;$TOOL_NAME&quot; != &quot;Edit&quot; ]]; then
+  exit 0
+fi
+
+# 跳过不存在或无路径的文件
+[[ -z &quot;$FILE_PATH&quot; || ! -f &quot;$FILE_PATH&quot; ]] &amp;&amp; exit 0
+
+log() {
+  echo &quot;[Hook:format] $1&quot; &gt;&amp;2
+}
+
+# 根据文件扩展名选择格式化工具
+case &quot;$FILE_PATH&quot; in
+  *.ts|*.tsx|*.js|*.jsx|*.json|*.md|*.yaml|*.yml|*.css|*.scss)
+    if command -v prettier &amp;&gt;/dev/null; then
+      prettier --write &quot;$FILE_PATH&quot; 2&gt;/dev/null &amp;&amp; log &quot;已格式化 (prettier): $FILE_PATH&quot;
+    fi
+    ;;
+  *.py)
+    if command -v black &amp;&gt;/dev/null; then
+      black &quot;$FILE_PATH&quot; 2&gt;/dev/null &amp;&amp; log &quot;已格式化 (black): $FILE_PATH&quot;
+    elif command -v autopep8 &amp;&gt;/dev/null; then
+      autopep8 --in-place &quot;$FILE_PATH&quot; &amp;&amp; log &quot;已格式化 (autopep8): $FILE_PATH&quot;
+    fi
+    ;;
+  *.go)
+    if command -v gofmt &amp;&gt;/dev/null; then
+      gofmt -w &quot;$FILE_PATH&quot; &amp;&amp; log &quot;已格式化 (gofmt): $FILE_PATH&quot;
+    fi
+    ;;
+  *.rs)
+    if command -v rustfmt &amp;&gt;/dev/null; then
+      rustfmt &quot;$FILE_PATH&quot; &amp;&amp; log &quot;已格式化 (rustfmt): $FILE_PATH&quot;
+    fi
+    ;;
+esac
+
+exit 0
+</code></pre>
+<strong>步骤 3：设置执行权限</strong>
+<pre><code class="language-bash">chmod +x .claude/hooks/auto-format.sh
+</code></pre>
+<h3 id="配置-hook">配置 Hook</h3>
+<p>在 <code>.claude/settings.json</code> 中添加配置：</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PostToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Write|Edit&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh&quot;,
+            &quot;timeout&quot;: 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="验证效果">验证效果</h3>
+<p>让 Claude 创建一个 TypeScript 文件：</p>
+<pre><code class="language-">&gt; 创建 utils.ts，包含 formatDate 函数
+
+[Hook:format] 已格式化 (prettier): utils.ts  ← Hook 自动运行！
+</code></pre>
+<strong>你收获了什么：</strong>
+<ul><li>每个文件在保存时自动格式化</li>
+<li>不再需要手动运行格式化命令</li>
+<li>CI 不会因为格式问题失败</li>
+<li>零心智负担——它自动发生</li>
+
+</ul>
+<hr>
+<h2 id="场景-2-提交前自动检查">场景 2：提交前自动检查</h2>
+<strong>问题：</strong> Claude 建议了一个危险的命令（如 <code>rm -rf /</code>），如果执行可能造成灾难性后果。
+<strong>目标：</strong> 在执行 Bash 命令前自动拦截危险操作，保护你的系统。
+<h3 id="创建安全验证-hook">创建安全验证 Hook</h3>
+<strong>步骤 1：创建验证脚本</strong>
+<code>.claude/hooks/security-validator.sh</code>：
+<pre><code class="language-bash">#!/bin/bash
+# security-validator.sh - 拦截危险的 Bash 命令
+# Hook: PreToolUse (Bash)
+# 退出码 2 = 拦截操作
+
+set -euo pipefail
+
+INPUT=$(cat)
+CMD=$(echo &quot;$INPUT&quot; | jq -r &#039;.tool_input.command // empty&#039;)
+
+log() {
+  echo &quot;[Hook:security] $1&quot; &gt;&amp;2
+}
+
+# 危险命令模式 - 这些会被拦截（退出码 2）
+BLOCKED_PATTERNS=(
+  &#039;rm -rf /&#039;
+  &#039;rm -rf ~&#039;
+  &#039;rm -rf /*&#039;
+  &#039;sudo rm -rf&#039;
+  &#039;dd if=/dev/zero&#039;
+  &#039;dd if=/dev/urandom&#039;
+  &#039;:(){ :|:&amp; };:&#039;         # Fork bomb
+  &#039;mkfs&#039;
+  &#039;git push --force main&#039;
+  &#039;git push --force master&#039;
+  &#039;git push --force origin main&#039;
+  &#039;git push --force origin master&#039;
+  &#039;DROP DATABASE&#039;
+  &#039;TRUNCATE TABLE&#039;
+  &#039;kubectl delete namespace&#039;
+  &#039;kubectl delete all&#039;
+  &#039;terraform destroy&#039;
+)
+
+# 检查危险模式
+for pattern in &quot;${BLOCKED_PATTERNS[@]}&quot;; do
+  if [[ &quot;$CMD&quot; == *&quot;$pattern&quot;* ]]; then
+    log &quot;拦截危险命令: $pattern&quot;
+    log &quot;完整命令: $CMD&quot;
+    exit 2  # 退出码 2 = 拦截操作
+  fi
+done
+
+# 警告但允许的模式
+WARN_PATTERNS=(
+  &#039;git reset --hard&#039;
+  &#039;npm publish&#039;
+  &#039;docker system prune&#039;
+)
+
+for pattern in &quot;${WARN_PATTERNS[@]}&quot;; do
+  if [[ &quot;$CMD&quot; == *&quot;$pattern&quot;* ]]; then
+    log &quot;警告: 有风险的操作 - $pattern&quot;
+    # 继续执行但 Claude 看到警告
+  fi
+done
+
+log &quot;安全检查通过&quot;
+exit 0
+</code></pre>
+<strong>步骤 2：设置执行权限</strong>
+<pre><code class="language-bash">chmod +x .claude/hooks/security-validator.sh
+</code></pre>
+<h3 id="配置-hook">配置 Hook</h3>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/security-validator.sh&quot;,
+            &quot;timeout&quot;: 10
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="验证效果">验证效果</h3>
+<p>尝试让 Claude 执行危险命令：</p>
+<pre><code class="language-">&gt; 运行 rm -rf /tmp/old-files
+
+[Hook:security] 拦截危险命令: rm -rf /
+[Hook:security] 完整命令: rm -rf /tmp/old-files
+
+操作被拦截！Claude 无法执行此命令。
+</code></pre>
+<strong>你收获了什么：</strong>
+<ul><li>危险命令自动拦截</li>
+<li>不用担心误操作造成灾难</li>
+<li>有风险的命令收到警告</li>
+<li>安全边界自动守护</li>
+
+</ul>
+<hr>
+<h2 id="场景-3-会话结束时自动通知">场景 3：会话结束时自动通知</h2>
+<strong>问题：</strong> 你完成了一个复杂的任务，想通知队友进度，但总是忘记发送消息。
+<strong>目标：</strong> 会话结束时自动发送通知（桌面提醒、Slack、邮件）。
+<h3 id="创建通知-hook">创建通知 Hook</h3>
+<strong>步骤 1：创建通知脚本</strong>
+<code>.claude/hooks/session-notify.sh</code>：
+<pre><code class="language-bash">#!/bin/bash
+# session-notify.sh - 会话结束时发送通知
+# Hook: SessionEnd 或 Stop
+
+set -euo pipefail
+
+INPUT=$(cat)
+SESSION_ID=$(echo &quot;$INPUT&quot; | jq -r &#039;.session_id // empty&#039;)
+CWD=$(echo &quot;$INPUT&quot; | jq -r &#039;.cwd // empty&#039;)
+REASON=$(echo &quot;$INPUT&quot; | jq -r &#039;.reason // empty&#039;)
+
+log() {
+  echo &quot;[Hook:notify] $1&quot; &gt;&amp;2
+}
+
+# 桌面通知（macOS/Linux）
+desktop_notify() {
+  local title=&quot;Claude Code 会话结束&quot;
+  local message=&quot;任务完成于: $(basename &quot;$CWD&quot;)&quot;
+
+  if [[ &quot;$(uname)&quot; == &quot;Darwin&quot; ]]; then
+    osascript -e &#039;display notification &quot;&#039;&quot;$message&quot;&#039;&quot; with title &quot;&#039;&quot;$title&quot;&#039;&quot;&#039; 2&gt;/dev/null || true
+  elif [[ &quot;$(uname)&quot; == &quot;Linux&quot; ]]; then
+    notify-send &quot;$title&quot; &quot;$message&quot; 2&gt;/dev/null || true
+  fi
+}
+
+# Slack 通知（可选，需设置 SLACK_WEBHOOK_URL 环境变量）
+slack_notify() {
+  local webhook=&quot;${SLACK_WEBHOOK_URL:-}&quot;
+  [[ -z &quot;$webhook&quot; ]] &amp;&amp; return
+
+  local project=$(basename &quot;$CWD&quot;)
+
+  curl -X POST &quot;$webhook&quot; \
+    -H &#039;Content-Type: application/json&#039; \
+    -d &#039;{&quot;text&quot;: &quot;Claude Code 会话结束于 *&#039;&quot;$project&quot;&#039;*&quot;}&#039; \
+    --silent --max-time 5 || true
+
+  log &quot;Slack 通知已发送&quot;
+}
+
+# 主流程
+log &quot;会话结束: $REASON&quot;
+desktop_notify
+slack_notify
+
+exit 0
+</code></pre>
+<strong>步骤 2：设置执行权限</strong>
+<pre><code class="language-bash">chmod +x .claude/hooks/session-notify.sh
+</code></pre>
+<h3 id="配置-hook">配置 Hook</h3>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/session-notify.sh&quot;
+          }
+        ]
+      }
+    ],
+    &quot;SessionEnd&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/session-notify.sh&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="验证效果">验证效果</h3>
+<p>当你完成任务并结束会话时：</p>
+<pre><code class="language-">会话结束...
+
+[Hook:notify] 会话结束: clear
+[Hook:notify] Slack 通知已发送
+
+桌面弹出通知：&quot;任务完成于: my-project&quot;
+</code></pre>
+<strong>你收获了什么：</strong>
+<ul><li>任务完成自动通知队友</li>
+<li>桌面提醒让你知道会话状态</li>
+<li>Slack 消息自动发送</li>
+<li>不再忘记同步进度</li>
+
+</ul>
+<hr>
+<h2 id="完整-hook-事件列表">完整 Hook 事件列表</h2>
+<p>Claude Code 支持 <strong>25 个 Hook 事件</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+<th>可拦截</th>
+<th>常见用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PreToolUse</strong></td>
+<td>工具执行前</td>
+<td>是</td>
+<td>验证输入、拦截危险操作</td>
+</tr>
+<tr>
+<td><strong>PostToolUse</strong></td>
+<td>工具成功后</td>
+<td>否</td>
+<td>格式化、日志、安全扫描</td>
+</tr>
+<tr>
+<td><strong>PostToolUseFailure</strong></td>
+<td>工具失败后</td>
+<td>否</td>
+<td>错误恢复、清理</td>
+</tr>
+<tr>
+<td><strong>UserPromptSubmit</strong></td>
+<td>用户提交提示</td>
+<td>是</td>
+<td>验证提示内容</td>
+</tr>
+<tr>
+<td><strong>PermissionRequest</strong></td>
+<td>权限对话框</td>
+<td>是</td>
+<td>自动批准/拒绝</td>
+</tr>
+<tr>
+<td><strong>Stop</strong></td>
+<td>Claude 完成响应</td>
+<td>是</td>
+<td>任务完成检查</td>
+</tr>
+<tr>
+<td><strong>SessionStart</strong></td>
+<td>会话开始</td>
+<td>否</td>
+<td>环境设置</td>
+</tr>
+<tr>
+<td><strong>SessionEnd</strong></td>
+<td>会话结束</td>
+<td>否</td>
+<td>清理、通知</td>
+</tr>
+<tr>
+<td><strong>SubagentStart</strong></td>
+<td>子智能体启动</td>
+<td>否</td>
+<td>子智能体设置</td>
+</tr>
+<tr>
+<td><strong>SubagentStop</strong></td>
+<td>子智能体完成</td>
+<td>是</td>
+<td>结果验证</td>
+</tr>
+<tr>
+<td><strong>FileChanged</strong></td>
+<td>监听文件变更</td>
+<td>否</td>
+<td>文件监控、重建</td>
+</tr>
+<tr>
+<td><strong>CwdChanged</strong></td>
+<td>工作目录变更</td>
+<td>否</td>
+<td>目录特定设置</td>
+</tr>
+</tbody>
+</table>
+<p>完整事件列表请参考 <a href="https://code.claude.com/docs/en/hooks">官方文档</a>。</p>
+<hr>
+<h2 id="hook-输入输出格式">Hook 输入输出格式</h2>
+<h3 id="json-输入-通过-stdin">JSON 输入（通过 stdin）</h3>
+<p>所有 Hooks 通过 stdin 接收 JSON：</p>
+<pre><code class="language-json">{
+  &quot;session_id&quot;: &quot;abc123&quot;,
+  &quot;transcript_path&quot;: &quot;/path/to/transcript.jsonl&quot;,
+  &quot;cwd&quot;: &quot;/current/working/directory&quot;,
+  &quot;hook_event_name&quot;: &quot;PreToolUse&quot;,
+  &quot;tool_name&quot;: &quot;Write&quot;,
+  &quot;tool_input&quot;: {
+    &quot;file_path&quot;: &quot;/path/to/file.js&quot;,
+    &quot;content&quot;: &quot;...&quot;
+  }
+}
+</code></pre>
+<h3 id="json-输出-stdout">JSON 输出（stdout）</h3>
+<p>退出码 0 时，stdout 中的 JSON 被解析：</p>
+<pre><code class="language-json">{
+  &quot;hookSpecificOutput&quot;: {
+    &quot;hookEventName&quot;: &quot;PreToolUse&quot;,
+    &quot;permissionDecision&quot;: &quot;allow&quot;,
+    &quot;permissionDecisionReason&quot;: &quot;文件在允许目录中&quot;,
+    &quot;updatedInput&quot;: {
+      &quot;file_path&quot;: &quot;/modified/path.js&quot;
+    }
+  }
+}
+</code></pre>
+<hr>
+<h2 id="配置位置">配置位置</h2>
+<p>Hooks 可以配置在多个位置：</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>作用范围</th>
+<th>提交建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.claude/settings.json</code></td>
+<td>用户全局</td>
+<td>不提交</td>
+</tr>
+<tr>
+<td><code>.claude/settings.json</code></td>
+<td>项目共享</td>
+<td>可提交</td>
+</tr>
+<tr>
+<td><code>.claude/settings.local.json</code></td>
+<td>本地环境</td>
+<td>不提交</td>
+</tr>
+<tr>
+<td>插件 <code>hooks/hooks.json</code></td>
+<td>插件范围</td>
+<td>随插件提交</td>
+</tr>
+<tr>
+<td>Skill/Agent frontmatter</td>
+<td>组件生命周期</td>
+<td>随组件提交</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="完整配置示例">完整配置示例</h2>
+<p>结合三个场景的完整配置：</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/security-validator.sh&quot;,
+            &quot;timeout&quot;: 10
+          }
+        ]
+      }
+    ],
+    &quot;PostToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Write|Edit&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/auto-format.sh&quot;,
+            &quot;timeout&quot;: 30
+          }
+        ]
+      }
+    ],
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/session-notify.sh&quot;
+          }
+        ]
+      }
+    ],
+    &quot;SessionEnd&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;$CLAUDE_PROJECT_DIR/.claude/hooks/session-notify.sh&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<strong>挑战：创建你的第一个 Hook</strong>
+<ul><li>创建 <code>.claude/hooks/</code> 目录</li>
+<li>复制上面的 <code>auto-format.sh</code> 脚本</li>
+<li>设置执行权限：<code>chmod +x .claude/hooks/auto-format.sh</code></li>
+<li>配置 <code>.claude/settings.json</code></li>
+<li>让 Claude 创建一个代码文件，观察 Hook 自动运行</li>
+
+</ul>
+<strong>预期结果：</strong>
+<pre><code class="language-">&gt; 创建 hello.ts 文件
+
+[Hook:format] 已格式化 (prettier): hello.ts
+</code></pre>
+<strong>下一步：</strong>
+<ul><li>添加安全验证 Hook，拦截危险命令</li>
+<li>添加密钥扫描 Hook，防止泄露</li>
+<li>添加会话通知 Hook，同步进度</li>
+
+</ul>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="hook-没有触发">Hook 没有触发？</h3>
+<strong>排查步骤：</strong>
+<ul><li>验证 JSON 配置语法：<code>cat .claude/settings.json | jq .hooks</code></li>
+<li>检查匹配器模式：确保工具名称匹配（区分大小写）</li>
+<li>确保脚本可执行：<code>chmod +x script.sh</code></li>
+<li>运行调试模式：<code>claude --debug</code> 查看 hook 执行日志</li>
+<li>验证 Hook 从 stdin 读取（不是命令参数）</li>
+
+</ul>
+<h3 id="hook-意外拦截">Hook 意外拦截？</h3>
+<strong>排查步骤：</strong>
+<ul><li>使用示例 JSON 测试：<code>echo &#039;{&quot;tool_name&quot;: &quot;Write&quot;, ...}&#039; | ./hook.sh</code></li>
+<li>检查退出码：应为 0（允许）或 2（拦截）</li>
+<li>检查 stderr 输出（退出码 2 时显示）</li>
+<li>确认拦截逻辑是否过于宽泛</li>
+
+</ul>
+<h3 id="json-解析失败">JSON 解析失败？</h3>
+<strong>解决方案：</strong>
+<ul><li>始终从 stdin 读取，不是命令参数</li>
+<li>使用 <code>jq</code> 或 Python JSON 解析（不要用字符串操作）</li>
+<li>优雅处理缺失字段：<code>jq -r &#039;.field // empty&#039;</code></li>
+<li>测试解析：<code>echo &#039;{}&#039; | jq .</code></li>
+
+</ul>
+<h3 id="hook-执行太慢">Hook 执行太慢？</h3>
+<strong>优化建议：</strong>
+<ul><li>设置合理的 timeout（格式化 30 秒，lint 10 秒）</li>
+<li>跳过不必要的处理（敏感文件、大文件）</li>
+<li>使用后台任务（<code>&amp;</code>）执行非关键操作</li>
+<li>条件跳过：检查文件大小、类型</li>
+
+</ul>
+<h3 id="如何调试-hook">如何调试 Hook？</h3>
+<strong>调试技巧：</strong>
+<ul><li>启用详细模式：<code>Ctrl+O</code> 在 Claude Code 中</li>
+<li>独立测试：<code>echo &#039;{&quot;tool_name&quot;:&quot;Write&quot;,&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/test.js&quot;}}&#039; | ./hook.sh</code></li>
+<li>检查退出码：<code>echo $?</code></li>
+<li>查看调试输出：<code>claude --debug 2&gt;&amp;1 | grep -i hook</code></li>
+
+</ul>
+<hr>
+<h2 id="安全注意事项">安全注意事项</h2>
+<h3 id="使用风险">使用风险</h3>
+<strong>Hooks 执行任意 shell 命令。你需要负责：</strong>
+<ul><li>配置的命令安全性</li>
+<li>文件访问/修改权限</li>
+<li>潜在数据丢失风险</li>
+<li>生产环境前的充分测试</li>
+
+</ul>
+<h3 id="最佳实践">最佳实践</h3>
+<table>
+<thead>
+<tr>
+<th>应该</th>
+<th>不应该</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>验证和净化所有输入</td>
+<td>盲目信任输入数据</td>
+</tr>
+<tr>
+<td>引用 shell 变量：<code>&quot;$VAR&quot;</code></td>
+<td>使用未引用：<code>$VAR</code></td>
+</tr>
+<tr>
+<td>使用 <code>$CLAUDE_PROJECT_DIR</code> 绝对路径</td>
+<td>硬编码路径</td>
+</tr>
+<tr>
+<td>跳过敏感文件（<code>.env</code>、密钥）</td>
+<td>处理所有文件</td>
+</tr>
+<tr>
+<td>先单独测试 Hooks</td>
+<td>部署未测试的 Hooks</td>
+</tr>
+<tr>
+<td>HTTP Hooks 使用显式 <code>allowedEnvVars</code></td>
+<td>向 webhooks 暴露所有环境变量</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="进阶模式">进阶模式</h2>
+<h3 id="模式-1-hook-链式执行">模式 1：Hook 链式执行</h3>
+<p>多个 Hook 顺序执行，形成处理管道：</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;PostToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Write|Edit&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;format.sh&quot;, &quot;timeout&quot;: 30 },
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;lint.sh&quot;, &quot;timeout&quot;: 10 },
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;security-scan.sh&quot;, &quot;timeout&quot;: 10 }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="模式-2-基于提示的-hook">模式 2：基于提示的 Hook</h3>
+<p>使用 LLM 评估任务完成情况：</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;prompt&quot;,
+            &quot;prompt&quot;: &quot;验证所有请求的任务是否已完成。检查：1) 所有文件已创建 2) 无未解决的错误&quot;,
+            &quot;timeout&quot;: 30
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h3 id="模式-3-组件范围-hooks">模式 3：组件范围 Hooks</h3>
+<p>在 Skill/Agent 的 frontmatter 中定义 Hooks：</p>
+<pre><code class="language-yaml">---
+name: secure-operations
+description: 执行带有安全检查的操作
+hooks:
+  PreToolUse:
+    - matcher: &quot;Bash&quot;
+      hooks:
+        - type: command
+          command: &quot;./scripts/check.sh&quot;
+          once: true
+---
+</code></pre>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote>"我改出问题了，能不能回退？"</blockquote>
+<p>你设置了自动格式化、安全验证、会话通知——一切都在自动运行。但万一 Hook 改错了代码怎么办？万一操作造成不可逆的影响怎么办？</p>
+<p>下一章 <strong><a href="/content/08-checkpoints.html">Checkpoints 和 Rewind</a></strong> 将解决这个问题：</p>
+<ul><li>保存会话快照，随时回滚</li>
+<li>Rewind 到任意时间点</li>
+<li>恢复到"出错前"的状态</li>
+<li>保护你的工作成果</li>
+
+</ul>
+<hr>
+<h2 id="相关资源">相关资源</h2>
+<ul><li><strong><a href="https://code.claude.com/docs/en/hooks">官方 Hooks 文档</a></strong> - 完整技术参考</li>
+<li><strong><a href="/content/08-checkpoints.html">Checkpoints 和 Rewind</a></strong> - 会话快照与回滚</li>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> - 可复用自主能力</li>
+<li><strong><a href="/content/04-subagents.html">Subagents</a></strong> - 委托任务执行</li>
+<li><strong><a href="/content/09-advanced-features.html">高级功能</a></strong> - 探索更多能力</li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/07-mcp.html">← MCP 扩展</a>
+      <a href="/content/09-checkpoints.html">Checkpoints 快照 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

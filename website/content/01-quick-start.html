@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快速开始 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code 快速开始 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#claude-code-是什么">Claude Code 是什么</a></li><li class="toc-item toc-h2"><a href="#安装-5-分钟">安装（5 分钟）</a></li><li class="toc-item toc-h3"><a href="#macos">macOS</a></li><li class="toc-item toc-h3"><a href="#windows">Windows</a></li><li class="toc-item toc-h3"><a href="#linux">Linux</a></li><li class="toc-item toc-h3"><a href="#验证安装">验证安装</a></li><li class="toc-item toc-h2"><a href="#第一次对话">第一次对话</a></li><li class="toc-item toc-h2"><a href="#实战场景">实战场景</a></li><li class="toc-item toc-h3"><a href="#场景-1-让-claude-解释一段代码">场景 1：让 Claude 解释一段代码</a></li><li class="toc-item toc-h3"><a href="#场景-2-让-claude-写代码">场景 2：让 Claude 写代码</a></li><li class="toc-item toc-h3"><a href="#场景-3-让-claude-改代码">场景 3：让 Claude 改代码</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-安装并启动">练习 1：安装并启动</a></li><li class="toc-item toc-h3"><a href="#练习-2-体验代码解释">练习 2：体验代码解释</a></li><li class="toc-item toc-h3"><a href="#练习-3-体验代码生成">练习 3：体验代码生成</a></li><li class="toc-item toc-h2"><a href="#能帮你做什么">能帮你做什么</a></li><li class="toc-item toc-h2"><a href="#学习路线图">学习路线图</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#claude-code-收费吗">Claude Code 收费吗？</a></li><li class="toc-item toc-h3"><a href="#安全吗">安全吗？</a></li><li class="toc-item toc-h3"><a href="#支持哪些语言">支持哪些语言？</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 快速开始
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-beginner">
+                🟢 初级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟢 <strong>初级</strong> | ⏱ 30 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-06</blockquote>
+<strong>你将学会：</strong> 5 分钟体验 Claude Code 的核心价值，知道它能不能帮到你。
+<h1>快速开始</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>你可能在想：Claude Code 到底是什么？它和 ChatGPT 有什么区别？能帮我做什么？</p>
+<p>如果你：</p>
+<ul><li>第一次听说 Claude Code</li>
+<li>安装了但不知道怎么用</li>
+<li>想快速判断它是否适合你</li>
+
+</ul>
+<p>这一章就是为你准备的。用 30 分钟，你就能亲身体验它的核心能力。</p>
+<h2 id="claude-code-是什么">Claude Code 是什么</h2>
+<p>Claude Code 不是 ChatGPT。它是 <strong>AI 编程伙伴</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>ChatGPT</th>
+<th>Claude Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>只能聊文字</td>
+<td>能读你的代码</td>
+</tr>
+<tr>
+<td>你要复制粘贴代码</td>
+<td>它直接访问项目文件</td>
+</tr>
+<tr>
+<td>建议要手动执行</td>
+<td>能直接修改代码</td>
+</tr>
+<tr>
+<td>每次对话重新开始</td>
+<td>记住你的项目规范</td>
+</tr>
+</tbody>
+</table>
+<p>简单说：ChatGPT 是顾问，Claude Code 是干活的人。</p>
+<h2 id="安装-5-分钟">安装（5 分钟）</h2>
+<h3 id="macos">macOS</h3>
+<pre><code class="language-bash"># 安装 Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# 登录
+claude auth login
+</code></pre>
+<h3 id="windows">Windows</h3>
+<pre><code class="language-bash"># 使用 PowerShell
+npm install -g @anthropic-ai/claude-code
+
+# 登录
+claude auth login
+</code></pre>
+<h3 id="linux">Linux</h3>
+<p>同 macOS。</p>
+<h3 id="验证安装">验证安装</h3>
+<pre><code class="language-bash">claude --version
+# 输出：Claude Code v2.1.92
+</code></pre>
+<h2 id="第一次对话">第一次对话</h2>
+<p>安装完成后，打开终端，进入任意代码项目目录，输入：</p>
+<pre><code class="language-bash">claude
+</code></pre>
+<p>你会看到 Claude Code 启动，等待你的输入。</p>
+<h2 id="实战场景">实战场景</h2>
+<h3 id="场景-1-让-claude-解释一段代码">场景 1：让 Claude 解释一段代码</h3>
+<strong>场景：</strong> 你接手了一个项目，看到一段看不懂的代码。
+<strong>操作：</strong>
+<ul><li>启动 Claude Code：</li>
+</ul>
+<pre><code class="language-bash">cd your-project
+claude
+</code></pre>
+<ul><li>输入问题：</li>
+</ul>
+<pre><code class="language-">解释 src/auth.ts 里的 verifyToken 函数做了什么
+</code></pre>
+<ul><li>Claude 会：</li>
+   </ul>
+<p>- 读取 <code>src/auth.ts</code> 文件
+   - 找到 <code>verifyToken</code> 函数
+   - 用中文解释它的逻辑</p>
+<strong>体验价值：</strong> 不用自己读代码，Claude 帮你理解。节省时间，降低上手难度。
+<h3 id="场景-2-让-claude-写代码">场景 2：让 Claude 写代码</h3>
+<strong>场景：</strong> 你需要一个新功能，但不确定怎么写。
+<strong>操作：</strong>
+<p>在 Claude Code 里输入：</p>
+<pre><code class="language-">帮我写一个函数，验证邮箱格式是否正确
+要求：
+- 返回 true/false
+- 支持常见邮箱格式
+- 放在 src/utils/validators.ts
+</code></pre>
+<p>Claude 会：</p>
+<ul><li>理解你的需求</li>
+<li>编写代码</li>
+<li>创建文件（或修改现有文件）</li>
+<li>显示它做了什么</li>
+
+</ul>
+<strong>体验价值：</strong> 从想法到代码，几秒钟。
+<h3 id="场景-3-让-claude-改代码">场景 3：让 Claude 改代码</h3>
+<strong>场景：</strong> 你发现了一个 Bug，需要修复。
+<strong>操作：</strong>
+<p>输入：</p>
+<pre><code class="language-">src/api/users.ts 第 45 行有个 bug：
+当用户名是空字符串时，会返回错误的用户数据
+帮我修复，并添加对应的测试
+</code></pre>
+<p>Claude 会：</p>
+<ul><li>分析代码找到问题</li>
+<li>提出修复方案</li>
+<li>执行修复</li>
+<li>写测试验证</li>
+
+</ul>
+<strong>体验价值：</strong> Bug 修复从"找→改→测"变成"描述→完成"。
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-安装并启动">练习 1：安装并启动</h3>
+<ul><li>安装 Claude Code</li>
+<li>打开任意项目目录</li>
+<li>输入 <code>claude</code> 启动</li>
+<li>输入 "列出这个项目的目录结构"</li>
+
+</ul>
+<h3 id="练习-2-体验代码解释">练习 2：体验代码解释</h3>
+<ul><li>在 Claude Code 里输入：</li>
+   </ul>
+<pre><code class="language-">   解释这个项目用到了什么技术栈
+   </code></pre>
+<ul><li>观察 Claude 如何分析项目</li>
+
+</ul>
+<h3 id="练习-3-体验代码生成">练习 3：体验代码生成</h3>
+<ul><li>输入：</li>
+   </ul>
+<pre><code class="language-">   写一个简单的 hello world 程序，用项目的技术栈
+   </code></pre>
+<ul><li>检查 Claude 生成的代码</li>
+
+</ul>
+<h2 id="能帮你做什么">能帮你做什么</h2>
+<p>Claude Code 的核心能力：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>代码解释</strong></td>
+<td>理解复杂代码，用中文解释</td>
+</tr>
+<tr>
+<td><strong>代码生成</strong></td>
+<td>从需求描述生成代码</td>
+</tr>
+<tr>
+<td><strong>代码修改</strong></td>
+<td>Bug 修复、重构、优化</td>
+</tr>
+<tr>
+<td><strong>代码审查</strong></td>
+<td>发现问题、提出改进建议</td>
+</tr>
+<tr>
+<td><strong>文档生成</strong></td>
+<td>README、API 文档、注释</td>
+</tr>
+<tr>
+<td><strong>测试编写</strong></td>
+<td>单元测试、集成测试</td>
+</tr>
+<tr>
+<td><strong>命令执行</strong></td>
+<td>运行测试、构建、部署</td>
+</tr>
+</tbody>
+</table>
+<h2 id="学习路线图">学习路线图</h2>
+<p>本教程分为四个阶段：</p>
+<ul><li><strong>上手阶段</strong>（你正在学）— 基本使用</li>
+<li><strong>定制阶段</strong> — 让 Claude 适应你的项目</li>
+<li><strong>自动化阶段</strong> — 构建自动化工作流</li>
+<li><strong>精通阶段</strong> — 企业级应用、复杂系统</li>
+
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="claude-code-收费吗">Claude Code 收费吗？</h3>
+<p>需要 Anthropic API 密钥。按使用量付费。</p>
+<ul><li>Haiku 模型最便宜（适合简单任务）</li>
+<li>Sonnet 模型性价比高（日常开发）</li>
+<li>Opus 模型最贵（复杂任务）</li>
+
+</ul>
+<h3 id="安全吗">安全吗？</h3>
+<p>Claude 只能访问你当前目录的代码。
+不会：</p>
+<ul><li>访问其他目录</li>
+<li>发送代码到其他地方</li>
+<li>自动执行危险命令</li>
+
+</ul>
+<p>所有文件修改都需要你确认（除非开启自动模式）。</p>
+<h3 id="支持哪些语言">支持哪些语言？</h3>
+<p>所有主流编程语言：</p>
+<ul><li>TypeScript/JavaScript</li>
+<li>Python</li>
+<li>Go</li>
+<li>Rust</li>
+<li>Java</li>
+<li>C/C++</li>
+<li>等等...</li>
+
+</ul>
+<h2 id="下一章预告">下一章预告</h2>
+<p>你已经会用 Claude Code 了。但每次都要输入完整的问题很麻烦。</p>
+<p>下一章，我们学习 <strong>交互与对话</strong>：</p>
+<ul><li>如何高效地和 Claude 沟通</li>
+<li>如何管理多个对话</li>
+<li>如何保存和恢复会话</li>
+
+</ul>
+<p>继续 → <a href="../02-interaction/">交互与对话</a></p>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <span></span>
+      <a href="/content/02-interaction.html">交互与对话 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

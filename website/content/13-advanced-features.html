@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高级功能 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code 高级功能 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#定制层级">定制层级</a></li><li class="toc-item toc-h2"><a href="#场景-1-自定义系统提示">场景 1：自定义系统提示</a></li><li class="toc-item toc-h3"><a href="#问题情境">问题情境</a></li><li class="toc-item toc-h3"><a href="#解决方案-claude-md-深度定制">解决方案：CLAUDE.md 深度定制</a></li><li class="toc-item toc-h4"><a href="#step-1-创建结构化-claude-md">Step 1：创建结构化 CLAUDE.md</a></li><li class="toc-item toc-h4"><a href="#step-2-验证-claude-是否理解">Step 2：验证 Claude 是否理解</a></li><li class="toc-item toc-h4"><a href="#step-3-动态更新-claude-md">Step 3：动态更新 CLAUDE.md</a></li><li class="toc-item toc-h3"><a href="#进阶-自定义-skills">进阶：自定义 Skills</a></li><li class="toc-item toc-h4"><a href="#示例-代码审查-skill">示例：代码审查 Skill</a></li><li class="toc-item toc-h2"><a href="#场景-2-权限模式深度配置">场景 2：权限模式深度配置</a></li><li class="toc-item toc-h3"><a href="#问题情境">问题情境</a></li><li class="toc-item toc-h3"><a href="#解决方案-理解并配置权限模式">解决方案：理解并配置权限模式</a></li><li class="toc-item toc-h4"><a href="#step-1-切换权限模式">Step 1：切换权限模式</a></li><li class="toc-item toc-h4"><a href="#step-2-实战场景对比">Step 2：实战场景对比</a></li><li class="toc-item toc-h4"><a href="#step-3-自定义权限规则">Step 3：自定义权限规则</a></li><li class="toc-item toc-h4"><a href="#step-4-等效-auto-mode-配置-无-team-plan">Step 4：等效 Auto-Mode 配置（无 Team Plan）</a></li><li class="toc-item toc-h2"><a href="#场景-3-性能调优">场景 3：性能调优</a></li><li class="toc-item toc-h3"><a href="#问题情境">问题情境</a></li><li class="toc-item toc-h3"><a href="#解决方案-上下文管理-扩展思考配置">解决方案：上下文管理 + 扩展思考配置</a></li><li class="toc-item toc-h4"><a href="#step-1-理解上下文窗口">Step 1：理解上下文窗口</a></li><li class="toc-item toc-h4"><a href="#step-2-手动压缩带焦点">Step 2：手动压缩带焦点</a></li><li class="toc-item toc-h4"><a href="#step-3-调整自动压缩阈值">Step 3：调整自动压缩阈值</a></li><li class="toc-item toc-h4"><a href="#step-4-扩展思考配置">Step 4：扩展思考配置</a></li><li class="toc-item toc-h4"><a href="#step-5-模型选择策略">Step 5：模型选择策略</a></li><li class="toc-item toc-h4"><a href="#step-6-后台任务释放对话">Step 6：后台任务释放对话</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-创建项目-claude-md">练习 1：创建项目 CLAUDE.md</a></li><li class="toc-item toc-h3"><a href="#练习-2-权限模式切换">练习 2：权限模式切换</a></li><li class="toc-item toc-h3"><a href="#练习-3-上下文压缩">练习 3：上下文压缩</a></li><li class="toc-item toc-h3"><a href="#练习-4-扩展思考控制">练习 4：扩展思考控制</a></li><li class="toc-item toc-h3"><a href="#练习-5-组合高级功能">练习 5：组合高级功能</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q1-claude-md-多长合适">Q1: CLAUDE.md 多长合适？</a></li><li class="toc-item toc-h3"><a href="#q2-权限模式如何选择">Q2: 权限模式如何选择？</a></li><li class="toc-item toc-h3"><a href="#q3-上下文压缩后丢失了关键信息">Q3: 上下文压缩后丢失了关键信息？</a></li><li class="toc-item toc-h3"><a href="#q4-扩展思考是否总是需要">Q4: 扩展思考是否总是需要？</a></li><li class="toc-item toc-h3"><a href="#q5-如何查看当前配置">Q5: 如何查看当前配置？</a></li><li class="toc-item toc-h3"><a href="#q6-配置文件的优先级">Q6: 配置文件的优先级？</a></li><li class="toc-item toc-h3"><a href="#q7-后台任务失败了怎么办">Q7: 后台任务失败了怎么办？</a></li><li class="toc-item toc-h3"><a href="#q8-如何禁用某个功能">Q8: 如何禁用某个功能？</a></li><li class="toc-item toc-h2"><a href="#快速参考">快速参考</a></li><li class="toc-item toc-h3"><a href="#键盘快捷键">键盘快捷键</a></li><li class="toc-item toc-h3"><a href="#slash-commands">Slash Commands</a></li><li class="toc-item toc-h3"><a href="#cli-标志">CLI 标志</a></li><li class="toc-item toc-h3"><a href="#环境变量">环境变量</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li><li class="toc-item toc-h2"><a href="#更多资源">更多资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 高级功能
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-advanced">
+                🔴 高级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🔴 <strong>高级</strong> | ⏱ 120 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证: 2026-04-06</blockquote>
+<strong>你将掌握:</strong> 自定义系统提示、权限模式深度配置、性能调优等高级定制能力。
+<h1>高级功能</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>"我想深度定制 Claude 的行为。"</p>
+<p>默认的 Claude Code 已经很强大，但在实际项目中，你可能需要：</p>
+<ul><li><strong>项目特定的上下文</strong> — 让 Claude 理解你的技术栈、编码规范、架构决策</li>
+<li><strong>精细的权限控制</strong> — 不同场景下不同的操作权限</li>
+<li><strong>性能优化</strong> — 在长会话中保持响应速度，控制 token 消耗</li>
+<li><strong>自动化工作流</strong> — 减少重复确认，提升开发效率</li>
+
+</ul>
+<p>当你从"会用 Claude Code"进阶到"驾驭 Claude Code"，就需要了解这些高级定制能力。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<p>Claude Code 的高级定制围绕三个维度展开：</p>
+<pre><code class="language-">┌─────────────────────────────────────────────────────────────┐
+│                    高级定制三维模型                           │
+└─────────────────────────────────────────────────────────────┘
+
+        ┌───────────┐
+        │  上下文   │  ← 项目知识、编码规范、架构决策
+        │ Context   │     CLAUDE.md、skills、memory
+        └─────┬─────┘
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                                                              │
+│    权限        ← 操作边界、自动化程度                 │
+│    Permissions    default/acceptEdits/plan/auto              │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+              │
+              ▼
+        ┌───────────┐
+        │  性能     │  ← token 预算、上下文压缩、模型选择
+        │ Perf     │     extended thinking、effort level
+        └───────────┘
+</code></pre>
+<h3 id="定制层级">定制层级</h3>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>配置位置</th>
+<th>影响范围</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>全局</strong></td>
+<td><code>~/.claude/settings.json</code></td>
+<td>所有项目</td>
+<td>默认模型、全局 hooks</td>
+</tr>
+<tr>
+<td><strong>项目</strong></td>
+<td><code>.claude/config.json</code></td>
+<td>当前项目</td>
+<td>项目 MCP、项目 hooks</td>
+</tr>
+<tr>
+<td><strong>会话</strong></td>
+<td>Slash commands / 环境变量</td>
+<td>当前会话</td>
+<td>权限模式、effort level</td>
+</tr>
+<tr>
+<td><strong>临时</strong></td>
+<td>键盘快捷键</td>
+<td>即时生效</td>
+<td>切换扩展思考、权限模式</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-自定义系统提示">场景 1：自定义系统提示</h2>
+<h3 id="问题情境">问题情境</h3>
+<p>你接手了一个 React + TypeScript 项目，想让 Claude：</p>
+<ul><li>遵循项目的编码规范（函数式组件、hooks 优先）</li>
+<li>知道技术栈细节（React 18、Zustand、Tailwind）</li>
+<li>理解架构决策（为什么选择 monorepo）</li>
+
+</ul>
+<p>默认的 Claude 不了解这些，每次都要重新解释。怎么办？</p>
+<h3 id="解决方案-claude-md-深度定制">解决方案：CLAUDE.md 深度定制</h3>
+<p>CLAUDE.md 是 Claude 的"项目记忆"，让它在每次对话都携带项目上下文。</p>
+<h4 id="step-1-创建结构化-claude-md">Step 1：创建结构化 CLAUDE.md</h4>
+<pre><code class="language-markdown"># CLAUDE.md — React Dashboard 项目
+
+## 项目概述
+企业级 React 数据仪表盘，用于展示实时业务指标。
+
+## 技术栈
+- React 18 + TypeScript 5
+- Zustand（状态管理）— 原因：轻量、无 Provider 包裹
+- Tailwind CSS — 原因：快速开发、一致性设计
+- Vite — 原因：开发服务器快、HMR 稳定
+- React Query — 数据获取和缓存
+
+## 编码规范
+- 组件命名：PascalCase，文件名 kebab-case
+- 每个组件一个文件夹：`components/button/Button.tsx`
+- 函数式组件 + hooks，不使用 class
+- Props 用 interface 定义，命名以 Props 结尾
+- 样式用 Tailwind utility classes，不写 inline style
+
+## 架构决策
+- Monorepo 结构：packages/ 下包含 shared、ui、dashboard
+- 不使用 Redux：团队规模小，Zustand 足够
+- SSR 暂不考虑：性能要求不高
+
+## 常用命令
+- `npm run dev` — 开发服务器
+- `npm test` — Vitest 测试
+- `npm run lint` — ESLint 检查
+
+## 重要约定
+- 所有 API 调用放在 `services/` 目录
+- 类型定义放在 `types/` 目录
+- 不要直接修改 package.json，先讨论
+</code></pre>
+<h4 id="step-2-验证-claude-是否理解">Step 2：验证 Claude 是否理解</h4>
+<pre><code class="language-">User: 我们项目的组件命名规范是什么？
+
+Claude: 根据 CLAUDE.md：
+- 组件命名：PascalCase（如 Button、UserCard）
+- 文件名：kebab-case（如 button.tsx、user-card.tsx）
+- 目录结构：每个组件一个文件夹，如 components/button/Button.tsx
+
+User: 为什么选择 Zustand 而不是 Redux？
+
+Claude: 项目选择了 Zustand 作为状态管理，原因：
+- 团队规模小，不需要 Redux 的复杂架构
+- Zustand 轻量、无 Provider 包裹，使用简单
+- 响应式更新更直观
+</code></pre>
+<h4 id="step-3-动态更新-claude-md">Step 3：动态更新 CLAUDE.md</h4>
+<p>在开发过程中发现新的约定，及时更新：</p>
+<pre><code class="language-markdown">## 新增约定（2026-04-06）
+- 使用 React Query 的 useQuery 替代 useEffect + fetch
+- 错误处理统一用 toast notification，放在 ErrorBoundary
+</code></pre>
+<h3 id="进阶-自定义-skills">进阶：自定义 Skills</h3>
+<p>Skills 是可复用的任务模板，让 Claude 执行特定工作流。</p>
+<h4 id="示例-代码审查-skill">示例：代码审查 Skill</h4>
+<pre><code class="language-markdown"># .claude/skills/code-review/instructions.md
+
+## 代码审查检查清单
+
+每次审查代码时执行：
+
+1. **运行静态检查**
+   - `npm run lint` — ESLint
+   - `npm run type-check` — TypeScript
+
+2. **检查编码规范**
+   - 组件命名是否遵循 PascalCase
+   - 是否使用了 hooks 而非 class
+   - Props 是否用 interface 定义
+
+3. **检查性能**
+   - 是否有不必要的 re-render
+   - 是否缺少 memo/useMemo/useCallback
+
+4. **检查安全**
+   - 用户输入是否验证
+   - API 密钥是否硬编码
+
+## 输出格式
+
+🔴 阻塞问题 (必须修复)
+🟡 建议改进 (推荐修复)
+🟢 良好实践 (值得肯定)
+</code></pre>
+<p>使用 Skill：</p>
+<pre><code class="language-">User: /code-review 审查 src/components/user-list/
+
+Claude: 执行代码审查 skill...
+
+✅ 运行 lint: 通过
+✅ 运行 type-check: 通过
+
+🟡 建议改进:
+- UserList.tsx:45 — 组件缺少 memo，可能导致不必要的 re-render
+- UserList.tsx:78 — onSelect 回调缺少 useCallback
+
+🟢 良好实践:
+- Props 定义清晰，interface UserListProps 结构良好
+- 错误处理完善，使用 ErrorBoundary 包裹
+</code></pre>
+<hr>
+<h2 id="场景-2-权限模式深度配置">场景 2：权限模式深度配置</h2>
+<h3 id="问题情境">问题情境</h3>
+<p>不同工作场景需要不同的权限级别：</p>
+<ul><li><strong>代码审查</strong> — 只需要读取文件，不需要修改权限</li>
+<li><strong>日常开发</strong> — 需要修改文件，但部署命令要确认</li>
+<li><strong>自动化任务</strong> — 执行批量操作，减少确认次数</li>
+<li><strong>危险操作</strong> — 强制推送、删除生产数据，必须阻止</li>
+
+</ul>
+<p>默认模式要么太严格（每步确认），要么太宽松（风险高）。怎么办？</p>
+<h3 id="解决方案-理解并配置权限模式">解决方案：理解并配置权限模式</h3>
+<p>Claude Code 提供 6 种权限模式：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>适合场景</th>
+<th>Claude 能做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default</code></td>
+<td>交互开发</td>
+<td>读取文件自由，其他操作需确认</td>
+</tr>
+<tr>
+<td><code>acceptEdits</code></td>
+<td>结对编程</td>
+<td>读取+编辑自由，命令需确认</td>
+</tr>
+<tr>
+<td><code>plan</code></td>
+<td>代码审查</td>
+<td>仅读取，不修改（研究模式）</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>自主工作</td>
+<td>所有操作 + 后台安全分类器（需 Team Plan）</td>
+</tr>
+<tr>
+<td><code>bypassPermissions</code></td>
+<td>CI/CD</td>
+<td>全部放行（危险，仅用于自动化）</td>
+</tr>
+<tr>
+<td><code>dontAsk</code></td>
+<td>限制模式</td>
+<td>仅执行预批准工具，其他全部拒绝</td>
+</tr>
+</tbody>
+</table>
+<h4 id="step-1-切换权限模式">Step 1：切换权限模式</h4>
+<strong>键盘快捷键</strong>（推荐）：
+<pre><code class="language-">Shift + Tab  # 切换所有 6 种模式
+Alt + M      # Windows/Linux
+</code></pre>
+<strong>Slash command</strong>：
+<pre><code class="language-">/plan        # 进入规划模式（只读）
+</code></pre>
+<strong>CLI 标志</strong>：
+<pre><code class="language-bash">claude --permission-mode plan    # 启动时进入规划模式
+claude --permission-mode auto    # 启动时进入 auto mode
+</code></pre>
+<h4 id="step-2-实战场景对比">Step 2：实战场景对比</h4>
+<strong>场景 A：代码审查（Plan Mode）</strong>
+<pre><code class="language-">User: claude --permission-mode plan
+User: 审查这个 PR，给出改进建议
+
+Claude: [读取文件]
+        [分析代码]
+        [输出建议]
+
+✅ 不修改任何文件
+✅ 不执行任何命令
+→ 适合审查，安全边界明确
+</code></pre>
+<strong>场景 B：日常开发（Default Mode）</strong>
+<pre><code class="language-">User: 修复 auth 模块的 bug
+
+Claude: 需要修改 src/auth.ts
+        变更内容：添加错误处理
+
+        Approve this change? (yes/no/show)
+
+User: yes
+
+Claude: [修改文件]
+
+User: 运行测试
+
+Claude: 需要执行 npm test
+        Approve? (yes/no)
+
+→ 每步确认，适合交互开发
+</code></pre>
+<strong>场景 C：批量重构（AcceptEdits Mode）</strong>
+<pre><code class="language-">User: Shift+Tab 切换到 acceptEdits
+User: 重构所有组件使用 memo
+
+Claude: [读取所有组件]
+        [逐个添加 memo]
+        [无需确认每个修改]
+
+        完成：修改了 15 个组件
+
+User: 运行 lint
+
+Claude: 需要执行 npm run lint
+        Approve? (yes/no)
+
+→ 编辑自由，命令仍需确认
+</code></pre>
+<h4 id="step-3-自定义权限规则">Step 3：自定义权限规则</h4>
+<p>当预设模式不够精细时，用 <code>allowedTools</code> 自定义：</p>
+<pre><code class="language-json">// ~/.claude/settings.json
+{
+  &quot;allowedTools&quot;: [
+    // 读取操作 — 全部放行
+    &quot;Read(*)&quot;,
+    &quot;Glob(*)&quot;,
+    &quot;Grep(*)&quot;,
+
+    // 文件编辑 — 仅限特定目录
+    &quot;Edit(src/components/*)&quot;,
+    &quot;Edit(src/lib/*)&quot;,
+    &quot;Write(src/components/*)&quot;,
+    &quot;Write(src/lib/*)&quot;,
+
+    // Git 操作 — 安全命令放行
+    &quot;Bash(git status:*)&quot;,
+    &quot;Bash(git log:*)&quot;,
+    &quot;Bash(git diff:*)&quot;,
+    &quot;Bash(git branch:*)&quot;,
+    &quot;Bash(git checkout:*)&quot;,
+
+    // npm 操作 — 常用命令放行
+    &quot;Bash(npm run dev:*)&quot;,
+    &quot;Bash(npm test:*)&quot;,
+    &quot;Bash(npm run lint:*)&quot;,
+
+    // 阻止危险操作 — 不在列表中的默认拒绝
+    // Bash(rm -rf:*) → 需确认
+    // Bash(git push --force:*) → 需确认
+  ]
+}
+</code></pre>
+<h4 id="step-4-等效-auto-mode-配置-无-team-plan">Step 4：等效 Auto-Mode 配置（无 Team Plan）</h4>
+<p>Auto Mode 需要 Team Plan 和后台安全分类器。如果没有，可以用权限规则模拟类似效果：</p>
+<strong>使用脚本配置保守基线</strong>：
+<pre><code class="language-bash"># 预览将要添加的内容
+python3 09-advanced-features/setup-auto-mode-permissions.py --dry-run
+
+# 应用保守基线（只读 + 本地检查）
+python3 09-advanced-features/setup-auto-mode-permissions.py
+
+# 添加编辑能力
+python3 09-advanced-features/setup-auto-mode-permissions.py --include-edits
+
+# 添加测试能力
+python3 09-advanced-features/setup-auto-mode-permissions.py --include-tests
+
+# 添加 git 写入能力
+python3 09-advanced-features/setup-auto-mode-permissions.py --include-git-write
+
+# 添加包安装能力
+python3 09-advanced-features/setup-auto-mode-permissions.py --include-packages
+</code></pre>
+<p>脚本添加的规则类别：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>示例规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心只读工具</td>
+<td><code>Read(*)</code>, <code>Glob(*)</code>, <code>Grep(*)</code></td>
+</tr>
+<tr>
+<td>本地检查</td>
+<td><code>Bash(git status:*)</code>, <code>Bash(git log:*)</code></td>
+</tr>
+<tr>
+<td>可选编辑</td>
+<td><code>Edit(*)</code>, <code>Write(*)</code></td>
+</tr>
+<tr>
+<td>可选测试</td>
+<td><code>Bash(pytest:*)</code>, <code>Bash(npm test:*)</code></td>
+</tr>
+<tr>
+<td>可选 git 写入</td>
+<td><code>Bash(git add:*)</code>, <code>Bash(git commit:*)</code></td>
+</tr>
+<tr>
+<td>可选包管理</td>
+<td><code>Bash(npm install:*)</code>, <code>Bash(pip install:*)</code></td>
+</tr>
+</tbody>
+</table>
+<p>危险操作（<code>rm -rf</code>、<code>sudo</code>、强制推送、<code>DROP TABLE</code>）被有意排除。</p>
+<hr>
+<h2 id="场景-3-性能调优">场景 3：性能调优</h2>
+<h3 id="问题情境">问题情境</h3>
+<p>长会话中遇到以下问题：</p>
+<ul><li><strong>上下文太长</strong> — Claude 说 "context length exceeded"</li>
+<li><strong>响应变慢</strong> — 每次回复等待时间增加</li>
+<li><strong>Token 消耗高</strong> — API 费用超出预期</li>
+<li><strong>推理质量下降</strong> — 复杂问题的答案不如开始时准确</li>
+
+</ul>
+<p>需要优化性能，保持高效工作流。</p>
+<h3 id="解决方案-上下文管理-扩展思考配置">解决方案：上下文管理 + 扩展思考配置</h3>
+<h4 id="step-1-理解上下文窗口">Step 1：理解上下文窗口</h4>
+<p>Claude Code 的上下文窗口有限（约 200K tokens）。当对话内容累积过多：</p>
+<pre><code class="language-">[开始] Context: 10K tokens
+[工作 1h] Context: 50K tokens
+[工作 2h] Context: 100K tokens
+[工作 3h] Context: 180K tokens → 开始压缩
+[工作 4h] Context: 195K tokens → 接近上限
+</code></pre>
+<strong>压缩策略</strong>：
+<ul><li>默认：达到 95% 时自动压缩</li>
+<li>手动：<code>/compact</code> 命令触发压缩</li>
+<li>定焦：<code>/compact focus: authentication</code> 保留特定主题上下文</li>
+
+</ul>
+<h4 id="step-2-手动压缩带焦点">Step 2：手动压缩带焦点</h4>
+<pre><code class="language-">User: /compact focus: authentication implementation
+
+Claude: 压缩上下文...
+
+保留内容：
+- authentication 模块相关讨论
+- 最近 20 个工具调用
+- 关键决策和结论
+
+移除内容：
+-偏离主题的讨论
+- 过时的中间状态
+- 冗余的描述
+
+压缩后 Context: 80K tokens（从 180K）
+</code></pre>
+<h4 id="step-3-调整自动压缩阈值">Step 3：调整自动压缩阈值</h4>
+<pre><code class="language-bash"># 降低阈值，提前压缩（如 80%）
+export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=80
+
+# 提高阈值，延后压缩（如 98%）
+export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=98
+</code></pre>
+<h4 id="step-4-扩展思考配置">Step 4：扩展思考配置</h4>
+<p>扩展思考让 Claude 进行深度推理，但消耗额外 tokens。</p>
+<strong>切换扩展思考</strong>：
+<pre><code class="language-">Option + T (macOS) / Alt + T (Windows/Linux)
+Ctrl + O  # 查看推理过程（详细模式）
+</code></pre>
+<strong>设置思考预算</strong>：
+<pre><code class="language-bash"># 默认最多 31,999 tokens
+# 降低预算以节省 tokens
+export MAX_THINKING_TOKENS=10000
+
+# 提高预算以获得更深度推理
+export MAX_THINKING_TOKENS=25000
+</code></pre>
+<strong>设置努力级别</strong>（仅 Opus 4.6）：
+<pre><code class="language-bash"># low (○), medium (◐), high (●), max
+export CLAUDE_CODE_EFFORT_LEVEL=high
+</code></pre>
+<p>或在会话中：</p>
+<pre><code class="language-">/effort high    # 深度推理
+/effort low     # 快速响应
+</code></pre>
+<h4 id="step-5-模型选择策略">Step 5：模型选择策略</h4>
+<p>根据任务选择合适的模型：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>适合场景</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Haiku 4.5</strong></td>
+<td>快速迭代、简单任务</td>
+<td>90% Sonnet 能力，3x 成本节省</td>
+</tr>
+<tr>
+<td><strong>Sonnet 4.6</strong></td>
+<td>日常开发、主要工作</td>
+<td>最佳编码模型</td>
+</tr>
+<tr>
+<td><strong>Opus 4.6</strong></td>
+<td>架构决策、复杂问题</td>
+<td>最深度推理</td>
+</tr>
+</tbody>
+</table>
+<strong>切换模型</strong>：
+<pre><code class="language-">Option + P / Alt + P    # 切换模型
+</code></pre>
+<strong>CLI 指定模型</strong>：
+<pre><code class="language-bash">claude --model claude-sonnet-4-6 &quot;implement feature&quot;
+claude --model claude-opus-4-6 &quot;architectural review&quot;
+claude --model claude-haiku-4-5 &quot;quick fix&quot;
+</code></pre>
+<strong>规划模型别名</strong>（Opus 规划 + Sonnet 执行）：
+<pre><code class="language-bash">claude --model opusplan &quot;design and implement new API&quot;
+# → Opus 4.6 用于规划阶段
+# → Sonnet 4.6 用于实现阶段
+</code></pre>
+<h4 id="step-6-后台任务释放对话">Step 6：后台任务释放对话</h4>
+<p>长时间操作放到后台，不阻塞对话：</p>
+<pre><code class="language-">User: Run tests in background
+
+Claude: Started task bg-1234
+
+User: Meanwhile, let&#039;s refactor the auth module
+
+Claude: [在测试后台运行时处理 auth 模块]
+
+[10分钟后]
+
+Claude: 📢 Background task bg-1234 completed:
+        ✅ 245 tests passed
+        ❌ 3 tests failed
+
+User: /task show bg-1234
+Claude: [显示测试输出]
+</code></pre>
+<p>后台任务管理：</p>
+<pre><code class="language-">/task list           # 显示所有任务
+/task status bg-1234 # 检查进度
+/task show bg-1234   # 查看输出
+/task cancel bg-1234 # 取消任务
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-创建项目-claude-md">练习 1：创建项目 CLAUDE.md</h3>
+<strong>目标</strong>：让 Claude 理解你的项目
+<pre><code class="language-bash"># 在项目根目录创建 CLAUDE.md
+# 内容包括：技术栈、编码规范、架构决策
+
+# 测试 Claude 是否理解
+&quot;我们项目的组件命名规范是什么？&quot;
+&quot;为什么选择这个技术栈？&quot;
+</code></pre>
+<h3 id="练习-2-权限模式切换">练习 2：权限模式切换</h3>
+<strong>目标</strong>：掌握权限模式的实际应用
+<pre><code class="language-bash"># 1. 代码审查场景
+claude --permission-mode plan
+&quot;审查 src/auth 模块，给出改进建议&quot;
+
+# 2. 批量编辑场景
+# Shift+Tab 切换到 acceptEdits
+&quot;重构所有组件添加 memo&quot;
+
+# 3. 回到交互开发
+# Shift+Tab 切换到 default
+</code></pre>
+<h3 id="练习-3-上下文压缩">练习 3：上下文压缩</h3>
+<strong>目标</strong>：长会话中保持性能
+<pre><code class="language-bash"># 开始一个复杂任务
+&quot;实现用户认证系统：JWT + 刷新token + 会话管理&quot;
+
+# 工作一段时间后
+# 手动压缩
+/compact focus: authentication
+
+# 查看压缩结果
+# 继续工作
+</code></pre>
+<h3 id="练习-4-扩展思考控制">练习 4：扩展思考控制</h3>
+<strong>目标</strong>：复杂问题获得深度推理
+<pre><code class="language-bash"># 启用扩展思考（默认开启）
+# Option+T 切换
+
+# 提问需要深度推理的问题
+&quot;分析我们是否应该迁移到 microservices，
+考虑：团队规模、DevOps 资源、未来扩展需求&quot;
+
+# 查看推理过程
+Ctrl + O
+</code></pre>
+<h3 id="练习-5-组合高级功能">练习 5：组合高级功能</h3>
+<strong>目标</strong>：综合运用多种高级能力
+<pre><code class="language-bash"># 1. 设置只读权限（分析阶段）
+claude --permission-mode plan
+
+# 2. 启用扩展思考
+# Option+T
+
+# 3. 提交复杂分析任务
+&quot;分析代码库架构，识别瓶颈，提出改进方案&quot;
+
+# 4. 审查完成后切换权限（实现阶段）
+# Shift+Tab 切换到 acceptEdits
+
+# 5. 执行改进
+&quot;根据方案优化性能瓶颈&quot;
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q1-claude-md-多长合适">Q1: CLAUDE.md 多长合适？</h3>
+<p>建议控制在 500-2000 字。过长会消耗上下文，过短信息不足。</p>
+<p>核心内容：</p>
+<ul><li>技术栈 + 选择原因</li>
+<li>编码规范（命名、结构）</li>
+<li>常用命令</li>
+<li>重要约定</li>
+
+</ul>
+<h3 id="q2-权限模式如何选择">Q2: 权限模式如何选择？</h3>
+<strong>决策树</strong>：
+<pre><code class="language-">开始
+  │
+  ▼
+需要修改文件？
+  ├─ No → plan（只读）
+  │
+  └─ Yes
+      │
+      ▼
+    批量操作？
+      ├─ No → default（交互）
+      │
+      └─ Yes
+          │
+          ▼
+        命令需要确认？
+          ├─ Yes → acceptEdits（编辑自由）
+          │
+          └─ No → auto（自主）
+</code></pre>
+<h3 id="q3-上下文压缩后丢失了关键信息">Q3: 上下文压缩后丢失了关键信息？</h3>
+<p>使用定焦压缩：</p>
+<pre><code class="language-">/compact focus: authentication implementation
+</code></pre>
+<p>只保留特定主题的上下文。</p>
+<p>或使用 Checkpoints（08-checkpoints 模块）保存会话状态。</p>
+<h3 id="q4-扩展思考是否总是需要">Q4: 扩展思考是否总是需要？</h3>
+<p>不需要。简单任务关闭扩展思考可以节省 tokens：</p>
+<pre><code class="language-">Option + T 切换
+/effort low 快速响应
+</code></pre>
+<p>复杂问题才启用：</p>
+<ul><li>架构决策</li>
+<li>复杂 bug 分析</li>
+<li>多方案权衡</li>
+
+</ul>
+<h3 id="q5-如何查看当前配置">Q5: 如何查看当前配置？</h3>
+<pre><code class="language-">/config    # 打开交互配置菜单
+</code></pre>
+<p>可以查看和切换：</p>
+<ul><li>扩展思考开/关</li>
+<li>权限模式</li>
+<li>模型选择</li>
+<li>详细输出</li>
+
+</ul>
+<h3 id="q6-配置文件的优先级">Q6: 配置文件的优先级？</h3>
+<pre><code class="language-">全局 ~/.claude/settings.json
+  ↓ 被覆盖
+项目 .claude/config.json
+  ↓ 被覆盖
+会话环境变量
+  ↓ 被覆盖
+临时快捷键
+</code></pre>
+<p>具体覆盖通用。</p>
+<h3 id="q7-后台任务失败了怎么办">Q7: 后台任务失败了怎么办？</h3>
+<p>查看详细输出：</p>
+<pre><code class="language-">/task show bg-1234
+</code></pre>
+<p>任务输出包含错误信息，根据错误类型修复。</p>
+<h3 id="q8-如何禁用某个功能">Q8: 如何禁用某个功能？</h3>
+<p>环境变量控制：</p>
+<pre><code class="language-bash"># 禁用扩展思考（不推荐）
+export MAX_THINKING_TOKENS=0
+
+# 禁用自动压缩
+export CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=99
+
+# 禁用提示建议
+export CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION=false
+
+# 禁用定时任务
+export CLAUDE_CODE_DISABLE_CRON=1
+</code></pre>
+<hr>
+<h2 id="快速参考">快速参考</h2>
+<h3 id="键盘快捷键">键盘快捷键</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Shift+Tab</code></td>
+<td>切换权限模式</td>
+</tr>
+<tr>
+<td><code>Option+T</code> / <code>Alt+T</code></td>
+<td>切换扩展思考</td>
+</tr>
+<tr>
+<td><code>Option+P</code> / <code>Alt+P</code></td>
+<td>切换模型</td>
+</tr>
+<tr>
+<td><code>Ctrl+O</code></td>
+<td>查看推理过程</td>
+</tr>
+<tr>
+<td><code>Ctrl+T</code></td>
+<td>切换任务列表</td>
+</tr>
+<tr>
+<td><code>Ctrl+B</code></td>
+<td>后台运行任务</td>
+</tr>
+<tr>
+<td><code>Ctrl+G</code></td>
+<td>外部编辑计划</td>
+</tr>
+<tr>
+<td><code>Esc+Esc</code></td>
+<td>回退操作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="slash-commands">Slash Commands</h3>
+<pre><code class="language-">/plan           # 进入规划模式（只读）
+/compact        # 压缩上下文
+/compact focus: # 定焦压缩
+/effort high    # 设置努力级别
+/config         # 打开配置菜单
+/task list      # 显示后台任务
+/sandbox        # 启用沙箱
+</code></pre>
+<h3 id="cli-标志">CLI 标志</h3>
+<pre><code class="language-bash">claude --permission-mode plan    # 规划模式
+claude --permission-mode auto    # 自动模式
+claude --model opusplan          # Opus 规划 + Sonnet 执行
+claude --sandbox                 # 启用沙箱
+claude -p                        # Print mode（非交互）
+claude --worktree                # Git worktree 隔离
+claude --remote                  # Web 会话
+</code></pre>
+<h3 id="环境变量">环境变量</h3>
+<pre><code class="language-bash">MAX_THINKING_TOKENS=16000        # 思考预算
+CLAUDE_CODE_EFFORT_LEVEL=high    # 努力级别
+CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=80  # 压缩阈值
+CLAUDE_CODE_TASK_LIST_ID=my-project  # 任务列表 ID
+</code></pre>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<blockquote><strong>"我要在生产环境使用"</strong></blockquote>
+<p>掌握了高级定制能力后，下一步是将 Claude Code 部署到生产环境：</p>
+<ul><li><strong>企业部署</strong> — MDM、托管设置、SSO 集成</li>
+<li><strong>CI/CD 集成</strong> — GitHub Actions、自动化代码审查</li>
+<li><strong>安全合规</strong> — SOC2、GDPR、审计日志</li>
+<li><strong>监控可观测性</strong> — 指标、日志、链路追踪</li>
+
+</ul>
+<p>继续阅读 <strong>14-enterprise</strong> 模块，了解企业级部署最佳实践。</p>
+<hr>
+<h2 id="更多资源">更多资源</h2>
+<ul><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a></li>
+<li><a href="https://code.claude.com/docs/en/headless">官方 Headless Mode 文档</a></li>
+<li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a></li>
+<li><a href="/content/08-checkpoints.html">Checkpoints 指南</a> — 会话管理和回退</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> — 持久上下文配置</li>
+<li><a href="/content/06-hooks.html">Hooks 指南</a> — 事件驱动自动化</li>
+<li><a href="https://code.claude.com/docs/en/keybindings">官方键绑定文档</a></li>
+<li><a href="https://code.claude.com/docs/en/scheduled-tasks">官方定时任务文档</a></li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/12-background-channels.html">← 后台任务与通道</a>
+      <a href="/content/14-enterprise.html">企业应用 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

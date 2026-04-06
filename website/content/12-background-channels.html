@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>后台任务与通道 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code 后台任务与通道 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#后台任务机制">后台任务机制</a></li><li class="toc-item toc-h3"><a href="#消息通道机制">消息通道机制</a></li><li class="toc-item toc-h3"><a href="#任务类型对比">任务类型对比</a></li><li class="toc-item toc-h2"><a href="#场景-1-启动后台任务">场景 1：启动后台任务</a></li><li class="toc-item toc-h3"><a href="#问题描述">问题描述</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#操作步骤">操作步骤</a></li><li class="toc-item toc-h3"><a href="#进阶-并行任务">进阶：并行任务</a></li><li class="toc-item toc-h3"><a href="#任务管理">任务管理</a></li><li class="toc-item toc-h2"><a href="#场景-2-配置通知通道-discord-slack">场景 2：配置通知通道（Discord/Slack）</a></li><li class="toc-item toc-h3"><a href="#问题描述">问题描述</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#discord-配置">Discord 配置</a></li><li class="toc-item toc-h3"><a href="#slack-配置">Slack 配置</a></li><li class="toc-item toc-h3"><a href="#测试通知">测试通知</a></li><li class="toc-item toc-h3"><a href="#消息格式优化">消息格式优化</a></li><li class="toc-item toc-h2"><a href="#场景-3-监控长时间任务">场景 3：监控长时间任务</a></li><li class="toc-item toc-h3"><a href="#问题描述">问题描述</a></li><li class="toc-item toc-h3"><a href="#解决方案">解决方案</a></li><li class="toc-item toc-h3"><a href="#loop-持续循环任务">`/loop` 持续循环任务</a></li><li class="toc-item toc-h3"><a href="#schedule-云端定时任务">`/schedule` 云端定时任务</a></li><li class="toc-item toc-h3"><a href="#结合-channel-的远程监控">结合 Channel 的远程监控</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#练习-1-后台构建">练习 1：后台构建</a></li><li class="toc-item toc-h3"><a href="#练习-2-配置-discord-通知">练习 2：配置 Discord 通知</a></li><li class="toc-item toc-h3"><a href="#练习-3-循环监控">练习 3：循环监控</a></li><li class="toc-item toc-h3"><a href="#练习-4-定时任务">练习 4：定时任务</a></li><li class="toc-item toc-h3"><a href="#练习-5-并行任务">练习 5：并行任务</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q1-任务卡住不动怎么办">Q1: 任务卡住不动怎么办？</a></li><li class="toc-item toc-h3"><a href="#q2-启动了太多并行任务">Q2: 启动了太多并行任务？</a></li><li class="toc-item toc-h3"><a href="#q3-discord-slack-通知没有收到">Q3: Discord/Slack 通知没有收到？</a></li><li class="toc-item toc-h3"><a href="#q4-schedule-任务没有执行">Q4: `/schedule` 任务没有执行？</a></li><li class="toc-item toc-h3"><a href="#q5-如何查看后台任务的输出">Q5: 如何查看后台任务的输出？</a></li><li class="toc-item toc-h3"><a href="#q6-loop-能运行多久">Q6: `/loop` 能运行多久？</a></li><li class="toc-item toc-h2"><a href="#最佳实践速查">最佳实践速查</a></li><li class="toc-item toc-h3"><a href="#推荐做法">✅ 推荐做法</a></li><li class="toc-item toc-h3"><a href="#避免做法">❌ 避免做法</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li><li class="toc-item toc-h2"><a href="#下一章预告">下一章预告</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 后台任务与通道
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟</blockquote>
+<h1>后台任务与消息通道</h1>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>有些任务要跑很长时间。</p>
+<p>想象这样一个场景：你让 Claude 运行完整测试套件，需要 15 分钟。在此期间，你被迫盯着屏幕等待——或者更糟，你开始做别的事，回来时已经忘了当初要干什么。</p>
+<p>这就是 <strong>后台任务</strong> 解决的问题：启动任务后立即返回，你继续工作，任务完成时自动通知你。</p>
+<p>更进一步，如果你想让整个团队都能收到构建结果通知，或者下班后让 Claude 继续处理，这就是 <strong>消息通道</strong> 的价值：把通知推送到 Discord、Slack 等平台，实现团队协作和远程监控。</p>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="后台任务机制">后台任务机制</h3>
+<p>后台任务允许你启动长时间操作而不阻塞会话：</p>
+<div class="mermaid">graph LR
+    A[你: 启动任务] --> B[后台执行]
+    B --> C[继续其他对话]
+    C --> D[任务完成]
+    D --> E[收到通知]
+    E --> A
+</div>
+<strong>关键特性：</strong>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>非阻塞执行</td>
+<td>任务在后台运行，你可以继续对话</td>
+</tr>
+<tr>
+<td>自动通知</td>
+<td>任务完成后收到 <code>&lt;task-notification&gt;</code></td>
+</tr>
+<tr>
+<td>状态查询</td>
+<td>随时使用 <code>/tasks</code> 查看所有任务状态</td>
+</tr>
+<tr>
+<td>并行处理</td>
+<td>多个独立任务可以同时运行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="消息通道机制">消息通道机制</h3>
+<p>Channels 通过 MCP 协议将通知推送到外部平台：</p>
+<div class="mermaid">graph LR
+    A[Claude Code] --> B[MCP Server]
+    B --> C[Discord]
+    B --> D[Slack]
+    B --> E[自定义端点]
+    C --> F[团队成员]
+    D --> F
+</div>
+<strong>核心价值：</strong>
+<ul><li><strong>团队通知</strong>：构建结果、测试状态自动推送到团队频道</li>
+<li><strong>远程监控</strong>：下班后任务完成时收到手机通知</li>
+<li><strong>双向通信</strong>：团队可以在 Slack 中给出反馈，Claude 读取并响应</li>
+
+</ul>
+<h3 id="任务类型对比">任务类型对比</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>运行位置</th>
+<th>最长时间</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Background Shell</td>
+<td>本地</td>
+<td>当前会话</td>
+<td>等待长时间命令</td>
+</tr>
+<tr>
+<td>Agent 后台</td>
+<td>本地</td>
+<td>当前会话</td>
+<td>独立研究任务</td>
+</tr>
+<tr>
+<td><code>/loop</code></td>
+<td>本地</td>
+<td>3 天</td>
+<td>持续监控修复</td>
+</tr>
+<tr>
+<td><code>/schedule</code></td>
+<td>云端</td>
+<td>不限</td>
+<td>定时执行</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-启动后台任务">场景 1：启动后台任务</h2>
+<h3 id="问题描述">问题描述</h3>
+<p>你正在开发一个大型项目，每次完整构建需要 5-10 分钟。你不想盯着终端等待，但又需要知道构建是否成功。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>使用 <code>run_in_background</code> 参数启动后台任务。</p>
+<h3 id="操作步骤">操作步骤</h3>
+<pre><code class="language-bash"># 在 Claude Code 中说：
+&quot;运行 npm build 在后台，我继续写文档&quot;
+</code></pre>
+<p>Claude 会这样执行：</p>
+<pre><code class="language-json">{
+  &quot;command&quot;: &quot;npm run build&quot;,
+  &quot;run_in_background&quot;: true,
+  &quot;timeout&quot;: 600000
+}
+</code></pre>
+<strong>立即返回：</strong>
+<pre><code class="language-">Task started: task_abc123
+你现在可以继续其他对话...
+</code></pre>
+<strong>5 分钟后收到通知：</strong>
+<pre><code class="language-xml">&lt;task-notification task_id=&quot;task_abc123&quot;&gt;
+  构建完成
+&lt;/task-notification&gt;
+</code></pre>
+<h3 id="进阶-并行任务">进阶：并行任务</h3>
+<p>当有多个独立任务时，可以并行启动：</p>
+<pre><code class="language-bash"># 在 Claude Code 中说：
+&quot;安装所有微服务的依赖，并行执行&quot;
+
+# Claude 会：
+发现 5 个微服务
+
+→ cd service-user &amp;&amp; npm install &amp; [task_001]
+→ cd service-order &amp;&amp; npm install &amp; [task_002]
+→ cd service-payment &amp;&amp; npm install &amp; [task_003]
+→ cd service-notif &amp;&amp; npm install &amp; [task_004]
+→ cd service-frontend &amp;&amp; npm install &amp; [task_005]
+
+已并行启动 5 个安装任务
+</code></pre>
+<h3 id="任务管理">任务管理</h3>
+<pre><code class="language-bash"># 查看所有任务状态
+/tasks
+
+# 输出：
+Running Tasks:
+- task_001: npm install (running)
+- task_002: npm install (completed)
+
+# 获取任务输出
+&quot;查看 task_001 的结果&quot;
+
+# 停止任务
+&quot;停止 task_003&quot;
+</code></pre>
+<hr>
+<h2 id="场景-2-配置通知通道-discord-slack">场景 2：配置通知通道（Discord/Slack）</h2>
+<h3 id="问题描述">问题描述</h3>
+<p>你是一个小团队的 Tech Lead。每次 CI 构建完成后，你希望团队成员都能在 Discord/Slack 中收到通知，而不是只有你自己知道。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>配置 MCP Channel，通过 Hook 自动发送通知。</p>
+<h3 id="discord-配置">Discord 配置</h3>
+<strong>Step 1：创建 Discord Bot</strong>
+<ul><li>访问 Discord Developer Portal</li>
+<li>创建新 Bot，获取 Token</li>
+<li>将 Bot 加入目标频道，获取 Channel ID</li>
+
+</ul>
+<strong>Step 2：配置 MCP Server</strong>
+<p>编辑 <code>~/.claude/settings.json</code>：</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;discord&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;@anthropic/mcp-discord&quot;],
+      &quot;env&quot;: {
+        &quot;DISCORD_TOKEN&quot;: &quot;Bot your-token-here&quot;,
+        &quot;CHANNEL_ID&quot;: &quot;123456789&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<strong>Step 3：配置自动通知 Hook</strong>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [{
+      &quot;command&quot;: &quot;claude mcp discord send_message &#039;会话结束：$SESSION_SUMMARY&#039;&quot;,
+      &quot;description&quot;: &quot;通知会话结束&quot;
+    }]
+  }
+}
+</code></pre>
+<h3 id="slack-配置">Slack 配置</h3>
+<strong>Step 1：创建 Slack App</strong>
+<ul><li>访问 Slack API 页面创建 App</li>
+<li>获取 Bot Token（格式：<code>xoxb-...</code>）</li>
+<li>将 App 加入目标频道，获取 Channel ID</li>
+
+</ul>
+<strong>Step 2：配置 MCP Server</strong>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;slack&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;@anthropic/mcp-slack&quot;],
+      &quot;env&quot;: {
+        &quot;SLACK_BOT_TOKEN&quot;: &quot;xoxb-your-token&quot;,
+        &quot;CHANNEL_ID&quot;: &quot;C12345678&quot;
+      }
+    }
+  }
+}
+</code></pre>
+<h3 id="测试通知">测试通知</h3>
+<pre><code class="language-bash"># 在 Claude Code 中说：
+&quot;测试 Discord Channel：发送 &#039;Hello from Claude Code&#039;&quot;
+
+# Claude 会调用 MCP 工具：
+mcp__discord__send_message({
+  &quot;content&quot;: &quot;Hello from Claude Code&quot;
+})
+
+# Discord 频道收到消息：
+Hello from Claude Code
+</code></pre>
+<h3 id="消息格式优化">消息格式优化</h3>
+<p>Discord 支持 Markdown 格式：</p>
+<pre><code class="language-markdown">**构建状态**: ✅ 成功
+**分支**: main
+**提交**: abc123
+
+变更摘要:
+- feat: 添加认证模块
+- fix: 修复登录 bug
+</code></pre>
+<p>Slack 支持 Block Kit 格式：</p>
+<pre><code class="language-json">{
+  &quot;text&quot;: &quot;构建完成&quot;,
+  &quot;blocks&quot;: [
+    {
+      &quot;type&quot;: &quot;section&quot;,
+      &quot;text&quot;: {
+        &quot;type&quot;: &quot;mrkdwn&quot;,
+        &quot;text&quot;: &quot;*构建状态*: ✅ 成功&quot;
+      }
+    }
+  ]
+}
+</code></pre>
+<hr>
+<h2 id="场景-3-监控长时间任务">场景 3：监控长时间任务</h2>
+<h3 id="问题描述">问题描述</h3>
+<p>你的模型训练需要 2 小时，CI 构建可能中途失败需要自动修复，或者你想每天早上自动检查依赖更新。</p>
+<h3 id="解决方案">解决方案</h3>
+<p>使用 <code>/loop</code> 持续监控或 <code>/schedule</code> 定时执行。</p>
+<h3 id="ic9ic-持续循环任务"><code>/loop</code> 持续循环任务</h3>
+<code>/loop</code> 让 Claude Code 在本地长时间运行一个任务，最多支持 <strong>3 天</strong>无人值守。
+<pre><code class="language-bash"># 持续监控构建状态，失败时自动修复
+/loop 每 10 分钟检查构建状态，失败时自动修复
+
+# Claude 响应：
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+循环任务已启动
+任务：检查构建状态
+间隔：10 分钟
+最长运行：3 天
+状态：运行中
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+→ 每 10 分钟自动执行
+→ 检查构建 → 失败则分析修复 → 重新构建
+</code></pre>
+<strong>其他 <code>/loop</code> 示例：</strong>
+<pre><code class="language-bash"># 持续监控测试
+/loop 每 5 分钟运行测试，失败时自动修复
+
+# 持续监控部署
+/loop 每分钟检查部署是否完成
+
+# 持续检查错误日志
+/loop 每 15 分钟检查错误日志，发现新错误时报告
+
+# 查看循环状态
+/loop-status
+
+# 停止循环
+/loop-stop
+</code></pre>
+<h3 id="ic12ic-云端定时任务"><code>/schedule</code> 云端定时任务</h3>
+<code>/schedule</code> 在云端设置定时任务，会在指定时间自动执行。
+<pre><code class="language-bash"># 每天早上 9 点检查依赖更新
+/schedule 每天 09:00 检查依赖更新并报告
+
+# 每天凌晨运行安全扫描
+/schedule 每天 02:00 运行 npm audit
+
+# 每周一生成周报
+/schedule 每周一 09:00 总结上周 git commit 统计
+
+# 工作日检查测试覆盖率
+/schedule 工作日 18:00 运行测试并检查覆盖率
+</code></pre>
+<strong>Cron 表达式格式：</strong>
+<pre><code class="language-">分钟 小时 日 月 星期
+
+示例：
+0 9 * * *      # 每天 09:00
+0 2 * * *      # 每天 02:00
+0 9 * * 1-5    # 工作日 09:00
+0 9 * * 1      # 每周一 09:00
+*/5 * * * *    # 每 5 分钟
+</code></pre>
+<h3 id="结合-channel-的远程监控">结合 Channel 的远程监控</h3>
+<p>配置 <code>/loop</code> + Discord/Slack，实现真正的远程监控：</p>
+<pre><code class="language-bash"># 在 Claude Code 中说：
+&quot;设置一个循环任务：每 10 分钟检查训练进度，
+ 完成时发送 Discord 通知&quot;
+
+# Claude 会：
+→ 配置 /loop 循环任务
+→ 训练完成时调用 mcp__discord__send_message
+
+# 2 小时后你在手机上收到 Discord 通知：
+训练完成！运行时间: 2h 15m 30s
+</code></pre>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="练习-1-后台构建">练习 1：后台构建</h3>
+<pre><code class="language-bash"># 在 Claude Code 中：
+&quot;在后台运行 npm run build，完成后告诉我结果&quot;
+
+# 同时继续工作：
+&quot;帮我写一个简单的测试用例&quot;
+</code></pre>
+<h3 id="练习-2-配置-discord-通知">练习 2：配置 Discord 通知</h3>
+<pre><code class="language-bash"># 1. 创建 Discord Bot（访问 Discord Developer Portal）
+# 2. 获取 Token 和 Channel ID
+# 3. 配置 ~/.claude/settings.json
+# 4. 在 Claude Code 中测试：
+
+&quot;测试 Discord Channel：发送 &#039;Hello from Claude Code&#039;&quot;
+</code></pre>
+<h3 id="练习-3-循环监控">练习 3：循环监控</h3>
+<pre><code class="language-bash"># 设置一个监控任务
+/loop 每 5 分钟检查是否有新的错误日志
+
+# 查看状态
+/loop-status
+
+# 停止循环
+/loop-stop
+</code></pre>
+<h3 id="练习-4-定时任务">练习 4：定时任务</h3>
+<pre><code class="language-bash"># 创建定时任务
+/schedule 每天 09:00 检查 git 状态
+
+# 查看定时任务列表
+# 使用 CronList 工具查看已设置的定时任务
+</code></pre>
+<h3 id="练习-5-并行任务">练习 5：并行任务</h3>
+<pre><code class="language-bash"># 在 Claude Code 中说：
+&quot;假设项目有 3 个子目录，并行检查每个目录的文件数量：
+- src/
+- tests/
+- docs/
+
+完成后汇总结果。&quot;
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q1-任务卡住不动怎么办">Q1: 任务卡住不动怎么办？</h3>
+<p>查看日志文件，分析原因：</p>
+<pre><code class="language-bash"># 查看任务日志
+&quot;显示 task_001 的日志&quot;
+
+# 日志位置
+~/.claude/tasks/task_001.log
+
+# 如果确实卡住，停止并重试
+&quot;停止 task_001，重新运行&quot;
+</code></pre>
+<h3 id="q2-启动了太多并行任务">Q2: 启动了太多并行任务？</h3>
+<p>限制并行数量，分批次执行：</p>
+<pre><code class="language-bash"># 错误：同时启动 20 个任务
+# 正确：先启动 5 个，完成后再启动下一批
+
+&quot;先安装前 5 个微服务的依赖，完成后继续下一批&quot;
+</code></pre>
+<h3 id="q3-discord-slack-通知没有收到">Q3: Discord/Slack 通知没有收到？</h3>
+<p>检查配置：</p>
+<ul><li>确认 MCP Server 配置正确</li>
+<li>确认 Token 和 Channel ID 有效</li>
+<li>确认 Bot 已加入目标频道</li>
+
+</ul>
+<pre><code class="language-bash"># 测试 MCP 连接
+&quot;列出可用的 MCP 工具&quot;
+
+# 应看到 mcp__discord__send_message 等工具
+</code></pre>
+<h3 id="q4-ic15ic-任务没有执行">Q4: <code>/schedule</code> 任务没有执行？</h3>
+<p>检查 Cron 表达式和任务状态：</p>
+<pre><code class="language-bash"># 查看定时任务列表
+# 使用 CronList 工具
+
+# 确认 Cron 表达式正确
+0 9 * * *    # 每天 09:00（本地时区）
+</code></pre>
+<h3 id="q5-如何查看后台任务的输出">Q5: 如何查看后台任务的输出？</h3>
+<p>收到通知后，读取输出：</p>
+<pre><code class="language-bash"># 方法 1：使用 TaskOutput
+&quot;获取 task_001 的输出&quot;
+
+# 方法 2：读取输出文件
+&quot;读取 /tmp/task_001_output.txt&quot;
+</code></pre>
+<h3 id="q6-ic16ic-能运行多久">Q6: <code>/loop</code> 能运行多久？</h3>
+<p>最多 <strong>3 天</strong>。超过后需要重新启动。</p>
+<pre><code class="language-bash"># 查看剩余时间
+/loop-status
+
+# 输出包含：
+运行时间: 12 小时
+剩余时间: 60 小时
+</code></pre>
+<hr>
+<h2 id="最佳实践速查">最佳实践速查</h2>
+<h3 id="推荐做法">✅ 推荐做法</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>超过 1 分钟的任务</td>
+<td>使用后台模式</td>
+</tr>
+<tr>
+<td>团队需要通知</td>
+<td>配置 Discord/Slack Channel</td>
+</tr>
+<tr>
+<td>CI 监控与修复</td>
+<td>使用 <code>/loop</code></td>
+</tr>
+<tr>
+<td>定时执行任务</td>
+<td>使用 <code>/schedule</code></td>
+</tr>
+<tr>
+<td>独立任务</td>
+<td>并行执行提高效率</td>
+</tr>
+</tbody>
+</table>
+<h3 id="避免做法">❌ 避免做法</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>为什么不好</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>后台运行交互命令</td>
+<td>需要输入的命令会卡住</td>
+</tr>
+<tr>
+<td>启动太多并行任务</td>
+<td>可能耗尽系统资源</td>
+</tr>
+<tr>
+<td>不检查任务结果</td>
+<td>后台任务失败时不知道</td>
+</tr>
+<tr>
+<td>手动轮询任务状态</td>
+<td>应等待自动通知</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="相关资源">相关资源</h2>
+<ul><li><a href="/content/05-mcp.html">MCP 配置</a> - MCP Server 详细配置</li>
+<li><a href="/content/06-hooks.html">Hooks 自动化</a> - 自动通知 Hook 设置</li>
+<li><a href="/content/10-cli.html">CLI 命令</a> - <code>/tasks</code> 命令详解</li>
+<li><a href="/content/08-checkpoints.html">Checkpoints</a> - 会话快照与回滚</li>
+<li><a href="https://modelcontextprotocol.io/">官方 MCP 文档</a></li>
+
+</ul>
+<hr>
+<h2 id="下一章预告">下一章预告</h2>
+<strong>第 13 章：高级功能详解</strong>
+<blockquote>我想深度定制 Claude 的行为...</blockquote>
+<p>当你发现默认设置不够用时——需要更精细的权限控制、更复杂的 Hook 触发条件、或者调试 MCP 连接问题——高级功能章节将带你深入 Claude Code 的配置内核。</p>
+<p>下一章将涵盖：</p>
+<ul><li>Extended Thinking 深度推理</li>
+<li>权限精细控制</li>
+<li>复杂 Hook 模式</li>
+<li>MCP 调试技巧</li>
+<li>配置文件完整解析</li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/11-multi-agent.html">← 多 Agent 协作</a>
+      <a href="/content/13-advanced-features.html">高级功能 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

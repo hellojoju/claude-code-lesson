@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企业应用 - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code 企业应用 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#为什么需要这个">为什么需要这个？</a></li><li class="toc-item toc-h2"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#企业级部署的三个支柱">企业级部署的三个支柱</a></li><li class="toc-item toc-h3"><a href="#高级能力概述">高级能力概述</a></li><li class="toc-item toc-h2"><a href="#场景-1-团队部署策略">场景 1：团队部署策略</a></li><li class="toc-item toc-h3"><a href="#情境">情境</a></li><li class="toc-item toc-h3"><a href="#目标">目标</a></li><li class="toc-item toc-h3"><a href="#步骤">步骤</a></li><li class="toc-item toc-h4"><a href="#1-创建托管设置配置">1. 创建托管设置配置</a></li><li class="toc-item toc-h4"><a href="#2-分角色权限控制">2. 分角色权限控制</a></li><li class="toc-item toc-h4"><a href="#3-mdm-os-级策略部署">3. MDM / OS 级策略部署</a></li><li class="toc-item toc-h4"><a href="#4-共享团队技能">4. 共享团队技能</a></li><li class="toc-item toc-h3"><a href="#结果验证">结果验证</a></li><li class="toc-item toc-h2"><a href="#场景-2-安全合规配置">场景 2：安全合规配置</a></li><li class="toc-item toc-h3"><a href="#情境">情境</a></li><li class="toc-item toc-h3"><a href="#目标">目标</a></li><li class="toc-item toc-h3"><a href="#步骤">步骤</a></li><li class="toc-item toc-h4"><a href="#1-启用审计日志">1. 启用审计日志</a></li><li class="toc-item toc-h4"><a href="#2-soc-2-合规配置">2. SOC 2 合规配置</a></li><li class="toc-item toc-h4"><a href="#3-gdpr-合规配置">3. GDPR 合规配置</a></li><li class="toc-item toc-h4"><a href="#4-pre-commit-安全检查">4. Pre-commit 安全检查</a></li><li class="toc-item toc-h3"><a href="#结果验证">结果验证</a></li><li class="toc-item toc-h2"><a href="#场景-3-监控和审计">场景 3：监控和审计</a></li><li class="toc-item toc-h3"><a href="#情境">情境</a></li><li class="toc-item toc-h3"><a href="#目标">目标</a></li><li class="toc-item toc-h3"><a href="#步骤">步骤</a></li><li class="toc-item toc-h4"><a href="#1-opentelemetry-集成">1. OpenTelemetry 集成</a></li><li class="toc-item toc-h4"><a href="#2-自定义指标">2. 自定义指标</a></li><li class="toc-item toc-h4"><a href="#3-prometheus-告警规则">3. Prometheus 告警规则</a></li><li class="toc-item toc-h4"><a href="#4-ci-cd-集成-github-actions">4. CI/CD 集成 - GitHub Actions</a></li><li class="toc-item toc-h4"><a href="#5-gitlab-ci-集成">5. GitLab CI 集成</a></li><li class="toc-item toc-h3"><a href="#结果验证">结果验证</a></li><li class="toc-item toc-h2"><a href="#高级能力补充">高级能力补充</a></li><li class="toc-item toc-h3"><a href="#computer-use">Computer Use</a></li><li class="toc-item toc-h3"><a href="#voice-mode">Voice Mode</a></li><li class="toc-item toc-h3"><a href="#multi-agent-collaboration">Multi-Agent Collaboration</a></li><li class="toc-item toc-h3"><a href="#高级命令">高级命令</a></li><li class="toc-item toc-h2"><a href="#try-it-now">🎯 Try It Now</a></li><li class="toc-item toc-h3"><a href="#快速实践-1-创建企业配置">快速实践 1：创建企业配置</a></li><li class="toc-item toc-h3"><a href="#快速实践-2-设置代码审查技能">快速实践 2：设置代码审查技能</a></li><li class="toc-item toc-h3"><a href="#快速实践-3-创建-ci-工作流">快速实践 3：创建 CI 工作流</a></li><li class="toc-item toc-h3"><a href="#快速实践-4-尝试-voice-mode">快速实践 4：尝试 Voice Mode</a></li><li class="toc-item toc-h2"><a href="#常见问题">常见问题</a></li><li class="toc-item toc-h3"><a href="#q1-托管设置和用户设置的区别">Q1: 托管设置和用户设置的区别？</a></li><li class="toc-item toc-h3"><a href="#q2-如何在不同环境使用不同配置">Q2: 如何在不同环境使用不同配置？</a></li><li class="toc-item toc-h3"><a href="#q3-ci-cd-中如何安全使用-api-key">Q3: CI/CD 中如何安全使用 API Key？</a></li><li class="toc-item toc-h3"><a href="#q4-远程控制的安全性如何保证">Q4: 远程控制的安全性如何保证？</a></li><li class="toc-item toc-h3"><a href="#q5-如何避免反模式">Q5: 如何避免反模式？</a></li><li class="toc-item toc-h3"><a href="#q6-multi-agent-的最佳数量">Q6: Multi-Agent 的最佳数量？</a></li><li class="toc-item toc-h2"><a href="#最佳实践总结">最佳实践总结</a></li><li class="toc-item toc-h3"><a href="#企业部署">企业部署</a></li><li class="toc-item toc-h3"><a href="#远程控制">远程控制</a></li><li class="toc-item toc-h3"><a href="#ci-cd-集成">CI/CD 集成</a></li><li class="toc-item toc-h3"><a href="#监控">监控</a></li><li class="toc-item toc-h2"><a href="#学习路径回顾">学习路径回顾</a></li><li class="toc-item toc-h3"><a href="#你已掌握的能力">你已掌握的能力</a></li><li class="toc-item toc-h3"><a href="#下一步建议">下一步建议</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li><li class="toc-item toc-h3"><a href="#官方文档">官方文档</a></li><li class="toc-item toc-h3"><a href="#相关模块">相关模块</a></li><li class="toc-item toc-h3"><a href="#外部资源">外部资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 企业应用
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-advanced">
+                🔴 高级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🔴 <strong>高级</strong> | ⏱ 180 分钟
+✅ Verified against Claude Code <strong>v2.1.92</strong> · Last verified: 2026-04-06</blockquote>
+<strong>你将掌握：</strong> 企业级部署、团队协作、安全合规、监控审计以及 CI/CD 集成的完整实践。
+<h1>企业部署与高级能力</h1>
+<p>本模块是 Claude Code 教程的最终章，涵盖生产环境部署、团队协作、高级工作流以及企业级最佳实践。掌握这些能力，你将能够在企业环境中安全、高效地使用 Claude Code。</p>
+<hr>
+<h2 id="为什么需要这个">为什么需要这个？</h2>
+<p>"我要在生产环境使用 Claude Code"</p>
+<p>想象这个场景：你的团队已经熟悉了 Claude Code 的基础功能，现在需要将它引入公司的开发流程。你面临的挑战包括：</p>
+<ul><li><strong>安全合规</strong>：如何确保代码安全，满足 SOC 2、GDPR 等合规要求？</li>
+<li><strong>团队协作</strong>：如何统一团队的配置和工作流？</li>
+<li><strong>监控审计</strong>：如何追踪使用情况，发现潜在问题？</li>
+<li><strong>CI/CD 集成</strong>：如何将 AI 辅助融入自动化流水线？</li>
+<li><strong>远程协作</strong>：如何跨设备、跨地点协作开发？</li>
+
+</ul>
+<p>这些问题没有正确答案，但本模块提供经过验证的实践方案，帮助你做出明智决策。</p>
+<hr>
+<h2 id="核心概念">核心概念</h2>
+<h3 id="企业级部署的三个支柱">企业级部署的三个支柱</h3>
+<div class="mermaid">graph TB
+    subgraph "安全与合规"
+        S1[托管设置] --> S2[权限控制]
+        S2 --> S3[审计日志]
+    end
+    
+    subgraph "团队协作"
+        T1[共享配置] --> T2[团队技能]
+        T2 --> T3[远程控制]
+    end
+    
+    subgraph "运营保障"
+        O1[监控指标] --> O2[告警规则]
+        O2 --> O3[CI/CD 集成]
+    end
+    
+    S3 --> T1
+    T3 --> O1
+</div>
+<table>
+<thead>
+<tr>
+<th>支柱</th>
+<th>核心能力</th>
+<th>解决的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>安全与合规</strong></td>
+<td>托管设置、权限控制、审计日志</td>
+<td>"如何确保安全合规？"</td>
+</tr>
+<tr>
+<td><strong>团队协作</strong></td>
+<td>共享配置、团队技能、远程控制</td>
+<td>"如何统一团队工作流？"</td>
+</tr>
+<tr>
+<td><strong>运营保障</strong></td>
+<td>监控指标、告警规则、CI/CD 集成</td>
+<td>"如何持续监控和改进？"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="高级能力概述">高级能力概述</h3>
+<p>除了企业部署，本模块还涵盖 Claude Code 最强大的能力：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>功能</th>
+<th>核心优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Computer Use</strong></td>
+<td>查看并控制你的屏幕</td>
+<td>无需 API 即可实现 GUI 自动化</td>
+</tr>
+<tr>
+<td><strong>Voice Mode</strong></td>
+<td>按下即说语音输入</td>
+<td>自然流畅的对话体验</td>
+</tr>
+<tr>
+<td><strong>Multi-Agent</strong></td>
+<td>并行运行多个 Agent</td>
+<td>显著加速工作流程</td>
+</tr>
+<tr>
+<td><strong>高级命令</strong></td>
+<td><code>/btw</code>、<code>/compact</code>、<code>/rewind</code></td>
+<td>精通上下文管理</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="场景-1-团队部署策略">场景 1：团队部署策略</h2>
+<h3 id="情境">情境</h3>
+<p>公司决定引入 Claude Code，你作为技术负责人需要制定部署方案。团队有 10 名开发者，分为前端、后端、DevOps 三组。</p>
+<h3 id="目标">目标</h3>
+<ul><li>统一团队配置</li>
+<li>分角色权限控制</li>
+<li>便于后续管理</li>
+
+</ul>
+<h3 id="步骤">步骤</h3>
+<h4 id="1-创建托管设置配置">1. 创建托管设置配置</h4>
+<p>托管设置允许组织通过配置文件集中管理 Claude Code 行为。</p>
+<pre><code class="language-bash"># 配置文件位置
+# macOS
+~/Library/Application Support/Claude Code/managed-settings.json
+
+# Linux
+~/.config/Claude Code/managed-settings.json
+
+# Windows
+%APPDATA%/Claude Code/managed-settings.json
+
+# Cross-platform (v2.1.83+)
+~/.claude/managed-settings.d/
+  00-org-defaults.json
+  10-team-policies.json
+  20-project-overrides.json
+</code></pre>
+<p>创建基础配置：</p>
+<pre><code class="language-json">{
+  &quot;version&quot;: &quot;1.0&quot;,
+  &quot;organization&quot;: &quot;ExampleCorp&quot;,
+  &quot;settings&quot;: {
+    &quot;permissions&quot;: {
+      &quot;defaultMode&quot;: &quot;auto&quot;,
+      &quot;autoApprove&quot;: {
+        &quot;bash&quot;: [&quot;npm test&quot;, &quot;npm run build&quot;, &quot;git status&quot;],
+        &quot;fileOperations&quot;: {
+          &quot;read&quot;: [&quot;**/*.ts&quot;, &quot;**/*.tsx&quot;, &quot;**/*.json&quot;],
+          &quot;write&quot;: [&quot;src/**/*&quot;, &quot;test/**/*&quot;]
+        }
+      },
+      &quot;requireApproval&quot;: {
+        &quot;bash&quot;: [&quot;rm -rf&quot;, &quot;sudo&quot;, &quot;docker&quot;],
+        &quot;fileOperations&quot;: {
+          &quot;write&quot;: [&quot;.env&quot;, &quot;*.key&quot;, &quot;*.pem&quot;]
+        }
+      }
+    },
+    &quot;security&quot;: {
+      &quot;allowedDomains&quot;: [&quot;github.com&quot;, &quot;gitlab.example.com&quot;],
+      &quot;disableTelemetry&quot;: true
+    }
+  }
+}
+</code></pre>
+<h4 id="2-分角色权限控制">2. 分角色权限控制</h4>
+<p>不同角色的开发者需要不同的权限：</p>
+<pre><code class="language-json">{
+  &quot;roles&quot;: {
+    &quot;junior-developer&quot;: {
+      &quot;permissions&quot;: {
+        &quot;defaultMode&quot;: &quot;default&quot;,
+        &quot;autoApprove&quot;: {
+          &quot;bash&quot;: [&quot;npm test&quot;, &quot;npm run lint&quot;]
+        }
+      },
+      &quot;restrictions&quot;: {
+        &quot;blockDestructiveCommands&quot;: true,
+        &quot;requireCodeReview&quot;: true
+      }
+    },
+    &quot;senior-developer&quot;: {
+      &quot;permissions&quot;: {
+        &quot;defaultMode&quot;: &quot;auto&quot;,
+        &quot;autoApprove&quot;: {
+          &quot;bash&quot;: [&quot;npm *&quot;, &quot;git *&quot;, &quot;docker *&quot;]
+        }
+      }
+    },
+    &quot;devops&quot;: {
+      &quot;permissions&quot;: {
+        &quot;defaultMode&quot;: &quot;auto&quot;,
+        &quot;autoApprove&quot;: {
+          &quot;bash&quot;: [&quot;*&quot;]
+        }
+      },
+      &quot;features&quot;: {
+        &quot;enableDeployment&quot;: true
+      }
+    }
+  }
+}
+</code></pre>
+<h4 id="3-mdm-os-级策略部署">3. MDM / OS 级策略部署</h4>
+<p>对于 macOS 环境，使用 MDM 配置：</p>
+<pre><code class="language-xml">&lt;!-- com.claude.code.mobileconfig --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+    &lt;key&gt;ManagedSettings&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;Permissions&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;DefaultMode&lt;/key&gt;
+            &lt;string&gt;auto&lt;/string&gt;
+        &lt;/dict&gt;
+        &lt;key&gt;Security&lt;/key&gt;
+        &lt;dict&gt;
+            &lt;key&gt;DisableTelemetry&lt;/key&gt;
+            &lt;true/&gt;
+            &lt;key&gt;AllowedDomains&lt;/key&gt;
+            &lt;array&gt;
+                &lt;string&gt;github.com&lt;/string&gt;
+                &lt;string&gt;example.com&lt;/string&gt;
+            &lt;/array&gt;
+        &lt;/dict&gt;
+    &lt;/dict&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre>
+<p>对于 Windows 环境，使用组策略：</p>
+<pre><code class="language-powershell"># 禁用遥测
+reg add &quot;HKLM\SOFTWARE\Policies\Anthropic\Claude Code&quot; /v DisableTelemetry /t REG_DWORD /d 1
+
+# 设置默认权限模式
+reg add &quot;HKLM\SOFTWARE\Policies\Anthropic\Claude Code&quot; /v DefaultPermissionMode /t REG_SZ /d &quot;auto&quot;
+</code></pre>
+<h4 id="4-共享团队技能">4. 共享团队技能</h4>
+<p>创建团队共享技能目录：</p>
+<pre><code class="language-bash"># 共享技能目录结构
+/opt/team-claude-skills/
+├── code-review/
+│   ├── skill.json
+│   └── instructions.md
+├── deploy-staging/
+├── test-coverage/
+└── security-scan/
+
+# 配置环境变量
+export CLAUDE_TEAM_SKILLS_PATH=/opt/team-claude-skills
+</code></pre>
+<p>代码审查技能示例：</p>
+<pre><code class="language-markdown"># .claude/skills/code-review/instructions.md
+
+## Code Review Checklist
+
+Run these checks:
+1. Run linter (`npm run lint`)
+2. Run type check (`npm run type-check`)
+3. Run tests (`npm test`)
+4. Check security issues
+5. Generate coverage report
+
+Output format:
+- CRITICAL: Blocking issues (must fix)
+- WARNING: Improvement suggestions (should fix)
+- INFO: Good practices (acknowledge)
+</code></pre>
+<h3 id="结果验证">结果验证</h3>
+<p>部署完成后验证配置：</p>
+<pre><code class="language-">你: 显示当前配置
+
+Claude:
+配置加载来源：
+- managed-settings.json
+- ~/.claude/settings.json
+
+生效设置：
+- 权限模式：auto
+- 遞测：已禁用
+- 允许域名：github.com, internal.company.com
+- 审计日志：已启用
+</code></pre>
+<hr>
+<h2 id="场景-2-安全合规配置">场景 2：安全合规配置</h2>
+<h3 id="情境">情境</h3>
+<p>公司需要通过 SOC 2 Type II 认证，你需要配置 Claude Code 满足合规要求。</p>
+<h3 id="目标">目标</h3>
+<ul><li>启用审计日志</li>
+<li>配置数据驻留</li>
+<li>满足 SOC 2 / GDPR 要求</li>
+
+</ul>
+<h3 id="步骤">步骤</h3>
+<h4 id="1-启用审计日志">1. 启用审计日志</h4>
+<p>审计日志记录所有操作，满足合规要求：</p>
+<pre><code class="language-json">{
+  &quot;auditLogging&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;logLevel&quot;: &quot;detailed&quot;,
+    &quot;events&quot;: [
+      &quot;command.execution&quot;,
+      &quot;file.access&quot;,
+      &quot;permission.grant&quot;,
+      &quot;permission.deny&quot;,
+      &quot;skill.execution&quot;,
+      &quot;error&quot;
+    ],
+    &quot;output&quot;: {
+      &quot;type&quot;: &quot;syslog&quot;,
+      &quot;server&quot;: &quot;logserver.example.com:514&quot;,
+      &quot;format&quot;: &quot;json&quot;
+    }
+  }
+}
+</code></pre>
+<p>自定义审计日志记录器：</p>
+<pre><code class="language-javascript">// audit-logger.js
+class AuditLogger {
+  constructor(logDir = &#039;logs/audit&#039;) {
+    this.logDir = logDir;
+  }
+
+  log(action, user, details) {
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      action,
+      user: user || &#039;system&#039;,
+      details,
+      sessionId: details.sessionId || &#039;N/A&#039;
+    };
+
+    const logFile = path.join(
+      this.logDir,
+      `audit-${new Date().toISOString().split(&#039;T&#039;)[0]}.log`
+    );
+
+    fs.appendFileSync(logFile, JSON.stringify(logEntry) + &#039;\n&#039;);
+  }
+}
+
+// 使用示例
+auditLogger.log(&#039;file_access&#039;, &#039;user@example.com&#039;, {
+  filePath: &#039;/path/to/secret.js&#039;,
+  operation: &#039;read&#039;,
+  sessionId: &#039;session-123&#039;
+});
+</code></pre>
+<h4 id="2-soc-2-合规配置">2. SOC 2 合规配置</h4>
+<pre><code class="language-json">{
+  &quot;compliance&quot;: {
+    &quot;framework&quot;: &quot;SOC2&quot;,
+    &quot;controls&quot;: {
+      &quot;accessControl&quot;: {
+        &quot;requireAuthentication&quot;: true,
+        &quot;sessionTimeout&quot;: 30,
+        &quot;mfaRequired&quot;: true
+      },
+      &quot;dataEncryption&quot;: {
+        &quot;inTransit&quot;: true,
+        &quot;atRest&quot;: true
+      },
+      &quot;changeManagement&quot;: {
+        &quot;requireApproval&quot;: true,
+        &quot;auditTrail&quot;: true,
+        &quot;versionControl&quot;: true
+      }
+    }
+  }
+}
+</code></pre>
+<h4 id="3-gdpr-合规配置">3. GDPR 合规配置</h4>
+<pre><code class="language-json">{
+  &quot;gdpr&quot;: {
+    &quot;dataResidency&quot;: &quot;eu&quot;,
+    &quot;rightToErasure&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;retentionDays&quot;: 30
+    },
+    &quot;consent&quot;: {
+      &quot;required&quot;: true,
+      &quot;version&quot;: &quot;2.0&quot;
+    },
+    &quot;dataProcessing&quot;: {
+      &quot;purpose&quot;: &quot;development-tools&quot;,
+      &quot;legalBasis&quot;: &quot;legitimate-interest&quot;
+    }
+  }
+}
+</code></pre>
+<h4 id="4-pre-commit-安全检查">4. Pre-commit 安全检查</h4>
+<p>创建自动化安全检查钩子：</p>
+<pre><code class="language-bash">#!/bin/bash
+# .claude/hooks/pre-commit
+
+echo &quot;运行团队安全检查...&quot;
+
+# 1. 检查敏感信息
+if git diff --cached | grep -iE &quot;(password|api_key|secret)&quot;; then
+  echo &quot;CRITICAL: 检测到潜在敏感信息!&quot;
+  exit 1
+fi
+
+# 2. 运行 linter
+npm run lint -- --quiet
+if [ $? -ne 0 ]; then
+  echo &quot;Lint 检查失败&quot;
+  exit 1
+fi
+
+# 3. 运行类型检查
+npm run type-check -- --quiet
+if [ $? -ne 0 ]; then
+  echo &quot;类型检查失败&quot;
+  exit 1
+fi
+
+# 4. 运行单元测试
+npm test -- --testPathPattern=&quot;unit&quot; --quiet
+if [ $? -ne 0 ]; then
+  echo &quot;单元测试失败&quot;
+  exit 1
+fi
+
+echo &quot;Pre-commit 检查通过&quot;
+</code></pre>
+<h3 id="结果验证">结果验证</h3>
+<pre><code class="language-">你: 检查安全合规状态
+
+Claude:
+合规检查报告：
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOC 2 控制：
+- 访问控制：已配置
+- 数据加密：已启用
+- 变更管理：已启用
+
+✅ GDPR 控制：
+- 数据驻留：eu
+- 删除权：已启用
+- 用户同意：已要求
+
+✅ 审计日志：
+- 状态：已启用
+- 级别：detailed
+- 输出：syslog
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre>
+<hr>
+<h2 id="场景-3-监控和审计">场景 3：监控和审计</h2>
+<h3 id="情境">情境</h3>
+<p>Claude Code 已经部署到生产环境，你需要建立监控体系确保稳定运行。</p>
+<h3 id="目标">目标</h3>
+<ul><li>建立关键指标监控</li>
+<li>配置告警规则</li>
+<li>实现 CI/CD 集成</li>
+
+</ul>
+<h3 id="步骤">步骤</h3>
+<h4 id="1-opentelemetry-集成">1. OpenTelemetry 集成</h4>
+<p>安装和配置 OpenTelemetry：</p>
+<pre><code class="language-bash"># 安装依赖
+npm install @opentelemetry/api
+npm install @opentelemetry/sdk-node
+npm install @opentelemetry/exporter-metrics-otlp-grpc
+</code></pre>
+<p>创建遥测模块：</p>
+<pre><code class="language-javascript">// telemetry.js
+const { MeterProvider } = require(&#039;@opentelemetry/sdk-metrics&#039;);
+const { OTLPGrpcMetricExporter } = require(&#039;@opentelemetry/exporter-metrics-otlp-grpc&#039;);
+
+const metricExporter = new OTLPGrpcMetricExporter({
+  url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || &#039;http://localhost:4317&#039;,
+});
+
+const meterProvider = new MeterProvider({
+  exporter: metricExporter,
+  interval: 10000, // 10 seconds
+});
+
+meterProvider.start();
+
+const meter = meterProvider.getMeter(&#039;claude-code-metrics&#039;);
+module.exports = { meter };
+</code></pre>
+<h4 id="2-自定义指标">2. 自定义指标</h4>
+<p>创建关键性能指标：</p>
+<pre><code class="language-javascript">const { meter } = require(&#039;./telemetry&#039;);
+
+// 命令执行计数器
+const commandCounter = meter.createCounter(&#039;claude.commands.total&#039;, {
+  description: &#039;执行的 Claude Code 命令总数&#039;,
+});
+
+// 命令执行时间
+const commandDuration = meter.createHistogram(&#039;claude.commands.duration&#039;, {
+  description: &#039;Claude Code 命令执行时间&#039;,
+  unit: &#039;ms&#039;,
+});
+
+// 追踪命令执行
+async function trackCommand(command, fn) {
+  const startTime = Date.now();
+
+  try {
+    await fn();
+    commandCounter.add(1, { command, status: &#039;success&#039; });
+  } catch (error) {
+    commandCounter.add(1, { command, status: &#039;error&#039; });
+    throw error;
+  } finally {
+    const duration = Date.now() - startTime;
+    commandDuration.record(duration, { command });
+  }
+}
+</code></pre>
+<h4 id="3-prometheus-告警规则">3. Prometheus 告警规则</h4>
+<pre><code class="language-yaml"># alerts.yml
+groups:
+  - name: claude_code_alerts
+    interval: 30s
+    rules:
+      # 高错误率告警
+      - alert: HighErrorRate
+        expr: |
+          rate(claude_commands_total{status=&quot;error&quot;}[5m])
+          / rate(claude_commands_total[5m]) &gt; 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;Claude Code 错误率过高&quot;
+          description: &quot;错误率为 {{ $value | humanizePercentage }}&quot;
+
+      # 响应时间告警
+      - alert: SlowResponseTime
+        expr: |
+          histogram_quantile(0.95, claude_commands_duration_bucket) &gt; 5000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;Claude Code 响应时间过慢&quot;
+          description: &quot;P95 响应时间为 {{ $value }}ms&quot;
+</code></pre>
+<h4 id="4-ci-cd-集成-github-actions">4. CI/CD 集成 - GitHub Actions</h4>
+<p>创建完整的 CI/CD 流水线：</p>
+<pre><code class="language-yaml"># .github/workflows/claude-ci.yml
+name: Claude Code CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  claude-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: &#039;20&#039;
+
+      - name: Install Claude Code
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Claude Code checks
+        run: |
+          claude -p &quot;审查代码库：
+          - 代码质量问题
+          - 安全漏洞
+          - 性能隐患
+          输出简洁摘要。&quot;
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-results
+          path: .claude/reports/
+</code></pre>
+<p>代码审查工作流：</p>
+<pre><code class="language-yaml"># .github/workflows/claude-review.yml
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Code Review
+        id: review
+        run: |
+          claude -p --output-format json \
+            &quot;审查此 PR 的变更。重点关注：
+            - 代码质量和可读性
+            - 潜在 bug 或边界情况
+            - 安全考虑
+            - 测试覆盖率
+
+            输出 JSON 格式，包含：summary, issues, suggestions&quot; &gt; review.json
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require(&#039;fs&#039;);
+            const review = JSON.parse(fs.readFileSync(&#039;review.json&#039;, &#039;utf8&#039;));
+
+            const body = `## Claude Code Review
+
+            ### Summary
+            ${review.summary}
+
+            ### Issues Found
+            ${review.issues.map(i =&gt; `- **${i.severity}**: ${i.message}`).join(&#039;\n&#039;)}
+
+            ### Suggestions
+            ${review.suggestions.map(s =&gt; `- ${s}`).join(&#039;\n&#039;)}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+</code></pre>
+<h4 id="5-gitlab-ci-集成">5. GitLab CI 集成</h4>
+<pre><code class="language-yaml"># .gitlab-ci.yml
+stages:
+  - check
+  - review
+  - test
+  - deploy
+
+variables:
+  CLAUDE_VERSION: &quot;latest&quot;
+
+claude:check:
+  stage: check
+  image: node:20
+  before_script:
+    - npm install -g @anthropic-ai/claude-code
+    - claude --version
+  script:
+    - npm ci
+    - claude -p &quot;运行代码质量检查并输出 JSON 报告&quot; &gt; claude-report.json
+  artifacts:
+    reports:
+      codequality: claude-report.json
+    paths:
+      - claude-report.json
+    expire_in: 1 week
+
+claude:review:
+  stage: review
+  image: node:20
+  before_script:
+    - npm install -g @anthropic-ai/claude-code
+  script:
+    - claude -p &quot;审查 merge request 变更&quot; &gt; review.md
+  artifacts:
+    paths:
+      - review.md
+    expire_in: 1 week
+  only:
+    - merge_requests
+
+claude:security:
+  stage: check
+  image: node:20
+  before_script:
+    - npm install -g @anthropic-ai/claude-code
+  script:
+    - claude -p &quot;安全扫描此代码库&quot; &gt; security-report.json
+  artifacts:
+    reports:
+      sast: security-report.json
+    paths:
+      - security-report.json
+  allow_failure: true
+</code></pre>
+<h3 id="结果验证">结果验证</h3>
+<p>查看监控仪表板：</p>
+<pre><code class="language-">你: 显示监控指标摘要
+
+Claude:
+Claude Code 监控摘要：
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 性能指标：
+- 平均响应时间：1.8s
+- P95 响应时间：4.2s
+- 成功率：99.2%
+
+📈 使用统计：
+- 今日命令数：245
+- 本周命令数：1,234
+- 活跃会话：12
+
+⚠️ 告警状态：
+- 无活跃告警
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre>
+<hr>
+<h2 id="高级能力补充">高级能力补充</h2>
+<p>本模块还涵盖以下高级能力，为企业级使用提供更多可能性。</p>
+<h3 id="computer-use">Computer Use</h3>
+<p>Computer Use 让 Claude Code 能够"看见"你的屏幕并控制鼠标和键盘。</p>
+<pre><code class="language-">传统 Claude Code:
+你: &quot;测试登录表单&quot;
+Claude: &quot;我看不到浏览器。请截图...&quot;
+
+Computer Use:
+你: &quot;测试登录表单&quot;
+Claude: [看见屏幕]
+  → 移动光标到用户名输入框
+  → 输入测试凭据
+  → 点击登录按钮
+  → 验证跳转到仪表板
+</code></pre>
+<strong>适用场景：</strong>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>为何使用 Computer Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web UI 测试</td>
+<td>无需 API，直接浏览器交互</td>
+</tr>
+<tr>
+<td>传统应用</td>
+<td>无可编程接口的 GUI 应用</td>
+</tr>
+<tr>
+<td>跨应用工作流</td>
+<td>跨多个应用自动化</td>
+</tr>
+</tbody>
+</table>
+<h3 id="voice-mode">Voice Mode</h3>
+<p>Voice Mode 启用按下即说的语音输入。</p>
+<pre><code class="language-">键盘输入：
+你（打字）：&quot;重构这个组件&quot;
+  → 思考措辞
+  → 输入字符
+  → 等待响应
+
+语音输入：
+你（说话）：&quot;重构这个组件&quot;
+  → 直接说出
+  → 即时传输
+  → 自然对话流程
+</code></pre>
+<strong>黄金法则：语音定方向，键盘写细节</strong>
+<pre><code class="language-">工作流示例：
+1. 🎤 &quot;重构认证模块&quot;（意图）
+2. ⌨️ 查看 Claude 的计划
+3. 🎤 &quot;第 3 步 - 用 OAuth 替代&quot;（反馈）
+4. ⌨️ 提供配置值
+5. 🎤 &quot;看起来不错，执行&quot;（确认）
+</code></pre>
+<h3 id="multi-agent-collaboration">Multi-Agent Collaboration</h3>
+<p>通过 Git Worktrees 实现并行任务处理。</p>
+<pre><code class="language-bash"># Claude Code 自动管理 worktrees
+claude --worktree
+
+# 创建 worktrees
+claude --worktree name=feature-a
+claude --worktree name=feature-b
+claude --worktree name=feature-c
+
+# Tmux 布局实现多面板
+Pane 1: cd .claude/worktrees/feature-a &amp;&amp; claude
+Pane 2: cd .claude/worktrees/feature-b &amp;&amp; claude
+Pane 3: cd .claude/worktrees/feature-c &amp;&amp; claude
+
+# 每个面板分配任务
+Pane 1: &quot;实现推荐算法&quot;
+Pane 2: &quot;创建 API 端点&quot;
+Pane 3: &quot;构建前端组件&quot;
+</code></pre>
+<h3 id="高级命令">高级命令</h3>
+<p>上下文管理命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>效果</th>
+<th>使用时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/btw</code></td>
+<td>旁路对话，不污染主上下文</td>
+<td>无关问题</td>
+</tr>
+<tr>
+<td><code>/compact</code></td>
+<td>压缩上下文，释放空间</td>
+<td>长对话接近限制</td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>回滚到之前状态</td>
+<td>发现方向错误</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="try-it-now">🎯 Try It Now</h2>
+<h3 id="快速实践-1-创建企业配置">快速实践 1：创建企业配置</h3>
+<pre><code class="language-bash"># 1. 创建托管设置目录
+mkdir -p ~/.claude/managed-settings.d
+
+# 2. 创建基础配置
+cat &gt; ~/.claude/managed-settings.d/00-org-defaults.json &lt;&lt; &#039;EOF&#039;
+{
+  &quot;version&quot;: &quot;1.0&quot;,
+  &quot;organization&quot;: &quot;MyTeam&quot;,
+  &quot;settings&quot;: {
+    &quot;permissions&quot;: {
+      &quot;defaultMode&quot;: &quot;auto&quot;
+    },
+    &quot;security&quot;: {
+      &quot;disableTelemetry&quot;: true
+    }
+  }
+}
+EOF
+
+# 3. 验证配置
+claude -p &quot;显示当前配置&quot;
+</code></pre>
+<h3 id="快速实践-2-设置代码审查技能">快速实践 2：设置代码审查技能</h3>
+<pre><code class="language-bash"># 1. 创建技能目录
+mkdir -p .claude/skills/code-review
+
+# 2. 创建技能定义
+cat &gt; .claude/skills/code-review/skill.json &lt;&lt; &#039;EOF&#039;
+{
+  &quot;name&quot;: &quot;code-review&quot;,
+  &quot;description&quot;: &quot;团队代码审查标准流程&quot;
+}
+EOF
+
+# 3. 创建指令文件
+cat &gt; .claude/skills/code-review/instructions.md &lt;&lt; &#039;EOF&#039;
+## Code Review Checklist
+
+1. Run linter
+2. Run type check
+3. Run tests
+4. Check security issues
+5. Output structured report
+EOF
+
+# 4. 使用技能
+claude
+&gt; /skill code-review
+</code></pre>
+<h3 id="快速实践-3-创建-ci-工作流">快速实践 3：创建 CI 工作流</h3>
+<pre><code class="language-bash"># 1. 创建 GitHub Actions 目录
+mkdir -p .github/workflows
+
+# 2. 创建基础 CI 工作流
+cat &gt; .github/workflows/claude-ci.yml &lt;&lt; &#039;EOF&#039;
+name: Claude Code CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: claude -p &quot;检查代码质量&quot;
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+EOF
+
+# 3. 提交并观察 CI 运行
+git add .github/workflows/claude-ci.yml
+git commit -m &quot;feat(ci): add Claude Code CI workflow&quot;
+git push
+</code></pre>
+<h3 id="快速实践-4-尝试-voice-mode">快速实践 4：尝试 Voice Mode</h3>
+<pre><code class="language-">1. 在 Claude Code 会话中按空格键
+2. 说话：&quot;解释这段代码的作用&quot;
+3. 松开空格键发送
+4. 观察语音识别和响应
+
+混合使用：
+- 语音：&quot;重构这个函数&quot;
+- 键盘：提供具体参数
+- 语音：&quot;看起来不错，继续&quot;
+</code></pre>
+<hr>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="q1-托管设置和用户设置的区别">Q1: 托管设置和用户设置的区别？</h3>
+<strong>托管设置</strong> 由组织控制，用户无法修改，用于强制执行安全策略。
+<strong>用户设置</strong> 由用户控制，位于 <code>~/.claude/settings.json</code>，用于个人偏好。
+<p>优先级：托管设置 > 用户设置 > 项目设置</p>
+<h3 id="q2-如何在不同环境使用不同配置">Q2: 如何在不同环境使用不同配置？</h3>
+<p>使用多环境配置模式：</p>
+<pre><code class="language-json">{
+  &quot;development&quot;: {
+    &quot;permissions&quot;: { &quot;defaultMode&quot;: &quot;auto&quot; },
+    &quot;features&quot;: { &quot;enableDebugLogging&quot;: true }
+  },
+  &quot;staging&quot;: {
+    &quot;permissions&quot;: { &quot;defaultMode&quot;: &quot;default&quot; },
+    &quot;auditLogging&quot;: { &quot;enabled&quot;: true }
+  },
+  &quot;production&quot;: {
+    &quot;permissions&quot;: { &quot;defaultMode&quot;: &quot;default&quot; },
+    &quot;security&quot;: { &quot;strictMode&quot;: true }
+  }
+}
+</code></pre>
+<p>通过环境变量切换：</p>
+<pre><code class="language-bash">export CLAUDE_ENV=production
+claude -p &quot;检查代码&quot;
+</code></pre>
+<h3 id="q3-ci-cd-中如何安全使用-api-key">Q3: CI/CD 中如何安全使用 API Key？</h3>
+<p>使用 GitHub Secrets 或 GitLab Variables：</p>
+<pre><code class="language-yaml">env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+</code></pre>
+<p>确保：</p>
+<ul><li>Secrets 从不暴露在日志中</li>
+<li>使用 <code>--allowedTools</code> 限制可用工具</li>
+<li>定期轮换 API Key</li>
+
+</ul>
+<h3 id="q4-远程控制的安全性如何保证">Q4: 远程控制的安全性如何保证？</h3>
+<p>最佳实践：</p>
+<ul><li>使用 SSH 密钥认证</li>
+<li>启用会话超时</li>
+<li>在关键节点创建检查点</li>
+<li>保护会话分享链接</li>
+<li>启用审计日志</li>
+
+</ul>
+<h3 id="q5-如何避免反模式">Q5: 如何避免反模式？</h3>
+<table>
+<thead>
+<tr>
+<th>反模式</th>
+<th>核心问题</th>
+<th>正确方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一个会话做所有事</td>
+<td>上下文污染</td>
+<td>一个会话一个任务</td>
+</tr>
+<tr>
+<td>反复修正</td>
+<td>需求不精确</td>
+<td>一次精确需求</td>
+</tr>
+<tr>
+<td>不验证就接受</td>
+<td>无验证</td>
+<td>主动测试和审查</td>
+</tr>
+<tr>
+<td>过度微操</td>
+<td>AI 自主性未用</td>
+<td>给方向，不给步骤</td>
+</tr>
+<tr>
+<td>模糊需求</td>
+<td>Claude 猜测</td>
+<td>清晰问题，具体目标</td>
+</tr>
+<tr>
+<td>没有 CLAUDE.md</td>
+<td>重复劳动</td>
+<td>编写项目记忆</td>
+</tr>
+</tbody>
+</table>
+<h3 id="q6-multi-agent-的最佳数量">Q6: Multi-Agent 的最佳数量？</h3>
+<p>建议：每个团队 5-10 个并行 Agent。</p>
+<p>过多会导致：</p>
+<ul><li>管理复杂度增加</li>
+<li>资源竞争</li>
+<li>合并冲突增多</li>
+
+</ul>
+<hr>
+<h2 id="最佳实践总结">最佳实践总结</h2>
+<h3 id="企业部署">企业部署</h3>
+<ul><li>对所有配置文件使用版本控制</li>
+<li>实施渐进式发布策略（试点 → 扩大 → 全量）</li>
+<li>启用审计日志以满足合规要求</li>
+<li>定期进行安全审查</li>
+<li>记录所有自定义配置</li>
+
+</ul>
+<h3 id="远程控制">远程控制</h3>
+<ul><li>使用 SSH 密钥认证进行远程连接</li>
+<li>在关键节点创建检查点</li>
+<li>定期监控会话活动</li>
+<li>保护会话分享链接</li>
+
+</ul>
+<h3 id="ci-cd-集成">CI/CD 集成</h3>
+<ul><li>在 CI 流水线中缓存依赖</li>
+<li>并行运行独立作业</li>
+<li>使用矩阵策略进行多版本测试</li>
+<li>使用 secrets 保护敏感信息</li>
+<li>设置适当的超时时间</li>
+
+</ul>
+<h3 id="监控">监控</h3>
+<ul><li>适当采样追踪（10-20%）</li>
+<li>使用适当的日志级别</li>
+<li>在日志中保护敏感信息</li>
+<li>定期审查关键指标</li>
+<li>为关键阈值设置告警</li>
+
+</ul>
+<hr>
+<h2 id="学习路径回顾">学习路径回顾</h2>
+<p>恭喜你完成了 Claude Code 教程的全部学习！回顾你的学习旅程：</p>
+<div class="mermaid">graph LR
+    A[01 Slash Commands] --> B[02 Memory]
+    B --> C[03 Skills]
+    C --> D[04 Subagents]
+    D --> E[05 MCP]
+    E --> F[06 Hooks]
+    F --> G[07 Plugins]
+    G --> H[08 Checkpoints]
+    H --> I[09 Advanced Features]
+    I --> J[10 CLI]
+    J --> K[14 Enterprise]
+    
+    style K fill:#f9f,stroke:#333,stroke-width:4px
+</div>
+<h3 id="你已掌握的能力">你已掌握的能力</h3>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>核心技能</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Slash Commands</strong></td>
+<td>自定义命令</td>
+<td>快速执行常用操作</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>CLAUDE.md 配置</td>
+<td>项目知识持久化</td>
+</tr>
+<tr>
+<td><strong>Skills</strong></td>
+<td>可复用任务模板</td>
+<td>标准化工作流</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong></td>
+<td>专业智能体委托</td>
+<td>复杂任务分解</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>外部数据访问</td>
+<td>连接外部工具和服务</td>
+</tr>
+<tr>
+<td><strong>Hooks</strong></td>
+<td>事件驱动自动化</td>
+<td>自动格式化、检查</td>
+</tr>
+<tr>
+<td><strong>Plugins</strong></td>
+<td>扩展包系统</td>
+<td>打包和分发技能</td>
+</tr>
+<tr>
+<td><strong>Checkpoints</strong></td>
+<td>会话快照与回滚</td>
+<td>安全探索和实验</td>
+</tr>
+<tr>
+<td><strong>Advanced Features</strong></td>
+<td>扩展思考、权限</td>
+<td>深度推理和精细控制</td>
+</tr>
+<tr>
+<td><strong>CLI</strong></td>
+<td>命令行界面</td>
+<td>高效操作和脚本集成</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>企业部署与集成</td>
+<td>生产级团队协作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="下一步建议">下一步建议</h3>
+<ul><li><strong>实践巩固</strong>：在日常开发中应用所学技能</li>
+<li><strong>团队推广</strong>：将企业部署方案引入团队</li>
+<li><strong>持续学习</strong>：关注 Claude Code 新版本更新</li>
+<li><strong>社区贡献</strong>：分享你的技能和配置模板</li>
+
+</ul>
+<hr>
+<h2 id="相关资源">相关资源</h2>
+<h3 id="官方文档">官方文档</h3>
+<ul><li><a href="https://code.claude.com/docs/en/enterprise">Enterprise Deployment Guide</a></li>
+<li><a href="https://code.claude.com/docs/en/remote-control">Remote Control Documentation</a></li>
+<li><a href="https://code.claude.com/docs/en/managed-settings">Managed Settings Reference</a></li>
+<li><a href="https://code.claude.com/docs/en/computer-use">Computer Use Documentation</a></li>
+<li><a href="https://code.claude.com/docs/en/voice-mode">Voice Mode Documentation</a></li>
+<li><a href="https://code.claude.com/docs/en/multi-agent">Multi-Agent Documentation</a></li>
+
+</ul>
+<h3 id="相关模块">相关模块</h3>
+<ul><li><a href="/content/09-advanced-features.html">Advanced Features</a> - Planning, thinking, permissions</li>
+<li><a href="/content/06-hooks.html">Hooks</a> - Event-driven automation</li>
+<li><a href="/content/05-mcp.html">MCP</a> - External data access</li>
+<li><a href="/content/04-subagents.html">Subagents</a> - Task delegation</li>
+<li><a href="/content/08-checkpoints.html">Checkpoints</a> - Session management and rollback</li>
+
+</ul>
+<h3 id="外部资源">外部资源</h3>
+<ul><li><a href="https://opentelemetry.io/docs/">OpenTelemetry Documentation</a></li>
+<li><a href="https://prometheus.io/docs/practices/">Prometheus Best Practices</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/dashboards/">Grafana Dashboards</a></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions Documentation</a></li>
+<li><a href="https://git-scm.com/docs/git-worktree">Git Worktree Guide</a></li></ul>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/13-advanced-features.html">← 高级功能</a>
+      <a href="/content/appendix-boris-tips.html">Boris 实战技巧 →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
