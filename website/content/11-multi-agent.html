@@ -64,9 +64,133 @@
     /* 主内容 */
     main { padding: 2rem 0; min-height: calc(100vh - 200px); }
 
-    article {
-      max-width: 900px;
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
       margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
     }
 
     /* 元信息 */
@@ -91,49 +215,6 @@
     .badge-beginner { background: #dcfce7; color: #166534; }
     .badge-intermediate { background: #fef3c7; color: #92400e; }
     .badge-advanced { background: #fee2e2; color: #991b1b; }
-
-    /* 目录 */
-    .toc {
-      background: #f9fafb;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      position: relative;
-    }
-
-    .toc h3 {
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .toc h3::after {
-      content: "▼";
-      font-size: 0.75rem;
-      transition: transform 0.2s;
-    }
-
-    .toc.collapsed h3::after {
-      transform: rotate(-90deg);
-    }
-
-    .toc.collapsed ul {
-      display: none;
-    }
-
-    .toc ul {
-      list-style: none;
-      padding-left: 1rem;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .toc a { color: var(--primary); }
-    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -176,6 +257,11 @@
     .breadcrumb {
       font-size: 0.875rem;
       margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
     }
 
     .breadcrumb a { color: var(--primary); }
@@ -202,16 +288,104 @@
     }
 
     .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
   </style>
 </head>
 <body>
   <nav>
     <div class="container">
-      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/modules.html">模块</a></li>
-        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
       </ul>
     </div>
   </nav>
@@ -219,25 +393,118 @@
   <main>
     <div class="container">
       
-      <article>
-        <nav class="breadcrumb">
-          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / 多 Agent 协作
-        </nav>
-
-        <div class="meta">
-          <span class="badge badge-intermediate">
-            🟡 中级
-          </span>
-          <span class="badge">✅ Claude Code v2.1.92</span>
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#概述">概述</a></li><li class="toc-item toc-h3"><a href="#从单-agent-到多-agent">从单 Agent 到多 Agent</a></li><li class="toc-item toc-h3"><a href="#anthropic-内部团队的用法">Anthropic 内部团队的用法</a></li><li class="toc-item toc-h2"><a href="#基础设施-git-worktrees">基础设施：Git Worktrees</a></li><li class="toc-item toc-h3"><a href="#什么是-git-worktree">什么是 Git Worktree？</a></li><li class="toc-item toc-h3"><a href="#worktree-与多-agent-的关系">Worktree 与多 Agent 的关系</a></li><li class="toc-item toc-h3"><a href="#创建-worktree">创建 Worktree</a></li><li class="toc-item toc-h3"><a href="#合并-worktree">合并 Worktree</a></li><li class="toc-item toc-h3"><a href="#使用-enterworktree-工具">使用 EnterWorktree 工具</a></li><li class="toc-item toc-h2"><a href="#协作模式">协作模式</a></li><li class="toc-item toc-h3"><a href="#1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</a></li><li class="toc-item toc-h3"><a href="#2-并行执行模式">2. 并行执行模式</a></li><li class="toc-item toc-h3"><a href="#3-层级管理模式">3. 层级管理模式</a></li><li class="toc-item toc-h3"><a href="#4-流水线模式">4. 流水线模式</a></li><li class="toc-item toc-h3"><a href="#5-点对点协作模式">5. 点对点协作模式</a></li><li class="toc-item toc-h2"><a href="#agent-工具详解">Agent 工具详解</a></li><li class="toc-item toc-h3"><a href="#基本用法">基本用法</a></li><li class="toc-item toc-h3"><a href="#可用代理类型">可用代理类型</a></li><li class="toc-item toc-h3"><a href="#并行调度技巧">并行调度技巧</a></li><li class="toc-item toc-h2"><a href="#agent-teams-配置指南">Agent Teams 配置指南</a></li><li class="toc-item toc-h3"><a href="#什么是-agent-teams">什么是 Agent Teams？</a></li><li class="toc-item toc-h3"><a href="#writer-reviewer-模式">Writer/Reviewer 模式</a></li><li class="toc-item toc-h3"><a href="#测试驱动模式-tdd">测试驱动模式（TDD）</a></li><li class="toc-item toc-h3"><a href="#并行会话结构示例">并行会话结构示例</a></li><li class="toc-item toc-h4"><a href="#窗口-1-前端会话">窗口 1：前端会话</a></li><li class="toc-item toc-h4"><a href="#窗口-2-测试套件会话">窗口 2：测试套件会话</a></li><li class="toc-item toc-h3"><a href="#tmux-多窗口管理">Tmux 多窗口管理</a></li><li class="toc-item toc-h2"><a href="#coordinator-mode-使用方法">Coordinator Mode 使用方法</a></li><li class="toc-item toc-h3"><a href="#四阶段协调模式">四阶段协调模式</a></li><li class="toc-item toc-h3"><a href="#各阶段详解">各阶段详解</a></li><li class="toc-item toc-h4"><a href="#第一阶段-research-调研">第一阶段：Research（调研）</a></li><li class="toc-item toc-h4"><a href="#第二阶段-synthesis-综合">第二阶段：Synthesis（综合）</a></li><li class="toc-item toc-h4"><a href="#第三阶段-implementation-实现">第三阶段：Implementation（实现）</a></li><li class="toc-item toc-h4"><a href="#第四阶段-verification-验证">第四阶段：Verification（验证）</a></li><li class="toc-item toc-h3"><a href="#coordinator-mode-激活">Coordinator Mode 激活</a></li><li class="toc-item toc-h2"><a href="#实战案例">实战案例</a></li><li class="toc-item toc-h3"><a href="#案例-1-完整功能开发">案例 1：完整功能开发</a></li><li class="toc-item toc-h3"><a href="#案例-2-大型功能开发-完整流程">案例 2：大型功能开发（完整流程）</a></li><li class="toc-item toc-h3"><a href="#案例-3-代码审查流水线">案例 3：代码审查流水线</a></li><li class="toc-item toc-h3"><a href="#案例-4-探索与研究">案例 4：探索与研究</a></li><li class="toc-item toc-h3"><a href="#案例-5-tdd-模式开发">案例 5：TDD 模式开发</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#何时使用多-agent">何时使用多 Agent</a></li><li class="toc-item toc-h3"><a href="#性能优化">性能优化</a></li><li class="toc-item toc-h3"><a href="#异步工作心智转变">异步工作心智转变</a></li><li class="toc-item toc-h2"><a href="#协作反模式">协作反模式</a></li><li class="toc-item toc-h3"><a href="#需要避免的模式">需要避免的模式</a></li><li class="toc-item toc-h3"><a href="#合理分配任务原则">合理分配任务原则</a></li><li class="toc-item toc-h2"><a href="#高级命令支持">高级命令支持</a></li><li class="toc-item toc-h3"><a href="#batch-批量处理">/batch 批量处理</a></li><li class="toc-item toc-h3"><a href="#loop-长时间运行任务">/loop 长时间运行任务</a></li><li class="toc-item toc-h3"><a href="#schedule-云端定时任务">/schedule 云端定时任务</a></li><li class="toc-item toc-h3"><a href="#非交互模式-p-标志">非交互模式 (-p 标志)</a></li><li class="toc-item toc-h2"><a href="#立即尝试">立即尝试</a></li><li class="toc-item toc-h3"><a href="#练习-1-并行代码审查">🎯 练习 1：并行代码审查</a></li><li class="toc-item toc-h3"><a href="#练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</a></li><li class="toc-item toc-h3"><a href="#练习-3-探索模式">🎯 练习 3：探索模式</a></li><li class="toc-item toc-h3"><a href="#练习-4-worktree-并行开发">🎯 练习 4：Worktree 并行开发</a></li><li class="toc-item toc-h3"><a href="#练习-5-coordinator-mode">🎯 练习 5：Coordinator Mode</a></li><li class="toc-item toc-h3"><a href="#练习-6-writer-reviewer-模式">🎯 练习 6：Writer/Reviewer 模式</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li></ul>
         </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 多 Agent 协作
+            </nav>
 
-        <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#协作模式">协作模式</a></li><li ><a href="#1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</a></li><li ><a href="#2-并行执行模式">2. 并行执行模式</a></li><li ><a href="#3-层级管理模式">3. 层级管理模式</a></li><li ><a href="#4-流水线模式">4. 流水线模式</a></li><li ><a href="#5-点对点协作模式">5. 点对点协作模式</a></li><li ><a href="#agent-工具详解">Agent 工具详解</a></li><li ><a href="#基本用法">基本用法</a></li><li ><a href="#可用代理类型">可用代理类型</a></li><li ><a href="#并行调度技巧">并行调度技巧</a></li><li ><a href="#实战案例">实战案例</a></li><li ><a href="#案例-完整功能开发">案例：完整功能开发</a></li><li ><a href="#案例-代码审查流水线">案例：代码审查流水线</a></li><li ><a href="#案例-探索与研究">案例：探索与研究</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#何时使用多-agent">何时使用多 Agent</a></li><li ><a href="#性能优化">性能优化</a></li><li ><a href="#避免的模式">避免的模式</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-并行代码审查">🎯 练习 1：并行代码审查</a></li><li ><a href="#练习-2-功能开发流水线">🎯 练习 2：功能开发流水线</a></li><li ><a href="#练习-3-探索模式">🎯 练习 3：探索模式</a></li><li ><a href="#相关资源">相关资源</a></li></ul></div>
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
 
-        <div class="content">
-          <blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote>
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 90 分钟</blockquote>
 <h1>多 Agent 协作</h1>
 <h2 id="概述">概述</h2>
-<p>Claude Code 支持多种多 Agent 协作模式，让你能够同时运行多个专业化的智能体来处理复杂任务。</p>
+<p>多 Agent 协作是 Claude Code 最强大的能力之一。当你的熟练程度提高后，自然的扩展是<strong>并行操作</strong>：多个 Claude 会话同时运行，每个处理不同的工作流。</p>
+<h3 id="从单-agent-到多-agent">从单 Agent 到多 Agent</h3>
+<pre><code class="language-">单 Agent 工作方式：
+你 → Claude → 做任务 A → 做任务 B → 做任务 C
+时间：线性增长
+
+多 Agent 工作方式：
+你 → Claude → Agent 1（任务 A）
+              → Agent 2（任务 B）
+              → Agent 3（任务 C）
+时间：并行，大幅缩短
+</code></pre>
+<h3 id="anthropic-内部团队的用法">Anthropic 内部团队的用法</h3>
+<p>Boris Cherny（Claude Code 产品负责人）的日常：</p>
+<pre><code class="language-">同时运行：
+- 5 个本地 SubAgent（处理不同模块）
+- 5-10 个云端 Agent（运行测试、构建、部署）
+→ 一个人干一个团队的活
+</code></pre>
+<blockquote><em>"我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</em>
+— Boris Cherny</blockquote>
+<hr>
+<h2 id="基础设施-git-worktrees">基础设施：Git Worktrees</h2>
+<h3 id="什么是-git-worktree">什么是 Git Worktree？</h3>
+<p>Git Worktree 允许你从同一个仓库创建多个工作目录，每个目录可以同时签出不同的分支。</p>
+<pre><code class="language-">传统方式（一个目录）：
+my-project/  ← 只能在 main 分支
+→ 要切换分支就要 stash 或 commit
+
+Worktree 方式（多个目录）：
+my-project/           ← main 分支
+my-project-feature-a/ ← feature-a 分支
+my-project-feature-b/ ← feature-b 分支
+→ 同时在不同分支工作，互不干扰
+</code></pre>
+<h3 id="worktree-与多-agent-的关系">Worktree 与多 Agent 的关系</h3>
+<div class="mermaid">graph LR
+    A[主仓库 main] --> B[Worktree 1]
+    A --> C[Worktree 2]
+    A --> D[Worktree 3]
+    
+    B --> E[Agent 1: 认证模块]
+    C --> F[Agent 2: 数据层]
+    D --> G[Agent 3: 前端 UI]
+    
+    E --> H[合并到 main]
+    F --> H
+    G --> H
+</div>
+<p>每个 Agent 在独立的 worktree 中工作，不会互相冲突，完成后合并分支即可。</p>
+<h3 id="创建-worktree">创建 Worktree</h3>
+<pre><code class="language-bash"># 手动创建
+git worktree add ../my-project-auth feature/authentication
+git worktree add ../my-project-notifications feature/notifications
+
+# Claude Code 自动管理
+claude --worktree
+# Claude 会：
+# 1. 在 .claude/worktrees/ 下创建新的 worktree
+# 2. 基于当前 HEAD 创建新分支
+# 3. 将工作目录切换到新的 worktree
+# 4. 完成后可以选择保留或删除
+</code></pre>
+<h3 id="合并-worktree">合并 Worktree</h3>
+<pre><code class="language-bash">cd my-project
+git merge feature/authentication
+git merge feature/notifications
+
+# 清理已合并的 worktree
+git worktree remove ../my-project-auth
+</code></pre>
+<h3 id="使用-enterworktree-工具">使用 EnterWorktree 工具</h3>
+<p>Claude Code 提供 <code>EnterWorktree</code> 工具来管理 worktree 会话：</p>
+<pre><code class="language-markdown"># 工具参数
+- name: worktree 名称（可选，自动生成）
+
+# 行为
+- 在 git 仓库中创建新 worktree
+- 切换当前会话到新 worktree
+- 完成后使用 ExitWorktree 返回
+
+# 何时使用
+- 用户明确要求&quot;worktree&quot;
+- 需要在不同分支并行工作
+</code></pre>
+<hr>
 <h2 id="协作模式">协作模式</h2>
 <h3 id="1-orchestrator-workers-模式">1. Orchestrator-Workers 模式</h3>
 <p>中央协调器将任务分发给专业工作者：</p>
@@ -367,8 +634,177 @@ Claude 会自动调度多个子代理并行处理任务
 # 错误：不必要的顺序
 先 Agent 1，等完成，再 Agent 2
 </code></pre>
+<hr>
+<h2 id="agent-teams-配置指南">Agent Teams 配置指南</h2>
+<h3 id="什么是-agent-teams">什么是 Agent Teams？</h3>
+<p>Agent Teams 是多个 Claude Code 会话互相通信和协调的工作模式。与单个 SubAgent 的主从关系不同，Agent Teams 是多对多关系，可以互相通信协调。</p>
+<pre><code class="language-">单个 SubAgent：
+主 Agent → SubAgent → 返回结果
+一对一关系
+
+Agent Teams：
+Writer Agent ←→ Reviewer Agent ←→ Tester Agent
+多对多关系，互相通信协调
+</code></pre>
+<h3 id="writer-reviewer-模式">Writer/Reviewer 模式</h3>
+<p>最常用的协作模式，适合功能开发：</p>
+<pre><code class="language-">Writer Agent（写代码）:
+→ 编写功能代码
+→ 发送给 Reviewer
+
+Reviewer Agent（审代码）:
+→ 审查代码质量
+→ 提出修改建议
+→ 发回给 Writer
+
+Writer Agent:
+→ 根据建议修改
+→ 再次发送给 Reviewer
+
+Reviewer Agent:
+→ 确认通过
+→ 发送给 Tester
+
+Tester Agent（测代码）:
+→ 编写测试用例
+→ 运行测试
+→ 如果失败，反馈给 Writer
+
+→ 循环直到所有测试通过
+</code></pre>
+<h3 id="测试驱动模式-tdd">测试驱动模式（TDD）</h3>
+<p>质量优先的开发模式：</p>
+<pre><code class="language-">Tester Agent:
+→ 先写测试用例（测试先行）
+
+Writer Agent:
+→ 实现代码让测试通过
+
+Reviewer Agent:
+→ 审查实现质量
+
+Tester Agent:
+→ 运行所有测试确认通过
+
+→ 代码质量更高，因为有测试保障
+</code></pre>
+<h3 id="并行会话结构示例">并行会话结构示例</h3>
+<h4 id="窗口-1-前端会话">窗口 1：前端会话</h4>
+<pre><code class="language-">我们正在为笔记应用程序构建前端。后端 REST API
+已经在端口 3001 上运行。你在这个会话中的范围只是 client/ 目录。
+
+首先读取 CLAUDE.md 和 PRD.md。然后实现 PRD 中描述的三面板前端布局：
+- 带有笔记列表的侧边栏（从 GET /api/notes 读取）
+- 活动笔记的编辑器面板（带有按键防抖自动保存）
+- 未选择笔记时的空状态
+
+不要触及 server/ 目录中的任何文件。
+
+首先进入计划模式。在写任何东西之前向我展示你的实现计划。
+</code></pre>
+<h4 id="窗口-2-测试套件会话">窗口 2：测试套件会话</h4>
+<pre><code class="language-">我们正在为笔记应用程序 REST API 编写集成测试。你在这个会话中的范围
+是 server/tests/ 目录（如果不存在则创建它）。
+
+读取 CLAUDE.md 和 server/routes/notes.js 文件。编写覆盖以下内容的集成测试：
+1. GET /api/notes — 返回数组，当没有笔记存在时返回空数组
+2. POST /api/notes — 创建笔记，返回带 id 的笔记，拒绝缺少标题的请求
+3. PUT /api/notes/:id — 更新笔记，对不存在的 id 返回 404
+4. DELETE /api/notes/:id — 删除笔记，返回 204，如果未找到返回 404
+
+使用 jest + supertest 技术栈。创建 server/tests/notes.test.js。
+
+不要修改 server/tests/ 之外的任何文件。
+</code></pre>
+<h3 id="tmux-多窗口管理">Tmux 多窗口管理</h3>
+<p>使用 Tmux 在一个终端窗口中管理多个 Claude 会话：</p>
+<pre><code class="language-">Tmux 窗口布局：
+┌─────────────┬─────────────┐
+│  Agent 1    │  Agent 2    │
+│  (Pane 1)   │  (Pane 2)   │
+├─────────────┼─────────────┤
+│  Agent 3    │  Agent 4    │
+│  (Pane 3)   │  (Pane 4)   │
+└─────────────┴─────────────┘
+
+每个 Pane 运行一个独立的 Claude 会话
+Ctrl+B + 方向键 切换 Pane
+</code></pre>
+<pre><code class="language-bash"># 创建 Tmux Session
+tmux new -s work
+
+# 在不同 Pane 中启动 Claude
+Pane 1: cd worktree-1 &amp;&amp; claude
+Pane 2: cd worktree-2 &amp;&amp; claude
+Pane 3: cd worktree-3 &amp;&amp; claude
+
+# 分配任务
+Pane 1: &quot;重构认证模块&quot;
+Pane 2: &quot;添加支付功能&quot;
+Pane 3: &quot;修复搜索 bug&quot;
+</code></pre>
+<hr>
+<h2 id="coordinator-mode-使用方法">Coordinator Mode 使用方法</h2>
+<h3 id="四阶段协调模式">四阶段协调模式</h3>
+<p>Coordinator Mode 是 Claude Code 的高级协调模式，将复杂任务分为四个阶段：</p>
+<div class="mermaid">graph TD
+    A[Research 调研] --> B[Synthesis 综合]
+    B --> C[Implementation 实现]
+    C --> D[Verification 验证]
+    
+    A --> |"理解问题、搜索代码"| A
+    B --> |"设计方案、制定计划"| B
+    C --> |"编写代码、处理意外"| C
+    D --> |"运行测试、确认正确"| D
+</div>
+<h3 id="各阶段详解">各阶段详解</h3>
+<h4 id="第一阶段-research-调研">第一阶段：Research（调研）</h4>
+<p>Claude 自动执行：</p>
+<ul><li>搜索相关代码和文档</li>
+<li>理解现有架构</li>
+<li>识别依赖关系</li>
+<li>分析可能的方案</li>
+
+</ul>
+<strong>输出：调研报告</strong>
+<h4 id="第二阶段-synthesis-综合">第二阶段：Synthesis（综合）</h4>
+<p>Claude 基于调研结果：</p>
+<ul><li>设计实现方案</li>
+<li>评估各方案的优劣</li>
+<li>选择最优方案</li>
+<li>制定详细计划</li>
+
+</ul>
+<strong>输出：实现计划</strong>
+<h4 id="第三阶段-implementation-实现">第三阶段：Implementation（实现）</h4>
+<p>Claude 按计划执行：</p>
+<ul><li>编写/修改代码</li>
+<li>运行中间验证</li>
+<li>处理意外情况</li>
+
+</ul>
+<strong>输出：代码变更</strong>
+<h4 id="第四阶段-verification-验证">第四阶段：Verification（验证）</h4>
+<p>Claude 验证实现：</p>
+<ul><li>运行测试</li>
+<li>检查类型错误</li>
+<li>验证功能正确性</li>
+<li>确认没有副作用</li>
+
+</ul>
+<strong>输出：验证报告</strong>
+<h3 id="coordinator-mode-激活">Coordinator Mode 激活</h3>
+<pre><code class="language-bash"># 在请求中使用四阶段结构
+&quot;使用 Coordinator Mode 处理这个任务：
+1. Research: 先调研现有代码结构
+2. Synthesis: 设计最优实现方案
+3. Implementation: 按计划执行
+4. Verification: 验证结果正确性
+
+每阶段完成后汇报进展。&quot;
+</code></pre>
 <h2 id="实战案例">实战案例</h2>
-<h3 id="案例-完整功能开发">案例：完整功能开发</h3>
+<h3 id="案例-1-完整功能开发">案例 1：完整功能开发</h3>
 <pre><code class="language-bash"># 使用 Orchestrator 模式开发新功能
 &quot;我需要实现用户认证功能。使用多 Agent 协作：
 
@@ -380,7 +816,39 @@ Claude 会自动调度多个子代理并行处理任务
 
 协调这些 Agent 完成任务。&quot;
 </code></pre>
-<h3 id="案例-代码审查流水线">案例：代码审查流水线</h3>
+<h3 id="案例-2-大型功能开发-完整流程">案例 2：大型功能开发（完整流程）</h3>
+<p>目标：为电商平台添加商品推荐功能</p>
+<pre><code class="language-">Step 1: 创建 Worktrees
+$ claude --worktree name=recommendation-engine
+$ claude --worktree name=api-endpoints
+$ claude --worktree name=frontend-ui
+
+Step 2: 启动多个 Agent
+Agent 1（recommendation-engine worktree）:
+&quot;实现基于协同过滤的推荐算法&quot;
+
+Agent 2（api-endpoints worktree）:
+&quot;创建推荐 API 端点，
+包括 GET /api/recommendations 和
+POST /api/recommendations/feedback&quot;
+
+Agent 3（frontend-ui worktree）:
+&quot;创建推荐组件，包括推荐卡片、
+推荐列表和&#039;不感兴趣&#039;按钮&quot;
+
+Step 3: 使用 /loop 持续测试
+/loop 每 15 分钟运行所有测试
+
+Step 4: 等待 Agent 完成
+[去做其他工作...]
+
+Step 5: 审查和合并
+→ 检查每个 Agent 的输出
+→ 运行集成测试
+→ 合并分支
+→ 部署
+</code></pre>
+<h3 id="案例-3-代码审查流水线">案例 3：代码审查流水线</h3>
 <pre><code class="language-bash">&quot;对当前变更执行多 Agent 审查：
 
 并行启动：
@@ -390,11 +858,30 @@ Claude 会自动调度多个子代理并行处理任务
 
 完成后生成综合报告。&quot;
 </code></pre>
-<h3 id="案例-探索与研究">案例：探索与研究</h3>
+<h3 id="案例-4-探索与研究">案例 4：探索与研究</h3>
 <pre><code class="language-bash">&quot;使用 Explore Agent：
 - 探索代码库中的认证相关代码
 - 搜索关键词 &#039;auth&#039; 和 &#039;login&#039;
 - 回答：认证流程是如何实现的？&quot;
+</code></pre>
+<h3 id="案例-5-tdd-模式开发">案例 5：TDD 模式开发</h3>
+<pre><code class="language-bash"># 测试驱动的多 Agent 协作
+&quot;使用 TDD 模式开发支付功能：
+
+1. Tester Agent：先编写支付测试用例
+   - 测试支付成功场景
+   - 测试支付失败场景
+   - 测试退款流程
+
+2. Writer Agent：实现支付逻辑
+   - 接收测试用例
+   - 编写代码让测试通过
+
+3. Reviewer Agent：审查代码质量
+   - 检查安全最佳实践
+   - 检查错误处理
+
+循环：Tester 运行测试 → 反馈给 Writer → Writer 修复 → 直到全部通过&quot;
 </code></pre>
 <h2 id="最佳实践">最佳实践</h2>
 <h3 id="何时使用多-agent">何时使用多 Agent</h3>
@@ -432,19 +919,163 @@ Claude 会自动调度多个子代理并行处理任务
 <td>点对点协作</td>
 <td>general-purpose</td>
 </tr>
+<tr>
+<td>TDD 开发</td>
+<td>Writer/Reviewer</td>
+<td>Tester 先行</td>
+</tr>
 </tbody>
 </table>
 <h3 id="性能优化">性能优化</h3>
 <ul><li><strong>限制并行数量</strong>：建议 ≤ 5 个并行 Agent</li>
-<li><strong>使用 worktree 隔离</strong>：避免冲突</li>
+<li><strong>使用 worktree 隔离</strong>：避免文件冲突</li>
 <li><strong>共享只读上下文</strong>：减少重复读取</li>
 <li><strong>后台运行独立任务</strong>：使用 <code>run_in_background</code></li>
-<h3 id="避免的模式">避免的模式</h3>
+<li><strong>设置合理超时</strong>：防止 Agent 无限运行</li>
+
+</ul>
+<h3 id="异步工作心智转变">异步工作心智转变</h3>
+<p>从同步到异步是使用多 Agent 的关键思维转变：</p>
+<table>
+<thead>
+<tr>
+<th>旧思维</th>
+<th>新思维</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>我要亲手写每一行代码</td>
+<td>我要设计好系统，让 Agent 去实现</td>
+</tr>
+<tr>
+<td>一个任务做完再做下一个</td>
+<td>能并行的就并行</td>
+</tr>
+<tr>
+<td>盯着屏幕等结果</td>
+<td>启动任务后去做其他事</td>
+</tr>
+<tr>
+<td>Claude 是一个助手</td>
+<td>Claude 是一个开发团队</td>
+</tr>
+<tr>
+<td>失败了要立即处理</td>
+<td>让 Agent 自动修复并重试</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-">新的工作方式：
+早上到公司：
+1. 分配任务给多个 Agent
+2. 让它们并行工作
+3. 你做高层次的架构设计、需求分析
+4. 下午检查 Agent 的结果
+5. 合并、审查、部署
+
+你不是在&quot;用工具&quot;，而是在&quot;管理团队&quot;
+</code></pre>
+<hr>
+<h2 id="协作反模式">协作反模式</h2>
+<h3 id="需要避免的模式">需要避免的模式</h3>
 <pre><code class="language-markdown"># 不要做
-- 不要在简单任务上使用多 Agent
-- 不要让 Agent 相互等待不必要
-- 不要在主会话中执行长任务（用后台）
-- 不要硬闯阻塞——停下来问
+
+❌ 让多个 Agent 修改同一个文件
+   → 这会导致合并冲突
+   → 使用 Worktree 隔离
+
+❌ 分配过于复杂的任务
+   → 单个 Agent 的任务应该有明确边界
+   → 复杂任务先分解再分配
+
+❌ 忽略 Agent 的输出
+   → Agent 完成后一定要审查结果
+   → 不要盲目合并代码
+
+❌ 创建过多并行 Agent
+   → 5-10 个通常是合理的范围
+   → 太多会消耗过多资源
+
+❌ 在简单任务上使用多 Agent
+   → 简单任务单 Agent 更高效
+   → 多 Agent 有协调开销
+
+❌ 让 Agent 相互等待不必要
+   → 尽量设计独立任务
+   → 有依赖的用流水线模式
+
+❌ 在主会话中执行长任务
+   → 使用后台运行
+   → 避免 blocking 主会话
+
+❌ 硬闯阻塞
+   → 遇到问题停下来问用户
+   → 不要盲目继续
+</code></pre>
+<h3 id="合理分配任务原则">合理分配任务原则</h3>
+<pre><code class="language-">确保每个 Agent 的任务是独立的
+避免两个 Agent 修改同一个文件
+
+✅ 好的分配：
+Agent 1: client/ 目录（前端）
+Agent 2: server/routes/ 目录（API）
+Agent 3: server/tests/ 目录（测试）
+
+❌ 坏的分配：
+Agent 1: 实现用户登录
+Agent 2: 也实现用户登录（冲突）
+</code></pre>
+<hr>
+<h2 id="高级命令支持">高级命令支持</h2>
+<h3 id="batch-批量处理">/batch 批量处理</h3>
+<code>/batch</code> 让你一次性将多个任务发送给 Claude Code，逐个自动处理：
+<pre><code class="language-">场景：处理 10 个 GitHub Issue
+
+你: /batch
+Claude: 请提供要处理的任务列表
+
+你:
+1. 修复 #101 登录超时问题
+2. 修复 #102 搜索结果排序错误
+3. 实现 #103 导出 CSV 功能
+4. 修复 #104 移动端布局问题
+
+Claude:
+→ 开始批量处理
+→ Task 1/4: 修复登录超时... ✓
+→ Task 2/4: 修复排序错误... ✓
+→ Task 3/4: 实现导出 CSV... ✓
+→ Task 4/4: 修复布局问题... ✓
+
+✅ 全部完成！
+</code></pre>
+<h3 id="loop-长时间运行任务">/loop 长时间运行任务</h3>
+<code>/loop</code> 让 Claude Code 在本地长时间运行一个任务，最多支持 <strong>3 天</strong>无人值守：
+<pre><code class="language-bash"># 持续监控测试
+/loop 每 5 分钟运行测试，失败时自动修复
+
+# 持续优化性能
+/loop 每小时运行性能测试，生成报告
+</code></pre>
+<h3 id="schedule-云端定时任务">/schedule 云端定时任务</h3>
+<code>/schedule</code> 让你在云端设置定时任务：
+<pre><code class="language-bash"># 每天凌晨运行安全扫描
+/schedule 每天 02:00 运行 npm audit 并报告漏洞
+
+# 每周一早上生成周报
+/schedule 每周一 09:00 总结上周的 git commit 统计
+</code></pre>
+<h3 id="非交互模式-p-标志">非交互模式 (-p 标志)</h3>
+<code>-p</code> 标志让 Claude Code 以非交互方式运行，适合脚本化操作：
+<pre><code class="language-bash"># 基本用法
+claude -p &quot;帮我检查这个文件有没有语法错误&quot; &lt; file.js
+
+# 输出到文件
+claude -p &quot;生成 API 文档&quot; &gt; api-docs.md
+
+# CI/CD 集成
+claude -p &quot;检查代码是否符合规范&quot;
 </code></pre>
 <h2 id="立即尝试">立即尝试</h2>
 <h3 id="练习-1-并行代码审查">🎯 练习 1：并行代码审查</h3>
@@ -466,37 +1097,76 @@ Claude 会自动调度多个子代理并行处理任务
 每步等待前一步完成。&quot;
 </code></pre>
 <h3 id="练习-3-探索模式">🎯 练习 3：探索模式</h3>
-<pre><code class="language-bash">&quot;使用 Explore Agent（thoroughness: medium）：
+<pre><code class="language-bash">&quot;使用 Explore Agent：
 - 查找所有 API 端点
 - 搜索错误处理模式
 - 回答：API 层的架构是什么？&quot;
 </code></pre>
+<h3 id="练习-4-worktree-并行开发">🎯 练习 4：Worktree 并行开发</h3>
+<pre><code class="language-bash"># 步骤 1：请求 Claude 创建 worktree
+&quot;使用 EnterWorktree 创建一个名为 &#039;feature-auth&#039; 的 worktree&quot;
+
+# 步骤 2：在新 worktree 中开发
+&quot;实现用户认证功能，使用 JWT&quot;
+
+# 步骤 3：完成后返回
+&quot;使用 ExitWorktree 返回主仓库&quot;
+</code></pre>
+<h3 id="练习-5-coordinator-mode">🎯 练习 5：Coordinator Mode</h3>
+<pre><code class="language-bash">&quot;使用 Coordinator Mode 处理重构任务：
+1. Research: 分析当前代码结构
+2. Synthesis: 设计重构方案
+3. Implementation: 执行重构
+4. Verification: 运行测试验证
+
+每阶段完成后汇报进展。&quot;
+</code></pre>
+<h3 id="练习-6-writer-reviewer-模式">🎯 练习 6：Writer/Reviewer 模式</h3>
+<pre><code class="language-bash"># 在两个终端窗口中分别运行 Claude
+
+# 窗口 1（Writer）：
+&quot;你是 Writer Agent。实现用户搜索功能，
+完成后通知 Reviewer（窗口 2）审查。&quot;
+
+# 窗口 2（Reviewer）：
+&quot;你是 Reviewer Agent。等待 Writer 完成代码，
+审查代码质量并提出修改建议。&quot;
+</code></pre>
 <h2 id="相关资源">相关资源</h2>
-<li><a href="/content/04-subagents.html">Subagents 参考</a></li>
+<ul><li><a href="/content/04-subagents.html">Subagents 参考</a></li>
 <li><a href="/content/12-background-tasks.html">后台任务</a></li>
 <li><a href="/content/10-cli.html">CLI 命令</a></li>
-<li><a href="https://docs.anthropic.com/en/docs/claude-code/agents">官方文档 - Agents</a></li></ul>
-        </div>
+<li><a href="https://git-scm.com/docs/git-worktree">Git Worktree 指南</a></li>
+<li><a href="https://github.com/tmux/tmux/wiki">Tmux 使用教程</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code/agents">官方文档 - Agents</a></li>
 
-        
+</ul>
+<hr>
+<blockquote><strong>要点回顾</strong>：多 Agent 协作是 Claude Code 的高级能力，通过 Git Worktrees 实现安全并行开发，使用 Agent Teams 和 Coordinator Mode 进行复杂任务的协调。关键是合理分配任务、避免冲突、定期审查 Agent 输出。</blockquote>
+            </div>
+
+            
     <div class="nav-buttons">
-      <a href="/content/10-cli.html">← CLI</a>
+      <a href="/content/10-plugins.html">← Plugins</a>
       <a href="/content/12-background-tasks.html">后台任务 →</a>
     </div>
   
-      </article>
+          </article>
+        </div>
+      </div>
     
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
-      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
-        本教程由社区维护，与 Anthropic 官方无关联
-      </p>
+      <p>© 2026 Claude Code 中文教程</p>
     </div>
   </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
@@ -505,25 +1175,128 @@ Claude 会自动调度多个子代理并行处理任务
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
   <script>
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
     });
 
-    // 目录折叠功能
-    document.querySelectorAll('.toc h3').forEach(h3 => {
-      h3.addEventListener('click', () => {
-        h3.parentElement.classList.toggle('collapsed');
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
       });
     });
 
-    // 如果目录超过 15 项，默认折叠
-    document.querySelectorAll('.toc').forEach(toc => {
-      if (toc.querySelectorAll('li').length > 15) {
-        toc.classList.add('collapsed');
-      }
-    });
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>

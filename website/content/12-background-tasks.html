@@ -64,9 +64,133 @@
     /* 主内容 */
     main { padding: 2rem 0; min-height: calc(100vh - 200px); }
 
-    article {
-      max-width: 900px;
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
       margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
     }
 
     /* 元信息 */
@@ -91,49 +215,6 @@
     .badge-beginner { background: #dcfce7; color: #166534; }
     .badge-intermediate { background: #fef3c7; color: #92400e; }
     .badge-advanced { background: #fee2e2; color: #991b1b; }
-
-    /* 目录 */
-    .toc {
-      background: #f9fafb;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      position: relative;
-    }
-
-    .toc h3 {
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .toc h3::after {
-      content: "▼";
-      font-size: 0.75rem;
-      transition: transform 0.2s;
-    }
-
-    .toc.collapsed h3::after {
-      transform: rotate(-90deg);
-    }
-
-    .toc.collapsed ul {
-      display: none;
-    }
-
-    .toc ul {
-      list-style: none;
-      padding-left: 1rem;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .toc a { color: var(--primary); }
-    .toc li { margin: 0.25rem 0; }
 
     /* 内容区 */
     .content h1 { font-size: 2rem; margin-bottom: 1rem; }
@@ -176,6 +257,11 @@
     .breadcrumb {
       font-size: 0.875rem;
       margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
     }
 
     .breadcrumb a { color: var(--primary); }
@@ -202,16 +288,104 @@
     }
 
     .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
   </style>
 </head>
 <body>
   <nav>
     <div class="container">
-      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/modules.html">模块</a></li>
-        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
       </ul>
     </div>
   </nav>
@@ -219,50 +393,97 @@
   <main>
     <div class="container">
       
-      <article>
-        <nav class="breadcrumb">
-          <a href="/index.html">首页</a> / <a href="/content/01-slash-commands.html">模块</a> / 后台任务
-        </nav>
-
-        <div class="meta">
-          <span class="badge badge-intermediate">
-            🟡 中级
-          </span>
-          <span class="badge">✅ Claude Code v2.1.92</span>
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#概述">概述</a></li><li class="toc-item toc-h3"><a href="#前台-vs-后台对比">前台 vs 后台对比</a></li><li class="toc-item toc-h2"><a href="#后台任务机制">后台任务机制</a></li><li class="toc-item toc-h3"><a href="#核心概念">核心概念</a></li><li class="toc-item toc-h3"><a href="#任务类型对比">任务类型对比</a></li><li class="toc-item toc-h2"><a href="#使用方式">使用方式</a></li><li class="toc-item toc-h3"><a href="#bash-后台任务">Bash 后台任务</a></li><li class="toc-item toc-h3"><a href="#agent-后台任务">Agent 后台任务</a></li><li class="toc-item toc-h2"><a href="#任务管理">任务管理</a></li><li class="toc-item toc-h3"><a href="#查看任务列表">查看任务列表</a></li><li class="toc-item toc-h3"><a href="#获取任务输出">获取任务输出</a></li><li class="toc-item toc-h3"><a href="#停止任务">停止任务</a></li><li class="toc-item toc-h2"><a href="#实战案例">实战案例</a></li><li class="toc-item toc-h3"><a href="#案例-长时间构建">案例：长时间构建</a></li><li class="toc-item toc-h3"><a href="#案例-并行探索">案例：并行探索</a></li><li class="toc-item toc-h3"><a href="#案例-测试执行">案例：测试执行</a></li><li class="toc-item toc-h3"><a href="#案例-批量并行操作">案例：批量并行操作</a></li><li class="toc-item toc-h3"><a href="#案例-长时间模型训练">案例：长时间模型训练</a></li><li class="toc-item toc-h2"><a href="#loop-持续循环任务">`/loop` 持续循环任务</a></li><li class="toc-item toc-h3"><a href="#什么是-loop">什么是 `/loop`？</a></li><li class="toc-item toc-h3"><a href="#loop-使用示例">`/loop` 使用示例</a></li><li class="toc-item toc-h3"><a href="#loop-最佳实践">`/loop` 最佳实践</a></li><li class="toc-item toc-h2"><a href="#schedule-云端定时任务">`/schedule` 云端定时任务</a></li><li class="toc-item toc-h3"><a href="#什么是-schedule">什么是 `/schedule`？</a></li><li class="toc-item toc-h3"><a href="#schedule-使用示例">`/schedule` 使用示例</a></li><li class="toc-item toc-h3"><a href="#cron-表达式格式">Cron 表达式格式</a></li><li class="toc-item toc-h3"><a href="#schedule-配置选项">`/schedule` 配置选项</a></li><li class="toc-item toc-h2"><a href="#任务日志管理">任务日志管理</a></li><li class="toc-item toc-h3"><a href="#日志位置">日志位置</a></li><li class="toc-item toc-h3"><a href="#查看日志">查看日志</a></li><li class="toc-item toc-h3"><a href="#日志最佳实践">日志最佳实践</a></li><li class="toc-item toc-h2"><a href="#任务监控与调试">任务监控与调试</a></li><li class="toc-item toc-h3"><a href="#实时状态监控">实时状态监控</a></li><li class="toc-item toc-h3"><a href="#常见问题排查">常见问题排查</a></li><li class="toc-item toc-h3"><a href="#调试技巧">调试技巧</a></li><li class="toc-item toc-h2"><a href="#任务状态">任务状态</a></li><li class="toc-item toc-h3"><a href="#状态流转">状态流转</a></li><li class="toc-item toc-h3"><a href="#状态查询">状态查询</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#do-应该做的">✅ DO - 应该做的</a></li><li class="toc-item toc-h3"><a href="#don-t-避免做的">❌ DON'T - 避免做的</a></li><li class="toc-item toc-h3"><a href="#场景推荐">场景推荐</a></li><li class="toc-item toc-h2"><a href="#通知机制">通知机制</a></li><li class="toc-item toc-h3"><a href="#任务完成通知">任务完成通知</a></li><li class="toc-item toc-h3"><a href="#处理通知">处理通知</a></li><li class="toc-item toc-h2"><a href="#立即尝试">立即尝试</a></li><li class="toc-item toc-h3"><a href="#练习-1-后台构建">🎯 练习 1：后台构建</a></li><li class="toc-item toc-h3"><a href="#练习-2-并行探索">🎯 练习 2：并行探索</a></li><li class="toc-item toc-h3"><a href="#练习-3-任务监控">🎯 练习 3：任务监控</a></li><li class="toc-item toc-h3"><a href="#练习-4-循环监控">🎯 练习 4：循环监控</a></li><li class="toc-item toc-h3"><a href="#练习-5-定时任务">🎯 练习 5：定时任务</a></li><li class="toc-item toc-h3"><a href="#练习-6-批量并行">🎯 练习 6：批量并行</a></li><li class="toc-item toc-h2"><a href="#相关资源">相关资源</a></li><li class="toc-item toc-h2"><a href="#下一步">下一步</a></li></ul>
         </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / 后台任务
+            </nav>
 
-        <div class="toc"><h3>目录</h3><ul><li ><a href="#概述">概述</a></li><li ><a href="#后台任务机制">后台任务机制</a></li><li ><a href="#核心概念">核心概念</a></li><li ><a href="#任务类型">任务类型</a></li><li ><a href="#使用方式">使用方式</a></li><li ><a href="#bash-后台任务">Bash 后台任务</a></li><li ><a href="#agent-后台任务">Agent 后台任务</a></li><li ><a href="#任务管理">任务管理</a></li><li ><a href="#查看任务列表">查看任务列表</a></li><li ><a href="#获取任务输出">获取任务输出</a></li><li ><a href="#停止任务">停止任务</a></li><li ><a href="#实战案例">实战案例</a></li><li ><a href="#案例-长时间构建">案例：长时间构建</a></li><li ><a href="#案例-并行探索">案例：并行探索</a></li><li ><a href="#案例-测试执行">案例：测试执行</a></li><li ><a href="#任务状态">任务状态</a></li><li ><a href="#状态流转">状态流转</a></li><li ><a href="#状态查询">状态查询</a></li><li ><a href="#最佳实践">最佳实践</a></li><li ><a href="#避免的模式">避免的模式</a></li><li ><a href="#推荐模式">推荐模式</a></li><li ><a href="#通知机制">通知机制</a></li><li ><a href="#任务完成通知">任务完成通知</a></li><li ><a href="#处理通知">处理通知</a></li><li ><a href="#立即尝试">立即尝试</a></li><li ><a href="#练习-1-后台构建">🎯 练习 1：后台构建</a></li><li ><a href="#练习-2-并行探索">🎯 练习 2：并行探索</a></li><li ><a href="#练习-3-任务监控">🎯 练习 3：任务监控</a></li><li ><a href="#相关资源">相关资源</a></li></ul></div>
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
 
-        <div class="content">
-          <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟</blockquote>
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 45 分钟</blockquote>
 <h1>后台任务</h1>
 <h2 id="概述">概述</h2>
-<p>Claude Code 支持后台任务执行，让你可以在等待长时间运行任务的同时继续其他工作。</p>
+<p>后台任务让你能够启动长时间运行的操作，然后在完成时检查结果，而不阻塞你的工作流。</p>
+<h3 id="前台-vs-后台对比">前台 vs 后台对比</h3>
+<pre><code class="language-">前台任务（默认）：
+你: 运行测试
+→ [等待测试完成...]
+→ [5分钟后]
+✓ 测试完成
+
+后台任务：
+你: 运行测试（后台）
+→ [立即返回]
+Task started: task_001
+[你可以继续工作...]
+
+[稍后]
+你: 检查任务状态
+✓ task_001 完成！
+</code></pre>
 <h2 id="后台任务机制">后台任务机制</h2>
 <h3 id="核心概念">核心概念</h3>
-<p>后台任务允许：
+<p>后台任务允许：</p>
 <ul><li><strong>非阻塞执行</strong>：任务在后台运行，你可以继续对话</li>
 <li><strong>自动通知</strong>：任务完成后自动通知你</li>
-<li><strong>结果获取</strong>：随时查看任务输出和状态</li></p>
-<h3 id="任务类型">任务类型</h3>
+<li><strong>结果获取</strong>：随时查看任务输出和状态</li>
+
+</ul>
+<h3 id="任务类型对比">任务类型对比</h3>
 <table>
 <thead>
 <tr>
 <th>类型</th>
-<th>工具</th>
-<th>用途</th>
+<th>运行位置</th>
+<th>最长时间</th>
+<th>适用场景</th>
+<th>命令</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Shell 任务</td>
-<td>Bash + run_in_background</td>
-<td>长时间命令</td>
+<td>Background Shell</td>
+<td>本地</td>
+<td>当前会话</td>
+<td>等待长时间命令</td>
+<td>Bash + <code>run_in_background</code></td>
 </tr>
 <tr>
-<td>Agent 任务</td>
-<td>Agent + run_in_background</td>
+<td>Agent 后台</td>
+<td>本地</td>
+<td>当前会话</td>
 <td>独立研究/实现</td>
+<td>Agent + <code>run_in_background</code></td>
+</tr>
+<tr>
+<td><code>/loop</code></td>
+<td>本地</td>
+<td>3 天</td>
+<td>持续监控和修复</td>
+<td><code>/loop [间隔] [任务]</code></td>
+</tr>
+<tr>
+<td><code>/schedule</code></td>
+<td>云端</td>
+<td>不限</td>
+<td>定时执行</td>
+<td><code>/schedule [时间] [任务]</code></td>
 </tr>
 </tbody>
 </table>
@@ -275,9 +496,11 @@
 }
 </code></pre>
 <strong>特点：</strong>
-<li>命令在后台执行</li>
+<ul><li>命令在后台执行</li>
 <li>会话可以继续其他对话</li>
 <li>完成后收到 <code>&lt;task-notification&gt;</code> 通知</li>
+
+</ul>
 <h3 id="agent-后台任务">Agent 后台任务</h3>
 <pre><code class="language-markdown"># 使用 Agent 工具的后台模式
 {
@@ -288,9 +511,11 @@
 }
 </code></pre>
 <strong>特点：</strong>
-<li>子代理独立运行</li>
+<ul><li>子代理独立运行</li>
 <li>不阻塞主会话</li>
 <li>完成后自动通知</li>
+
+</ul>
 <h2 id="任务管理">任务管理</h2>
 <h3 id="查看任务列表">查看任务列表</h3>
 <p>使用 <code>/tasks</code> 命令查看所有后台任务：</p>
@@ -363,6 +588,257 @@ Background Shells:
   &quot;timeout&quot;: 300000  // 5 分钟超时
 }
 </code></pre>
+<h3 id="案例-批量并行操作">案例：批量并行操作</h3>
+<pre><code class="language-bash"># 安装所有微服务的依赖
+&quot;安装所有微服务的依赖&quot;
+
+Claude:
+发现 5 个微服务
+
+→ cd service-user &amp;&amp; npm install &amp; [task_001]
+→ cd service-order &amp;&amp; npm install &amp; [task_002]
+→ cd service-payment &amp;&amp; npm install &amp; [task_003]
+→ cd service-notif &amp;&amp; npm install &amp; [task_004]
+→ cd service-frontend &amp;&amp; npm install &amp; [task_005]
+
+✓ 已并行启动 5 个安装任务
+
+[10分钟后...]
+
+你: 检查安装状态
+
+Claude:
+task_001: ✅ 完成
+task_002: ✅ 完成
+task_003: ✅ 完成
+task_004: 🔄 85%
+task_005: ✅ 完成
+</code></pre>
+<h3 id="案例-长时间模型训练">案例：长时间模型训练</h3>
+<pre><code class="language-bash"># 启动模型训练，需要几小时
+&quot;启动模型训练，需要几小时&quot;
+
+Claude:
+→ python train.py &amp; [task_ml_001]
+
+✓ 训练已在后台启动
+日志文件: logs/training.log
+
+[训练在后台运行...]
+
+[2小时后...]
+
+你: 训练完成了吗？
+
+Claude:
+task_ml_001: ✅ 完成
+运行时间: 2h 15m 30s
+
+查看结果：
+→ 显示训练日志
+→ 评估模型性能
+</code></pre>
+<h2 id="ic8ic-持续循环任务"><code>/loop</code> 持续循环任务</h2>
+<h3 id="什么是-ic9ic">什么是 <code>/loop</code>？</h3>
+<code>/loop</code> 让 Claude Code 在本地长时间运行一个任务，最多支持 <strong>3 天</strong>无人值守。
+<pre><code class="language-bash"># 持续监控构建状态，失败时自动修复
+/loop 每 10 分钟检查构建状态，失败时自动修复
+
+Claude:
+→ 设置循环任务
+→ 每 10 分钟自动执行
+→ 检查构建 → 失败则分析修复 → 重新构建
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+循环任务已启动
+任务：检查构建状态
+间隔：10 分钟
+最长运行：3 天
+状态：运行中
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</code></pre>
+<h3 id="ic11ic-使用示例"><code>/loop</code> 使用示例</h3>
+<pre><code class="language-bash"># 持续监控测试
+/loop 每 5 分钟运行测试，失败时自动修复
+
+# 持续监控部署
+/loop 每分钟检查部署是否完成
+
+# 持续检查错误日志
+/loop 每 15 分钟检查错误日志，发现新错误时报告
+
+# 使用 loop skill 控制循环
+/loop-status   # 查看当前循环状态
+/loop-start    # 启动新循环
+/loop-stop     # 停止循环
+</code></pre>
+<h3 id="ic12ic-最佳实践"><code>/loop</code> 最佳实践</h3>
+<pre><code class="language-markdown"># 适用场景
+- CI/CD 监控与自动修复
+- 长时间数据同步监控
+- 持续性代码质量检查
+- 等待外部服务响应
+
+# 注意事项
+- 设置合理的检查间隔（建议 &gt;= 5 分钟）
+- 循环任务会占用会话资源
+- 重要循环应记录日志便于追溯
+</code></pre>
+<h2 id="ic13ic-云端定时任务"><code>/schedule</code> 云端定时任务</h2>
+<h3 id="什么是-ic14ic">什么是 <code>/schedule</code>？</h3>
+<code>/schedule</code> 通过 CronCreate 工具在云端设置定时任务，Claude 会在指定时间自动执行。
+<pre><code class="language-bash"># 每天早上 9 点检查依赖更新
+/schedule 每天早上 9 点检查依赖更新
+
+Claude:
+→ 创建定时任务
+→ 每天 09:00 在云端自动执行
+→ 检查 npm audit
+→ 如果有更新，生成报告
+</code></pre>
+<h3 id="ic16ic-使用示例"><code>/schedule</code> 使用示例</h3>
+<pre><code class="language-bash"># 每天凌晨运行安全扫描
+/schedule 每天 02:00 运行 npm audit 并报告漏洞
+
+# 每周一早上生成周报
+/schedule 每周一 09:00 总结上周的 git commit 统计
+
+# 工作日每天检查测试覆盖率
+/schedule 工作日 18:00 运行测试并检查覆盖率
+</code></pre>
+<h3 id="cron-表达式格式">Cron 表达式格式</h3>
+<p>使用标准 5 字段 cron 表达式（本地时区）：</p>
+<pre><code class="language-">分钟 小时 日 月 星期
+
+示例：
+0 9 * * *      # 每天 09:00
+0 2 * * *      # 每天 02:00
+0 9 * * 1-5    # 工作日 09:00
+0 9 * * 1      # 每周一 09:00
+*/5 * * * *    # 每 5 分钟
+0 * * * *      # 每小时整点
+</code></pre>
+<h3 id="ic17ic-配置选项"><code>/schedule</code> 配置选项</h3>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cron</code></td>
+<td>Cron 表达式（本地时区）</td>
+</tr>
+<tr>
+<td><code>prompt</code></td>
+<td>执行时运行的提示词</td>
+</tr>
+<tr>
+<td><code>recurring</code></td>
+<td><code>true</code> = 定期执行，<code>false</code> = 一次性</td>
+</tr>
+<tr>
+<td><code>durable</code></td>
+<td><code>true</code> = 持久化到文件，<code>false</code> = 仅内存</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-markdown"># 持久化定时任务（会话重启后继续）
+{
+  &quot;cron&quot;: &quot;0 9 * * 1-5&quot;,
+  &quot;prompt&quot;: &quot;检查测试覆盖率&quot;,
+  &quot;recurring&quot;: true,
+  &quot;durable&quot;: true
+}
+</code></pre>
+<h2 id="任务日志管理">任务日志管理</h2>
+<h3 id="日志位置">日志位置</h3>
+<pre><code class="language-">~/.claude/tasks/
+├── task_001.log
+├── task_002.log
+├── task_003.log
+└── scheduled/
+    └── daily_audit.log
+</code></pre>
+<h3 id="查看日志">查看日志</h3>
+<pre><code class="language-bash"># 查看特定任务的日志
+&quot;显示 task_001 的日志&quot;
+
+Claude:
+→ tail -n 50 ~/.claude/tasks/task_001.log
+
+[2024-03-15 14:25:00] Task started
+[2024-03-15 14:25:01] Running: npm test
+[2024-03-15 14:30:15] Test complete
+[2024-03-15 14:30:15] All tests passed
+</code></pre>
+<h3 id="日志最佳实践">日志最佳实践</h3>
+<pre><code class="language-markdown"># 重要任务应保存日志
+- 长时间训练任务
+- 数据迁移任务
+- 批量处理任务
+
+# 日志管理建议
+- 定期清理旧日志（超过 7 天）
+- 重要日志复制到项目目录
+- 使用时间戳便于追溯
+</code></pre>
+<h2 id="任务监控与调试">任务监控与调试</h2>
+<h3 id="实时状态监控">实时状态监控</h3>
+<pre><code class="language-bash"># 查看所有任务状态
+/tasks
+
+# 查看特定任务详情
+&quot;查看 task_001 的详细状态&quot;
+
+# 监控长时间任务
+&quot;每 5 分钟汇报 task_ml_001 的进度&quot;
+</code></pre>
+<h3 id="常见问题排查">常见问题排查</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务卡住不动</td>
+<td>检查日志，可能需要停止并重试</td>
+</tr>
+<tr>
+<td>任务失败</td>
+<td>查看错误日志，分析失败原因</td>
+</tr>
+<tr>
+<td>资源耗尽</td>
+<td>限制并行任务数量</td>
+</tr>
+<tr>
+<td>超时终止</td>
+<td>增加 timeout 参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="调试技巧">调试技巧</h3>
+<pre><code class="language-markdown"># 1. 查看任务输出
+{
+  &quot;task_id&quot;: &quot;...&quot;,
+  &quot;block&quot;: false  // 快速查看状态
+}
+
+# 2. 检查日志文件
+→ Read ~/.claude/tasks/task_xxx.log
+
+# 3. 测试命令单独运行
+先前台运行验证命令正确性，再后台化
+
+# 4. 分阶段执行
+复杂任务拆分为多个小任务
+</code></pre>
 <h2 id="任务状态">任务状态</h2>
 <h3 id="状态流转">状态流转</h3>
 <div class="mermaid">graph LR
@@ -385,51 +861,121 @@ Background Shells:
 }
 </code></pre>
 <h2 id="最佳实践">最佳实践</h2>
-<p>###何时使用后台</p>
+<h3 id="do-应该做的">✅ DO - 应该做的</h3>
+<strong>1. 长时间任务使用后台模式</strong>
+<pre><code class="language-bash">构建大型项目 → 后台
+运行完整测试 → 后台
+数据库迁移 → 后台
+模型训练 → 后台
+</code></pre>
+<strong>2. 监控任务状态</strong>
+<pre><code class="language-bash">定期检查后台任务
+收到通知后及时处理结果
+保存重要任务日志
+</code></pre>
+<strong>3. 使用并行处理</strong>
+<pre><code class="language-bash">独立任务可以并行运行
+批量操作使用并行策略
+限制并行数量避免资源耗尽
+</code></pre>
+<strong>4. 设置合理的超时</strong>
+<pre><code class="language-markdown"># 根据任务类型设置 timeout
+{
+  &quot;command&quot;: &quot;npm test&quot;,
+  &quot;timeout&quot;: 120000  // 2 分钟
+}
+
+{
+  &quot;command&quot;: &quot;python train.py&quot;,
+  &quot;timeout&quot;: 3600000  // 1 小时
+}
+</code></pre>
+<strong>5. 持续监控使用 <code>/loop</code></strong>
+<pre><code class="language-bash"># CI/CD 自动修复
+/loop 每 10 分钟检查构建状态，失败时自动修复
+
+# 部署监控
+/loop 每分钟检查部署是否完成
+</code></pre>
+<h3 id="don-t-避免做的">❌ DON'T - 避免做的</h3>
+<strong>1. 启动太多并行任务</strong>
+<pre><code class="language-bash"># 错误：同时启动 20 个任务
+# 正确：限制在 5 个以内，分批次执行
+</code></pre>
+<strong>2. 忘记检查结果</strong>
+<pre><code class="language-bash"># 错误：启动后台任务后忽略通知
+# 正确：收到通知后立即查看输出
+</code></pre>
+<strong>3. 不监控失败的任务</strong>
+<pre><code class="language-bash"># 错误：任务失败后不处理
+# 正确：查看日志，分析原因，必要时重试
+</code></pre>
+<strong>4. 轮询后台任务状态</strong>
+<pre><code class="language-markdown"># 错误：手动轮询
+while running: check status
+
+# 正确：等待自动通知
+启动任务 → 继续其他工作 → 收到通知
+</code></pre>
+<strong>5. 在后台运行交互命令</strong>
+<pre><code class="language-bash"># 错误：后台运行需要输入的命令
+npm init -- 后台运行
+
+# 正确：前台运行交互命令
+npm init
+</code></pre>
+<h3 id="场景推荐">场景推荐</h3>
 <table>
 <thead>
 <tr>
 <th>场景</th>
 <th>推荐</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>长时间构建/测试</td>
 <td>✅ 后台</td>
+<td>超过 1 分钟的任务</td>
 </tr>
 <tr>
 <td>代码搜索/探索</td>
 <td>✅ 后台</td>
+<td>Agent 任务可并行</td>
 </tr>
 <tr>
 <td>独立研究任务</td>
 <td>✅ 后台</td>
+<td>不依赖其他工作</td>
+</tr>
+<tr>
+<td>持续监控修复</td>
+<td>✅ <code>/loop</code></td>
+<td>长时间循环任务</td>
+</tr>
+<tr>
+<td>定时执行</td>
+<td>✅ <code>/schedule</code></td>
+<td>云端定时任务</td>
 </tr>
 <tr>
 <td>需要交互的任务</td>
 <td>❌ 前台</td>
+<td>需要输入的命令</td>
 </tr>
 <tr>
 <td>快速简单命令</td>
 <td>❌ 前台</td>
+<td>低于 10 秒的任务</td>
+</tr>
+<tr>
+<td>关键部署操作</td>
+<td>❌ 前台</td>
+<td>需实时观察输出</td>
 </tr>
 </tbody>
 </table>
-<h3 id="避免的模式">避免的模式</h3>
-<pre><code class="language-markdown"># 不要做
-- 不要 poll（轮询）后台任务 —— 会自动通知
-- 不要 sleep 等待任务
-- 不要在后台运行交互命令
-- 不要忘记检查任务结果
-</code></pre>
-<h3 id="推荐模式">推荐模式</h3>
-<pre><code class="language-markdown"># 好习惯
-- 启动后台任务后立即继续其他工作
-- 收到通知后再处理结果
-- 用 block=false 检查状态
-- 设置合理的 timeout
-</code></pre>
 <h2 id="通知机制">通知机制</h2>
 <h3 id="任务完成通知">任务完成通知</h3>
 <pre><code class="language-xml">&lt;task-notification&gt;
@@ -438,9 +984,11 @@ Background Shells:
 &lt;/task-notification&gt;
 </code></pre>
 <h3 id="处理通知">处理通知</h3>
-<p>收到通知后：
-<li>使用 Read 工具读取输出文件</li>
-<li>或使用 TaskOutput 获取完整结果</li></p>
+<p>收到通知后：</p>
+<ul><li>使用 Read 工具读取输出文件</li>
+<li>或使用 TaskOutput 获取完整结果</li>
+
+</ul>
 <pre><code class="language-markdown"># 读取输出文件
 {
   &quot;file_path&quot;: &quot;/tmp/output.txt&quot;
@@ -468,31 +1016,66 @@ Background Shells:
 - 继续其他对话
 - 收到通知后检查结果&quot;
 </code></pre>
-<h2 id="相关资源">相关资源</h2>
-<li><a href="/content/11-multi-agent.html">多 Agent 协作</a></li>
-<li><a href="/content/10-cli.html">CLI 命令</a></li>
-<li><a href="/content/04-subagents.html">Subagents 参考</a></li></ul>
-        </div>
+<h3 id="练习-4-循环监控">🎯 练习 4：循环监控</h3>
+<pre><code class="language-bash"># 设置一个持续监控任务
+/loop 每 5 分钟检查是否有新的错误日志
 
-        
+# 查看循环状态
+/loop-status
+
+# 停止循环
+/loop-stop
+</code></pre>
+<h3 id="练习-5-定时任务">🎯 练习 5：定时任务</h3>
+<pre><code class="language-bash"># 创建一个定时任务
+/schedule 每天 09:00 检查 git 状态
+
+# 查看定时任务列表
+# 使用 CronList 工具查看已设置的定时任务
+</code></pre>
+<h3 id="练习-6-批量并行">🎯 练习 6：批量并行</h3>
+<pre><code class="language-bash"># 模拟批量操作
+&quot;假设有 3 个子项目，并行安装它们的依赖：
+- project-a
+- project-b
+- project-c
+
+完成后汇总安装结果。&quot;
+</code></pre>
+<h2 id="相关资源">相关资源</h2>
+<ul><li><a href="/content/11-multi-agent.html">多 Agent 协作</a> - 并行 Agent 执行策略</li>
+<li><a href="/content/10-cli.html">CLI 命令</a> - <code>/tasks</code> 命令详解</li>
+<li><a href="/content/04-subagents.html">Subagents 参考</a> - Agent 后台模式</li>
+<li><a href="/content/08-checkpoints.html">Checkpoints</a> - 任务状态快照</li>
+<li><a href="https://docs.anthropic.com/claude-code/cron">CronCreate 工具文档</a></li>
+
+</ul>
+<h2 id="下一步">下一步</h2>
+<p>掌握后台任务后，继续学习 <a href="/content/08-checkpoints.html">Checkpoints</a> 了解会话快照与回滚。</p>
+            </div>
+
+            
     <div class="nav-buttons">
       <a href="/content/11-multi-agent.html">← 多 Agent 协作</a>
       <a href="/content/13-channels.html">Channels →</a>
     </div>
   
-      </article>
+          </article>
+        </div>
+      </div>
     
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
-      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
-        本教程由社区维护，与 Anthropic 官方无关联
-      </p>
+      <p>© 2026 Claude Code 中文教程</p>
     </div>
   </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
@@ -501,25 +1084,128 @@ Background Shells:
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
   <script>
     // 高亮所有代码块
     document.querySelectorAll('pre code').forEach(block => {
       Prism.highlightElement(block);
     });
 
-    // 目录折叠功能
-    document.querySelectorAll('.toc h3').forEach(h3 => {
-      h3.addEventListener('click', () => {
-        h3.parentElement.classList.toggle('collapsed');
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
       });
     });
 
-    // 如果目录超过 15 项，默认折叠
-    document.querySelectorAll('.toc').forEach(toc => {
-      if (toc.querySelectorAll('li').length > 15) {
-        toc.classList.add('collapsed');
-      }
-    });
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subagents - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Subagents 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#概述">概述</a></li><li class="toc-item toc-h2"><a href="#核心优势">核心优势</a></li><li class="toc-item toc-h2"><a href="#文件位置">文件位置</a></li><li class="toc-item toc-h2"><a href="#配置">配置</a></li><li class="toc-item toc-h3"><a href="#文件格式">文件格式</a></li><li class="toc-item toc-h3"><a href="#配置字段">配置字段</a></li><li class="toc-item toc-h3"><a href="#工具配置选项">工具配置选项</a></li><li class="toc-item toc-h3"><a href="#cli-配置">CLI 配置</a></li><li class="toc-item toc-h2"><a href="#内置-subagents">内置 Subagents</a></li><li class="toc-item toc-h3"><a href="#general-purpose-subagent">General-Purpose Subagent</a></li><li class="toc-item toc-h3"><a href="#plan-subagent">Plan Subagent</a></li><li class="toc-item toc-h3"><a href="#explore-subagent">Explore Subagent</a></li><li class="toc-item toc-h3"><a href="#bash-subagent">Bash Subagent</a></li><li class="toc-item toc-h3"><a href="#statusline-setup-subagent">Statusline Setup Subagent</a></li><li class="toc-item toc-h3"><a href="#claude-code-guide-subagent">Claude Code Guide Subagent</a></li><li class="toc-item toc-h2"><a href="#管理-subagents">管理 Subagents</a></li><li class="toc-item toc-h3"><a href="#使用-agents-命令-推荐">使用 `/agents` 命令（推荐）</a></li><li class="toc-item toc-h3"><a href="#直接文件管理">直接文件管理</a></li><li class="toc-item toc-h2"><a href="#使用-subagents">使用 Subagents</a></li><li class="toc-item toc-h3"><a href="#自动委托">自动委托</a></li><li class="toc-item toc-h3"><a href="#显式调用">显式调用</a></li><li class="toc-item toc-h3"><a href="#提及调用">@-提及调用</a></li><li class="toc-item toc-h3"><a href="#会话级-agent">会话级 Agent</a></li><li class="toc-item toc-h3"><a href="#列出可用-agents">列出可用 Agents</a></li><li class="toc-item toc-h2"><a href="#可恢复-agents">可恢复 Agents</a></li><li class="toc-item toc-h2"><a href="#链式-subagents">链式 Subagents</a></li><li class="toc-item toc-h2"><a href="#subagents-持久化内存">Subagents 持久化内存</a></li><li class="toc-item toc-h3"><a href="#内存作用域">内存作用域</a></li><li class="toc-item toc-h3"><a href="#工作原理">工作原理</a></li><li class="toc-item toc-h3"><a href="#示例配置">示例配置</a></li><li class="toc-item toc-h2"><a href="#后台-subagents">后台 Subagents</a></li><li class="toc-item toc-h3"><a href="#配置">配置</a></li><li class="toc-item toc-h3"><a href="#键盘快捷键">键盘快捷键</a></li><li class="toc-item toc-h3"><a href="#禁用后台任务">禁用后台任务</a></li><li class="toc-item toc-h2"><a href="#worktree-隔离">Worktree 隔离</a></li><li class="toc-item toc-h3"><a href="#配置">配置</a></li><li class="toc-item toc-h3"><a href="#工作原理">工作原理</a></li><li class="toc-item toc-h2"><a href="#限制可生成的-subagents">限制可生成的 Subagents</a></li><li class="toc-item toc-h3"><a href="#示例">示例</a></li><li class="toc-item toc-h2"><a href="#claude-agents-cli-命令">`claude agents` CLI 命令</a></li><li class="toc-item toc-h2"><a href="#并行代理工作流详解">并行代理工作流详解</a></li><li class="toc-item toc-h3"><a href="#并行会话结构">并行会话结构</a></li><li class="toc-item toc-h3"><a href="#运行并行会话-具体示例">运行并行会话——具体示例</a></li><li class="toc-item toc-h4"><a href="#窗口-1-前端会话">窗口 1：前端会话</a></li><li class="toc-item toc-h4"><a href="#窗口-2-测试套件会话">窗口 2：测试套件会话</a></li><li class="toc-item toc-h3"><a href="#用于安全并行开发的-git-工作树">用于安全并行开发的 Git 工作树</a></li><li class="toc-item toc-h2"><a href="#subagent-类型分类">Subagent 类型分类</a></li><li class="toc-item toc-h3"><a href="#1-并行-agent-parallel-agents">1. 并行 Agent（Parallel Agents）</a></li><li class="toc-item toc-h3"><a href="#2-顺序-agent-sequential-agents">2. 顺序 Agent（Sequential Agents）</a></li><li class="toc-item toc-h3"><a href="#3-探索-agent-exploratory-agents">3. 探索 Agent（Exploratory Agents）</a></li><li class="toc-item toc-h3"><a href="#4-专家-agent-expert-agents">4. 专家 Agent（Expert Agents）</a></li><li class="toc-item toc-h2"><a href="#子代理协调模式">子代理协调模式</a></li><li class="toc-item toc-h3"><a href="#writer-reviewer-模式">Writer/Reviewer 模式</a></li><li class="toc-item toc-h3"><a href="#测试驱动模式-tdd-with-subagents">测试驱动模式（TDD with Subagents）</a></li><li class="toc-item toc-h3"><a href="#动态-agent-创建">动态 Agent 创建</a></li><li class="toc-item toc-h3"><a href="#agent-协作链">Agent 协作链</a></li><li class="toc-item toc-h2"><a href="#anthropic-内部使用实践">Anthropic 内部使用实践</a></li><li class="toc-item toc-h3"><a href="#工程生产力提升">工程生产力提升</a></li><li class="toc-item toc-h3"><a href="#boris-cherny-的工作方法">Boris Cherny 的工作方法</a></li><li class="toc-item toc-h3"><a href="#anthropic-内部的-agent-配置">Anthropic 内部的 Agent 配置</a></li><li class="toc-item toc-h2"><a href="#agent-teams-实验性">Agent Teams（实验性）</a></li><li class="toc-item toc-h3"><a href="#subagents-vs-agent-teams">Subagents vs Agent Teams</a></li><li class="toc-item toc-h3"><a href="#启用-agent-teams">启用 Agent Teams</a></li><li class="toc-item toc-h3"><a href="#启动团队">启动团队</a></li><li class="toc-item toc-h3"><a href="#显示模式">显示模式</a></li><li class="toc-item toc-h3"><a href="#导航">导航</a></li><li class="toc-item toc-h3"><a href="#团队配置">团队配置</a></li><li class="toc-item toc-h3"><a href="#架构">架构</a></li><li class="toc-item toc-h3"><a href="#任务分配和消息传递">任务分配和消息传递</a></li><li class="toc-item toc-h3"><a href="#计划审批工作流">计划审批工作流</a></li><li class="toc-item toc-h3"><a href="#团队-hook-事件">团队 hook 事件</a></li><li class="toc-item toc-h3"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#限制">限制</a></li><li class="toc-item toc-h2"><a href="#插件-subagent-安全">插件 Subagent 安全</a></li><li class="toc-item toc-h2"><a href="#架构">架构</a></li><li class="toc-item toc-h3"><a href="#高层架构">高层架构</a></li><li class="toc-item toc-h3"><a href="#subagent-生命周期">Subagent 生命周期</a></li><li class="toc-item toc-h2"><a href="#上下文管理">上下文管理</a></li><li class="toc-item toc-h3"><a href="#关键要点">关键要点</a></li><li class="toc-item toc-h3"><a href="#性能考虑">性能考虑</a></li><li class="toc-item toc-h3"><a href="#关键行为">关键行为</a></li><li class="toc-item toc-h2"><a href="#何时使用-subagents">何时使用 Subagents</a></li><li class="toc-item toc-h2"><a href="#subagent-vs-skill-对比">SubAgent vs Skill 对比</a></li><li class="toc-item toc-h3"><a href="#选择指南">选择指南</a></li><li class="toc-item toc-h3"><a href="#示例对比">示例对比</a></li><li class="toc-item toc-h2"><a href="#立即尝试">立即尝试</a></li><li class="toc-item toc-h3"><a href="#练习-1-探索内置-subagents">🎯 练习 1：探索内置 Subagents</a></li><li class="toc-item toc-h3"><a href="#练习-2-创建自定义-subagent">🎯 练习 2：创建自定义 Subagent</a></li><li class="toc-item toc-h3"><a href="#练习-3-并行-subagent-执行">🎯 练习 3：并行 Subagent 执行</a></li><li class="toc-item toc-h3"><a href="#练习-4-多视角分析">🎯 练习 4：多视角分析</a></li><li class="toc-item toc-h3"><a href="#练习-5-上下文隔离测试">🎯 练习 5：上下文隔离测试</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h3"><a href="#设计原则">设计原则</a></li><li class="toc-item toc-h3"><a href="#系统提示最佳实践">系统提示最佳实践</a></li><li class="toc-item toc-h3"><a href="#工具访问策略">工具访问策略</a></li><li class="toc-item toc-h2"><a href="#本文件夹中的示例-subagents">本文件夹中的示例 Subagents</a></li><li class="toc-item toc-h3"><a href="#1-code-reviewer-code-reviewer-md">1. Code Reviewer (`code-reviewer.md`)</a></li><li class="toc-item toc-h3"><a href="#2-test-engineer-test-engineer-md">2. Test Engineer (`test-engineer.md`)</a></li><li class="toc-item toc-h3"><a href="#3-documentation-writer-documentation-writer-md">3. Documentation Writer (`documentation-writer.md`)</a></li><li class="toc-item toc-h3"><a href="#4-secure-reviewer-secure-reviewer-md">4. Secure Reviewer (`secure-reviewer.md`)</a></li><li class="toc-item toc-h3"><a href="#5-implementation-agent-implementation-agent-md">5. Implementation Agent (`implementation-agent.md`)</a></li><li class="toc-item toc-h3"><a href="#6-debugger-debugger-md">6. Debugger (`debugger.md`)</a></li><li class="toc-item toc-h3"><a href="#7-data-scientist-data-scientist-md">7. Data Scientist (`data-scientist.md`)</a></li><li class="toc-item toc-h2"><a href="#安装说明">安装说明</a></li><li class="toc-item toc-h3"><a href="#方法-1-使用-agents-命令-推荐">方法 1：使用 /agents 命令（推荐）</a></li><li class="toc-item toc-h3"><a href="#方法-2-复制到项目">方法 2：复制到项目</a></li><li class="toc-item toc-h3"><a href="#方法-3-复制到用户目录">方法 3：复制到用户目录</a></li><li class="toc-item toc-h3"><a href="#验证">验证</a></li><li class="toc-item toc-h2"><a href="#文件结构">文件结构</a></li><li class="toc-item toc-h2"><a href="#相关概念">相关概念</a></li><li class="toc-item toc-h3"><a href="#相关功能">相关功能</a></li><li class="toc-item toc-h3"><a href="#与其他功能比较">与其他功能比较</a></li><li class="toc-item toc-h3"><a href="#集成模式">集成模式</a></li><li class="toc-item toc-h2"><a href="#其他资源">其他资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Subagents
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-intermediate">
+                🟡 中级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟡 <strong>中级</strong> | ⏱ 60 分钟
+✅ 已验证于 Claude Code <strong>v2.1.92</strong> · 最后验证日期：2026-04-05</blockquote>
+<strong>你将构建：</strong> 将任务委托给专业 AI 助手。
+<h1>Subagents - 完整参考指南</h1>
+<p>Subagents 是 Claude Code 可以将任务委托给的专业 AI 助手。每个 subagent 有特定用途，使用独立于主对话的上下文窗口，并可配置特定工具和自定义系统提示。</p>
+<h2 id="概述">概述</h2>
+<p>Subagents 通过以下方式在 Claude Code 中实现委托任务执行：</p>
+<ul><li>创建<strong>隔离的 AI 助手</strong>，拥有独立的上下文窗口</li>
+<li>提供<strong>自定义系统提示</strong>以获得专业特长</li>
+<li>实施<strong>工具访问控制</strong>以限制能力</li>
+<li>防止复杂任务造成的<strong>上下文污染</strong></li>
+<li>实现多个专业任务的<strong>并行执行</strong></li>
+
+</ul>
+<p>每个 subagent 独立运行，从干净的状态开始，仅接收其任务所需的特定上下文，然后将结果返回给主 agent 进行整合。</p>
+<strong>快速开始</strong>：使用 <code>/agents</code> 命令交互式地创建、查看、编辑和管理你的 subagents。
+<hr>
+<h2 id="核心优势">核心优势</h2>
+<table>
+<thead>
+<tr>
+<th>优势</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>上下文保护</strong></td>
+<td>在独立上下文中运行，防止污染主对话</td>
+</tr>
+<tr>
+<td><strong>专业特长</strong></td>
+<td>针对特定领域优化，成功率更高</td>
+</tr>
+<tr>
+<td><strong>可复用性</strong></td>
+<td>可跨不同项目使用并与团队共享</td>
+</tr>
+<tr>
+<td><strong>灵活权限</strong></td>
+<td>不同 subagent 类型有不同的工具访问级别</td>
+</tr>
+<tr>
+<td><strong>可扩展性</strong></td>
+<td>多个 agents 可同时处理不同方面</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="文件位置">文件位置</h2>
+<p>Subagent 文件可存储在多个位置，具有不同的作用域：</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>类型</th>
+<th>位置</th>
+<th>作用域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1（最高）</td>
+<td><strong>CLI 定义</strong></td>
+<td>通过 <code>--agents</code> 标志（JSON）</td>
+<td>仅当前会话</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>项目 subagents</strong></td>
+<td><code>.claude/agents/</code></td>
+<td>当前项目</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>用户 subagents</strong></td>
+<td><code>~/.claude/agents/</code></td>
+<td>所有项目</td>
+</tr>
+<tr>
+<td>4（最低）</td>
+<td><strong>插件 agents</strong></td>
+<td>插件 <code>agents/</code> 目录</td>
+<td>通过插件</td>
+</tr>
+</tbody>
+</table>
+<p>当存在重复名称时，优先级较高的来源优先。</p>
+<hr>
+<h2 id="配置">配置</h2>
+<h3 id="文件格式">文件格式</h3>
+<p>Subagents 在 YAML frontmatter 中定义，随后是 markdown 格式的系统提示：</p>
+<pre><code class="language-yaml">---
+name: your-sub-agent-name
+description: Description of when this subagent should be invoked
+tools: tool1, tool2, tool3  # Optional - inherits all tools if omitted
+disallowedTools: tool4  # Optional - explicitly disallowed tools
+model: sonnet  # Optional - sonnet, opus, haiku, or inherit
+permissionMode: default  # Optional - permission mode
+maxTurns: 20  # Optional - limit agentic turns
+skills: skill1, skill2  # Optional - skills to preload into context
+mcpServers: server1  # Optional - MCP servers to make available
+memory: user  # Optional - persistent memory scope (user, project, local)
+background: false  # Optional - run as background task
+effort: high  # Optional - reasoning effort (low, medium, high, max)
+isolation: worktree  # Optional - git worktree isolation
+initialPrompt: &quot;Start by analyzing the codebase&quot;  # Optional - auto-submitted first turn
+hooks:  # Optional - component-scoped hooks
+  PreToolUse:
+    - matcher: &quot;Bash&quot;
+      hooks:
+        - type: command
+          command: &quot;./scripts/security-check.sh&quot;
+---
+
+Your subagent&#039;s system prompt goes here. This can be multiple paragraphs
+and should clearly define the subagent&#039;s role, capabilities, and approach
+to solving problems.
+</code></pre>
+<h3 id="配置字段">配置字段</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必需</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>是</td>
+<td>唯一标识符（小写字母和连字符）</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>是</td>
+<td>目的自然语言描述。包含 "use PROACTIVELY" 以鼓励自动调用</td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>否</td>
+<td>以逗号分隔的特定工具列表。省略则继承所有工具。支持 <code>Agent(agent_name)</code> 语法来限制可生成的 subagents</td>
+</tr>
+<tr>
+<td><code>disallowedTools</code></td>
+<td>否</td>
+<td>以逗号分隔的 subagent 禁止使用的工具列表</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>否</td>
+<td>要使用的模型：<code>sonnet</code>、<code>opus</code>、<code>haiku</code>、完整模型 ID 或 <code>inherit</code>。默认为配置的 subagent 模型</td>
+</tr>
+<tr>
+<td><code>permissionMode</code></td>
+<td>否</td>
+<td><code>default</code>、<code>acceptEdits</code>、<code>dontAsk</code>、<code>bypassPermissions</code>、<code>plan</code></td>
+</tr>
+<tr>
+<td><code>maxTurns</code></td>
+<td>否</td>
+<td>subagent 可执行的最大 agent 步数</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td>否</td>
+<td>以逗号分隔的要预加载的 skills 列表。在启动时将完整 skill 内容注入 subagent 的上下文</td>
+</tr>
+<tr>
+<td><code>mcpServers</code></td>
+<td>否</td>
+<td>提供给 subagent 使用的 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>否</td>
+<td>组件级 hooks（PreToolUse、PostToolUse、Stop）</td>
+</tr>
+<tr>
+<td><code>memory</code></td>
+<td>否</td>
+<td>持久化内存目录作用域：<code>user</code>、<code>project</code> 或 <code>local</code></td>
+</tr>
+<tr>
+<td><code>background</code></td>
+<td>否</td>
+<td>设置为 <code>true</code> 以始终将此 subagent 作为后台任务运行</td>
+</tr>
+<tr>
+<td><code>effort</code></td>
+<td>否</td>
+<td>推理努力级别：<code>low</code>、<code>medium</code>、<code>high</code> 或 <code>max</code></td>
+</tr>
+<tr>
+<td><code>isolation</code></td>
+<td>否</td>
+<td>设置为 <code>worktree</code> 以给 subagent 其自己的 git worktree</td>
+</tr>
+<tr>
+<td><code>initialPrompt</code></td>
+<td>否</td>
+<td>当 subagent 作为主 agent 运行时自动提交的第一轮</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工具配置选项">工具配置选项</h3>
+<strong>选项 1：继承所有工具（省略该字段）</strong>
+<pre><code class="language-yaml">---
+name: full-access-agent
+description: Agent with all available tools
+---
+</code></pre>
+<strong>选项 2：指定特定工具</strong>
+<pre><code class="language-yaml">---
+name: limited-agent
+description: Agent with specific tools only
+tools: Read, Grep, Glob, Bash
+---
+</code></pre>
+<strong>选项 3：条件性工具访问</strong>
+<pre><code class="language-yaml">---
+name: conditional-agent
+description: Agent with filtered tool access
+tools: Read, Bash(npm:*), Bash(test:*)
+---
+</code></pre>
+<h3 id="cli-配置">CLI 配置</h3>
+<p>使用 <code>--agents</code> 标志和 JSON 格式为单个会话定义 subagents：</p>
+<pre><code class="language-bash">claude --agents &#039;{
+  &quot;code-reviewer&quot;: {
+    &quot;description&quot;: &quot;Expert code reviewer. Use proactively after code changes.&quot;,
+    &quot;prompt&quot;: &quot;You are a senior code reviewer. Focus on code quality, security, and best practices.&quot;,
+    &quot;tools&quot;: [&quot;Read&quot;, &quot;Grep&quot;, &quot;Glob&quot;, &quot;Bash&quot;],
+    &quot;model&quot;: &quot;sonnet&quot;
+  }
+}&#039;
+</code></pre>
+<strong><code>--agents</code> 标志的 JSON 格式：</strong>
+<pre><code class="language-json">{
+  &quot;agent-name&quot;: {
+    &quot;description&quot;: &quot;Required: when to invoke this agent&quot;,
+    &quot;prompt&quot;: &quot;Required: system prompt for the agent&quot;,
+    &quot;tools&quot;: [&quot;Optional&quot;, &quot;array&quot;, &quot;of&quot;, &quot;tools&quot;],
+    &quot;model&quot;: &quot;optional: sonnet|opus|haiku&quot;
+  }
+}
+</code></pre>
+<strong>Agent 定义优先级：</strong>
+<p>Agent 定义按以下优先级顺序加载（首次匹配优先）：</p>
+<ul><li><strong>CLI 定义</strong> - <code>--agents</code> 标志（仅当前会话，JSON）</li>
+<li><strong>项目级</strong> - <code>.claude/agents/</code>（当前项目）</li>
+<li><strong>用户级</strong> - <code>~/.claude/agents/</code>（所有项目）</li>
+<li><strong>插件级</strong> - 插件 <code>agents/</code> 目录</li>
+
+</ul>
+<p>这允许 CLI 定义在单个会话中覆盖所有其他来源。</p>
+<hr>
+<h2 id="内置-subagents">内置 Subagents</h2>
+<p>Claude Code 包含几个始终可用的内置 subagents：</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>模型</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>general-purpose</strong></td>
+<td>继承</td>
+<td>复杂、多步骤任务</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>继承</td>
+<td>用于规划模式的研究</td>
+</tr>
+<tr>
+<td><strong>Explore</strong></td>
+<td>Haiku</td>
+<td>只读代码库探索（快速/中等/非常详尽）</td>
+</tr>
+<tr>
+<td><strong>Bash</strong></td>
+<td>继承</td>
+<td>在独立上下文中执行终端命令</td>
+</tr>
+<tr>
+<td><strong>statusline-setup</strong></td>
+<td>Sonnet</td>
+<td>配置状态栏</td>
+</tr>
+<tr>
+<td><strong>Claude Code Guide</strong></td>
+<td>Haiku</td>
+<td>回答 Claude Code 功能问题</td>
+</tr>
+</tbody>
+</table>
+<h3 id="general-purpose-subagent">General-Purpose Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>从父级继承</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>所有工具</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>复杂研究任务、多步骤操作、代码修改</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：需要同时进行探索和修改以及复杂推理的任务。
+<h3 id="plan-subagent">Plan Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>从父级继承</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>Read, Glob, Grep, Bash</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>在规划模式中自动用于研究代码库</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：当 Claude 需要在提出计划前理解代码库时。
+<h3 id="explore-subagent">Explore Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>Haiku（快速、低延迟）</td>
+</tr>
+<tr>
+<td><strong>模式</strong></td>
+<td>严格只读</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>Glob, Grep, Read, Bash（仅只读命令）</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>快速代码库搜索和分析</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：搜索/理解代码而不进行修改时。
+<strong>详尽度级别</strong> - 指定探索深度：
+<ul><li><strong>"quick"</strong> - 快速搜索，最小探索，适合查找特定模式</li>
+<li><strong>"medium"</strong> - 中等探索，平衡速度和详尽度，默认方式</li>
+<li><strong>"very thorough"</strong> - 跨多个位置和命名约定的全面分析，可能需要更长时间</li>
+
+</ul>
+<h3 id="bash-subagent">Bash Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>从父级继承</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>Bash</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>在独立上下文窗口中执行终端命令</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：运行受益于隔离上下文的 shell 命令时。
+<h3 id="statusline-setup-subagent">Statusline Setup Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>Sonnet</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>Read, Write, Bash</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>配置 Claude Code 状态栏显示</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：设置或自定义状态栏时。
+<h3 id="claude-code-guide-subagent">Claude Code Guide Subagent</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>模型</strong></td>
+<td>Haiku（快速、低延迟）</td>
+</tr>
+<tr>
+<td><strong>工具</strong></td>
+<td>只读</td>
+</tr>
+<tr>
+<td><strong>用途</strong></td>
+<td>回答关于 Claude Code 功能和使用的问题</td>
+</tr>
+</tbody>
+</table>
+<strong>何时使用</strong>：当用户询问 Claude Code 如何工作或如何使用特定功能时。
+<hr>
+<h2 id="管理-subagents">管理 Subagents</h2>
+<h3 id="使用-ic45ic-命令-推荐">使用 <code>/agents</code> 命令（推荐）</h3>
+<pre><code class="language-bash">/agents
+</code></pre>
+<p>这提供交互式菜单来：</p>
+<ul><li>查看所有可用的 subagents（内置、用户和项目）</li>
+<li>通过引导设置创建新 subagents</li>
+<li>编辑现有的自定义 subagents 和工具访问</li>
+<li>删除自定义 subagents</li>
+<li>查看当存在重复时哪些 subagents 处于活动状态</li>
+
+</ul>
+<h3 id="直接文件管理">直接文件管理</h3>
+<pre><code class="language-bash"># 创建项目 subagent
+mkdir -p .claude/agents
+cat &gt; .claude/agents/test-runner.md &lt;&lt; &#039;EOF&#039;
+---
+name: test-runner
+description: Use proactively to run tests and fix failures
+---
+
+You are a test automation expert. When you see code changes, proactively
+run the appropriate tests. If tests fail, analyze the failures and fix
+them while preserving the original test intent.
+EOF
+
+# 创建用户 subagent（在所有项目中可用）
+mkdir -p ~/.claude/agents
+</code></pre>
+<hr>
+<h2 id="使用-subagents">使用 Subagents</h2>
+<h3 id="自动委托">自动委托</h3>
+<p>Claude 根据以下主动委托任务：</p>
+<ul><li>你请求中的任务描述</li>
+<li>subagent 配置中的 <code>description</code> 字段</li>
+<li>当前上下文和可用工具</li>
+
+</ul>
+<p>要鼓励主动使用，在 <code>description</code> 字段中包含 "use PROACTIVELY" 或 "MUST BE USED"：</p>
+<pre><code class="language-yaml">---
+name: code-reviewer
+description: Expert code review specialist. Use PROACTIVELY after writing or modifying code.
+---
+</code></pre>
+<h3 id="显式调用">显式调用</h3>
+<p>你可以显式请求特定 subagent：</p>
+<pre><code class="language-">&gt; Use the test-runner subagent to fix failing tests
+&gt; Have the code-reviewer subagent look at my recent changes
+&gt; Ask the debugger subagent to investigate this error
+</code></pre>
+<h3 id="提及调用">@-提及调用</h3>
+<p>使用 <code>@</code> 前缀保证调用特定 subagent（绕过自动委托启发式）：</p>
+<pre><code class="language-">&gt; @&quot;code-reviewer (agent)&quot; review the auth module
+</code></pre>
+<h3 id="会话级-agent">会话级 Agent</h3>
+<p>使用特定 agent 作为主 agent 运行整个会话：</p>
+<pre><code class="language-bash"># 通过 CLI 标志
+claude --agent code-reviewer
+
+# 通过 settings.json
+{
+  &quot;agent&quot;: &quot;code-reviewer&quot;
+}
+</code></pre>
+<h3 id="列出可用-agents">列出可用 Agents</h3>
+<p>使用 <code>claude agents</code> 命令列出所有来源的所有已配置 agents：</p>
+<pre><code class="language-bash">claude agents
+</code></pre>
+<hr>
+<h2 id="可恢复-agents">可恢复 Agents</h2>
+<p>Subagents 可以继续之前的对话，完整保留上下文：</p>
+<pre><code class="language-bash"># 初始调用
+&gt; Use the code-analyzer agent to start reviewing the authentication module
+# Returns agentId: &quot;abc123&quot;
+
+#稍后恢复 agent
+&gt; Resume agent abc123 and now analyze the authorization logic as well
+</code></pre>
+<strong>用例</strong>：
+<ul><li>跨多个会话的长期研究</li>
+<li>不丢失上下文的迭代优化</li>
+<li>维持上下文的多步骤工作流</li>
+
+</ul>
+<hr>
+<h2 id="链式-subagents">链式 Subagents</h2>
+<p>按顺序执行多个 subagents：</p>
+<pre><code class="language-bash">&gt; First use the code-analyzer subagent to find performance issues,
+  then use the optimizer subagent to fix them
+</code></pre>
+<p>这实现了复杂工作流，其中一个 subagent 的输出传递给另一个。</p>
+<hr>
+<h2 id="subagents-持久化内存">Subagents 持久化内存</h2>
+<code>memory</code> 字段给 subagents 一个跨会话持久化的目录。这允许 subagents 随时间积累知识，存储笔记、发现和跨会话持久化的上下文。
+<h3 id="内存作用域">内存作用域</h3>
+<table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>目录</th>
+<th>用例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user</code></td>
+<td><code>~/.claude/agent-memory/&lt;name&gt;/</code></td>
+<td>跨所有项目的个人笔记和偏好</td>
+</tr>
+<tr>
+<td><code>project</code></td>
+<td><code>.claude/agent-memory/&lt;name&gt;/</code></td>
+<td>与团队共享的项目特定知识</td>
+</tr>
+<tr>
+<td><code>local</code></td>
+<td><code>.claude/agent-memory-local/&lt;name&gt;/</code></td>
+<td>不提交到版本控制的本地项目知识</td>
+</tr>
+</tbody>
+</table>
+<h3 id="工作原理">工作原理</h3>
+<ul><li>内存目录中 <code>MEMORY.md</code> 的前 200 行自动加载到 subagent 的系统提示中</li>
+<li><code>Read</code>、<code>Write</code> 和 <code>Edit</code> 工具自动启用，供 subagent 管理其内存文件</li>
+<li>subagent 可以根据需要在其内存目录中创建额外文件</li>
+
+</ul>
+<h3 id="示例配置">示例配置</h3>
+<pre><code class="language-yaml">---
+name: researcher
+memory: user
+---
+
+You are a research assistant. Use your memory directory to store findings,
+track progress across sessions, and build up knowledge over time.
+
+Check your MEMORY.md file at the start of each session to recall previous context.
+</code></pre>
+<div class="mermaid">graph LR
+    A["Subagent<br/>Session 1"] -->|writes| M["MEMORY.md<br/>(persistent)"]
+    M -->|loads into| B["Subagent<br/>Session 2"]
+    B -->|updates| M
+    M -->|loads into| C["Subagent<br/>Session 3"]
+
+    style A fill:#e1f5fe,stroke:#333,color:#333
+    style B fill:#e1f5fe,stroke:#333,color:#333
+    style C fill:#e1f5fe,stroke:#333,color:#333
+    style M fill:#f3e5f5,stroke:#333,color:#333
+</div>
+<hr>
+<h2 id="后台-subagents">后台 Subagents</h2>
+<p>Subagents 可以在后台运行，释放主对话用于其他任务。</p>
+<h3 id="配置">配置</h3>
+<p>在 frontmatter 中设置 <code>background: true</code> 以始终将 subagent 作为后台任务运行：</p>
+<pre><code class="language-yaml">---
+name: long-runner
+background: true
+description: Performs long-running analysis tasks in the background
+---
+</code></pre>
+<h3 id="键盘快捷键">键盘快捷键</h3>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ctrl+B</code></td>
+<td>将当前运行的 subagent 任务放入后台</td>
+</tr>
+<tr>
+<td><code>Ctrl+F</code></td>
+<td>终止所有后台 agents（按两次确认）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="禁用后台任务">禁用后台任务</h3>
+<p>设置环境变量以完全禁用后台任务支持：</p>
+<pre><code class="language-bash">export CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1
+</code></pre>
+<hr>
+<h2 id="worktree-隔离">Worktree 隔离</h2>
+<code>isolation: worktree</code> 设置给 subagent 其自己的 git worktree，允许其独立进行更改而不影响主工作树。
+<h3 id="配置">配置</h3>
+<pre><code class="language-yaml">---
+name: feature-builder
+isolation: worktree
+description: Implements features in an isolated git worktree
+tools: Read, Write, Edit, Bash, Grep, Glob
+---
+</code></pre>
+<h3 id="工作原理">工作原理</h3>
+<div class="mermaid">graph TB
+    Main["Main Working Tree"] -->|spawns| Sub["Subagent with<br/>Isolated Worktree"]
+    Sub -->|makes changes in| WT["Separate Git<br/>Worktree + Branch"]
+    WT -->|no changes| Clean["Auto-cleaned"]
+    WT -->|has changes| Return["Returns worktree<br/>path and branch"]
+
+    style Main fill:#e1f5fe,stroke:#333,color:#333
+    style Sub fill:#f3e5f5,stroke:#333,color:#333
+    style WT fill:#e8f5e9,stroke:#333,color:#333
+    style Clean fill:#fff3e0,stroke:#333,color:#333
+    style Return fill:#fff3e0,stroke:#333,color:#333
+</div>
+<ul><li>subagent 在独立分支的独立 git worktree 中操作</li>
+<li>如果 subagent 未进行更改，worktree 会自动清理</li>
+<li>如果存在更改，worktree 路径和分支名称会返回给主 agent 以供审查或合并</li>
+
+</ul>
+<hr>
+<h2 id="限制可生成的-subagents">限制可生成的 Subagents</h2>
+<p>你可以通过在 <code>tools</code> 字段中使用 <code>Agent(agent_type)</code> 语法来控制给定 subagent 允许生成哪些 subagents。这提供了一种白名单特定 subagents 进行委托的方式。</p>
+<blockquote><strong>注意</strong>：在 v2.1.63 中，<code>Task</code> 工具更名为 <code>Agent</code>。现有的 <code>Task(...)</code> 引用仍作为别名工作。</blockquote>
+<h3 id="示例">示例</h3>
+<pre><code class="language-yaml">---
+name: coordinator
+description: Coordinates work between specialized agents
+tools: Agent(worker, researcher), Read, Bash
+---
+
+You are a coordinator agent. You can delegate work to the &quot;worker&quot; and
+&quot;researcher&quot; subagents only. Use Read and Bash for your own exploration.
+</code></pre>
+<p>在此示例中，<code>coordinator</code> subagent 只能生成 <code>worker</code> 和 <code>researcher</code> subagents。它不能生成任何其他 subagents，即使它们在其他地方定义。</p>
+<hr>
+<h2 id="ic73ic-cli-命令"><code>claude agents</code> CLI 命令</h2>
+<code>claude agents</code> 命令按来源（内置、用户级、项目级）分组列出所有已配置的 agents：
+<pre><code class="language-bash">claude agents
+</code></pre>
+<p>此命令：</p>
+<ul><li>显示所有来源的所有可用 agents</li>
+<li>按 source 位置分组 agents</li>
+<li>指示<strong>覆盖</strong>，当较高优先级的 agent 覆盖较低优先级的同名 agent 时（例如，项目级 agent 与用户级 agent 同名）</li>
+
+</ul>
+<hr>
+<h2 id="并行代理工作流详解">并行代理工作流详解</h2>
+<p>随着你对 Claude Code 的熟练程度发展和提高，自然的扩展是<strong>并行操作</strong>：多个 Claude 会话同时运行，每个处理不同的工作流。</p>
+<h3 id="并行会话结构">并行会话结构</h3>
+<p>多个 Claude Code 会话，每个分配特定范围，复制小团队的并行能力。一个会话构建认证系统。另一个构建数据可视化层。第三个为已完成的功能编写测试。</p>
+<p>Boris Cherny（Claude Code 负责人）通常同时运行五个或更多并行会话。他对工作流的描述：<em>"我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</em></p>
+<h3 id="运行并行会话-具体示例">运行并行会话——具体示例</h3>
+<h4 id="窗口-1-前端会话">窗口 1：前端会话</h4>
+<pre><code class="language-">我们正在为笔记应用程序构建前端。后端 REST API
+已经在端口 3001 上运行。你在这个会话中的范围只是 client/ 目录。
+
+首先读取 CLAUDE.md 和 PRD.md。然后实现 PRD 中描述的三面板前端布局：
+- 带有笔记列表的侧边栏（从 GET /api/notes 读取）
+- 活动笔记的编辑器面板（带有按键防抖自动保存）
+- 未选择笔记时的空状态
+
+不要触及 server/ 目录中的任何文件。
+
+首先进入计划模式。在写任何东西之前向我展示你的实现计划。
+</code></pre>
+<h4 id="窗口-2-测试套件会话">窗口 2：测试套件会话</h4>
+<pre><code class="language-">我们正在为笔记应用程序 REST API 编写集成测试。你在这个会话中的范围
+是 server/tests/ 目录（如果不存在则创建它）。
+
+读取 CLAUDE.md 和 server/routes/notes.js 文件。编写覆盖以下内容的集成测试：
+1. GET /api/notes — 返回数组，当没有笔记存在时返回空数组
+2. POST /api/notes — 创建笔记，返回带 id 的笔记，拒绝缺少标题的请求
+3. PUT /api/notes/:id — 更新笔记，对不存在的 id 返回 404
+4. DELETE /api/notes/:id — 删除笔记，返回 204，如果未找到返回 404
+
+使用 jest + supertest 技术栈。创建 server/tests/notes.test.js。
+
+不要修改 server/tests/ 之外的任何文件。
+</code></pre>
+<p>两个会话现在同时运行。这是并行代理工作流的核心：每个会话有自己的范围、自己的上下文，互不干扰。</p>
+<h3 id="用于安全并行开发的-git-工作树">用于安全并行开发的 Git 工作树</h3>
+<strong>Git 工作树</strong>是链接到同一仓库的额外工作目录。每个工作树检出不同的分支，每个都有自己的磁盘文件集。
+<pre><code class="language-bash"># 从 main 分支的仓库根目录
+git worktree add ../my-project-auth feature/authentication
+git worktree add ../my-project-notifications feature/notifications
+</code></pre>
+<p>这样每个并行会话可以在独立的目录中工作：</p>
+<pre><code class="language-">my-project/                ← 主分支（Session 1）
+├── .claude/worktrees/
+│   ├── auth/              ← 认证功能（Session 2）
+│   ├── notifications/     ← 通知功能（Session 3）
+│   └── tests/             ← 测试套件（Session 4）
+
+每个 Agent 在独立的 worktree 中工作
+→ 不会互相冲突
+→ 完成后合并分支即可
+</code></pre>
+<p>完成后正常合并：</p>
+<pre><code class="language-bash">cd my-project
+git merge feature/authentication
+git merge feature/notifications
+</code></pre>
+<hr>
+<h2 id="subagent-类型分类">Subagent 类型分类</h2>
+<p>理解不同类型的 subagent 有助于选择正确的工作模式。</p>
+<h3 id="1-并行-agent-parallel-agents">1. 并行 Agent（Parallel Agents）</h3>
+<p>同时执行相似任务：</p>
+<pre><code class="language-">5 个 Agent 各自审查不同的文件
+→ 并行处理
+→ 合并结果
+</code></pre>
+<strong>适用场景</strong>：批量处理、大规模审查、多目录分析
+<h3 id="2-顺序-agent-sequential-agents">2. 顺序 Agent（Sequential Agents）</h3>
+<p>按顺序执行不同阶段：</p>
+<pre><code class="language-">Agent 1: 分析
+→ 传递结果给 Agent 2
+Agent 2: 设计
+→ 传递结果给 Agent 3
+Agent 3: 实现
+</code></pre>
+<strong>适用场景</strong>：复杂功能开发、分阶段重构、渐进式迁移
+<h3 id="3-探索-agent-exploratory-agents">3. 探索 Agent（Exploratory Agents）</h3>
+<p>探索不同方案：</p>
+<pre><code class="language-">Agent 1: 尝试方案 A
+Agent 2: 尝试方案 B
+Agent 3: 尝试方案 C
+
+→ 比较结果
+→ 选择最佳方案
+</code></pre>
+<strong>适用场景</strong>：技术选型、架构决策、方案比较
+<h3 id="4-专家-agent-expert-agents">4. 专家 Agent（Expert Agents）</h3>
+<p>专门领域专家：</p>
+<pre><code class="language-">Security Agent: 安全审查
+Performance Agent: 性能优化
+Accessibility Agent: 可访问性检查
+</code></pre>
+<strong>适用场景</strong>：多维度分析、专项审查、领域特定任务
+<hr>
+<h2 id="子代理协调模式">子代理协调模式</h2>
+<h3 id="writer-reviewer-模式">Writer/Reviewer 模式</h3>
+<p>多个 Agent 互相通信和协调的高级工作模式：</p>
+<pre><code class="language-">Writer Agent（写代码）:
+→ 编写功能代码
+→ 发送给 Reviewer
+
+Reviewer Agent（审代码）:
+→ 审查代码质量
+→ 提出修改建议
+→ 发回给 Writer
+
+→ 循环迭代直到质量达标
+</code></pre>
+<p>这种模式确保代码质量通过迭代不断提升。</p>
+<h3 id="测试驱动模式-tdd-with-subagents">测试驱动模式（TDD with Subagents）</h3>
+<pre><code class="language-">Tester Agent:
+→ 先写测试用例（测试先行）
+
+Writer Agent:
+→ 实现代码让测试通过
+
+Reviewer Agent:
+→ 审查实现质量
+
+→ 测试保障代码质量
+</code></pre>
+<h3 id="动态-agent-创建">动态 Agent 创建</h3>
+<p>根据任务动态创建 Agent：</p>
+<pre><code class="language-">你: 为每个服务创建一个 SubAgent 进行健康检查
+
+Claude:
+发现服务：user, order, payment, notification, email
+
+→ 为每个服务启动 Agent
+
+✓ 已启动 5 个 SubAgent
+并行检查所有服务健康状态
+</code></pre>
+<h3 id="agent-协作链">Agent 协作链</h3>
+<p>多个 Agent 顺序协作：</p>
+<pre><code class="language-">你: 让这些 Agent 协作完成代码迁移
+
+Agent 1: 分析旧代码
+Agent 2: 设计新架构
+Agent 3: 实现迁移
+Agent 4: 测试迁移
+Agent 5: 更新文档
+
+[Agent 协作流程]
+Agent 1 → 结果 → Agent 2
+Agent 2 → 设计 → Agent 3
+Agent 3 → 代码 → Agent 4
+Agent 4 → 测试 → Agent 5
+
+✓ 迁移完成
+</code></pre>
+<hr>
+<h2 id="anthropic-内部使用实践">Anthropic 内部使用实践</h2>
+<h3 id="工程生产力提升">工程生产力提升</h3>
+<p>Anthropic 团队对 Claude Code 的使用展示了其在生产环境中的实际效果：</p>
+<ul><li><strong>工程生产力</strong>：自 Claude Code 采用以来增加了 <strong>200%</strong></li>
+<li><strong>PR 审查</strong>：<strong>100%</strong> 的 PR 在人工审查之前先由 Claude 审查</li>
+<li><strong>每日产出</strong>：每个工程师每天发布 <strong>10-30 个 PR</strong></li>
+<li><strong>GitHub 占比</strong>：Claude Code 贡献了全球 GitHub 提交的 <strong>4%</strong>（2026 年初）</li>
+
+</ul>
+<h3 id="boris-cherny-的工作方法">Boris Cherny 的工作方法</h3>
+<p>Claude Code 负责人 Boris Cherny 的实际工作流程：</p>
+<blockquote><em>"我通常同时运行五个或更多并行会话。我启动一个任务，然后另一个，然后另一个，然后去喝杯咖啡让它们运行。"</em></blockquote>
+<p>关键实践：</p>
+<ul><li><strong>规划优先</strong>：在约 <strong>80%</strong> 的会话中使用计划模式</li>
+<li><strong>模型选择</strong>：专门使用 Opus 4.6，从不降低能力来节省 token</li>
+<li><strong>成本观念</strong>：<em>"使用更便宜的模型实际上更便宜并不明显。通常，最强大的模型更便宜且消耗更少的 token，因为它以更少的修正完成任务更快。"</em></li>
+<li><strong>为未来构建</strong>：<em>"为六个月后的模型构建，而不是为今天的模型。"</em></li>
+
+</ul>
+<h3 id="anthropic-内部的-agent-配置">Anthropic 内部的 Agent 配置</h3>
+<p>Anthropic 工程团队常用的 subagent 类型：</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>用途</th>
+<th>使用频率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plan</strong></td>
+<td>实现规划</td>
+<td>80% 的会话</td>
+</tr>
+<tr>
+<td><strong>Explore</strong></td>
+<td>代码库探索</td>
+<td>所有新项目</td>
+</tr>
+<tr>
+<td><strong>Code Reviewer</strong></td>
+<td>PR 审查</td>
+<td>100% 的 PR</td>
+</tr>
+<tr>
+<td><strong>Test Engineer</strong></td>
+<td>测试生成</td>
+<td>每个功能</td>
+</tr>
+<tr>
+<td><strong>Security Reviewer</strong></td>
+<td>安全审计</td>
+<td>每周定期</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="agent-teams-实验性">Agent Teams（实验性）</h2>
+<p>Agent Teams 协调多个 Claude Code 实例共同处理复杂任务。与 subagents（被委托子任务并返回结果）不同，队友独立工作，拥有自己的上下文，并通过共享邮箱系统直接通信。</p>
+<blockquote><strong>注意</strong>：Agent Teams 是实验性的，需要 Claude Code v2.1.32+。使用前请启用。</blockquote>
+<h3 id="subagents-vs-agent-teams">Subagents vs Agent Teams</h3>
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>Subagents</th>
+<th>Agent Teams</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>委托模型</strong></td>
+<td>父级委托子任务，等待结果</td>
+<td>团队负责人分配工作，队友独立执行</td>
+</tr>
+<tr>
+<td><strong>上下文</strong></td>
+<td>每个子任务全新上下文，结果提炼返回</td>
+<td>每个队友维护自己的持久化上下文</td>
+</tr>
+<tr>
+<td><strong>协调</strong></td>
+<td>顺序或并行，由父级管理</td>
+<td>共享任务列表，自动依赖管理</td>
+</tr>
+<tr>
+<td><strong>通信</strong></td>
+<td>仅返回值</td>
+<td>通过邮箱进行 agent 间消息传递</td>
+</tr>
+<tr>
+<td><strong>会话恢复</strong></td>
+<td>支持</td>
+<td>不支持进程内队友</td>
+</tr>
+<tr>
+<td><strong>最适合</strong></td>
+<td>专注、明确的子任务</td>
+<td>需要并行工作的大型多文件项目</td>
+</tr>
+</tbody>
+</table>
+<h3 id="启用-agent-teams">启用 Agent Teams</h3>
+<p>设置环境变量或将其添加到 <code>settings.json</code>：</p>
+<pre><code class="language-bash">export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+</code></pre>
+<p>或在 <code>settings.json</code> 中：</p>
+<pre><code class="language-json">{
+  &quot;env&quot;: {
+    &quot;CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS&quot;: &quot;1&quot;
+  }
+}
+</code></pre>
+<h3 id="启动团队">启动团队</h3>
+<p>启用后，在提示中要求 Claude 与队友一起工作：</p>
+<pre><code class="language-">User: Build the authentication module. Use a team — one teammate for the API endpoints,
+      one for the database schema, and one for the test suite.
+</code></pre>
+<p>Claude 将创建团队、分配任务并自动协调工作。</p>
+<h3 id="显示模式">显示模式</h3>
+<p>控制队友活动的显示方式：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>标志</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auto</strong></td>
+<td><code>--teammate-mode auto</code></td>
+<td>自动为你的终端选择最佳显示模式</td>
+</tr>
+<tr>
+<td><strong>In-process</strong></td>
+<td><code>--teammate-mode in-process</code></td>
+<td>在当前终端内联显示队友输出（默认）</td>
+</tr>
+<tr>
+<td><strong>Split-panes</strong></td>
+<td><code>--teammate-mode tmux</code></td>
+<td>在独立的 tmux 或 iTerm2 窗格中打开每个队友</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-bash">claude --teammate-mode tmux
+</code></pre>
+<p>你也可以在 <code>settings.json</code> 中设置显示模式：</p>
+<pre><code class="language-json">{
+  &quot;teammateMode&quot;: &quot;tmux&quot;
+}
+</code></pre>
+<blockquote><strong>注意</strong>：分窗模式需要 tmux 或 iTerm2。它在 VS Code 终端、Windows Terminal 或 Ghostty 中不可用。</blockquote>
+<h3 id="导航">导航</h3>
+<p>在分窗模式中使用 <code>Shift+Down</code> 在队友之间导航。</p>
+<h3 id="团队配置">团队配置</h3>
+<p>团队配置存储在 <code>~/.claude/teams/{team-name}/config.json</code>。</p>
+<h3 id="架构">架构</h3>
+<div class="mermaid">graph TB
+    Lead["Team Lead<br/>(Coordinator)"]
+    TaskList["Shared Task List<br/>(Dependencies)"]
+    Mailbox["Mailbox<br/>(Messages)"]
+    T1["Teammate 1<br/>(Own Context)"]
+    T2["Teammate 2<br/>(Own Context)"]
+    T3["Teammate 3<br/>(Own Context)"]
+
+    Lead -->|assigns tasks| TaskList
+    Lead -->|sends messages| Mailbox
+    TaskList -->|picks up work| T1
+    TaskList -->|picks up work| T2
+    TaskList -->|picks up work| T3
+    T1 -->|reads/writes| Mailbox
+    T2 -->|reads/writes| Mailbox
+    T3 -->|reads/writes| Mailbox
+    T1 -->|updates status| TaskList
+    T2 -->|updates status| TaskList
+    T3 -->|updates status| TaskList
+
+    style Lead fill:#e1f5fe,stroke:#333,color:#333
+    style TaskList fill:#fff9c4,stroke:#333,color:#333
+    style Mailbox fill:#f3e5f5,stroke:#333,color:#333
+    style T1 fill:#e8f5e9,stroke:#333,color:#333
+    style T2 fill:#e8f5e9,stroke:#333,color:#333
+    style T3 fill:#e8f5e9,stroke:#333,color:#333
+</div>
+<strong>关键组件</strong>：
+<ul><li><strong>Team Lead</strong>：创建团队、分配任务并协调的主 Claude Code 会话</li>
+<li><strong>Shared Task List</strong>：具有自动依赖跟踪的同步任务列表</li>
+<li><strong>Mailbox</strong>：队友通信状态和协调的 agent 间消息传递系统</li>
+<li><strong>Teammates</strong>：独立的 Claude Code 实例，各有自己的上下文窗口</li>
+
+</ul>
+<h3 id="任务分配和消息传递">任务分配和消息传递</h3>
+<p>团队负责人将工作分解为任务并分配给队友。共享任务列表处理：</p>
+<ul><li><strong>自动依赖管理</strong> — 任务等待其依赖项完成</li>
+<li><strong>状态跟踪</strong> — 队友工作时更新任务状态</li>
+<li><strong>Agent 间消息传递</strong> — 队友通过邮箱发送消息进行协调（例如，"数据库架构已准备好，你可以开始编写查询"）</li>
+
+</ul>
+<h3 id="计划审批工作流">计划审批工作流</h3>
+<p>对于复杂任务，团队负责人在队友开始工作前创建执行计划。用户审查并批准计划，确保团队的方法在代码更改前与期望一致。</p>
+<h3 id="团队-hook-事件">团队 hook 事件</h3>
+<p>Agent Teams 引入两个额外的 <a href="/content/06-hooks.html">hook 事件</a>：</p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>触发时机</th>
+<th>用例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TeammateIdle</code></td>
+<td>队友完成当前任务且无待处理工作时</td>
+<td>触发通知、分配后续任务</td>
+</tr>
+<tr>
+<td><code>TaskCompleted</code></td>
+<td>共享任务列表中的任务标记完成时</td>
+<td>运行验证、更新仪表板、链式依赖工作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="最佳实践">最佳实践</h3>
+<ul><li><strong>团队规模</strong>：保持团队 3-5 名队友以获得最佳协调</li>
+<li><strong>任务大小</strong>：将工作分解为每个 5-15 分钟的任务 — 足够小以并行化，足够大以有意义</li>
+<li><strong>避免文件冲突</strong>：将不同文件或目录分配给不同队友以防止合并冲突</li>
+<li><strong>从简单开始</strong>：首次团队使用进程内模式；熟悉后切换到分窗</li>
+<li><strong>清晰任务描述</strong>：提供具体、可操作的任务描述以便队友独立工作</li>
+
+</ul>
+<h3 id="限制">限制</h3>
+<ul><li><strong>实验性</strong>：功能行为可能在未来版本中更改</li>
+<li><strong>无会话恢复</strong>：进程内队友在会话结束后无法恢复</li>
+<li><strong>每会话一个团队</strong>：无法在单个会话中创建嵌套团队或多个团队</li>
+<li><strong>固定领导</strong>：团队负责人角色无法转移给队友</li>
+<li><strong>分窗限制</strong>：需要 tmux/iTerm2；在 VS Code 终端、Windows Terminal 或 Ghostty 中不可用</li>
+<li><strong>无跨会话团队</strong>：队友仅在当前会话中存在</li>
+
+</ul>
+<blockquote><strong>警告</strong>：Agent Teams 是实验性的。先用非关键工作测试，并监控队友协调的意外行为。</blockquote>
+<hr>
+<h2 id="插件-subagent-安全">插件 Subagent 安全</h2>
+<p>插件提供的 subagents 具有受限的 frontmatter 能力以确保安全。以下字段在插件 subagent 定义中<strong>不允许</strong>：</p>
+<ul><li><code>hooks</code> - 不能定义生命周期 hooks</li>
+<li><code>mcpServers</code> - 不能配置 MCP 服务器</li>
+<li><code>permissionMode</code> - 不能覆盖权限设置</li>
+
+</ul>
+<p>这防止插件通过 subagent hooks 提升权限或执行任意命令。</p>
+<hr>
+<h2 id="架构">架构</h2>
+<h3 id="高层架构">高层架构</h3>
+<div class="mermaid">graph TB
+    User["User"]
+    Main["Main Agent<br/>(Coordinator)"]
+    Reviewer["Code Reviewer<br/>Subagent"]
+    Tester["Test Engineer<br/>Subagent"]
+    Docs["Documentation<br/>Subagent"]
+
+    User -->|asks| Main
+    Main -->|delegates| Reviewer
+    Main -->|delegates| Tester
+    Main -->|delegates| Docs
+    Reviewer -->|returns result| Main
+    Tester -->|returns result| Main
+    Docs -->|returns result| Main
+    Main -->|synthesizes| User
+</div>
+<h3 id="subagent-生命周期">Subagent 生命周期</h3>
+<div class="mermaid">sequenceDiagram
+    participant User
+    participant MainAgent as Main Agent
+    participant CodeReviewer as Code Reviewer<br/>Subagent
+    participant Context as Separate<br/>Context Window
+
+    User->>MainAgent: "Build new auth feature"
+    MainAgent->>MainAgent: Analyze task
+    MainAgent->>CodeReviewer: "Review this code"
+    CodeReviewer->>Context: Initialize clean context
+    Context->>CodeReviewer: Load reviewer instructions
+    CodeReviewer->>CodeReviewer: Perform review
+    CodeReviewer-->>MainAgent: Return findings
+    MainAgent->>MainAgent: Incorporate results
+    MainAgent-->>User: Provide synthesis
+</div>
+<hr>
+<h2 id="上下文管理">上下文管理</h2>
+<div class="mermaid">graph TB
+    A["Main Agent Context<br/>50,000 tokens"]
+    B["Subagent 1 Context<br/>20,000 tokens"]
+    C["Subagent 2 Context<br/>20,000 tokens"]
+    D["Subagent 3 Context<br/>20,000 tokens"]
+
+    A -->|Clean slate| B
+    A -->|Clean slate| C
+    A -->|Clean slate| D
+
+    B -->|Results only| A
+    C -->|Results only| A
+    D -->|Results only| A
+
+    style A fill:#e1f5fe
+    style B fill:#fff9c4
+    style C fill:#fff9c4
+    style D fill:#fff9c4
+</div>
+<h3 id="关键要点">关键要点</h3>
+<ul><li>每个 subagent 获得<strong>全新上下文窗口</strong>，没有主对话历史</li>
+<li>仅将<strong>相关上下文</strong>传递给 subagent 用于其特定任务</li>
+<li>结果<strong>提炼</strong>返回给主 agent</li>
+<li>这防止长期项目中的<strong>上下文 token 耗尽</strong></li>
+
+</ul>
+<h3 id="性能考虑">性能考虑</h3>
+<ul><li><strong>上下文效率</strong> - Agents 保护主上下文，启用更长会话</li>
+<li><strong>延迟</strong> - Subagents 从干净状态开始，收集初始上下文可能增加延迟</li>
+
+</ul>
+<h3 id="关键行为">关键行为</h3>
+<ul><li><strong>无嵌套生成</strong> - Subagents 不能生成其他 subagents</li>
+<li><strong>后台权限</strong> - 后台 subagents 自动拒绝任何未预先批准的权限</li>
+<li><strong>后台化</strong> - 按 <code>Ctrl+B</code> 将当前运行的任务放入后台</li>
+<li><strong> transcripts</strong> - Subagent transcripts 存储在 <code>~/.claude/projects/{project}/{sessionId}/subagents/agent-{agentId}.jsonl</code></li>
+<li><strong>自动压缩</strong> - Subagent 上下文在约 95% 容量时自动压缩（使用 <code>CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</code> 环境变量覆盖）</li>
+
+</ul>
+<hr>
+<h2 id="何时使用-subagents">何时使用 Subagents</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>使用 Subagent</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>有许多步骤的复杂功能</td>
+<td>是</td>
+<td>分离关注点，防止上下文污染</td>
+</tr>
+<tr>
+<td>快速代码审查</td>
+<td>否</td>
+<td>不必要的开销</td>
+</tr>
+<tr>
+<td>并行任务执行</td>
+<td>是</td>
+<td>每个 subagent 有独立上下文</td>
+</tr>
+<tr>
+<td>需要专业特长</td>
+<td>是</td>
+<td>自定义系统提示</td>
+</tr>
+<tr>
+<td>长期分析</td>
+<td>是</td>
+<td>防止主上下文耗尽</td>
+</tr>
+<tr>
+<td>单一任务</td>
+<td>否</td>
+<td>不必要地增加延迟</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="subagent-vs-skill-对比">SubAgent vs Skill 对比</h2>
+<p>理解 SubAgent 和 Skill 的区别有助于选择正确的工具。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>SubAgent</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自主性</strong></td>
+<td>高度自主</td>
+<td>遵循脚本</td>
+</tr>
+<tr>
+<td><strong>复杂度</strong></td>
+<td>适合复杂任务</td>
+<td>适合标准化流程</td>
+</tr>
+<tr>
+<td><strong>通信</strong></td>
+<td>需要协调</td>
+<td>无需通信</td>
+</tr>
+<tr>
+<td><strong>创建</strong></td>
+<td>简单（YAML + prompt）</td>
+<td>需要编写配置</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>探索性任务</td>
+<td>重复性任务</td>
+</tr>
+<tr>
+<td><strong>上下文</strong></td>
+<td>独立上下文窗口</td>
+<td>共享主会话上下文</td>
+</tr>
+<tr>
+<td><strong>并行能力</strong></td>
+<td>可并行执行</td>
+<td>顺序执行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="选择指南">选择指南</h3>
+<strong>使用 SubAgent 当</strong>：
+<ul><li>任务需要自主探索和决策</li>
+<li>需要并行处理多个独立任务</li>
+<li>任务复杂度较高，需要专业特长</li>
+<li>需要隔离上下文防止污染</li>
+
+</ul>
+<strong>使用 Skill 当</strong>：
+<ul><li>任务是标准化、重复性的流程</li>
+<li>需要快速执行，不需要探索</li>
+<li>任务步骤明确，不需要自主决策</li>
+<li>希望共享主会话的上下文</li>
+
+</ul>
+<h3 id="示例对比">示例对比</h3>
+<strong>SubAgent 适合的场景</strong>：
+<pre><code class="language-">你: 实现用户认证功能
+让 3 个 SubAgent 各自探索不同方案
+
+Claude:
+🚀 启动 3 个 SubAgent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Agent 1: 探索 JWT 方案
+Agent 2: 探索 Session 方案
+Agent 3: 探索 OAuth 方案
+
+[探索中...]
+
+推荐方案：JWT
+理由：最适合你的架构（微服务）
+</code></pre>
+<strong>Skill 适合的场景</strong>：
+<pre><code class="language-">你: 运行代码审查 skill
+
+Claude:
+执行代码审查流程：
+1. 运行 git diff 查看更改
+2. 检查安全漏洞
+3. 检查代码风格
+4. 生成审查报告
+
+✓ 审查完成
+</code></pre>
+<hr>
+<h2 id="立即尝试">立即尝试</h2>
+<h3 id="练习-1-探索内置-subagents">🎯 练习 1：探索内置 Subagents</h3>
+<p>测试 Claude Code 的内置专业 agents：</p>
+<pre><code class="language-bash"># 在 Claude Code 会话中：
+
+# 测试 Explore agent（代码库搜索）
+&quot;I need to understand how authentication works in this codebase. Use the Explore agent.&quot;
+
+# 测试 Plan agent（实现规划）
+&quot;Plan the implementation of a new user profile feature.&quot;
+
+# 测试 Code Reviewer
+&quot;Review the code I just wrote for security issues.&quot;
+
+# 测试 Build Error Resolver
+&quot;My build is failing with TypeScript errors. Help me fix them.&quot;
+</code></pre>
+<h3 id="练习-2-创建自定义-subagent">🎯 练习 2：创建自定义 Subagent</h3>
+<p>为你的工作流创建专业 agent：</p>
+<strong>步骤 1：定义 agent 目的</strong>
+<pre><code class="language-markdown"># 需要：一个用于文档生成的 &quot;Doc Writer&quot; agent
+- 分析代码结构
+- 生成全面文档
+- 遵循项目文档标准
+</code></pre>
+<strong>步骤 2：创建 agent 配置</strong>
+<pre><code class="language-bash">mkdir -p .claude/agents/doc-writer
+</code></pre>
+<p>创建 <code>.claude/agents/doc-writer/agent.md</code>：</p>
+<pre><code class="language-markdown">---
+name: doc-writer
+description: Documentation generation specialist. Use when generating or updating docs.
+model: sonnet
+tools: Read, Write, Glob, Grep
+---
+
+# Documentation Writer Agent
+
+## Purpose
+Generate comprehensive, clear documentation for code modules.
+
+## Process
+
+1. **Analyze Code Structure**
+   - Read source files
+   - Identify key functions, classes, exports
+   - Understand module purpose
+
+2. **Generate Documentation**
+   - Module overview
+   - Function signatures and descriptions
+   - Usage examples
+   - Edge cases and error handling
+
+3. **Follow Standards**
+   - Check CLAUDE.md for project doc conventions
+   - Use consistent formatting
+   - Include code examples
+
+4. **Output Format**
+   </code></pre>
+<p>markdown
+   # Module Name
+   
+   ## Overview
+   Brief description
+   
+   ## API Reference
+   ### Function Name
+   <strong>Signature:</strong> <code>functionName(param1, param2)</code>
+   <strong>Purpose:</strong> Description
+   <strong>Returns:</strong> Type
+   
+   ## Usage Examples</p>
+<pre><code class="language-typescript">   // Example code
+   </code></pre>
+<p>## Notes
+   - Edge cases
+   - Performance considerations</p>
+<pre><code class="language-"></code></pre>
+<strong>步骤 3：测试 agent</strong>
+<pre><code class="language-bash"># 在 Claude Code 中调用
+&quot;Use the doc-writer agent to document src/utils/helpers.ts&quot;
+
+# 或直接使用 Agent 工具
+Agent(subagent_type: &quot;doc-writer&quot;, prompt: &quot;Document src/utils/helpers.ts&quot;)
+</code></pre>
+<h3 id="练习-3-并行-subagent-执行">🎯 练习 3：并行 Subagent 执行</h3>
+<p>同时运行多个 agents：</p>
+<pre><code class="language-bash"># 在 Claude Code 中：
+
+&quot;I need a comprehensive code analysis. Run these agents in parallel:
+1. Security reviewer - check for vulnerabilities
+2. Performance optimizer - find bottlenecks
+3. Code reviewer - check quality and style
+
+After all complete, summarize findings.&quot;
+</code></pre>
+<strong>预期行为：</strong>
+<ul><li>Claude 同时启动 3 个 subagents</li>
+<li>每个在隔离上下文中运行</li>
+<li>结果合并到最终摘要中</li>
+
+</ul>
+<h3 id="练习-4-多视角分析">🎯 练习 4：多视角分析</h3>
+<p>使用分角色 subagents 进行复杂决策：</p>
+<pre><code class="language-bash">&quot;Analyze whether we should migrate from REST to GraphQL. Use split-role subagents:
+- Factual reviewer: Check technical facts
+- Senior engineer: Evaluate architecture impact
+- Security expert: Assess security implications
+- Consistency reviewer: Check alignment with existing patterns
+
+Provide a synthesized recommendation.&quot;
+</code></pre>
+<h3 id="练习-5-上下文隔离测试">🎯 练习 5：上下文隔离测试</h3>
+<p>测试 subagent 上下文隔离：</p>
+<pre><code class="language-bash"># 步骤 1：在主会话中加载大量上下文
+&quot;Read all files in src/ and summarize the architecture&quot;
+
+# 步骤 2：运行 subagent 而不污染上下文
+&quot;Now use the code-reviewer agent to review src/api/users.ts&quot;
+# subagent 不会有所有 src/* 文件加载
+# 它从干净状态开始，防止上下文偏差
+
+# 步骤 3：比较
+# 主会话：广泛但可能遗漏细节
+# Subagent：专注的深度审查
+</code></pre>
+<hr>
+<h2 id="最佳实践">最佳实践</h2>
+<h3 id="设计原则">设计原则</h3>
+<strong>应该：</strong>
+<ul><li>从 Claude 生成的 agents 开始 - 用 Claude 生成初始 subagent，然后迭代定制</li>
+<li>设计专注的 subagents - 单一、明确的职责，而非一个做所有事情</li>
+<li>编写详细提示 - 包含具体说明、示例和约束</li>
+<li>限制工具访问 - 仅授予 subagent 目的所需的工具</li>
+<li>版本控制 - 将项目 subagents 纳入版本控制以进行团队协作</li>
+
+</ul>
+<strong>不应该：</strong>
+<ul><li>创建具有相同角色的重叠 subagents</li>
+<li>给 subagents 不必要的工具访问</li>
+<li>对简单、单步任务使用 subagents</li>
+<li>在一个 subagent 的提示中混合关注点</li>
+<li>忘记传递必要的上下文</li>
+
+</ul>
+<h3 id="系统提示最佳实践">系统提示最佳实践</h3>
+<ul><li><strong>明确角色</strong></li>
+   </ul>
+<pre><code class="language-">   You are an expert code reviewer specializing in [specific areas]
+   </code></pre>
+<ul><li><strong>清晰定义优先级</strong></li>
+   </ul>
+<pre><code class="language-">   Review priorities (in order):
+   1. Security Issues
+   2. Performance Problems
+   3. Code Quality
+   </code></pre>
+<ul><li><strong>指定输出格式</strong></li>
+   </ul>
+<pre><code class="language-">   For each issue provide: Severity, Category, Location, Description, Fix, Impact
+   </code></pre>
+<ul><li><strong>包含操作步骤</strong></li>
+   </ul>
+<pre><code class="language-">   When invoked:
+   1. Run git diff to see recent changes
+   2. Focus on modified files
+   3. Begin review immediately
+   </code></pre>
+<h3 id="工具访问策略">工具访问策略</h3>
+<ul><li><strong>从严格开始</strong>：仅从必要工具开始</li>
+<li><strong>仅在需要时扩展</strong>：根据需求添加工具</li>
+<li><strong>尽可能只读</strong>：对分析 agents 使用 Read/Grep</li>
+<li><strong>沙箱执行</strong>：将 Bash 命令限制为特定模式</li>
+
+</ul>
+<hr>
+<h2 id="本文件夹中的示例-subagents">本文件夹中的示例 Subagents</h2>
+<p>此文件夹包含即用型示例 subagents：</p>
+<h3 id="1-code-reviewer-ic93ic">1. Code Reviewer (<code>code-reviewer.md</code>)</h3>
+<strong>用途</strong>：全面的代码质量和可维护性分析
+<strong>工具</strong>：Read, Grep, Glob, Bash
+<strong>专业领域</strong>：
+<ul><li>安全漏洞检测</li>
+<li>性能优化识别</li>
+<li>代码可维护性评估</li>
+<li>测试覆盖率分析</li>
+
+</ul>
+<strong>何时使用</strong>：需要关注质量和安全的自动化代码审查
+<hr>
+<h3 id="2-test-engineer-ic94ic">2. Test Engineer (<code>test-engineer.md</code>)</h3>
+<strong>用途</strong>：测试策略、覆盖率分析和自动化测试
+<strong>工具</strong>：Read, Write, Bash, Grep
+<strong>专业领域</strong>：
+<ul><li>单元测试创建</li>
+<li>集成测试设计</li>
+<li>边缘情况识别</li>
+<li>覆盖率分析（>80% 目标）</li>
+
+</ul>
+<strong>何时使用</strong>：需要全面测试套件创建或覆盖率分析
+<hr>
+<h3 id="3-documentation-writer-ic95ic">3. Documentation Writer (<code>documentation-writer.md</code>)</h3>
+<strong>用途</strong>：技术文档、API 文档和用户指南
+<strong>工具</strong>：Read, Write, Grep
+<strong>专业领域</strong>：
+<ul><li>API 端点文档</li>
+<li>用户指南创建</li>
+<li>架构文档</li>
+<li>代码注释改进</li>
+
+</ul>
+<strong>何时使用</strong>：需要创建或更新项目文档
+<hr>
+<h3 id="4-secure-reviewer-ic96ic">4. Secure Reviewer (<code>secure-reviewer.md</code>)</h3>
+<strong>用途</strong>：具有最小权限的安全专注代码审查
+<strong>工具</strong>：Read, Grep
+<strong>专业领域</strong>：
+<ul><li>安全漏洞检测</li>
+<li>认证/授权问题</li>
+<li>数据暴露风险</li>
+<li>注入攻击识别</li>
+
+</ul>
+<strong>何时使用</strong>：需要没有修改能力的安全审计
+<hr>
+<h3 id="5-implementation-agent-ic97ic">5. Implementation Agent (<code>implementation-agent.md</code>)</h3>
+<strong>用途</strong>：用于功能开发的完整实现能力
+<strong>工具</strong>：Read, Write, Edit, Bash, Grep, Glob
+<strong>专业领域</strong>：
+<ul><li>功能实现</li>
+<li>代码生成</li>
+<li>构建和测试执行</li>
+<li>代码库修改</li>
+
+</ul>
+<strong>何时使用</strong>：需要 subagent 端到端实现功能
+<hr>
+<h3 id="6-debugger-ic98ic">6. Debugger (<code>debugger.md</code>)</h3>
+<strong>用途</strong>：用于错误、测试失败和意外行为的调试专家
+<strong>工具</strong>：Read, Edit, Bash, Grep, Glob
+<strong>专业领域</strong>：
+<ul><li>根因分析</li>
+<li>错误调查</li>
+<li>测试失败解决</li>
+<li>最小修复实现</li>
+
+</ul>
+<strong>何时使用</strong>：遇到 bug、错误或意外行为
+<hr>
+<h3 id="7-data-scientist-ic99ic">7. Data Scientist (<code>data-scientist.md</code>)</h3>
+<strong>用途</strong>：用于 SQL 查询和数据洞察的数据分析专家
+<strong>工具</strong>：Bash, Read, Write
+<strong>专业领域</strong>：
+<ul><li>SQL 查询优化</li>
+<li>BigQuery 操作</li>
+<li>数据分析和可视化</li>
+<li>统计洞察</li>
+
+</ul>
+<strong>何时使用</strong>：需要数据分析、SQL 查询或 BigQuery 操作
+<hr>
+<h2 id="安装说明">安装说明</h2>
+<h3 id="方法-1-使用-agents-命令-推荐">方法 1：使用 /agents 命令（推荐）</h3>
+<pre><code class="language-bash">/agents
+</code></pre>
+<p>然后：</p>
+<ul><li>选择 'Create New Agent'</li>
+<li>选择项目级或用户级</li>
+<li>详细描述你的 subagent</li>
+<li>选择要授予访问权限的工具（或留空以继承所有）</li>
+<li>保存并使用</li>
+
+</ul>
+<h3 id="方法-2-复制到项目">方法 2：复制到项目</h3>
+<p>将 agent 文件复制到项目的 <code>.claude/agents/</code> 目录：</p>
+<pre><code class="language-bash"># 导航到你的项目
+cd /path/to/your/project
+
+# 如果不存在则创建 agents 目录
+mkdir -p .claude/agents
+
+# 从此文件夹复制所有 agent 文件
+cp /path/to/04-subagents/*.md .claude/agents/
+
+# 移除 README（不需要在 .claude/agents 中）
+rm .claude/agents/README.md
+</code></pre>
+<h3 id="方法-3-复制到用户目录">方法 3：复制到用户目录</h3>
+<p>对于在所有项目中可用的 agents：</p>
+<pre><code class="language-bash"># 创建用户 agents 目录
+mkdir -p ~/.claude/agents
+
+# 复制 agents
+cp /path/to/04-subagents/code-reviewer.md ~/.claude/agents/
+cp /path/to/04-subagents/debugger.md ~/.claude/agents/
+# ... 根据需要复制其他
+</code></pre>
+<h3 id="验证">验证</h3>
+<p>安装后，验证 agents 是否被识别：</p>
+<pre><code class="language-bash">/agents
+</code></pre>
+<p>你应该看到已安装的 agents 与内置 agents 一起列出。</p>
+<hr>
+<h2 id="文件结构">文件结构</h2>
+<pre><code class="language-">project/
+├── .claude/
+│   └── agents/
+│       ├── code-reviewer.md
+│       ├── test-engineer.md
+│       ├── documentation-writer.md
+│       ├── secure-reviewer.md
+│       ├── implementation-agent.md
+│       ├── debugger.md
+│       └── data-scientist.md
+└── ...
+</code></pre>
+<hr>
+<h2 id="相关概念">相关概念</h2>
+<h3 id="相关功能">相关功能</h3>
+<ul><li><strong><a href="/content/01-slash-commands.html">Slash Commands</a></strong> - 快速用户调用快捷方式</li>
+<li><strong><a href="/content/02-memory.html">Memory</a></strong> - 持久化跨会话上下文</li>
+<li><strong><a href="/content/03-skills.html">Skills</a></strong> - 可复用自主能力</li>
+<li><strong><a href="/content/05-mcp.html">MCP Protocol</a></strong> - 实时外部数据访问</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动的 shell 命令自动化</li>
+<li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包的扩展包</li>
+
+</ul>
+<h3 id="与其他功能比较">与其他功能比较</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>用户调用</th>
+<th>自动调用</th>
+<th>持久化</th>
+<th>外部访问</th>
+<th>隔离上下文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Slash Commands</strong></td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>Subagents</strong></td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td><strong>Memory</strong></td>
+<td>自动</td>
+<td>自动</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>MCP</strong></td>
+<td>自动</td>
+<td>是</td>
+<td>否</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td><strong>Skills</strong></td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<h3 id="集成模式">集成模式</h3>
+<div class="mermaid">graph TD
+    User["User Request"] --> Main["Main Agent"]
+    Main -->|Uses| Memory["Memory<br/>(Context)"]
+    Main -->|Queries| MCP["MCP<br/>(Live Data)"]
+    Main -->|Invokes| Skills["Skills<br/>(Auto Tools)"]
+    Main -->|Delegates| Subagents["Subagents<br/>(Specialists)"]
+
+    Subagents -->|Use| Memory
+    Subagents -->|Query| MCP
+    Subagents -->|Isolated| Context["Clean Context<br/>Window"]
+</div>
+<hr>
+<h2 id="其他资源">其他资源</h2>
+<ul><li><a href="https://code.claude.com/docs/en/sub-agents">官方 Subagents 文档</a></li>
+<li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - <code>--agents</code> 标志和其他 CLI 选项</li>
+<li><a href="/content/07-plugins.html">插件指南</a> - 用于将 agents 与其他功能打包</li>
+<li><a href="/content/03-skills.html">Skills 指南</a> - 用于自动调用能力</li>
+<li><a href="/content/02-memory.html">Memory 指南</a> - 用于持久化上下文</li>
+<li><a href="/content/06-hooks.html">Hooks 指南</a> - 用于事件驱动自动化</li>
+
+</ul>
+<hr>
+<em>最后更新：2026 年 3 月</em>
+<em>本指南涵盖完整的 subagent 配置、委托模式和 Claude Code 最佳实践。</em>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/06-powerup-buddy.html">← PowerUp 与 Buddy</a>
+      <a href="/content/08-mcp.html">MCP →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

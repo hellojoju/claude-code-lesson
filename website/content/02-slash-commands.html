@@ -1,0 +1,2698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slash Commands - Claude Code 终极教程 - Claude Code 终极教程</title>
+  <meta name="description" content="学习 Claude Code Slash Commands 功能的完整教程">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+    /* 基础样式 */
+    :root {
+      --primary: #D97706;
+      --secondary: #059669;
+      --bg: #ffffff;
+      --bg-dark: #1f2937;
+      --text: #1f2937;
+      --text-dark: #f3f4f6;
+      --border: #e5e7eb;
+      --border-dark: #374151;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: var(--bg-dark);
+        --text: var(--text-dark);
+        --border: var(--border-dark);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+    /* 导航 */
+    nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    nav a { text-decoration: none; color: var(--text); }
+    nav a:hover { color: var(--primary); }
+
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-weight: 500; }
+
+    /* 主内容 */
+    main { padding: 2rem 0; min-height: calc(100vh - 200px); }
+
+    /* 左右布局容器 */
+    .layout-wrapper {
+      display: flex;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* 左侧目录 */
+    .sidebar-toc {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 80px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
+      padding-right: 1rem;
+    }
+
+    .sidebar-toc::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 2px;
+    }
+
+    .sidebar-toc::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .sidebar-toc-inner {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .sidebar-toc h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .sidebar-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-list {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-item {
+      margin: 0;
+    }
+
+    .sidebar-toc .toc-h2 > a {
+      font-weight: 500;
+      color: #374151;
+      padding: 0.375rem 0.5rem;
+      display: block;
+      text-decoration: none;
+      font-size: 0.8125rem;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h3 > a {
+      font-size: 0.75rem;
+      color: #6b7280;
+      padding: 0.25rem 0.5rem 0.25rem 1.25rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+      position: relative;
+    }
+
+    .sidebar-toc .toc-h3 > a::before {
+      content: "└";
+      position: absolute;
+      left: 0.5rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-toc .toc-h4 > a {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      padding: 0.25rem 0.5rem 0.25rem 2rem;
+      display: block;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-toc .toc-h2 > a:hover,
+    .sidebar-toc .toc-h3 > a:hover {
+      background: #e5e7eb;
+      color: var(--primary);
+    }
+
+    .sidebar-toc .toc-h2 > a.active,
+    .sidebar-toc .toc-h3 > a.active {
+      background: #fef3c7;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 900px;
+    }
+
+    article {
+      width: 100%;
+    }
+
+    /* 元信息 */
+    .meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .badge-beginner { background: #dcfce7; color: #166534; }
+    .badge-intermediate { background: #fef3c7; color: #92400e; }
+    .badge-advanced { background: #fee2e2; color: #991b1b; }
+
+    /* 内容区 */
+    .content h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .content h2 { font-size: 1.5rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+    .content p { margin-bottom: 1rem; }
+    .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    .content li { margin-bottom: 0.5rem; }
+    .content code { background: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+    .content pre { margin-bottom: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .content pre code { background: transparent; padding: 0; }
+    .content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin: 1rem 0; color: #6b7280; }
+    .content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .content th, .content td { border: 1px solid var(--border); padding: 0.5rem; text-align: left; }
+    .content th { background: #f9fafb; }
+
+    /* Try It Now 区块 */
+    .try-it-now {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .try-it-now h3 { color: #92400e; margin-top: 0; }
+    .try-it-now::before { content: "🎯 "; }
+
+    /* 页脚 */
+    footer {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 2rem 0;
+      margin-top: 4rem;
+    }
+
+    footer a { color: #fbbf24; }
+
+    /* 面包屑 */
+    .breadcrumb {
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 64px;
+      background: var(--bg);
+      padding: 0.5rem 0;
+      z-index: 50;
+    }
+
+    .breadcrumb a { color: var(--primary); }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-buttons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-buttons a:hover { background: #b45309; }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .sidebar-toc {
+        display: none;
+      }
+
+      .main-content {
+        max-width: 100%;
+      }
+
+      .layout-wrapper {
+        display: block;
+      }
+    }
+
+    /* 移动端目录按钮 */
+    .mobile-toc-btn {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-toc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 280px;
+      max-height: 60vh;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .mobile-toc-panel.show {
+      display: block;
+    }
+
+    .mobile-toc-panel h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toc-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .mobile-toc-panel a {
+      display: block;
+      padding: 0.5rem;
+      color: #374151;
+      text-decoration: none;
+      font-size: 0.875rem;
+      border-radius: 0.25rem;
+    }
+
+    .mobile-toc-panel a:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/content/modules.html">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
+        <li><a href="/pdf.html">PDF</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      
+      <div class="layout-wrapper">
+        
+      <aside class="sidebar-toc">
+        <div class="sidebar-toc-inner">
+          <h3>📑 目录</h3>
+          <ul class="toc-list"><li class="toc-item toc-h2"><a href="#概述">概述</a></li><li class="toc-item toc-h2"><a href="#内置命令参考">内置命令参考</a></li><li class="toc-item toc-h3"><a href="#趣味功能">🎮 趣味功能</a></li><li class="toc-item toc-h3"><a href="#内置-skills">内置 Skills</a></li><li class="toc-item toc-h2"><a href="#高级命令详解">高级命令详解</a></li><li class="toc-item toc-h3"><a href="#compact-压缩对话历史">`/compact` - 压缩对话历史</a></li><li class="toc-item toc-h3"><a href="#init-初始化项目知识">`/init` - 初始化项目知识</a></li><li class="toc-item toc-h3"><a href="#doctor-诊断安装健康状况">`/doctor` - 诊断安装健康状况</a></li><li class="toc-item toc-h3"><a href="#config-打开设置界面">`/config` - 打开设置界面</a></li><li class="toc-item toc-h3"><a href="#model-选择或更改-ai-模型">`/model` - 选择或更改 AI 模型</a></li><li class="toc-item toc-h3"><a href="#permissions-查看或更新权限">`/permissions` - 查看或更新权限</a></li><li class="toc-item toc-h3"><a href="#mcp-管理-mcp-服务器">`/mcp` - 管理 MCP 服务器</a></li><li class="toc-item toc-h3"><a href="#terminal-setup-配置终端快捷键">`/terminal-setup` - 配置终端快捷键</a></li><li class="toc-item toc-h3"><a href="#rewind-回退对话和代码">`/rewind` - 回退对话和代码</a></li><li class="toc-item toc-h3"><a href="#export-导出对话">`/export` - 导出对话</a></li><li class="toc-item toc-h3"><a href="#clear-清除对话历史">`/clear` - 清除对话历史</a></li><li class="toc-item toc-h3"><a href="#bashes-管理后台任务">`/bashes` - 管理后台任务</a></li><li class="toc-item toc-h3"><a href="#hooks-管理钩子配置">`/hooks` - 管理钩子配置</a></li><li class="toc-item toc-h3"><a href="#memory-编辑内存文件">`/memory` - 编辑内存文件</a></li><li class="toc-item toc-h3"><a href="#agents-管理-ai-子代理">`/agents` - 管理 AI 子代理</a></li><li class="toc-item toc-h2"><a href="#三种核心模式详解">三种核心模式详解</a></li><li class="toc-item toc-h3"><a href="#模式概览">模式概览</a></li><li class="toc-item toc-h3"><a href="#默认模式-default-mode">默认模式 (Default Mode)</a></li><li class="toc-item toc-h3"><a href="#自动模式-auto-mode">自动模式 (Auto Mode)</a></li><li class="toc-item toc-h3"><a href="#规划模式-plan-mode">规划模式 (Plan Mode)</a></li><li class="toc-item toc-h3"><a href="#模式选择决策树">模式选择决策树</a></li><li class="toc-item toc-h3"><a href="#推荐工作流">推荐工作流</a></li><li class="toc-item toc-h3"><a href="#已弃用命令">已弃用命令</a></li><li class="toc-item toc-h3"><a href="#近期更改">近期更改</a></li><li class="toc-item toc-h2"><a href="#自定义命令-现为-skills">自定义命令（现为 Skills）</a></li><li class="toc-item toc-h3"><a href="#迁移路径">迁移路径</a></li><li class="toc-item toc-h3"><a href="#为什么选择-skills">为什么选择 Skills？</a></li><li class="toc-item toc-h3"><a href="#创建自定义命令作为-skill">创建自定义命令作为 Skill</a></li><li class="toc-item toc-h3"><a href="#frontmatter-参考">Frontmatter 参考</a></li><li class="toc-item toc-h3"><a href="#参数">参数</a></li><li class="toc-item toc-h3"><a href="#使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</a></li><li class="toc-item toc-h3"><a href="#文件引用">文件引用</a></li><li class="toc-item toc-h2"><a href="#插件命令">插件命令</a></li><li class="toc-item toc-h2"><a href="#mcp-prompts-作为命令">MCP Prompts 作为命令</a></li><li class="toc-item toc-h3"><a href="#mcp-权限语法">MCP 权限语法</a></li><li class="toc-item toc-h2"><a href="#命令架构">命令架构</a></li><li class="toc-item toc-h2"><a href="#命令生命周期">命令生命周期</a></li><li class="toc-item toc-h2"><a href="#本文件夹中的可用命令">本文件夹中的可用命令</a></li><li class="toc-item toc-h3"><a href="#1-optimize-代码优化">1. `/optimize` - 代码优化</a></li><li class="toc-item toc-h3"><a href="#2-pr-pull-request-准备">2. `/pr` - Pull Request 准备</a></li><li class="toc-item toc-h3"><a href="#3-generate-api-docs-api-文档生成器">3. `/generate-api-docs` - API 文档生成器</a></li><li class="toc-item toc-h3"><a href="#4-commit-带上下文的-git-commit">4. `/commit` - 带上下文的 Git Commit</a></li><li class="toc-item toc-h3"><a href="#5-push-all-暂存-提交和推送">5. `/push-all` -暂存、提交和推送</a></li><li class="toc-item toc-h3"><a href="#6-doc-refactor-文档重构">6. `/doc-refactor` - 文档重构</a></li><li class="toc-item toc-h3"><a href="#7-setup-ci-cd-ci-cd-管道设置">7. `/setup-ci-cd` - CI/CD 管道设置</a></li><li class="toc-item toc-h3"><a href="#8-unit-test-expand-测试覆盖扩展">8. `/unit-test-expand` - 测试覆盖扩展</a></li><li class="toc-item toc-h2"><a href="#安装">安装</a></li><li class="toc-item toc-h3"><a href="#作为-skills-推荐">作为 Skills（推荐）</a></li><li class="toc-item toc-h3"><a href="#作为旧版命令">作为旧版命令</a></li><li class="toc-item toc-h2"><a href="#创建自己的命令">创建自己的命令</a></li><li class="toc-item toc-h3"><a href="#skill-模板-推荐">Skill 模板（推荐）</a></li><li class="toc-item toc-h3"><a href="#仅用户命令-禁止自动调用">仅用户命令（禁止自动调用）</a></li><li class="toc-item toc-h2"><a href="#最佳实践">最佳实践</a></li><li class="toc-item toc-h2"><a href="#立即尝试">立即尝试</a></li><li class="toc-item toc-h3"><a href="#练习-1-创建你的第一个-skill">🎯 练习 1：创建你的第一个 Skill</a></li><li class="toc-item toc-h3"><a href="#练习-2-动态上下文-skill">🎯 练习 2：动态上下文 Skill</a></li><li class="toc-item toc-h3"><a href="#练习-3-命令链工作流">🎯 练习 3：命令链工作流</a></li><li class="toc-item toc-h2"><a href="#实用工作流">实用工作流</a></li><li class="toc-item toc-h3"><a href="#每日开发周期">每日开发周期</a></li><li class="toc-item toc-h3"><a href="#代码审查工作流">代码审查工作流</a></li><li class="toc-item toc-h3"><a href="#发布工作流">发布工作流</a></li><li class="toc-item toc-h2"><a href="#高级模式">高级模式</a></li><li class="toc-item toc-h3"><a href="#模式-1-上下文继承">模式 1：上下文继承</a></li><li class="toc-item toc-h3"><a href="#模式-2-条件执行">模式 2：条件执行</a></li><li class="toc-item toc-h3"><a href="#模式-3-错误恢复">模式 3：错误恢复</a></li><li class="toc-item toc-h3"><a href="#模式-4-多文件处理">模式 4：多文件处理</a></li><li class="toc-item toc-h3"><a href="#模式-5-交互式提示">模式 5：交互式提示</a></li><li class="toc-item toc-h2"><a href="#性能考量">性能考量</a></li><li class="toc-item toc-h3"><a href="#skill-加载速度">Skill 加载速度</a></li><li class="toc-item toc-h3"><a href="#命令执行速度">命令执行速度</a></li><li class="toc-item toc-h3"><a href="#优化示例">优化示例</a></li><li class="toc-item toc-h2"><a href="#常见陷阱">常见陷阱</a></li><li class="toc-item toc-h3"><a href="#陷阱-1-循环依赖">陷阱 1：循环依赖</a></li><li class="toc-item toc-h3"><a href="#陷阱-2-权限过度">陷阱 2：权限过度</a></li><li class="toc-item toc-h3"><a href="#陷阱-3-过于复杂的-skills">陷阱 3：过于复杂的 Skills</a></li><li class="toc-item toc-h3"><a href="#陷阱-4-缺少错误处理">陷阱 4：缺少错误处理</a></li><li class="toc-item toc-h3"><a href="#陷阱-5-硬编码路径">陷阱 5：硬编码路径</a></li><li class="toc-item toc-h2"><a href="#故障排查">故障排查</a></li><li class="toc-item toc-h3"><a href="#命令未找到">命令未找到</a></li><li class="toc-item toc-h3"><a href="#命令未按预期执行">命令未按预期执行</a></li><li class="toc-item toc-h3"><a href="#skill-与命令冲突">Skill 与命令冲突</a></li><li class="toc-item toc-h2"><a href="#相关指南">相关指南</a></li><li class="toc-item toc-h2"><a href="#更多资源">更多资源</a></li></ul>
+        </div>
+      </aside>
+    
+        <div class="main-content">
+          <article>
+            <nav class="breadcrumb">
+              <a href="/index.html">首页</a> / <a href="/content/modules.html">模块</a> / Slash Commands
+            </nav>
+
+            <div class="meta">
+              <span class="badge badge-beginner">
+                🟢 初级
+              </span>
+              <span class="badge">✅ Claude Code v2.1.92</span>
+            </div>
+
+            <div class="content">
+              <blockquote>🟢 <strong>初级</strong> | ⏱ 30 分钟
+✅ 已验证 Claude Code <strong>v2.1.92</strong> · 最后验证：2026-04-05</blockquote>
+<strong>你将学到：</strong> 学习使用 slash commands 加速工作流程。
+<h1>Slash Commands</h1>
+<h2 id="概述">概述</h2>
+<p>Slash commands 是在交互式会话中控制 Claude 行为的快捷方式。它们分为几种类型：</p>
+<ul><li><strong>内置命令</strong>：由 Claude Code 提供（<code>/help</code>、<code>/clear</code>、<code>/model</code>）</li>
+<li><strong>Skills</strong>：用户定义的命令，以 <code>SKILL.md</code> 文件形式创建（<code>/optimize</code>、<code>/pr</code>）</li>
+<li><strong>插件命令</strong>：来自已安装插件的命令（<code>/frontend-design:frontend-design</code>）</li>
+<li><strong>MCP prompts</strong>：来自 MCP servers 的命令（<code>/mcp__github__list_prs</code>）</li>
+
+</ul>
+<blockquote><strong>注意</strong>：自定义 slash commands 已合并到 skills 中。<code>.claude/commands/</code> 中的文件仍然可用，但 skills（<code>.claude/skills/</code>）现在是推荐的方式。两者都创建 <code>/command-name</code> 快捷方式。参见 <a href="/content/03-skills.html">Skills 指南</a> 获取完整参考。</blockquote>
+<h2 id="内置命令参考">内置命令参考</h2>
+<p>内置命令是常用操作的快捷方式。共有 <strong>55+ 个内置命令</strong> 和 <strong>5 个内置 skills</strong> 可用。在 Claude Code 中输入 <code>/</code> 可查看完整列表，或输入 <code>/</code> 后跟任意字母进行筛选。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/add-dir &lt;path&gt;</code></td>
+<td>添加工作目录</td>
+</tr>
+<tr>
+<td><code>/agents</code></td>
+<td>管理代理配置</td>
+</tr>
+<tr>
+<td><code>/branch [name]</code></td>
+<td>将对话分支到新会话（别名：<code>/fork</code>）。注意：<code>/fork</code> 在 v2.1.77 中重命名为 <code>/branch</code></td>
+</tr>
+<tr>
+<td><code>/btw &lt;question&gt;</code></td>
+<td>旁注问题，不添加到历史记录</td>
+</tr>
+<tr>
+<td><code>/chrome</code></td>
+<td>配置 Chrome 浏览器集成</td>
+</tr>
+<tr>
+<td><code>/clear</code></td>
+<td>清除对话（别名：<code>/reset</code>、<code>/new</code>）</td>
+</tr>
+<tr>
+<td><code>/color [color|default]</code></td>
+<td>设置提示栏颜色</td>
+</tr>
+<tr>
+<td><code>/compact [instructions]</code></td>
+<td>压缩对话，可选聚焦指令</td>
+</tr>
+<tr>
+<td><code>/config</code></td>
+<td>打开设置（别名：<code>/settings</code>）</td>
+</tr>
+<tr>
+<td><code>/context</code></td>
+<td>以彩色网格可视化上下文使用情况</td>
+</tr>
+<tr>
+<td><code>/copy [N]</code></td>
+<td>将助手响应复制到剪贴板；<code>w</code> 写入文件</td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>显示 token 使用统计</td>
+</tr>
+<tr>
+<td><code>/desktop</code></td>
+<td>在 Desktop 应用中继续（别名：<code>/app</code>）</td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>未提交更改的交互式 diff 查看器</td>
+</tr>
+<tr>
+<td><code>/doctor</code></td>
+<td>诊断安装健康状况</td>
+</tr>
+<tr>
+<td><code>/effort [low|medium|high|max|auto]</code></td>
+<td>设置努力级别。<code>max</code> 需要 Opus 4.6</td>
+</tr>
+<tr>
+<td><code>/exit</code></td>
+<td>退出 REPL（别名：<code>/quit</code>）</td>
+</tr>
+<tr>
+<td><code>/export [filename]</code></td>
+<td>将当前对话导出到文件或剪贴板</td>
+</tr>
+<tr>
+<td><code>/extra-usage</code></td>
+<td>配置速率限制的额外使用量</td>
+</tr>
+<tr>
+<td><code>/fast [on|off]</code></td>
+<td>切换快速模式</td>
+</tr>
+<tr>
+<td><code>/feedback</code></td>
+<td>提交反馈（别名：<code>/bug</code>）</td>
+</tr>
+<tr>
+<td><code>/help</code></td>
+<td>显示帮助</td>
+</tr>
+<tr>
+<td><code>/hooks</code></td>
+<td>查看 hook 配置</td>
+</tr>
+<tr>
+<td><code>/ide</code></td>
+<td>管理 IDE 集成</td>
+</tr>
+<tr>
+<td><code>/init</code></td>
+<td>初始化 <code>CLAUDE.md</code>。设置 <code>CLAUDE_CODE_NEW_INIT=true</code> 启用交互式流程</td>
+</tr>
+<tr>
+<td><code>/insights</code></td>
+<td>生成会话分析报告</td>
+</tr>
+<tr>
+<td><code>/install-github-app</code></td>
+<td>设置 GitHub Actions 应用</td>
+</tr>
+<tr>
+<td><code>/install-slack-app</code></td>
+<td>安装 Slack 应用</td>
+</tr>
+<tr>
+<td><code>/keybindings</code></td>
+<td>打开快捷键配置</td>
+</tr>
+<tr>
+<td><code>/login</code></td>
+<td>切换 Anthropic 账户</td>
+</tr>
+<tr>
+<td><code>/logout</code></td>
+<td>登出 Anthropic 账户</td>
+</tr>
+<tr>
+<td><code>/mcp</code></td>
+<td>管理 MCP servers 和 OAuth</td>
+</tr>
+<tr>
+<td><code>/memory</code></td>
+<td>编辑 <code>CLAUDE.md</code>，切换自动记忆</td>
+</tr>
+<tr>
+<td><code>/mobile</code></td>
+<td>移动应用二维码（别名：<code>/ios</code>、<code>/android</code>）</td>
+</tr>
+<tr>
+<td><code>/model [model]</code></td>
+<td>用左右箭头选择模型以调整努力级别</td>
+</tr>
+<tr>
+<td><code>/passes</code></td>
+<td>分享 Claude Code 的免费周</td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>查看/更新权限（别名：<code>/allowed-tools</code>）</td>
+</tr>
+<tr>
+<td><code>/plan [description]</code></td>
+<td>进入规划模式</td>
+</tr>
+<tr>
+<td><code>/plugin</code></td>
+<td>管理插件</td>
+</tr>
+<tr>
+<td><code>/powerup</code></td>
+<td>🆕 交互式学习课程，动画演示 Claude Code 功能（v2.1.90+）</td>
+</tr>
+<tr>
+<td><code>/pr-comments [PR]</code></td>
+<td>获取 GitHub PR 评论</td>
+</tr>
+<tr>
+<td><code>/privacy-settings</code></td>
+<td>隐私设置（仅限 Pro/Max）</td>
+</tr>
+<tr>
+<td><code>/release-notes</code></td>
+<td>查看变更日志</td>
+</tr>
+<tr>
+<td><code>/reload-plugins</code></td>
+<td>重新加载活跃插件</td>
+</tr>
+<tr>
+<td><code>/remote-control</code></td>
+<td>从 claude.ai 远程控制（别名：<code>/rc</code>）</td>
+</tr>
+<tr>
+<td><code>/remote-env</code></td>
+<td>配置默认远程环境</td>
+</tr>
+<tr>
+<td><code>/rename [name]</code></td>
+<td>重命名会话</td>
+</tr>
+<tr>
+<td><code>/resume [session]</code></td>
+<td>恢复对话（别名：<code>/continue</code>）</td>
+</tr>
+<tr>
+<td><code>/review</code></td>
+<td><strong>已弃用</strong> — 请安装 <code>code-review</code> 插件</td>
+</tr>
+<tr>
+<td><code>/rewind</code></td>
+<td>回退对话和/或代码（别名：<code>/checkpoint</code>）</td>
+</tr>
+<tr>
+<td><code>/sandbox</code></td>
+<td>切换沙箱模式</td>
+</tr>
+<tr>
+<td><code>/schedule [description]</code></td>
+<td>创建/管理定时任务</td>
+</tr>
+<tr>
+<td><code>/security-review</code></td>
+<td>分析分支的安全漏洞</td>
+</tr>
+<tr>
+<td><code>/skills</code></td>
+<td>列出可用 skills</td>
+</tr>
+<tr>
+<td><code>/stats</code></td>
+<td>可视化每日使用量、会话、连续天数</td>
+</tr>
+<tr>
+<td><code>/status</code></td>
+<td>显示版本、模型、账户</td>
+</tr>
+<tr>
+<td><code>/statusline</code></td>
+<td>配置状态栏</td>
+</tr>
+<tr>
+<td><code>/tasks</code></td>
+<td>列出/管理后台任务</td>
+</tr>
+<tr>
+<td><code>/terminal-setup</code></td>
+<td>配置终端快捷键</td>
+</tr>
+<tr>
+<td><code>/theme</code></td>
+<td>更改颜色主题</td>
+</tr>
+<tr>
+<td><code>/vim</code></td>
+<td>切换 Vim/普通模式</td>
+</tr>
+<tr>
+<td><code>/voice</code></td>
+<td>切换按键说话语音听写</td>
+</tr>
+</tbody>
+</table>
+<h3 id="趣味功能">🎮 趣味功能</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/buddy</code></td>
+<td>🆕 孵化一个小伙伴陪你写代码（v2.1.89+，四月特别功能）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内置-skills">内置 Skills</h3>
+<p>这些 skills 随 Claude Code 提供，可像 slash commands 一样调用：</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/batch &lt;instruction&gt;</code></td>
+<td>使用 worktrees 编排大规模并行更改</td>
+</tr>
+<tr>
+<td><code>/claude-api</code></td>
+<td>加载项目语言的 Claude API 参考</td>
+</tr>
+<tr>
+<td><code>/debug [description]</code></td>
+<td>启用调试日志</td>
+</tr>
+<tr>
+<td><code>/loop [interval] &lt;prompt&gt;</code></td>
+<td>按间隔重复运行提示</td>
+</tr>
+<tr>
+<td><code>/simplify [focus]</code></td>
+<td>检查已更改文件的代码质量</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="高级命令详解">高级命令详解</h2>
+<p>以下是对核心内置命令的详细说明，帮助你更高效地使用 Claude Code。</p>
+<h3 id="ic102ic-压缩对话历史"><code>/compact</code> - 压缩对话历史</h3>
+<p>压缩对话历史，保留核心信息，减少 token 消耗，同时保持对话的连贯性。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/compact [instructions]
+</code></pre>
+<strong>工作流程：</strong>
+执行 <code>/compact</code> 后，Claude Code 会：
+<ul><li>分析当前对话历史</li>
+<li>保留对话的核心信息和上下文</li>
+<li>压缩对话内容，减少 token 数量</li>
+<li>保持对话的连贯性</li>
+
+</ul>
+<strong>使用场景：</strong>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对话过长时</td>
+<td>当对话超过 20 轮或 token 消耗过高时</td>
+</tr>
+<tr>
+<td>任务切换前</td>
+<td>完成一个任务，准备开始新任务前</td>
+</tr>
+<tr>
+<td>定期压缩</td>
+<td>在长时间对话中每完成一个子任务后</td>
+</tr>
+</tbody>
+</table>
+<strong>组合用法：</strong>
+<pre><code class="language-bash"># 压缩对话历史后，开始新的对话
+/compact
+/clear
+
+# 压缩并聚焦特定内容
+/compact focus:bugs  # 只保留 bug 相关内容
+</code></pre>
+<strong>注意事项：</strong>
+<ul><li><code>/compact</code> 命令无参数版本会自动压缩对话历史</li>
+<li>压缩后无法恢复原始对话历史</li>
+<li>不会影响已生成的 <code>CLAUDE.md</code> 文件或其他项目文件</li>
+
+</ul>
+<hr>
+<h3 id="ic106ic-初始化项目知识"><code>/init</code> - 初始化项目知识</h3>
+<p>初始化项目知识图谱，扫描当前文件夹下的所有文件，将解析结果保存到 <code>CLAUDE.md</code> 文件中。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/init
+</code></pre>
+<strong>工作流程：</strong>
+<ul><li>扫描当前目录下的所有文件</li>
+<li>解析文件内容并生成项目知识图谱</li>
+<li>将解析结果保存到 <code>CLAUDE.md</code> 文件中</li>
+<li>后续对话会自动引用该文件作为上下文</li>
+
+</ul>
+<strong>关键特点：</strong>
+<ul><li><strong>生成 CLAUDE.md 文件</strong>：该文件包含项目所有文件的解析结果</li>
+<li><strong>支持手动编辑</strong>：你可以直接修改 <code>CLAUDE.md</code> 文件，添加额外信息</li>
+<li><strong>自动作为上下文</strong>：后续对话会自动引用 <code>CLAUDE.md</code> 文件</li>
+
+</ul>
+<strong>最佳实践：</strong>
+<ul><li>新项目必用：在任何新项目中首次使用 Claude Code 时，先运行 <code>/init</code></li>
+<li>定期更新：当项目文件发生较大变化时，重新运行 <code>/init</code></li>
+<li>手动补充：根据需要手动编辑 <code>CLAUDE.md</code>，添加额外信息</li>
+
+</ul>
+<hr>
+<h3 id="ic114ic-诊断安装健康状况"><code>/doctor</code> - 诊断安装健康状况</h3>
+<p>检查 Claude Code 的安装健康状况，诊断常见问题，并提供修复建议。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/doctor
+</code></pre>
+<strong>检查项目：</strong>
+<table>
+<thead>
+<tr>
+<th>检查类别</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统环境</td>
+<td>操作系统版本、Node.js 版本、内存和磁盘空间</td>
+</tr>
+<tr>
+<td>安装完整性</td>
+<td>Claude Code 版本、依赖包完整性、可执行文件路径</td>
+</tr>
+<tr>
+<td>网络连接</td>
+<td>Anthropic API 连接、代理设置、DNS 解析</td>
+</tr>
+<tr>
+<td>配置文件</td>
+<td>配置文件语法、配置文件路径、配置项有效性</td>
+</tr>
+<tr>
+<td>认证状态</td>
+<td>登录状态、令牌有效性、账户权限</td>
+</tr>
+</tbody>
+</table>
+<strong>输出示例：</strong>
+<pre><code class="language-bash">Claude Code Health Check
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ System Environment
+  - OS: macOS 14.0
+  - Node.js: v18.17.0
+  - Memory: 16 GB
+
+✓ Installation
+  - Version: 1.0.124
+  - Dependencies: All installed
+
+✓ Network Connection
+  - API Connection: OK
+
+✓ Authentication
+  - Status: Logged in
+
+Overall Status: ✓ Healthy
+</code></pre>
+<strong>常见问题修复：</strong>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>修复建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网络连接失败</td>
+<td>检查互联网连接、验证代理设置、尝试禁用 VPN</td>
+</tr>
+<tr>
+<td>认证失败</td>
+<td>运行 <code>/logout</code> 然后 <code>/login</code>，验证账户凭据</td>
+</tr>
+<tr>
+<td>配置文件错误</td>
+<td>检查 config.json 语法，运行 <code>/config</code> 重置设置</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="ic118ic-打开设置界面"><code>/config</code> - 打开设置界面</h3>
+<p>打开 Claude Code 的设置界面，允许你配置各种选项和偏好设置。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/config
+</code></pre>
+<strong>配置选项类别：</strong>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型设置</td>
+<td>选择默认 AI 模型、配置模型参数</td>
+</tr>
+<tr>
+<td>界面设置</td>
+<td>主题选择、字体大小、界面布局</td>
+</tr>
+<tr>
+<td>行为设置</td>
+<td>自动保存、文件监听、上下文管理</td>
+</tr>
+<tr>
+<td>集成设置</td>
+<td>Git 集成、MCP 服务器、插件配置</td>
+</tr>
+<tr>
+<td>安全设置</td>
+<td>权限管理、隐私设置、沙箱配置</td>
+</tr>
+</tbody>
+</table>
+<strong>配置文件位置：</strong>
+<ul><li><strong>Windows</strong>: <code>%APPDATA%\claude\config.json</code></li>
+<li><strong>macOS</strong>: <code>~/Library/Application Support/claude/config.json</code></li>
+<li><strong>Linux</strong>: <code>~/.config/claude/config.json</code></li>
+
+</ul>
+<strong>最佳实践：</strong>
+<ul><li>定期检查配置设置，确保符合当前需求</li>
+<li>大幅修改配置前备份配置文件</li>
+<li>修改配置后测试相关功能是否正常</li>
+
+</ul>
+<hr>
+<h3 id="ic122ic-选择或更改-ai-模型"><code>/model</code> - 选择或更改 AI 模型</h3>
+<p>选择或更改 Claude Code 使用的 AI 模型，根据任务需求选择最合适的模型。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/model [model-name]
+</code></pre>
+<strong>可用模型：</strong>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>名称</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sonnet 4.6</td>
+<td><code>claude-sonnet-4-6</code></td>
+<td>平衡性能和速度</td>
+<td>通用任务、代码生成、文档编写</td>
+</tr>
+<tr>
+<td>Haiku 4.5</td>
+<td><code>claude-haiku-4-5</code></td>
+<td>快速响应，成本低</td>
+<td>简单任务、快速查询、成本敏感场景</td>
+</tr>
+<tr>
+<td>Opus 4.5</td>
+<td><code>claude-opus-4-5</code></td>
+<td>最强性能，成本高</td>
+<td>复杂任务、深度分析、高质量要求</td>
+</tr>
+</tbody>
+</table>
+<strong>模型选择建议：</strong>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>推荐模型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>代码生成</td>
+<td>Sonnet 4.6</td>
+</tr>
+<tr>
+<td>文档编写</td>
+<td>Sonnet 4.6</td>
+</tr>
+<tr>
+<td>简单查询</td>
+<td>Haiku 4.5</td>
+</tr>
+<tr>
+<td>复杂分析</td>
+<td>Opus 4.5</td>
+</tr>
+</tbody>
+</table>
+<strong>注意事项：</strong>
+<ul><li>不同模型的成本不同</li>
+<li>模型切换会影响当前会话</li>
+<li>使用 <code>/effort max</code> 需要 Opus 4.6 模型</li>
+
+</ul>
+<hr>
+<h3 id="ic127ic-查看或更新权限"><code>/permissions</code> - 查看或更新权限</h3>
+<p>查看或更新 Claude Code 的权限配置，控制 Claude 可以执行的操作。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/permissions [subcommand]
+</code></pre>
+<strong>子命令：</strong>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无参数</td>
+<td>查看当前权限配置</td>
+</tr>
+<tr>
+<td><code>add</code></td>
+<td>添加权限规则</td>
+</tr>
+<tr>
+<td><code>remove</code></td>
+<td>删除权限规则</td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>清除所有权限规则</td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>重置为默认权限</td>
+</tr>
+</tbody>
+</table>
+<strong>权限类型：</strong>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工具权限</td>
+<td><code>Bash</code>, <code>Read</code>, <code>Write</code>, <code>Edit</code>, <code>Delete</code>, <code>Grep</code></td>
+</tr>
+<tr>
+<td>命令权限</td>
+<td><code>SlashCommand</code>, <code>RunCommand</code></td>
+</tr>
+</tbody>
+</table>
+<strong>权限规则示例：</strong>
+<pre><code class="language-yaml"># 允许特定命令
+allow:
+  - Bash(git add:*)
+  - Bash(git commit:*)
+  - Bash(git status:*)
+
+# 拒绝特定操作
+deny:
+  - Delete(*)
+  - Bash(rm:*)
+
+# 限制文件访问
+allow:
+  - Read(./src/*)
+  - Write(./src/*)
+deny:
+  - Read(./config/*)
+</code></pre>
+<strong>安全建议：</strong>
+<ul><li>遵循最小权限原则：只授予必要的权限</li>
+<li>拒绝规则优先于允许规则</li>
+<li>定期审查权限配置</li>
+
+</ul>
+<hr>
+<h3 id="ic140ic-管理-mcp-服务器"><code>/mcp</code> - 管理 MCP 服务器</h3>
+<p>管理 Claude Code 的模型上下文协议（MCP）服务器，扩展 Claude Code 的能力范围。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/mcp &lt;子命令&gt; [参数]
+</code></pre>
+<strong>子命令：</strong>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list</code></td>
+<td>列出已配置的 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>add</code></td>
+<td>添加 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>remove</code></td>
+<td>删除 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>enable</code></td>
+<td>启用 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>disable</code></td>
+<td>禁用 MCP 服务器</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>测试 MCP 服务器连接</td>
+</tr>
+</tbody>
+</table>
+<strong>常见 MCP 服务器配置：</strong>
+<pre><code class="language-bash"># 添加文件系统访问
+/mcp add filesystem stdio npx @modelcontextprotocol/server-filesystem ~/projects
+
+# 添加 GitHub 集成
+/mcp add github sse https://api.github.com/mcp --token $GITHUB_TOKEN
+
+# 添加数据库连接
+/mcp add database stdio npx @modelcontextprotocol/server-postgres --connection-string &quot;postgresql://...&quot;
+</code></pre>
+<strong>最佳实践：</strong>
+<ul><li>只连接必要的 MCP 服务器</li>
+<li>使用环境变量存储凭证</li>
+<li>定期测试 MCP 服务器连接</li>
+
+</ul>
+<hr>
+<h3 id="ic147ic-配置终端快捷键"><code>/terminal-setup</code> - 配置终端快捷键</h3>
+<p>安装 Shift+Enter 键绑定，以便在终端中输入多行文本。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/terminal-setup
+</code></pre>
+<strong>支持的终端：</strong>
+<table>
+<thead>
+<tr>
+<th>终端</th>
+<th>支持</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iTerm2</td>
+<td>✓ 完全支持</td>
+<td>Shift+Enter 换行，Enter 发送</td>
+</tr>
+<tr>
+<td>VSCode 终端</td>
+<td>✓ 完全支持</td>
+<td>Shift+Enter 换行，Enter 发送</td>
+</tr>
+<tr>
+<td>其他终端</td>
+<td>✗ 不支持</td>
+<td>建议使用 iTerm2 或 VSCode 终端</td>
+</tr>
+</tbody>
+</table>
+<strong>键绑定说明：</strong>
+<ul><li><strong>Enter</strong>: 发送命令</li>
+<li><strong>Shift+Enter</strong>: 换行（不发送）</li>
+
+</ul>
+<strong>注意事项：</strong>
+<ul><li>仅支持 iTerm2 和 VSCode 终端</li>
+<li>需要重启终端才能生效</li>
+
+</ul>
+<hr>
+<h3 id="ic148ic-回退对话和代码"><code>/rewind</code> - 回退对话和代码</h3>
+<p>回退对话和/或代码，允许你撤销之前的操作，恢复到之前的状态。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/rewind [steps]
+</code></pre>
+<strong>参数说明：</strong>
+<ul><li>无参数：显示可回退的操作列表</li>
+<li><code>[steps]</code>：指定要回退的步数</li>
+
+</ul>
+<strong>可回退的操作：</strong>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对话操作</td>
+<td>消息发送、命令执行、上下文更改</td>
+</tr>
+<tr>
+<td>文件操作</td>
+<td>文件创建、文件编辑、文件删除</td>
+</tr>
+<tr>
+<td>代码操作</td>
+<td>代码生成、代码修改、代码重构</td>
+</tr>
+</tbody>
+</table>
+<strong>使用示例：</strong>
+<pre><code class="language-bash"># 查看可回退的操作列表
+/rewind
+
+# 回退 3 步
+/rewind 3
+</code></pre>
+<strong>注意事项：</strong>
+<ul><li>回退操作无法恢复</li>
+<li>建议在回退前使用 <code>/export</code> 导出对话</li>
+
+</ul>
+<hr>
+<h3 id="ic151ic-导出对话"><code>/export</code> - 导出对话</h3>
+<p>将当前对话导出到文件或剪贴板，方便保存和分享。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/export [filename]
+</code></pre>
+<strong>参数说明：</strong>
+<ul><li>无参数：导出到剪贴板</li>
+<li><code>[filename]</code>：导出到指定文件</li>
+
+</ul>
+<strong>导出格式：</strong>
+导出的文件采用 Markdown 格式，包含：
+<ul><li>会话日期和时间</li>
+<li>使用的模型</li>
+<li>完整对话历史</li>
+
+</ul>
+<strong>使用场景：</strong>
+<ul><li>保存重要对话记录</li>
+<li>分享对话内容</li>
+<li>创建文档</li>
+
+</ul>
+<hr>
+<h3 id="ic153ic-清除对话历史"><code>/clear</code> - 清除对话历史</h3>
+<p>清除 Claude Code 的对话历史，重置当前会话上下文。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/clear
+</code></pre>
+<strong>功能说明：</strong>
+<ul><li>清除当前会话的所有对话历史</li>
+<li>重置上下文窗口</li>
+<li>保持 Claude Code 界面打开，准备新对话</li>
+
+</ul>
+<strong>使用场景：</strong>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务切换</td>
+<td>完成一个任务后，开始新任务前</td>
+</tr>
+<tr>
+<td>清理过长对话</td>
+<td>对话持续很久、上下文累积过多时</td>
+</tr>
+<tr>
+<td>修复偏离</td>
+<td>Claude 的回答偏离正轨或上下文混乱时</td>
+</tr>
+</tbody>
+</table>
+<strong>注意事项：</strong>
+<ul><li>清除的对话内容无法恢复</li>
+<li>不会影响已生成的 <code>CLAUDE.md</code> 文件或项目文件</li>
+
+</ul>
+<hr>
+<h3 id="ic155ic-管理后台任务"><code>/bashes</code> - 管理后台任务</h3>
+<p>列出和管理 Claude Code 中的后台任务。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/bashes [subcommand]
+</code></pre>
+<strong>子命令：</strong>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无参数</td>
+<td>列出所有后台任务及其状态</td>
+</tr>
+<tr>
+<td><code>kill &lt;task-id&gt;</code></td>
+<td>终止指定的后台任务</td>
+</tr>
+<tr>
+<td><code>output &lt;task-id&gt;</code></td>
+<td>查看指定任务的输出</td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>清除已完成的任务</td>
+</tr>
+</tbody>
+</table>
+<strong>使用场景：</strong>
+<ul><li>长时间运行的构建任务</li>
+<li>安装依赖</li>
+<li>运行测试</li>
+
+</ul>
+<strong>后台任务优势：</strong>
+<ul><li>非阻塞：后台任务不会阻塞主对话流程</li>
+<li>多任务：可以同时运行多个后台任务</li>
+<li>监控：可以随时查看任务状态和输出</li>
+
+</ul>
+<hr>
+<h3 id="ic159ic-管理钩子配置"><code>/hooks</code> - 管理钩子配置</h3>
+<p>管理工具事件的钩子配置，在特定事件发生时自动执行自定义脚本。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/hooks [subcommand]
+</code></pre>
+<strong>子命令：</strong>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无参数</td>
+<td>列出所有已配置的钩子</td>
+</tr>
+<tr>
+<td><code>add</code></td>
+<td>添加新的钩子</td>
+</tr>
+<tr>
+<td><code>edit</code></td>
+<td>编辑现有钩子</td>
+</tr>
+<tr>
+<td><code>remove</code></td>
+<td>删除钩子</td>
+</tr>
+<tr>
+<td><code>enable</code></td>
+<td>启用钩子</td>
+</tr>
+<tr>
+<td><code>disable</code></td>
+<td>禁用钩子</td>
+</tr>
+</tbody>
+</table>
+<strong>钩子事件：</strong>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>before-edit</code></td>
+<td>文件编辑前</td>
+</tr>
+<tr>
+<td><code>after-edit</code></td>
+<td>文件编辑后</td>
+</tr>
+<tr>
+<td><code>before-run</code></td>
+<td>命令执行前</td>
+</tr>
+<tr>
+<td><code>after-run</code></td>
+<td>命令执行后</td>
+</tr>
+<tr>
+<td><code>on-error</code></td>
+<td>错误发生时</td>
+</tr>
+<tr>
+<td><code>on-success</code></td>
+<td>任务成功时</td>
+</tr>
+</tbody>
+</table>
+<strong>钩子配置示例：</strong>
+<pre><code class="language-yaml">name: format-code
+event: after-edit
+command: prettier --write $FILE
+enabled: true
+</code></pre>
+<hr>
+<h3 id="ic171ic-编辑内存文件"><code>/memory</code> - 编辑内存文件</h3>
+<p>编辑 <code>CLAUDE.md</code> 内存文件，该文件包含项目的上下文信息。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/memory
+</code></pre>
+<strong>CLAUDE.md 文件内容：</strong>
+<ul><li>项目概述：项目的基本信息和目标</li>
+<li>架构说明：项目架构和技术栈</li>
+<li>代码规范：编码标准和最佳实践</li>
+<li>重要说明：需要注意的事项</li>
+<li>上下文信息：AI 需要了解的项目细节</li>
+
+</ul>
+<strong>使用场景：</strong>
+<ul><li>添加项目信息</li>
+<li>更新架构说明</li>
+<li>补充上下文</li>
+
+</ul>
+<strong>最佳实践：</strong>
+<ul><li>定期更新 <code>CLAUDE.md</code> 文件</li>
+<li>使用清晰的语言描述项目</li>
+<li>结构化内容，使用标题和列表组织</li>
+
+</ul>
+<hr>
+<h3 id="ic174ic-管理-ai-子代理"><code>/agents</code> - 管理 AI 子代理</h3>
+<p>管理专门的自定义 AI 子代理，处理特定类型的任务。</p>
+<strong>基本语法：</strong>
+<pre><code class="language-bash">/agents [subcommand]
+</code></pre>
+<strong>子命令：</strong>
+<table>
+<thead>
+<tr>
+<th>子命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无参数</td>
+<td>列出所有可用的子代理</td>
+</tr>
+<tr>
+<td><code>create</code></td>
+<td>创建新的子代理</td>
+</tr>
+<tr>
+<td><code>edit</code></td>
+<td>编辑现有子代理</td>
+</tr>
+<tr>
+<td><code>delete</code></td>
+<td>删除子代理</td>
+</tr>
+<tr>
+<td><code>use</code></td>
+<td>使用指定的子代理</td>
+</tr>
+</tbody>
+</table>
+<strong>子代理优势：</strong>
+<ul><li>专业化：每个子代理专注于特定领域</li>
+<li>一致性：保持输出风格的一致性</li>
+<li>效率：预设特定任务的工作流程</li>
+<li>可定制：根据团队需求创建自定义子代理</li>
+
+</ul>
+<strong>使用示例：</strong>
+<pre><code class="language-bash"># 使用代码审查代理
+/agents use code-reviewer
+
+# 切换到错误修复代理
+/agents use bug-fixer
+</code></pre>
+<hr>
+<h2 id="三种核心模式详解">三种核心模式详解</h2>
+<p>Claude Code 有三种核心权限模式，理解它们的区别对于高效使用至关重要。</p>
+<h3 id="模式概览">模式概览</h3>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>特点</th>
+<th>适用场景</th>
+<th>安全性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>默认模式</strong></td>
+<td>逐个确认</td>
+<td>初学者、不确定的操作</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>自动模式</strong></td>
+<td>自动批准</td>
+<td>信任的重复性任务</td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>规划模式</strong></td>
+<td>先计划后执行</td>
+<td>复杂重构、大型功能</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="默认模式-default-mode">默认模式 (Default Mode)</h3>
+<strong>启动方式：</strong>
+<pre><code class="language-bash"># 默认就是此模式，无需额外参数
+claude
+</code></pre>
+<strong>交互流程：</strong>
+<pre><code class="language-">你: &quot;帮我修复这个 bug&quot;
+
+Claude: &quot;我将修改 file.js&quot;
+你: [需要按 y 确认]
+
+Claude: &quot;我将安装依赖&quot;
+你: [需要按 y 确认]
+</code></pre>
+<strong>推荐使用场景：</strong>
+<ul><li>初次使用 Claude Code</li>
+<li>不确定的操作</li>
+<li>需要仔细审查每个改动</li>
+<li>生产环境的代码</li>
+
+</ul>
+<h3 id="自动模式-auto-mode">自动模式 (Auto Mode)</h3>
+<strong>启动方式：</strong>
+<pre><code class="language-bash"># 方式 1: 命令行参数
+claude --auto-approve
+
+# 方式 2: 配置文件
+# ~/.claude/config.json
+{
+  &quot;autoApprove&quot;: true
+}
+</code></pre>
+<strong>安全机制：</strong>
+Auto Mode 不是简单的"全部放行"，它内置了 AI 安全分类器：
+<ul><li><strong>第一阶段</strong>：Prompt Injection 探测器快速检查（误报率 8.5%）</li>
+<li><strong>第二阶段</strong>：Transcript 分类器深度推理（误报率 0.4%）</li>
+
+</ul>
+<strong>推荐使用场景：</strong>
+<ul><li>高度信任的操作（如只读任务）</li>
+<li>重复性工作（如格式化代码）</li>
+<li>沙盒环境或测试项目</li>
+<li>已经在规划模式中审查过的任务</li>
+
+</ul>
+<strong>安全警告：</strong>
+<ul><li>Auto Mode 有约 17% 的漏检率</li>
+<li><code>--dangerously-skip-permissions</code> 完全跳过权限检查，仅限沙盒环境</li>
+
+</ul>
+<h3 id="规划模式-plan-mode">规划模式 (Plan Mode)</h3>
+<strong>启动方式：</strong>
+<pre><code class="language-bash"># 方式 1: 命令行参数
+claude --plan-mode
+
+# 方式 2: 在会话中快速切换
+# 按两次 Shift+Tab
+
+# 方式 3: 使用 /plan 命令
+/plan 添加用户认证功能
+</code></pre>
+<strong>工作流程：</strong>
+<pre><code class="language-">你: &quot;帮我将应用迁移到 TypeScript&quot;
+
+Claude: [生成详细计划]
+1. 安装 TypeScript 和依赖
+2. 创建 tsconfig.json
+3. 重命名 .js 文件为 .ts
+...
+
+你: [批准或修改计划]
+Claude: [执行计划]
+</code></pre>
+<strong>推荐使用场景：</strong>
+<ul><li>大型重构（超过 5 个文件）</li>
+<li>架构变更</li>
+<li>添加复杂功能</li>
+<li>安全性敏感的操作</li>
+
+</ul>
+<h3 id="模式选择决策树">模式选择决策树</h3>
+<pre><code class="language-">任务来了
+  │
+  ├─ 是否修改代码？
+  │   ├─ 否 → 默认模式或自动模式（只读操作）
+  │   └─ 是 → 继续
+  │
+  ├─ 涉及多少文件？
+  │   ├─ 1-3 个 → 默认模式
+  │   └─ 3+ 个 → 继续
+  │
+  ├─ 是否是生产代码？
+  │   ├─ 是 → 规划模式
+  │   └─ 否 → 继续
+  │
+  └─ 你是否信任 Claude？
+      ├─ 是 → 自动模式
+      └─ 否 → 规划模式或默认模式
+</code></pre>
+<h3 id="推荐工作流">推荐工作流</h3>
+<pre><code class="language-">┌─────────────────┐
+│  规划模式        │ ← 大型任务从这里开始
+│  (Plan Mode)    │
+└────────┬────────┘
+         │ 审查并批准计划
+         ↓
+┌─────────────────┐
+│  自动模式        │ ← 执行已批准的计划
+│  (Auto Mode)    │
+└─────────────────┘
+</code></pre>
+<hr>
+<h3 id="已弃用命令">已弃用命令</h3>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/review</code></td>
+<td>已弃用 — 被 <code>code-review</code> 插件取代</td>
+</tr>
+<tr>
+<td><code>/output-style</code></td>
+<td>自 v2.1.73 起弃用</td>
+</tr>
+<tr>
+<td><code>/fork</code></td>
+<td>重命名为 <code>/branch</code>（别名仍可用，v2.1.77）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="近期更改">近期更改</h3>
+<ul><li><code>/fork</code> 重命名为 <code>/branch</code>，保留 <code>/fork</code> 作为别名（v2.1.77）</li>
+<li><code>/output-style</code> 弃用（v2.1.73）</li>
+<li><code>/review</code> 弃用，推荐使用 <code>code-review</code> 插件</li>
+<li>添加 <code>/effort</code> 命令，<code>max</code> 级别需要 Opus 4.6</li>
+<li>添加 <code>/voice</code> 命令用于按键说话语音听写</li>
+<li>添加 <code>/schedule</code> 命令用于创建/管理定时任务</li>
+<li>添加 <code>/color</code> 命令用于提示栏自定义</li>
+<li><code>/model</code> 选择器现在显示人类可读标签（如 "Sonnet 4.6"）而非原始模型 ID</li>
+<li><code>/resume</code> 支持 <code>/continue</code> 别名</li>
+<li>MCP prompts 可作为 <code>/mcp__&lt;server&gt;__&lt;prompt&gt;</code> 命令使用（参见 <a href="#mcp-prompts-as-commands">MCP Prompts 作为命令</a>）</li>
+
+</ul>
+<h2 id="自定义命令-现为-skills">自定义命令（现为 Skills）</h2>
+<p>自定义 slash commands 已<strong>合并到 skills</strong> 中。两种方式都创建可用 <code>/command-name</code> 调用的命令：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>位置</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Skills（推荐）</strong></td>
+<td><code>.claude/skills/&lt;name&gt;/SKILL.md</code></td>
+<td>当前标准</td>
+</tr>
+<tr>
+<td><strong>旧版命令</strong></td>
+<td><code>.claude/commands/&lt;name&gt;.md</code></td>
+<td>仍可用</td>
+</tr>
+</tbody>
+</table>
+<p>如果 skill 和命令同名，<strong>skill 优先</strong>。例如，当 <code>.claude/commands/review.md</code> 和 <code>.claude/skills/review/SKILL.md</code> 同时存在时，使用 skill 版本。</p>
+<h3 id="迁移路径">迁移路径</h3>
+<p>现有的 <code>.claude/commands/</code> 文件无需修改即可继续工作。要迁移到 skills：</p>
+<strong>迁移前（命令）：</strong>
+<pre><code class="language-">.claude/commands/optimize.md
+</code></pre>
+<strong>迁移后（Skill）：</strong>
+<pre><code class="language-">.claude/skills/optimize/SKILL.md
+</code></pre>
+<h3 id="为什么选择-skills">为什么选择 Skills？</h3>
+<p>Skills 比旧版命令提供更多功能：</p>
+<ul><li><strong>目录结构</strong>：可打包脚本、模板和参考文件</li>
+<li><strong>自动调用</strong>：Claude 可在相关时自动触发 skills</li>
+<li><strong>调用控制</strong>：选择用户、Claude 或两者是否可调用</li>
+<li><strong>子代理执行</strong>：使用 <code>context: fork</code> 在隔离上下文中运行 skills</li>
+<li><strong>渐进式披露</strong>：仅在需要时加载额外文件</li>
+
+</ul>
+<h3 id="创建自定义命令作为-skill">创建自定义命令作为 Skill</h3>
+<p>创建包含 <code>SKILL.md</code> 文件的目录：</p>
+<pre><code class="language-bash">mkdir -p .claude/skills/my-command
+</code></pre>
+<strong>文件：</strong> <code>.claude/skills/my-command/SKILL.md</code>
+<pre><code class="language-yaml">---
+name: my-command
+description: 此命令的功能及何时使用
+---
+
+# My Command
+
+调用此命令时 Claude 应遵循的指令。
+
+1. 第一步
+2. 第二步
+3. 第三步
+</code></pre>
+<h3 id="frontmatter-参考">Frontmatter 参考</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>用途</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>命令名称（变为 <code>/name</code>）</td>
+<td>目录名</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>简要描述（帮助 Claude 知道何时使用）</td>
+<td>首段</td>
+</tr>
+<tr>
+<td><code>argument-hint</code></td>
+<td>自动补全的预期参数</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>allowed-tools</code></td>
+<td>命令无需权限即可使用的工具</td>
+<td>继承</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>使用的特定模型</td>
+<td>继承</td>
+</tr>
+<tr>
+<td><code>disable-model-invocation</code></td>
+<td>若为 <code>true</code>，仅用户可调用（Claude 不可）</td>
+<td><code>false</code></td>
+</tr>
+<tr>
+<td><code>user-invocable</code></td>
+<td>若为 <code>false</code>，从 <code>/</code> 菜单隐藏</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>context</code></td>
+<td>设为 <code>fork</code> 以在隔离子代理中运行</td>
+<td>无</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>使用 <code>context: fork</code> 时的代理类型</td>
+<td><code>general-purpose</code></td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>Skill 级别的 hooks（PreToolUse、PostToolUse、Stop）</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h3 id="参数">参数</h3>
+<p>命令可接收参数：</p>
+<strong>使用 <code>$ARGUMENTS</code> 接收所有参数：</strong>
+<pre><code class="language-yaml">---
+name: fix-issue
+description: 根据编号修复 GitHub issue
+---
+
+按照我们的编码标准修复 issue #$ARGUMENTS
+</code></pre>
+<p>用法：<code>/fix-issue 123</code> → <code>$ARGUMENTS</code> 变为 "123"</p>
+<strong>使用 <code>$0</code>、<code>$1</code> 等接收单个参数：</strong>
+<pre><code class="language-yaml">---
+name: review-pr
+description: 以指定优先级审查 PR
+---
+
+以优先级 $1 审查 PR #$0
+</code></pre>
+<p>用法：<code>/review-pr 456 high</code> → <code>$0</code>="456", <code>$1</code>="high"</p>
+<h3 id="使用-shell-命令获取动态上下文">使用 Shell 命令获取动态上下文</h3>
+<p>使用 <code>!</code>command`` 在提示前执行 bash 命令：</p>
+<pre><code class="language-yaml">---
+name: commit
+description: 创建包含上下文的 git commit
+allowed-tools: Bash(git *)
+---
+
+## 上下文
+
+- 当前 git 状态：!`git status`
+- 当前 git diff：!`git diff HEAD`
+- 当前分支：!`git branch --show-current`
+- 最近提交：!`git log --oneline -5`
+
+## 你的任务
+
+基于以上更改，创建一个 git commit。
+</code></pre>
+<h3 id="文件引用">文件引用</h3>
+<p>使用 `@` 包含文件内容：</p>
+<pre><code class="language-markdown">审查 @src/utils/helpers.js 中的实现
+比较 @src/old-version.js 和 @src/new-version.js
+</code></pre>
+<h2 id="插件命令">插件命令</h2>
+<p>插件可提供自定义命令：</p>
+<pre><code class="language-">/plugin-name:command-name
+</code></pre>
+<p>或当无命名冲突时直接使用 `/command-name`。</p>
+<strong>示例：</strong>
+<pre><code class="language-bash">/frontend-design:frontend-design
+/commit-commands:commit
+</code></pre>
+<h2 id="mcp-prompts-作为命令">MCP Prompts 作为命令</h2>
+<p>MCP servers 可将 prompts 暴露为 slash commands：</p>
+<pre><code class="language-">/mcp__&lt;server-name&gt;__&lt;prompt-name&gt; [arguments]
+</code></pre>
+<strong>示例：</strong>
+<pre><code class="language-bash">/mcp__github__list_prs
+/mcp__github__pr_review 456
+/mcp__jira__create_issue &quot;Bug 标题&quot; high
+</code></pre>
+<h3 id="mcp-权限语法">MCP 权限语法</h3>
+<p>在权限中控制 MCP server 访问：</p>
+<ul><li>`mcp__github<code> - 访问整个 GitHub MCP server
+- </code>mcp__github__*<code> - 通配符访问所有工具
+- </code>mcp__github__get_issue` - 特定工具访问</li>
+
+</ul>
+<h2 id="命令架构">命令架构</h2>
+<div class="mermaid">graph TD
+    A["用户输入：/command-name"] --> B{"命令类型？"}
+    B -->|内置| C["执行内置命令"]
+    B -->|Skill| D["加载 SKILL.md"]
+    B -->|插件| E["加载插件命令"]
+    B -->|MCP| F["执行 MCP Prompt"]
+
+    D --> G["解析 Frontmatter"]
+    G --> H["替换变量"]
+    H --> I["执行 Shell 命令"]
+    I --> J["发送到 Claude"]
+    J --> K["返回结果"]
+</div>
+<h2 id="命令生命周期">命令生命周期</h2>
+<div class="mermaid">sequenceDiagram
+    participant User as 用户
+    participant Claude as Claude Code
+    participant FS as 文件系统
+    participant CLI as Shell/Bash
+
+    User->>Claude: 输入 /optimize
+    Claude->>FS: 搜索 .claude/skills/ 和 .claude/commands/
+    FS-->>Claude: 返回 optimize/SKILL.md
+    Claude->>Claude: 解析 frontmatter
+    Claude->>CLI: 执行 !`command` 替换
+    CLI-->>Claude: 命令输出
+    Claude->>Claude: 替换 $ARGUMENTS
+    Claude->>User: 处理提示
+    Claude->>User: 返回结果
+</div>
+<h2 id="本文件夹中的可用命令">本文件夹中的可用命令</h2>
+<p>这些示例命令可作为 skills 或旧版命令安装。</p>
+<h3 id="1-optimize-代码优化">1. `/optimize` - 代码优化</h3>
+<p>分析代码的性能问题、内存泄漏和优化机会。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/optimize
+[粘贴你的代码]
+</code></pre>
+<h3 id="2-pr-pull-request-准备">2. `/pr` - Pull Request 准备</h3>
+<p>引导完成 PR 准备检查清单，包括 linting、测试和提交格式化。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/pr
+</code></pre>
+<strong>截图：</strong>
+!<a href="pr-slash-command.png">/pr</a>
+<h3 id="3-generate-api-docs-api-文档生成器">3. `/generate-api-docs` - API 文档生成器</h3>
+<p>从源代码生成全面的 API 文档。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/generate-api-docs
+</code></pre>
+<h3 id="4-commit-带上下文的-git-commit">4. `/commit` - 带上下文的 Git Commit</h3>
+<p>创建包含仓库动态上下文的 git commit。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/commit [可选消息]
+</code></pre>
+<h3 id="5-push-all-暂存-提交和推送">5. `/push-all` -暂存、提交和推送</h3>
+<p>暂存所有更改、创建 commit 并推送到远程，附带安全检查。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/push-all
+</code></pre>
+<strong>安全检查：</strong>
+<ul><li>密钥：`.env<em><code>、</code></em>.key<code>、</code>*.pem<code>、</code>credentials.json<code>
+- API 密钥：检测真实密钥与占位符
+- 大文件：</code>>10MB<code> 无 Git LFS
+- 构建产物：</code>node_modules/<code>、</code>dist/<code>、</code>__pycache__/<code>
+
+### 6. </code>/doc-refactor` - 文档重构</li>
+
+</ul>
+<p>重构项目文档以提高清晰度和可访问性。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/doc-refactor
+</code></pre>
+<h3 id="7-setup-ci-cd-ci-cd-管道设置">7. `/setup-ci-cd` - CI/CD 管道设置</h3>
+<p>实现 pre-commit hooks 和 GitHub Actions 用于质量保证。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/setup-ci-cd
+</code></pre>
+<h3 id="8-unit-test-expand-测试覆盖扩展">8. `/unit-test-expand` - 测试覆盖扩展</h3>
+<p>通过针对未测试分支和边缘情况提高测试覆盖率。</p>
+<strong>用法：</strong>
+<pre><code class="language-">/unit-test-expand
+</code></pre>
+<h2 id="安装">安装</h2>
+<h3 id="作为-skills-推荐">作为 Skills（推荐）</h3>
+<p>复制到你的 skills 目录：</p>
+<pre><code class="language-bash"># 创建 skills 目录
+mkdir -p .claude/skills
+
+# 为每个命令文件创建 skill 目录
+for cmd in optimize pr commit; do
+  mkdir -p .claude/skills/$cmd
+  cp 01-slash-commands/$cmd.md .claude/skills/$cmd/SKILL.md
+done
+</code></pre>
+<h3 id="作为旧版命令">作为旧版命令</h3>
+<p>复制到你的 commands 目录：</p>
+<pre><code class="language-bash"># 项目级（团队共享）
+mkdir -p .claude/commands
+cp 01-slash-commands/*.md .claude/commands/
+
+# 个人使用
+mkdir -p ~/.claude/commands
+cp 01-slash-commands/*.md ~/.claude/commands/
+</code></pre>
+<h2 id="创建自己的命令">创建自己的命令</h2>
+<h3 id="skill-模板-推荐">Skill 模板（推荐）</h3>
+<p>创建 `.claude/skills/my-command/SKILL.md`：</p>
+<pre><code class="language-yaml">---
+name: my-command
+description: 此命令的功能。当 [触发条件] 时使用。
+argument-hint: [可选参数]
+allowed-tools: Bash(npm *), Read, Grep
+---
+
+# 命令标题
+
+## 上下文
+
+- 当前分支：!`git branch --show-current`
+- 相关文件：@package.json
+
+## 指令
+
+1. 第一步
+2. 使用参数的第二步：$ARGUMENTS
+3. 第三步
+
+## 输出格式
+
+- 如何格式化响应
+- 包含什么内容
+</code></pre>
+<h3 id="仅用户命令-禁止自动调用">仅用户命令（禁止自动调用）</h3>
+<p>对于有副作用且 Claude 不应自动触发的命令：</p>
+<pre><code class="language-yaml">---
+name: deploy
+description: 部署到生产环境
+disable-model-invocation: true
+allowed-tools: Bash(npm *), Bash(git *)
+---
+
+将应用部署到生产环境：
+
+1. 运行测试
+2. 构建应用
+3. 推送到部署目标
+4. 验证部署
+</code></pre>
+<h2 id="最佳实践">最佳实践</h2>
+<table>
+<thead>
+<tr>
+<th>应该</th>
+<th>不应该</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使用清晰、行动导向的名称</td>
+<td>为一次性任务创建命令</td>
+</tr>
+<tr>
+<td>包含带触发条件的 `description<code>&lt;/td&gt;
+&lt;td&gt;在命令中构建复杂逻辑&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;保持命令专注于单一任务&lt;/td&gt;
+&lt;td&gt;硬编码敏感信息&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;对有副作用的命令使用 </code>disable-model-invocation<code>&lt;/td&gt;
+&lt;td&gt;略过 description 字段&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;使用 </code>!<code> 前缀获取动态上下文&lt;/td&gt;
+&lt;td&gt;假设 Claude 知道当前状态&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;在 skill 目录中组织相关文件&lt;/td&gt;
+&lt;td&gt;把所有内容放在一个文件中&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+## 立即尝试
+
+### 🎯 练习 1：创建你的第一个 Skill
+
+创建一个简单的 </code>/hello` skill 来问候你：
+
+<pre><code class="language-bash">mkdir -p .claude/skills/hello
+</code></pre>
+
+创建 `.claude/skills/hello/SKILL.md`：
+
+<pre><code class="language-yaml">---
+name: hello
+description: 问候用户。当用户打招呼或开始会话时使用。
+---
+
+# Hello Skill
+
+热情问候用户，询问他们今天想做什么。
+
+包含：
+1. 当前时间和日期
+2. 项目快速状态（git 分支、最近活动）
+3. 根据最近更改建议做什么
+</code></pre>
+
+测试：`/hello<code>
+
+### 🎯 练习 2：动态上下文 Skill
+
+创建一个 </code>/status` skill 显示项目状态：
+
+<pre><code class="language-yaml">---
+name: status
+description: 显示全面的项目状态。当用户询问项目状态时使用。
+allowed-tools: Bash(git *), Bash(npm *), Read
+---
+
+# 项目状态报告
+
+## Git 状态
+- 当前分支：!`git branch --show-current`
+- 未提交更改：!`git status --short`
+- 最近提交：!`git log --oneline -5`
+
+## 依赖
+- Package.json：@package.json
+- 过期包：!`npm outdated --json 2&gt;/dev/null || echo &quot;无过期包&quot;`
+
+## 测试覆盖率
+- 最近测试运行：!`npm test -- --coverage --silent 2&gt;&amp;1 | tail -20 || echo &quot;测试未配置&quot;`
+
+## 概要
+
+简要总结：
+1. 需要关注的内容（未提交更改、失败的测试）
+2. 准备好可发布的
+3. 建议的下一步
+</code></pre>
+
+测试：`/status`
+
+<h3 id="练习-3-命令链工作流">🎯 练习 3：命令链工作流</h3>
+
+组合多个命令完成工作流：
+
+<pre><code class="language-bash"># 早晨例行
+/status          # 检查项目健康
+/diff            # 回顾昨天的更改
+/memory          # 添加今天的聚焦上下文
+
+# 提交前例行  
+/optimize        # 检查优化机会  
+/commit          # 创建上下文提交
+
+# PR 准备
+/pr              # 完整 PR 检查清单
+</code></pre>
+
+<h2 id="实用工作流">实用工作流</h2>
+
+<h3 id="每日开发周期">每日开发周期</h3>
+
+<div class="mermaid">graph LR
+    A[/status] --> B[/diff]
+    B --> C[编写代码]
+    C --> D[/optimize]
+    D --> E[/commit]
+    E --> F{/测试通过？}
+    F -->|是| G[/pr]
+    F -->|否| C
+</div>
+
+<strong>早晨启动：</strong>
+<pre><code class="language-bash">/status           # 项目健康检查
+/compact focus:bugs  # 聚焦 bug 修复
+</code></pre>
+
+<strong>完成工作后：</strong>
+<pre><code class="language-bash">/optimize         # 性能审查
+/test             # 运行测试
+/commit           # 上下文提交
+</code></pre>
+
+<h3 id="代码审查工作流">代码审查工作流</h3>
+
+创建一个 `/review-branch` skill 用于全面审查：
+
+<pre><code class="language-yaml">---
+name: review-branch
+description: 审查分支的质量、安全和性能。合并 PR 前使用。
+argument-hint: branch-name
+allowed-tools: Bash(git *), Read, Grep, Glob
+---
+
+# 分支审查：$ARGUMENTS
+
+## 更改概要
+- 更改的文件：!`git diff main...$ARGUMENTS --stat`
+- 包含的提交：!`git log main..$ARGUMENTS --oneline`
+
+## 质量检查
+对于每个更改的文件：
+
+1. **代码风格**
+   - 函数 &lt; 50 行
+   - 文件 &lt; 800 行
+   - 无深层嵌套（&gt;4 层）
+
+2. **安全**
+   - 无硬编码密钥
+   - 存在输入验证
+   - 正确的错误处理
+
+3. **性能**
+   - 无 N+1 查询
+   - 高效算法
+   - 无内存泄漏
+
+## 报告格式
+
+| 文件 | 质量 | 安全 | 性能 | 问题 |
+|------|---------|----------|-------------|--------|
+
+## 建议
+
+提供合并建议：
+- 阻塞问题（必须修复）
+- 警告（应该修复）
+- 建议（可选）
+</code></pre>
+
+<h3 id="发布工作流">发布工作流</h3>
+
+创建一个 `/release-check` skill：
+
+<pre><code class="language-yaml">---
+name: release-check
+description: 发布前验证检查清单。发布前使用。
+allowed-tools: Bash(npm *), Bash(git *), Read
+---
+
+# 发布检查清单
+
+## 版本检查
+- 当前版本：!`node -e &quot;console.log(require(&#039;./package.json&#039;).version)&quot;`
+- 变更日志已更新：检查 CHANGELOG.md 是否有当前版本条目
+
+## 质量门控
+- 所有测试通过：!`npm test 2&gt;&amp;1 | tail -5`
+- 无 TypeScript 错误：!`npx tsc --noEmit 2&gt;&amp;1 || echo &quot;无 TS 错误&quot;`
+- Lint 清洁：!`npm run lint 2&gt;&amp;1 | tail -5 || echo &quot;Lint 通过&quot;`
+
+## 安全扫描
+- 代码中无密钥：!`grep -r &quot;api_key\|password\|secret&quot; --include=&quot;*.js&quot; --include=&quot;*.ts&quot; src/ || echo &quot;清洁&quot;`
+- 依赖已审计：!`npm audit 2&gt;&amp;1 || echo &quot;审计通过&quot;`
+
+## 文档
+- README 已更新
+- API 文档当前
+- 如有破坏性更改需迁移指南
+
+## 最终报告
+
+提供：
+1. ✅ 通过的检查
+2. ❌ 失败的检查（阻塞）
+3. ⚠️ 警告（非阻塞）
+4. 发布建议
+</code></pre>
+
+<h2 id="高级模式">高级模式</h2>
+
+<h3 id="模式-1-上下文继承">模式 1：上下文继承</h3>
+
+Skills 可引用其他 skills 或记忆：
+
+<pre><code class="language-yaml">---
+name: smart-commit
+description: 使用项目记忆的智能提交
+---
+
+# Smart Commit
+
+使用来自以下的上下文：
+- @CLAUDE.md 用于项目约定
+- 最近记忆用于当前聚焦
+
+## 步骤
+
+1. 对照 CLAUDE.md 约定审查更改
+2. 检查记忆中的进行中工作
+3. 创建符合项目风格的提交消息
+4. 如有协作需包含共同作者信息
+</code></pre>
+
+<h3 id="模式-2-条件执行">模式 2：条件执行</h3>
+
+使用 shell 条件实现智能行为：
+
+<pre><code class="language-yaml">---
+name: safe-push
+description: 自动检查的安全推送
+allowed-tools: Bash(git *), Bash(npm *)
+---
+
+# Safe Push
+
+## 预检查
+- 测试通过：!`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; echo &quot;PASS&quot; || echo &quot;FAIL&quot;`
+- 分支清洁：!`git status --porcelain | wc -l | xargs`
+
+## 条件逻辑
+- 若测试 FAIL：&quot;无法推送 - 测试失败。先运行 /test-fix&quot;
+- 若分支有未提交更改：&quot;无法推送 - 有未提交更改。先运行 /commit&quot;
+- 若全 PASS：继续推送
+
+## 推送步骤
+!`npm test 2&gt;&amp;1 | grep -q &quot;passed&quot; &amp;&amp; git push || echo &quot;阻塞：测试失败&quot;`
+</code></pre>
+
+<h3 id="模式-3-错误恢复">模式 3：错误恢复</h3>
+
+优雅处理错误：
+
+<pre><code class="language-yaml">---
+name: robust-deploy
+description: 带回滚能力的部署
+allowed-tools: Bash(npm *), Bash(git *)
+---
+
+# Robust Deploy
+
+## 部署前快照
+- 当前提交：!`git rev-parse HEAD`
+- 当前分支：!`git branch --show-current`
+
+## 部署步骤
+1. 构建：!`npm run build 2&gt;&amp;1 | tail -10`
+2. 部署：!`npm run deploy 2&gt;&amp;1 | tail -10`
+3. 验证：!`curl -s https://app.example.com/health || echo &quot;FAILED&quot;`
+
+## 失败时回滚
+若任何步骤失败：
+</code></pre>bash
+git checkout !`git rev-parse HEAD`  # 返回快照
+npm run rollback  # 自定义回滚命令
+<pre><code class="language-">
+报告成功或回滚原因。
+</code></pre>
+
+<h3 id="模式-4-多文件处理">模式 4：多文件处理</h3>
+
+高效处理多个文件：
+
+<pre><code class="language-yaml">---
+name: batch-optimize
+description: 并行优化多个文件
+allowed-tools: Read, Edit, Glob, Bash
+---
+
+# 批量优化
+
+## 查找目标文件
+!`find src -name &quot;*.ts&quot; -type f | head -20`
+
+## 对每个文件
+1. 读取文件
+2. 分析：
+   - 未使用的导入
+   - 死代码
+   - 优化机会
+3. 应用优化
+4. 跟踪更改
+
+## 概要报告
+- 处理文件数：$FILES_COUNT
+- 应用优化数：$OPTIMIZATIONS_COUNT
+- 减少行数：$LINES_SAVED
+</code></pre>
+
+<h3 id="模式-5-交互式提示">模式 5：交互式提示</h3>
+
+Skills 可提示用户输入：
+
+<pre><code class="language-yaml">---
+name: interactive-review
+description: 带用户引导的交互式代码审查
+---
+
+# Interactive Review
+
+## 第一阶段：概览
+显示更改摘要并询问：
+- &quot;聚焦特定领域？（安全、性能、风格）&quot;
+- 等待用户响应
+
+## 第二阶段：深入
+基于用户聚焦领域：
+- 显示相关问题
+- 对每个问题请求决策
+
+## 第三阶段：应用
+- &quot;应用所有批准的更改？&quot;
+- 若是：进行编辑
+- 若否：列出供人工审查
+</code></pre>
+
+<h2 id="性能考量">性能考量</h2>
+
+<h3 id="skill-加载速度">Skill 加载速度</h3>
+
+以下情况 Skills 加载更快：
+
+<ul><li><strong>精简 frontmatter</strong>：仅包含必要字段</li>
+<li><strong>高效 shell 命令</strong>：使用 `--quiet<code>、</code>--silent<code>，管道到 </code>head<code>
+3. **优先文件引用而非读取**：</code>@file<code> 有缓存，</code>Read<code> 为最新
+4. **惰性加载**：不包含所有文件，使用 </code>!<code> 命令按需获取
+
+### 命令执行速度
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;方式&lt;/th&gt;
+&lt;th&gt;速度&lt;/th&gt;
+&lt;th&gt;用例&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;静态内容&lt;/td&gt;
+&lt;td&gt;最快&lt;/td&gt;
+&lt;td&gt;固定指令&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>!<code> 命令（缓存）&lt;/td&gt;
+&lt;td&gt;快&lt;/td&gt;
+&lt;td&gt;Git 状态、package.json&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>!<code> 命令（最新）&lt;/td&gt;
+&lt;td&gt;中等&lt;/td&gt;
+&lt;td&gt;测试结果、构建输出&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;</code>@file` 引用</td></li>
+</ul><td>中等</td>
+<td>大文件、模板</td>
+</tr>
+<tr>
+<td>内联 Read 工具</td>
+<td>最慢</td>
+<td>实时文件检查</td>
+</tr>
+</tbody>
+</table>
+<h3 id="优化示例">优化示例</h3>
+<strong>慢 skill：</strong>
+<pre><code class="language-yaml"># 每次读取所有文件
+检查所有这些文件：
+- @src/index.ts
+- @src/utils.ts
+- @src/config.ts
+- @src/app.ts
+</code></pre>
+<strong>快 skill：</strong>
+<pre><code class="language-yaml"># 惰性加载仅所需内容
+检查匹配模式的文件：
+!`find src -name &quot;*.ts&quot; | head -5`
+
+然后选择性读取：
+&quot;哪些文件需要详细审查？&quot;
+</code></pre>
+<h2 id="常见陷阱">常见陷阱</h2>
+<h3 id="陷阱-1-循环依赖">陷阱 1：循环依赖</h3>
+<strong>问题：</strong> Skill A 引用 Skill B，Skill B 又引用 Skill A。
+<strong>解决方案：</strong> 使用记忆（CLAUDE.md）作为共享上下文，而非 skill 链。
+<h3 id="陷阱-2-权限过度">陷阱 2：权限过度</h3>
+<strong>问题：</strong> Skill 请求它不需要的工具。
+<pre><code class="language-yaml"># 不好：请求所有权限
+allowed-tools: Bash(*), Read(*), Write(*)
+</code></pre>
+<strong>解决方案：</strong> 仅请求必要工具：
+<pre><code class="language-yaml"># 好：特定权限
+allowed-tools: Bash(git status), Bash(git log), Read
+</code></pre>
+<h3 id="陷阱-3-过于复杂的-skills">陷阱 3：过于复杂的 Skills</h3>
+<strong>问题：</strong> 一个 skill 做太多事情。
+<strong>解决方案：</strong> 分解为聚焦的 skills：
+<pre><code class="language-yaml"># 代替 /full-review，创建：
+/review-security  # 聚焦安全
+/review-performance  # 聚焦性能  
+/review-style  # 聚焦风格
+</code></pre>
+<h3 id="陷阱-4-缺少错误处理">陷阱 4：缺少错误处理</h3>
+<strong>问题：</strong> Skill 失败但无指导。
+<pre><code class="language-yaml"># 不好：无回退
+运行测试：!`npm test`
+</code></pre>
+<strong>解决方案：</strong> 包含错误指导：
+<pre><code class="language-yaml"># 好：错误处理
+运行测试：!`npm test 2&gt;&amp;1 || echo &quot;测试失败 - 查看上方输出&quot;`
+
+若测试失败：
+1. 显示测试输出
+2. 建议运行 /debug-tests
+3. 不要继续依赖步骤
+</code></pre>
+<h3 id="陷阱-5-硬编码路径">陷阱 5：硬编码路径</h3>
+<strong>问题：</strong> Skill 仅在特定项目中工作。
+<pre><code class="language-yaml"># 不好：硬编码
+检查：@/Users/dev/my-project/src/app.ts
+</code></pre>
+<strong>解决方案：</strong> 使用相对路径和发现：
+<pre><code class="language-yaml"># 好：可移植
+检查：@src/app.ts
+或发现：!`find . -name &quot;app.ts&quot; -type f`
+</code></pre>
+<h2 id="故障排查">故障排查</h2>
+<h3 id="命令未找到">命令未找到</h3>
+<strong>解决方案：</strong>
+<ul><li>检查文件是否在 `.claude/skills/<name>/SKILL.md<code> 或 </code>.claude/commands/<name>.md<code>
+- 验证 frontmatter 中的 </code>name<code> 字段是否匹配预期命令名
+- 重启 Claude Code 会话
+- 运行 </code>/help<code> 查看可用命令
+
+### 命令未按预期执行
+
+**解决方案：**
+- 添加更具体的指令
+- 在 skill 文件中包含示例
+- 若使用 bash 命令，检查 </code>allowed-tools`</li>
+<li>先用简单输入测试</li>
+
+</ul>
+<h3 id="skill-与命令冲突">Skill 与命令冲突</h3>
+<p>若两者同名，<strong>skill 优先</strong>。移除其中一个或重命名。</p>
+<h2 id="相关指南">相关指南</h2>
+<ul><li><strong><a href="/content/03-skills.html">Skills</a></strong> - skills 完整参考（自动调用能力）</li>
+<li><strong><a href="/content/02-memory.html">Memory</a></strong> - CLAUDE.md 持久上下文</li>
+<li><strong><a href="/content/04-subagents.html">Subagents</a></strong> - 委托 AI 代理</li>
+<li><strong><a href="/content/07-plugins.html">Plugins</a></strong> - 打包命令集合</li>
+<li><strong><a href="/content/06-hooks.html">Hooks</a></strong> - 事件驱动自动化</li>
+
+</ul>
+<h2 id="更多资源">更多资源</h2>
+<ul><li><a href="https://code.claude.com/docs/en/interactive-mode">官方交互模式文档</a> - 内置命令参考</li>
+<li><a href="https://code.claude.com/docs/en/skills">官方 Skills 文档</a> - 完整 skills 参考</li>
+<li><a href="https://code.claude.com/docs/en/cli-reference">CLI 参考</a> - 命令行选项</li>
+
+</ul>
+<hr>
+            </div>
+
+            
+    <div class="nav-buttons">
+      <a href="/content/01-cli.html">← CLI 参考手册</a>
+      <a href="/content/03-memory.html">Memory →</a>
+    </div>
+  
+          </article>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Claude Code 中文教程</p>
+    </div>
+  </footer>
+
+  <!-- 移动端目录按钮 -->
+  <button class="mobile-toc-btn" id="mobileTocBtn" title="目录">📑</button>
+  <div class="mobile-toc-panel" id="mobileTocPanel"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js"></script>
+  <!-- Mermaid 图表渲染 -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // 初始化 Mermaid - 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true,
+          curve: 'basis'
+        },
+        sequence: {
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+  <style>
+    /* Mermaid 图表样式 */
+    .mermaid {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      text-align: center;
+    }
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+  <script>
+    // 高亮所有代码块
+    document.querySelectorAll('pre code').forEach(block => {
+      Prism.highlightElement(block);
+    });
+
+    // 目录滚动高亮
+    const tocLinks = document.querySelectorAll('.sidebar-toc a');
+    const headings = document.querySelectorAll('.content h2[id], .content h3[id]');
+
+    function updateActiveTocLink() {
+      let current = null;
+      const scrollPos = window.scrollY + 100;
+
+      headings.forEach(heading => {
+        if (heading.offsetTop <= scrollPos) {
+          current = heading;
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (current && link.getAttribute('href') === '#' + current.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTocLink);
+    updateActiveTocLink();
+
+    // 平滑滚动
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 移动端目录
+    const mobileTocBtn = document.getElementById('mobileTocBtn');
+    const mobileTocPanel = document.getElementById('mobileTocPanel');
+    const sidebarToc = document.querySelector('.sidebar-toc-inner');
+
+    if (sidebarToc && mobileTocPanel) {
+      mobileTocPanel.innerHTML = sidebarToc.innerHTML;
+    }
+
+    if (mobileTocBtn && mobileTocPanel) {
+      mobileTocBtn.addEventListener('click', () => {
+        mobileTocPanel.classList.toggle('show');
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', (e) => {
+        if (!mobileTocBtn.contains(e.target) && !mobileTocPanel.contains(e.target)) {
+          mobileTocPanel.classList.remove('show');
+        }
+      });
+
+      // 移动端目录点击跳转
+      mobileTocPanel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          mobileTocPanel.classList.remove('show');
+          const targetId = link.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const offset = 80;
+            window.scrollTo({
+              top: target.offsetTop - offset,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>

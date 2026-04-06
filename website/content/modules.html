@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>模块索引 - Claude Code 终极教程</title>
+  <title>教程目录 - Claude Code 中文教程</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
   <style>
@@ -153,6 +153,25 @@
       border-bottom: 2px solid var(--primary);
     }
 
+    /* 学习路径说明 */
+    .learning-path {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #86efac;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .learning-path h2 {
+      color: #166534;
+      margin-bottom: 0.75rem;
+    }
+
+    .learning-path p {
+      color: #15803d;
+      margin-bottom: 0.5rem;
+    }
+
     /* 页脚 */
     footer {
       background: #1f2937;
@@ -160,19 +179,17 @@
       padding: 2rem 0;
       margin-top: 4rem;
     }
-
-    footer a { color: #fbbf24; }
   </style>
 </head>
 <body>
   <nav>
     <div class="container">
-      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 终极教程</a>
+      <a href="/index.html" style="font-weight: bold; font-size: 1.25rem;">Claude Code 中文教程</a>
       <ul class="nav-links">
         <li><a href="/index.html">首页</a></li>
-        <li><a href="/content/modules.html" class="active">模块</a></li>
+        <li><a href="/content/modules.html" class="active">教程</a></li>
+        <li><a href="/content/18-source-code-analysis.html">源码解读</a></li>
         <li><a href="/pdf.html">PDF 下载</a></li>
-        <li><a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></li>
       </ul>
     </div>
   </nav>
@@ -181,103 +198,102 @@
     <div class="container">
       <article>
         <div class="page-header">
-          <h1>📚 模块索引</h1>
-          <p>从基础到高级，系统学习 Claude Code 的所有核心功能。共 13 个模块，全部中文翻译。</p>
+          <h1>📚 教程目录</h1>
+          <p>从入门到精通，循序渐进学习 Claude Code。共 17 个模块，按学习路径编排。</p>
         </div>
 
-        <h2 class="section-title">🟢 初级模块</h2>
+        <div class="learning-path">
+          <h2>🎯 学习路径</h2>
+          <p><strong>入门阶段（01-06）</strong>：掌握基础操作，建立正确的工作习惯</p>
+          <p><strong>进阶阶段（07-14）</strong>：学习自动化、协作和高级功能</p>
+          <p><strong>精通阶段（15-17）</strong>：企业级应用和高级能力</p>
+        </div>
+
+        <h2 class="section-title">🟢 入门阶段</h2>
+        <p style="color: #6b7280; margin-bottom: 1rem;">基础操作必学，建立正确的工作习惯。</p>
         <div class="module-grid">
           <div class="module-card">
-            <h3><a href="/content/01-slash-commands.html">01. Slash Commands</a></h3>
+            <h3><a href="/content/01-cli.html">01. CLI 参考手册</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 30 分钟</span>
             </div>
-            <p class="module-desc">学习使用斜杠命令加速工作流程。包括 55+ 内置命令和自定义 Skill 创建。</p>
+            <p class="module-desc">命令行界面完整指南，启动选项和参数配置。<strong>学习 Claude Code 的第一步。</strong></p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/02-memory.html">02. Memory</a></h3>
+            <h3><a href="/content/02-slash-commands.html">02. Slash Commands</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 45 分钟</span>
             </div>
-            <p class="module-desc">掌握 CLAUDE.md 配置系统，实现跨会话持久化上下文管理。</p>
+            <p class="module-desc">55+ 内置命令快速调用，加速工作流程。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/03-skills.html">03. Skills</a></h3>
+            <h3><a href="/content/03-memory.html">03. Memory</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 40 分钟</span>
             </div>
-            <p class="module-desc">创建可复用的任务模板，让 Claude 自动执行复杂工作流。</p>
+            <p class="module-desc">CLAUDE.md 配置系统，实现跨会话持久化上下文。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/08-checkpoints.html">08. Checkpoints</a></h3>
+            <h3><a href="/content/04-skills.html">04. Skills</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 25 分钟</span>
             </div>
-            <p class="module-desc">会话快照与回滚，安全探索和实验。</p>
+            <p class="module-desc">创建可复用的任务模板，自动化复杂工作流。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/10-cli.html">10. CLI</a></h3>
+            <h3><a href="/content/05-checkpoints.html">05. Checkpoints</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 35 分钟</span>
             </div>
-            <p class="module-desc">命令行界面完整指南，包括所有启动参数和环境变量。</p>
+            <p class="module-desc">会话快照与回滚，<strong>做任何有风险操作前必学</strong>。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/14-powerup-buddy.html">14. Powerup 与 Buddy</a></h3>
+            <h3><a href="/content/06-powerup-buddy.html">06. PowerUp 与 Buddy</a></h3>
             <div class="module-meta">
               <span class="badge badge-beginner">🟢 初级</span>
-              <span>⏱ 15 分钟</span>
             </div>
-            <p class="module-desc">🆕 交互式学习课程和虚拟伙伴系统。</p>
+            <p class="module-desc">交互式学习课程，虚拟伙伴陪你写代码。</p>
           </div>
         </div>
 
-        <h2 class="section-title">🟡 中级模块</h2>
+        <h2 class="section-title">🟡 进阶阶段</h2>
+        <p style="color: #6b7280; margin-bottom: 1rem;">自动化、协作和高级功能。</p>
         <div class="module-grid">
           <div class="module-card">
-            <h3><a href="/content/04-subagents.html">04. Subagents</a></h3>
+            <h3><a href="/content/07-subagents.html">07. Subagents</a></h3>
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
-              <span>⏱ 60 分钟</span>
             </div>
             <p class="module-desc">委托专业智能体，并行处理复杂任务。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/05-mcp.html">05. MCP</a></h3>
+            <h3><a href="/content/08-mcp.html">08. MCP</a></h3>
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
-              <span>⏱ 50 分钟</span>
             </div>
             <p class="module-desc">模型上下文协议，连接外部工具和数据源。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/06-hooks.html">06. Hooks</a></h3>
+            <h3><a href="/content/09-hooks.html">09. Hooks</a></h3>
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
-              <span>⏱ 70 分钟</span>
             </div>
-            <p class="module-desc">事件驱动自动化，在工具执行前后自动运行脚本。</p>
+            <p class="module-desc">事件驱动自动化，工具执行前后自动运行脚本。</p>
           </div>
 
           <div class="module-card">
-            <h3><a href="/content/07-plugins.html">07. Plugins</a></h3>
+            <h3><a href="/content/10-plugins.html">10. Plugins</a></h3>
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
-              <span>⏱ 90 分钟</span>
             </div>
-            <p class="module-desc">扩展包系统，打包和分享完整的工具链。</p>
+            <p class="module-desc">扩展包系统，打包和分享完整工具链。</p>
           </div>
 
           <div class="module-card">
@@ -285,7 +301,7 @@
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
             </div>
-            <p class="module-desc">多智能体协作模式，解决复杂问题。</p>
+            <p class="module-desc">多智能体协作模式，使用 Worktree 并行工作。</p>
           </div>
 
           <div class="module-card">
@@ -293,7 +309,7 @@
             <div class="module-meta">
               <span class="badge badge-intermediate">🟡 中级</span>
             </div>
-            <p class="module-desc">后台运行长时间任务，提高工作效率。</p>
+            <p class="module-desc">后台运行长时间任务，监控和循环执行。</p>
           </div>
 
           <div class="module-card">
@@ -303,17 +319,41 @@
             </div>
             <p class="module-desc">频道系统，组织和管理多个对话流。</p>
           </div>
-        </div>
 
-        <h2 class="section-title">🔴 高级模块</h2>
-        <div class="module-grid">
           <div class="module-card">
-            <h3><a href="/content/09-advanced-features.html">09. Advanced Features</a></h3>
+            <h3><a href="/content/14-advanced-features.html">14. 高级功能</a></h3>
             <div class="module-meta">
               <span class="badge badge-advanced">🔴 高级</span>
-              <span>⏱ 120 分钟</span>
             </div>
-            <p class="module-desc">高级功能详解：扩展思考、自动模式、权限管理等。</p>
+            <p class="module-desc">扩展思考、权限模式、自动模式等高级特性。</p>
+          </div>
+        </div>
+
+        <h2 class="section-title">🔴 精通阶段</h2>
+        <p style="color: #6b7280; margin-bottom: 1rem;">企业级应用和高级能力。</p>
+        <div class="module-grid">
+          <div class="module-card">
+            <h3><a href="/content/15-enterprise.html">15. 企业级应用</a></h3>
+            <div class="module-meta">
+              <span class="badge badge-advanced">🔴 高级</span>
+            </div>
+            <p class="module-desc">企业部署、远程控制、监控、CI/CD 集成。</p>
+          </div>
+
+          <div class="module-card">
+            <h3><a href="/content/16-advanced-capabilities.html">16. 高级能力</a></h3>
+            <div class="module-meta">
+              <span class="badge badge-advanced">🔴 高级</span>
+            </div>
+            <p class="module-desc">Computer Use、Voice Mode、高级工作流模式。</p>
+          </div>
+
+          <div class="module-card">
+            <h3><a href="/content/17-boris-tips.html">17. Boris 使用技巧</a></h3>
+            <div class="module-meta">
+              <span class="badge badge-intermediate">🟡 中级</span>
+            </div>
+            <p class="module-desc">Claude Code 产品负责人的实战技巧与最佳实践。</p>
           </div>
         </div>
       </article>
@@ -322,10 +362,7 @@
 
   <footer>
     <div class="container">
-      <p>© 2026 Claude Code 终极教程 | <a href="https://github.com/anthropics/claude-code" target="_blank">GitHub</a></p>
-      <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">
-        本教程由社区维护，与 Anthropic 官方无关联
-      </p>
+      <p>© 2026 Claude Code 中文教程</p>
     </div>
   </footer>
 </body>
